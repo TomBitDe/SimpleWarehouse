@@ -188,7 +188,7 @@ public class MonitoringResource implements MonitoringResourceMXBean {
     public void registerInJMX() {
         this.exceptionCount = new AtomicLong();
         try {
-            objectName = new ObjectName("GfTestMonitoring:type=" + this.getClass().getName());
+            objectName = new ObjectName("SimpleWarehouseMonitoring:type=" + this.getClass().getName());
             platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
             platformMBeanServer.registerMBean(sc.getBusinessObject(MonitoringResource.class), objectName);
         }
