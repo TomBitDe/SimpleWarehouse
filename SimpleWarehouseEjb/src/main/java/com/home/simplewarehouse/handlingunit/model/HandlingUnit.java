@@ -1,16 +1,20 @@
 package com.home.simplewarehouse.handlingunit.model;
 
+import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.Version;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.util.model.EntityAudit;
+import com.home.simplewarehouse.location.model.Location;
 
 /**
  * Any kind of handling unit.<br>
@@ -18,13 +22,28 @@ import com.home.simplewarehouse.util.model.EntityAudit;
  */
 @Entity
 @Table(name="HANDLING_UNIT")
-public class HandlingUnit extends EntityAudit {
+public class HandlingUnit implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
 
     @Id
-    @Column(name = "ID")
+    @Column(name = "ID", nullable = false, length = 200)
     private String id;
+
+    @Version
+    private int version;
+    
+    @ManyToOne( cascade=CascadeType.PERSIST )
+    private Location location;
+    
+    public HandlingUnit() {
+    	super();
+    }
+    
+    public HandlingUnit(String id) {
+    	super();
+    	this.id = id;
+    }
 
     public String getId() {
     	LOG.debug("id=" + id);
@@ -36,33 +55,36 @@ public class HandlingUnit extends EntityAudit {
     	LOG.debug("id=" + id);
     }
 
+	public int getVersion() {
+		return version;
+	}
+
+	protected void setVersion(int version) {
+		this.version = version;
+	}
+
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
 	@Override
 	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result + Objects.hash(id);
-		
-		return result;
+		return Objects.hash(id, location);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (!super.equals(obj))
+		if (obj == null)
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		HandlingUnit other = (HandlingUnit) obj;
-		
-		return Objects.equals(id, other.id);
-	}
-
-	@Override
-	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("HandlingUnit [id=").append(id).append("]");
-		
-		return builder.toString();
+		return Objects.equals(id, other.id) && Objects.equals(location, other.location);
 	}
 }
