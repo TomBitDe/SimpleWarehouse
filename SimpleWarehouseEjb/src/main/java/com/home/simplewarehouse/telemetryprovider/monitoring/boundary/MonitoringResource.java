@@ -1,4 +1,4 @@
-package com.home.simplewarehouse.telemetryprovider.monitoring.entity;
+package com.home.simplewarehouse.telemetryprovider.monitoring.boundary;
 
 import java.lang.management.ManagementFactory;
 import java.util.ArrayList;
@@ -39,12 +39,15 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
+import com.home.simplewarehouse.telemetryprovider.monitoring.entity.Diagnostics;
+import com.home.simplewarehouse.telemetryprovider.monitoring.entity.Invocation;
+
 @Singleton
 @Startup
 @LocalBean
 @Path("monitoring")
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
-public class MonitoringRessource implements MonitoringRessourceMXBean {
+public class MonitoringResource implements MonitoringResourceMXBean {
 
     private MBeanServer platformMBeanServer;
     private ObjectName objectName = null;
@@ -187,7 +190,7 @@ public class MonitoringRessource implements MonitoringRessourceMXBean {
         try {
             objectName = new ObjectName("GfTestMonitoring:type=" + this.getClass().getName());
             platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
-            platformMBeanServer.registerMBean(sc.getBusinessObject(MonitoringRessource.class), objectName);
+            platformMBeanServer.registerMBean(sc.getBusinessObject(MonitoringResource.class), objectName);
         }
         catch (IllegalStateException | InstanceAlreadyExistsException | MBeanRegistrationException |
         		MalformedObjectNameException | NotCompliantMBeanException e) {

@@ -1,9 +1,11 @@
-package com.home.simplewarehouse.telemetryprovider.monitoring.entity;
+package com.home.simplewarehouse.telemetryprovider.monitoring.boundary;
 
 import java.util.List;
 import java.util.Map;
 
-public interface MonitoringRessourceMXBean {
+import com.home.simplewarehouse.telemetryprovider.monitoring.entity.Invocation;
+
+public interface MonitoringResourceMXBean {
 	List<Invocation> getSlowestMethods();
 	Map<String, String> getDiagnostics();
 	Map<String, Integer> getExceptionStatistics();
