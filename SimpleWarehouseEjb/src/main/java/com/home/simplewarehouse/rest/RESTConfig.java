@@ -1,4 +1,4 @@
-package com.home.simplewarehouse.telemetryprovider.monitoring;
+package com.home.simplewarehouse.rest;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
