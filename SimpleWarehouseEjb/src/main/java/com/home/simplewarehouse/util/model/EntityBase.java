@@ -2,20 +2,25 @@ package com.home.simplewarehouse.util.model;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.MappedSuperclass;
 
 /**
- * Important attributes (content) to track when using entities.
+ * Important attributes (content) for tracking when using entities.
  */
-public class EntityAudit {
+@MappedSuperclass
+public class EntityBase {
     /**
      * The update time stamp of the entity
      */
+    @Basic(optional = false)
     @Column(name = "UPDATE_TS")
     private Timestamp updateTimestamp;
     /**
      * The user id of the user who has done the last update
      */
+    @Basic(optional = false)
     @Column(name = "UPDATE_USER")
     private String updateUserId;
     
@@ -37,8 +42,10 @@ public class EntityAudit {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append("EntityAudit [updateTimestamp=").append(updateTimestamp)
-			.append(", updateUserId=").append(updateUserId)
+		builder.append("EntityAudit [updateTimestamp=")
+		    .append(updateTimestamp)
+			.append(", updateUserId=")
+			.append(updateUserId)
 		    .append("]");
 		
 		return builder.toString();
