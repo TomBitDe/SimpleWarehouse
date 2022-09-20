@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.location.model;
 
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -72,16 +73,21 @@ public class Location implements Serializable {
 	}
 
 	public Set<HandlingUnit> getHandlingUnits() {
-		return handlingUnits;
+		return Collections.unmodifiableSet (handlingUnits);
 	}
 
-	public void setHandlingUnits(Set<HandlingUnit> handlingUnits) {
-		this.handlingUnits = handlingUnits;
+	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
+		handlingUnit.setLocation(this);
+		
+		return this.handlingUnits.add(handlingUnit);
 	}
 	
-	public void addHandlingUnit(HandlingUnit handlingUnit) {
-		handlingUnit.setLocation(this);
-		this.handlingUnits.add(handlingUnit);
+	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
+		boolean b = handlingUnits.remove( handlingUnit );
+	    
+		if ( b ) handlingUnit.setLocation(null);
+	    
+		return b;
 	}
 
 	@Override
@@ -100,6 +106,4 @@ public class Location implements Serializable {
 		Location other = (Location) obj;
 		return Objects.equals(handlingUnits, other.handlingUnits) && Objects.equals(id, other.id);
 	}
-	
-	
 }
