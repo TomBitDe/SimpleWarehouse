@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.location.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Objects;
@@ -19,6 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.handlingunit.model.HandlingUnit;
+import com.home.simplewarehouse.util.model.EntityBase;
 
 /**
  * Any storage location.<br>
@@ -31,7 +33,7 @@ import com.home.simplewarehouse.handlingunit.model.HandlingUnit;
  */
 @Entity
 @Table(name="LOCATION")
-public class Location implements Serializable {
+public class Location extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Location.class);
 
@@ -52,6 +54,22 @@ public class Location implements Serializable {
     public Location(String id) {
     	super();
     	this.id = id;
+    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
+    	super.setUpdateUserId("System");
+    }
+    
+    public Location(String id, String user) {
+    	super();
+    	this.id = id;
+    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
+    	super.setUpdateUserId(user);
+    }
+    
+    public Location(String id, String user, Timestamp timestamp) {
+    	super();
+    	this.id = id;
+    	super.setUpdateTimestamp(timestamp);
+    	super.setUpdateUserId(user);
     }
     
     public String getId() {

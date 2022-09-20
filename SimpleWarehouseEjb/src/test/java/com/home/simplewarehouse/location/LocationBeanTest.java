@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -25,6 +26,7 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.location.model.Location;
 import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.util.model.EntityBase;
 
 /**
  * Test the location bean.
@@ -60,20 +62,22 @@ public class LocationBeanTest {
 	 */
 	@Test
 	@InSequence(0)
-	public void createAndGetById() {
-		LOG.info("Test createAndGetById");
+	public void create_getById() {
+		LOG.info("Test create_getById");
 
 		Location expLocation = new Location("A");
 
 		locationLocal.create(expLocation);
 		Location location = locationLocal.getById(expLocation.getId());
 		assertEquals(expLocation, location);
+		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
+		assertFalse(location.getUpdateTimestamp() == null);
 	}
 	
 	@Test
 	@InSequence(1)
-	public void deleteById() {
-		LOG.info("Test deleteById");
+	public void deleteById_getById_create() {
+		LOG.info("Test deleteById_getById_create");
 
 		if (locationLocal.getById("A") == null) { 
 		    locationLocal.create(new Location("A"));
@@ -89,6 +93,24 @@ public class LocationBeanTest {
 		
 		// Delete returns null because the location does not exist
 		assertNull(locationLocal.delete(location.getId()));
+		
+		locationLocal.create(new Location("A", "Test"));
+		location = locationLocal.getById("A");
+		
+		assertEquals("Test", location.getUpdateUserId());
+		assertFalse(location.getUpdateTimestamp() == null);
+		
+		location = locationLocal.delete(location.getId());
+		
+		Timestamp ts = new Timestamp(System.currentTimeMillis());
+		
+		locationLocal.create(new Location("A", "Test", ts));
+		location = locationLocal.getById("A");
+		
+		assertEquals("Test", location.getUpdateUserId());
+		assertEquals(ts, location.getUpdateTimestamp());
+		
+		location = locationLocal.delete(location.getId());
 	}
 
 	@Test
@@ -127,11 +149,11 @@ public class LocationBeanTest {
 		assertTrue(locations.isEmpty());
 		
 		// Prepare some locations
-		locationLocal.create(new Location("A"));
-		locationLocal.create(new Location("B"));
-		locationLocal.create(new Location("C"));
-		locationLocal.create(new Location("D"));
-		locationLocal.create(new Location("E"));
+		locationLocal.create(new Location("A", "Test"));
+		locationLocal.create(new Location("B", "Test"));
+		locationLocal.create(new Location("C", "Test"));
+		locationLocal.create(new Location("D", "Test"));
+		locationLocal.create(new Location("E", "Test"));
 
 		// Another test
 		locations = locationLocal.getAll();

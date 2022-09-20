@@ -11,6 +11,8 @@ import javax.persistence.MappedSuperclass;
  */
 @MappedSuperclass
 public class EntityBase {
+	public static final String USER_DEFAULT = "System";
+	
     /**
      * The update time stamp of the entity
      */
@@ -28,14 +30,23 @@ public class EntityBase {
 		return updateTimestamp;
 	}
 	public void setUpdateTimestamp(Timestamp updateTimestamp) {
-		this.updateTimestamp = updateTimestamp;
+		if (updateTimestamp == null) {
+			updateTimestamp = new Timestamp(System.currentTimeMillis());		}
+		else {
+			this.updateTimestamp = updateTimestamp;
+		}
 	}
 	
 	public String getUpdateUserId() {
 		return updateUserId;
 	}
 	public void setUpdateUserId(String updateUserId) {
-		this.updateUserId = updateUserId;
+		if (updateUserId == null) {
+			this.updateUserId = USER_DEFAULT;
+		}
+		else {
+		    this.updateUserId = updateUserId;
+		}
 	}
 	
 	@Override
