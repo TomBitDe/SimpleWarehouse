@@ -6,6 +6,7 @@ import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
+import javax.interceptor.Interceptors;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
@@ -14,10 +15,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.handlingunit.model.HandlingUnit;
+import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 
 @Stateless
 @Local(HandlingUnitLocal.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
+@Interceptors(PerformanceAuditor.class)
 public class HandlingUnitBean implements HandlingUnitLocal {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitBean.class);
 	

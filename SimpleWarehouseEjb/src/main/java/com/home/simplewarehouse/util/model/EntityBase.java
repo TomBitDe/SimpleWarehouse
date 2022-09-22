@@ -26,6 +26,11 @@ public class EntityBase {
     @Column(name = "UPDATE_USER")
     private String updateUserId;
     
+    public EntityBase() {
+    	this.updateTimestamp = new Timestamp(System.currentTimeMillis());
+    	this.updateUserId = USER_DEFAULT;
+    }
+    
 	public Timestamp getUpdateTimestamp() {
 		return updateTimestamp;
 	}

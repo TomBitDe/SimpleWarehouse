@@ -124,4 +124,21 @@ public class Location extends EntityBase implements Serializable {
 		Location other = (Location) obj;
 		return Objects.equals(handlingUnits, other.handlingUnits) && Objects.equals(id, other.id);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Location [id=")
+		    .append(id)
+		    .append(", version=")
+		    .append(version)
+		    .append(", handlingUnits=")
+			.append(handlingUnits)
+			.append(", toString()=")
+			.append(super.toString())
+			.append("]");
+		
+		return builder.toString();
+	}
+	
 }

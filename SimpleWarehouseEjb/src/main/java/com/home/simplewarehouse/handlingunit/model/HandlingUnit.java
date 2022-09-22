@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.handlingunit.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
@@ -15,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.location.model.Location;
+import com.home.simplewarehouse.util.model.EntityBase;
 
 /**
  * Any kind of handling unit.<br>
@@ -22,7 +24,7 @@ import com.home.simplewarehouse.location.model.Location;
  */
 @Entity
 @Table(name="HANDLING_UNIT")
-public class HandlingUnit implements Serializable {
+public class HandlingUnit extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
 
@@ -43,6 +45,20 @@ public class HandlingUnit implements Serializable {
     public HandlingUnit(String id) {
     	super();
     	this.id = id;
+    }
+
+    public HandlingUnit(String id, String user) {
+    	super();
+    	this.id = id;
+    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
+    	super.setUpdateUserId(user);
+    }
+    
+    public HandlingUnit(String id, String user, Timestamp timestamp) {
+    	super();
+    	this.id = id;
+    	super.setUpdateTimestamp(timestamp);
+    	super.setUpdateUserId(user);
     }
 
     public String getId() {
@@ -87,4 +103,22 @@ public class HandlingUnit implements Serializable {
 		HandlingUnit other = (HandlingUnit) obj;
 		return Objects.equals(id, other.id) && Objects.equals(location, other.location);
 	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("HandlingUnit [id=")
+		    .append(id)
+		    .append(", version=")
+		    .append(version)
+		    .append(", location=")
+			.append(location)
+			.append(", toString()=")
+			.append(super.toString())			
+			.append("]");
+		
+		return builder.toString();
+	}
+	
+	
 }

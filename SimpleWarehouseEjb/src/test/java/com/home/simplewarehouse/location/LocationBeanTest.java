@@ -68,7 +68,9 @@ public class LocationBeanTest {
 		Location expLocation = new Location("A");
 
 		locationLocal.create(expLocation);
-		Location location = locationLocal.getById(expLocation.getId());
+		Location location = locationLocal.getById(expLocation.getId());		
+		LOG.info(location);
+		
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
 		assertFalse(location.getUpdateTimestamp() == null);
@@ -84,6 +86,8 @@ public class LocationBeanTest {
 		}
 		
 		Location location = locationLocal.getById("A");
+		LOG.info(location);
+		
 		assertEquals("A", location.getId());
 		
 		// Delete returns the deleted location
@@ -96,7 +100,8 @@ public class LocationBeanTest {
 		
 		locationLocal.create(new Location("A", "Test"));
 		location = locationLocal.getById("A");
-		
+		LOG.info(location);
+				
 		assertEquals("Test", location.getUpdateUserId());
 		assertFalse(location.getUpdateTimestamp() == null);
 		
@@ -106,6 +111,7 @@ public class LocationBeanTest {
 		
 		locationLocal.create(new Location("A", "Test", ts));
 		location = locationLocal.getById("A");
+		LOG.info(location);
 		
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
@@ -157,6 +163,7 @@ public class LocationBeanTest {
 
 		// Another test
 		locations = locationLocal.getAll();
+		locations.stream().forEach(l -> l.toString());
 
 		assertFalse(locations.isEmpty());
 		assertEquals(5, locations.size());
