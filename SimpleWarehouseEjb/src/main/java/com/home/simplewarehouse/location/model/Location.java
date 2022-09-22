@@ -134,7 +134,7 @@ public class Location extends EntityBase implements Serializable {
 		    .append(version)
 		    .append(", handlingUnits=")
 			.append(handlingUnits)
-			.append(", toString()=")
+			.append(", ")
 			.append(super.toString())
 			.append("]");
 		

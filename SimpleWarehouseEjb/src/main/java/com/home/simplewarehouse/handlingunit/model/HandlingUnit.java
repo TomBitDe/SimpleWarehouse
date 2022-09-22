@@ -113,7 +113,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		    .append(version)
 		    .append(", location=")
 			.append(location)
-			.append(", toString()=")
+			.append(", ")
 			.append(super.toString())			
 			.append("]");
 		
