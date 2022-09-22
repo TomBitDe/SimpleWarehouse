@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="error" strict="true"
+	name="XMLConfigTest" packages="org.apache.logging.log4j.test">
+	<Properties>
+		<Property name="logpath">../logs</Property>
+	</Properties>
+
+	<Appenders>
+		<Appender type="Console" name="STDOUT">
+			<Layout type="PatternLayout" pattern="%d{HH:mm:ss,SSS} [%highlight{%-5level}] %C{1.}.%M() - %msg%n%throwable{short.lineNumber}" />
+		</Appender>
+		<Appender type="File" name="FileAll" fileName="${logpath}/GfTest-All.log" immediateFlush="true" append="true">
+			<Layout type="PatternLayout" pattern="%d{yyyy.MM.dd HH:mm:ss,SSS} [%highlight{%-5level}] %C{1.}.%M() - %msg%n%throwable{short.lineNumber}" />
+		</Appender>
+		<Appender type="File" name="FilePart" fileName="${logpath}/GfTest-Part.log" immediateFlush="true" append="true">
+			<Layout type="PatternLayout" pattern="%d{yyyy.MM.dd HH:mm:ss,SSS} [%highlight{%-5level}] %C{1.}.%M() - %msg%n%throwable{short.lineNumber}" />
+		</Appender>
+	</Appenders>
+
+	<Loggers>
+		<Logger name="com.home.simplewarehouse.location" level="info" additivity="false">
+			<AppenderRef ref="FilePart" />
+		</Logger>
+
+		<Logger name="com.home.simplewarehouse" level="info" additivity="false">
+			<AppenderRef ref="FileAll" />
+		</Logger>
+
+		<Root level="info">
+		    <AppenderRef ref="STDOUT" />
+		    <!--
+			<AppenderRef ref="FileAll" />
+			<AppenderRef ref="FilePart" />
+			-->
+		</Root>
+	</Loggers>
+
+</Configuration>
