@@ -1,4 +1,4 @@
-package com.home.simplewarehouse.handlingunit.model;
+package com.home.simplewarehouse.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -14,9 +14,6 @@ import javax.persistence.Version;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.home.simplewarehouse.location.model.Location;
-import com.home.simplewarehouse.util.model.EntityBase;
 
 /**
  * Any kind of handling unit.<br>
@@ -83,13 +80,42 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		return location;
 	}
 
-	public void setLocation(Location location) {
+	protected void setLocation(Location location) {
 		this.location = location;
+	}
+	
+	public void dropTo(Location location) {
+		if (location == null) {
+			throw new IllegalArgumentException("Location is null");
+		}
+		else {
+			setLocation(location);
+			location.addHandlingUnit(this);
+		}
+	}
+	
+	public void pickFrom(Location location) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+		if (location == null) {
+			throw new IllegalArgumentException("Location is null");
+		}
+		if (location.getHandlingUnits() == null) {
+			throw new IllegalStateException("Location has illegal state (HandlingUnits is null)");
+		}
+		if (location.getHandlingUnits().isEmpty()) {
+			throw new LocationIsEmptyException("Location [" + location.getId() + "] is EMPTY");
+		}
+		
+		if (! location.removeHandlingUnit(this)) {
+			throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getId() + ']');
+		}
+		
+		setLocation(null);
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(id, location);
+		// Only id; this is a must. Otherwise stack overflow
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -101,7 +127,9 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		HandlingUnit other = (HandlingUnit) obj;
-		return Objects.equals(id, other.id) && Objects.equals(location, other.location);
+		
+		// Only id; this is a must. Otherwise stack overflow
+		return Objects.equals(id, other.id);
 	}
 
 	@Override

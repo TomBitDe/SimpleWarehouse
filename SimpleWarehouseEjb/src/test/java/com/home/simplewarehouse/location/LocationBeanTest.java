@@ -23,10 +23,10 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.home.simplewarehouse.location.model.Location;
+import com.home.simplewarehouse.model.EntityBase;
+import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.telemetryprovider.monitoring.boundary.MonitoringResource;
-import com.home.simplewarehouse.util.model.EntityBase;
 
 /**
  * Test the location bean.

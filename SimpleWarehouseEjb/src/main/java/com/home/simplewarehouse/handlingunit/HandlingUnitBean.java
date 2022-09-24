@@ -14,7 +14,7 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.handlingunit.model.HandlingUnit;
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 
 @Stateless
@@ -58,7 +58,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		else {
 			LOG.debug("Id <" + id + "> not found");
 		}
-		LOG.trace("<-- delete(" + id + ')');
+		LOG.trace("<-- delete(" + id + ") returns " + handlingUnit);
 
 		return handlingUnit;
 	}
@@ -71,11 +71,11 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 
 			HandlingUnit oldHandlingUnit = delete(handlingUnit.getId());
 
-			LOG.trace("<-- delete()");
+			LOG.trace("<-- delete() returns " + handlingUnit);
 
 			return oldHandlingUnit;
 		}
-		LOG.trace("<-- delete()");
+		LOG.trace("<-- delete() returns null");
 
 		return null;
 	}
@@ -101,5 +101,5 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		LOG.trace("<-- getAll()");
 
 		return handlingUnit;
-	}	
+	}
 }

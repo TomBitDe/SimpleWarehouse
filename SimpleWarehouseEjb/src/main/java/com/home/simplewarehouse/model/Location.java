@@ -1,4 +1,4 @@
-package com.home.simplewarehouse.location.model;
+package com.home.simplewarehouse.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
@@ -18,9 +18,6 @@ import javax.persistence.Version;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-
-import com.home.simplewarehouse.handlingunit.model.HandlingUnit;
-import com.home.simplewarehouse.util.model.EntityBase;
 
 /**
  * Any storage location.<br>
@@ -110,7 +107,8 @@ public class Location extends EntityBase implements Serializable {
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(handlingUnits, id);
+		// Only id; this is a must. Otherwise stack overflow
+		return Objects.hash(id);
 	}
 
 	@Override
@@ -122,7 +120,9 @@ public class Location extends EntityBase implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Location other = (Location) obj;
-		return Objects.equals(handlingUnits, other.handlingUnits) && Objects.equals(id, other.id);
+		
+		// Only id; this is a must. Otherwise stack overflow
+		return Objects.equals(id, other.id);
 	}
 
 	@Override

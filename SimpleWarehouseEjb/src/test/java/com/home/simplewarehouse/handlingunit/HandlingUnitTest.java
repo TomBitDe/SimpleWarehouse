@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 
@@ -19,10 +20,17 @@ import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.home.simplewarehouse.handlingunit.model.HandlingUnit;
+import com.home.simplewarehouse.location.LocationBean;
+import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.HandlingUnitNotOnLocationException;
+import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LocationIsEmptyException;
 import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -36,6 +44,9 @@ public class HandlingUnitTest {
 	@EJB
 	HandlingUnitLocal handlingUnitLocal;
 	
+	@EJB
+	LocationLocal locationLocal;
+	
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
@@ -46,6 +57,7 @@ public class HandlingUnitTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
 						HandlingUnitLocal.class, HandlingUnitBean.class,
+						LocationLocal.class, LocationBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -53,6 +65,24 @@ public class HandlingUnitTest {
 		LOG.debug(archive.toString(true));
 
 		return archive;
+	}
+	
+	@Before
+	public void beforeTest() {
+		
+	}
+	
+	@After
+	public void afterTest( ) {
+		// Cleanup locations
+		List<Location> locations = locationLocal.getAll();
+		
+		locations.stream().forEach(l -> locationLocal.delete(l));
+		
+		// Cleanup handling units
+		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
+		
+		handlingUnits.stream().forEach(h -> handlingUnitLocal.delete(h));		
 	}
 
 	/**
@@ -62,6 +92,8 @@ public class HandlingUnitTest {
 	@InSequence(0)
 	public void createAndGetById() {
 		LOG.info("Test createAndGetById");
+
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
 		HandlingUnit expHandlingUnit = new HandlingUnit("1");
 
@@ -74,9 +106,9 @@ public class HandlingUnitTest {
 	public void deleteById() {
 		LOG.info("Test deleteById");
 
-		if (handlingUnitLocal.getById("1") == null) { 
-		    handlingUnitLocal.create(new HandlingUnit("1"));
-		}
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+
+		handlingUnitLocal.create(new HandlingUnit("1"));
 		
 		HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
 		assertEquals("1", handlingUnit.getId());
@@ -95,11 +127,11 @@ public class HandlingUnitTest {
 	public void deleteByHandlingUnit() {
 		LOG.info("Test deleteByHandlingUnit");
 
-		if (handlingUnitLocal.getById("1") == null) { 
-		    handlingUnitLocal.create(new HandlingUnit("1"));
-		}
-		
-		HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+
+		handlingUnitLocal.create(new HandlingUnit("1"));
+
+	    HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
 		assertEquals("1", handlingUnit.getId());
 		
 		// Delete returns the deleted handlingUnit
@@ -116,14 +148,7 @@ public class HandlingUnitTest {
 	public void getAll() {
 		LOG.info("Test getAll");
 		
-		// Cleanup
-		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
-		
-		handlingUnits.stream().forEach(l -> handlingUnitLocal.delete(l));
-		
-		handlingUnits = handlingUnitLocal.getAll();
-		
-		assertTrue(handlingUnits.isEmpty());
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		
 		// Prepare some handling units
 		handlingUnitLocal.create(new HandlingUnit("1"));
@@ -133,12 +158,163 @@ public class HandlingUnitTest {
 		handlingUnitLocal.create(new HandlingUnit("5"));
 
 		// Another test
-		handlingUnits = handlingUnitLocal.getAll();
+		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
 
 		assertFalse(handlingUnits.isEmpty());
 		assertEquals(5, handlingUnits.size());
+	}
+	
+	@Test
+	@InSequence(4)
+	public void dropTo() {
+		LOG.info("Test dropTo");
 		
-		//Cleanup
-		handlingUnits.stream().forEach(l -> handlingUnitLocal.delete(l));
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+		
+		// Prepare a handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("1"));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		Location lOA = locationLocal.getById("A");
+		
+		// Now drop
+		hU1.dropTo(lOA);
+		
+		// Handling Unit is on location now
+		assertTrue(hU1.getLocation().equals(lOA));
+		
+		assertFalse(lOA.getHandlingUnits().isEmpty());
+		assertEquals(1, lOA.getHandlingUnits().size());
+		
+		// Location must contain handling unit now
+		assertTrue(lOA.getHandlingUnits().contains(hU1));	
+	}
+	
+	@Test(expected = IllegalArgumentException.class)
+	@InSequence(5)
+	public void dropToNull() {
+		LOG.info("Test dropToNull");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+		
+		// Prepare a handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("1"));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		Location lOA = null;
+		
+		// Now drop
+		hU1.dropTo(lOA);
+	}
+	
+	@Test
+	@InSequence(6)
+	public void pickFrom() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+		LOG.info("Test pickFrom");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+		
+		// Prepare a handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("1"));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		Location lOA = locationLocal.getById("A");
+		
+		// To prepare the pick do a drop before
+		hU1.dropTo(lOA);
+		
+		// Handling Unit is on location now
+		assertTrue(hU1.getLocation().equals(lOA));
+		
+		Set<HandlingUnit> handlingUnits = lOA.getHandlingUnits();
+		assertFalse(handlingUnits.isEmpty());
+		assertEquals(1, handlingUnits.size());
+		
+		// Location must contain handling unit now
+		assertTrue(handlingUnits.contains(hU1));
+		
+		// Now do the pick
+		hU1.pickFrom(lOA);
+		
+		assertNull(hU1.getLocation());
+		assertFalse(lOA.getHandlingUnits().contains(hU1));
+	}
+	
+	@Test(expected = LocationIsEmptyException.class)
+	@InSequence(7)
+	public void pickFromEmptyLocation() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+		LOG.info("Test pickFromEmptyLocation");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+				
+		// Prepare a handling unit
+		handlingUnitLocal.create(new HandlingUnit("1"));
+		
+		// Pick now
+		HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
+		
+		// Location is EMPTY because just newly created
+		handlingUnit.pickFrom(new Location("A"));
+	}
+
+	@Test(expected = HandlingUnitNotOnLocationException.class)
+	@InSequence(8)
+	public void pickFromLocationNotContaining() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+		LOG.info("Test pickFromLocationNotContaining");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+				
+		// Prepare handling units and a location
+		handlingUnitLocal.create(new HandlingUnit("1"));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		Location lOA = locationLocal.getById("A");
+		
+		hU1.dropTo(lOA);
+		
+		handlingUnitLocal.create(new HandlingUnit("2"));
+
+		// Pick now
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		
+		// Location contains hU1 but not hU2
+		hU2.pickFrom(lOA);
+	}
+	
+	@Test
+	@InSequence(9)
+	public void deleteHandlingUnitOnLocation() {
+		LOG.info("Test deleteHandlingUnitOnLocation");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		// Prepare handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("1"));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		Location lOA = locationLocal.getById("A");
+		
+		// Now delete a handling unit that is related to a location
+		handlingUnitLocal.delete(hU1);
+		
+		// Check the location
+		assertFalse(lOA.getHandlingUnits().contains(hU1));
+		assertTrue(lOA.getHandlingUnits().isEmpty());
 	}
 }

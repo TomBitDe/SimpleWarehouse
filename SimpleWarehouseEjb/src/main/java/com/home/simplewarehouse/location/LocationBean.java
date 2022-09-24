@@ -14,7 +14,7 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.location.model.Location;
+import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 
 @Stateless
@@ -58,7 +58,7 @@ public class LocationBean implements LocationLocal {
 		else {
 			LOG.debug("Id <" + id + "> not found");
 		}
-		LOG.trace("<-- delete(" + id + ')');
+		LOG.trace("<-- delete(" + id + ") returns " + location);
 
 		return location;
 	}
@@ -71,11 +71,11 @@ public class LocationBean implements LocationLocal {
 
 			Location oldLocation = delete(location.getId());
 
-			LOG.trace("<-- delete()");
+			LOG.trace("<-- delete() returns " + location);
 
 			return oldLocation;
 		}
-		LOG.trace("<-- delete()");
+		LOG.trace("<-- delete() returns null");
 
 		return null;
 	}

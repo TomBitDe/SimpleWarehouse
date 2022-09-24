@@ -3,8 +3,8 @@
 	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_2.xsd"
 	version="2.2" xmlns="http://xmlns.jcp.org/xml/ns/persistence">
 	<persistence-unit name="SimpleWarehouse-PU" transaction-type="JTA">
-		<class>com.home.simplewarehouse.handlingunit.model.HandlingUnit</class>
-		<class>com.home.simplewarehouse.location.model.Location</class>
+		<class>com.home.simplewarehouse.model.HandlingUnit</class>
+		<class>com.home.simplewarehouse.model.Location</class>
 		<class>com.home.simplewarehouse.singleton.simplecache.model.ApplConfig</class>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />

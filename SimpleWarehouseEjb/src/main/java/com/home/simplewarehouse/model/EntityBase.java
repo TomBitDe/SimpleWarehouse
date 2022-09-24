@@ -1,4 +1,4 @@
-package com.home.simplewarehouse.util.model;
+package com.home.simplewarehouse.model;
 
 import java.sql.Timestamp;
 

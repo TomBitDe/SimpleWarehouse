@@ -2,7 +2,7 @@ package com.home.simplewarehouse.location;
 
 import java.util.List;
 
-import com.home.simplewarehouse.location.model.Location;
+import com.home.simplewarehouse.model.Location;
 
 public interface LocationLocal {
 	public void create(Location location);
