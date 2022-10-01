@@ -35,13 +35,15 @@ public class Location extends EntityBase implements Serializable {
     private static final Logger LOG = LogManager.getLogger(Location.class);
 
     @Id
-    @Column(name = "ID", nullable = false, length = 200)
+    @Column(name = "LOCATION_ID", nullable = false, length = 200)
     private String id;
     
     @Version
     private int version;
     
-    @OneToMany( mappedBy="location", cascade=CascadeType.PERSIST, fetch=FetchType.EAGER )
+    @OneToMany( mappedBy="location"
+    		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
+    		, fetch=FetchType.EAGER )
     private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
     public Location() {
@@ -124,6 +126,22 @@ public class Location extends EntityBase implements Serializable {
 		// Only id; this is a must. Otherwise stack overflow
 		return Objects.equals(id, other.id);
 	}
+	
+	private String toString(Set<HandlingUnit> handlingUnits) {
+		StringBuilder builder = new StringBuilder();
+
+		builder.append("[");
+		
+		if (handlingUnits == null) {
+			builder.append("null");
+		}
+		else {
+		    handlingUnits.stream().forEach(item -> builder.append(item.getId()).append(" "));
+		}
+		builder.append("]");
+		
+		return builder.toString();
+	}
 
 	@Override
 	public String toString() {
@@ -133,7 +151,7 @@ public class Location extends EntityBase implements Serializable {
 		    .append(", version=")
 		    .append(version)
 		    .append(", handlingUnits=")
-			.append(handlingUnits)
+		    .append(toString(handlingUnits))
 			.append(", ")
 			.append(super.toString())
 			.append("]");

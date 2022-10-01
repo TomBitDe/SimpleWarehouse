@@ -6,8 +6,7 @@ import com.home.simplewarehouse.model.HandlingUnit;
 
 public interface HandlingUnitLocal {
 	public void create(HandlingUnit handlingUnit);
-	public HandlingUnit delete(String id);
-	public HandlingUnit delete(HandlingUnit handlingUnit);
+	public void delete(HandlingUnit handlingUnit);
 	public HandlingUnit getById(String id);
 	public List<HandlingUnit> getAll();
 }

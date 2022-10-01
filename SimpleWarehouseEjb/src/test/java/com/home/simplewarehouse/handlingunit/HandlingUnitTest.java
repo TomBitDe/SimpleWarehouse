@@ -8,8 +8,6 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.List;
-import java.util.Set;
-
 import javax.ejb.EJB;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +20,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -100,26 +99,8 @@ public class HandlingUnitTest {
 		handlingUnitLocal.create(expHandlingUnit);
 		HandlingUnit handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
 		assertEquals(expHandlingUnit, handlingUnit);
-	}
-	@Test
-	@InSequence(1)
-	public void deleteById() {
-		LOG.info("Test deleteById");
-
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-
-		handlingUnitLocal.create(new HandlingUnit("1"));
 		
-		HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
-		assertEquals("1", handlingUnit.getId());
-		
-		// Delete returns the deleted handlingUnit
-		handlingUnit = handlingUnitLocal.delete(handlingUnit.getId());
-		assertNotNull(handlingUnit);
-		assertEquals("1", handlingUnit.getId());
-		
-		// Delete returns null because the handlingUnit does not exist
-		assertNull(handlingUnitLocal.delete(handlingUnit.getId()));
+		LOG.info(handlingUnit);
 	}
 
 	@Test
@@ -135,12 +116,10 @@ public class HandlingUnitTest {
 		assertEquals("1", handlingUnit.getId());
 		
 		// Delete returns the deleted handlingUnit
-		handlingUnit = handlingUnitLocal.delete(handlingUnit);
+		handlingUnitLocal.delete(handlingUnit);
 		assertNotNull(handlingUnit);
 		assertEquals("1", handlingUnit.getId());
-		
-		// Delete returns null because the handlingUnit does not exist
-		assertNull(handlingUnitLocal.delete(handlingUnit));
+		LOG.info(handlingUnit);
 	}
 	
 	@Test
@@ -183,6 +162,8 @@ public class HandlingUnitTest {
 		// Now drop
 		hU1.dropTo(lOA);
 		
+		LOG.info(hU1);
+		
 		// Handling Unit is on location now
 		assertTrue(hU1.getLocation().equals(lOA));
 		
@@ -190,7 +171,9 @@ public class HandlingUnitTest {
 		assertEquals(1, lOA.getHandlingUnits().size());
 		
 		// Location must contain handling unit now
-		assertTrue(lOA.getHandlingUnits().contains(hU1));	
+		assertTrue(lOA.getHandlingUnits().contains(hU1));
+		
+		LOG.info(lOA);
 	}
 	
 	@Test(expected = IllegalArgumentException.class)
@@ -235,18 +218,22 @@ public class HandlingUnitTest {
 		// Handling Unit is on location now
 		assertTrue(hU1.getLocation().equals(lOA));
 		
-		Set<HandlingUnit> handlingUnits = lOA.getHandlingUnits();
-		assertFalse(handlingUnits.isEmpty());
-		assertEquals(1, handlingUnits.size());
+		assertFalse(lOA.getHandlingUnits().isEmpty());
+		assertEquals(1, lOA.getHandlingUnits().size());
 		
 		// Location must contain handling unit now
-		assertTrue(handlingUnits.contains(hU1));
+		assertTrue(lOA.getHandlingUnits().contains(hU1));
 		
+		LOG.info(hU1);
+		LOG.info(lOA);
+
 		// Now do the pick
 		hU1.pickFrom(lOA);
 		
 		assertNull(hU1.getLocation());
 		assertFalse(lOA.getHandlingUnits().contains(hU1));
+		LOG.info(hU1);
+		LOG.info(lOA);
 	}
 	
 	@Test(expected = LocationIsEmptyException.class)
@@ -290,6 +277,8 @@ public class HandlingUnitTest {
 		// Pick now
 		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		
+		LOG.info(hU2);
+		
 		// Location contains hU1 but not hU2
 		hU2.pickFrom(lOA);
 	}
@@ -304,17 +293,29 @@ public class HandlingUnitTest {
 
 		// Prepare handling unit and a location
 		handlingUnitLocal.create(new HandlingUnit("1"));
+		handlingUnitLocal.create(new HandlingUnit("2"));
 		
 		locationLocal.create(new Location("A"));
 		
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		Location lOA = locationLocal.getById("A");
+		
+		// Drop to make a relation
+		hU1.dropTo(lOA);
+		hU2.dropTo(lOA);
 		
 		// Now delete a handling unit that is related to a location
 		handlingUnitLocal.delete(hU1);
 		
+		LOG.info(hU1);
+		
+		lOA = locationLocal.getById("A");
+		
 		// Check the location
+		assertNotNull(lOA);
+		assertFalse(lOA.getHandlingUnits().isEmpty());
+		assertTrue(lOA.getHandlingUnits().contains(hU2));
 		assertFalse(lOA.getHandlingUnits().contains(hU1));
-		assertTrue(lOA.getHandlingUnits().isEmpty());
 	}
 }

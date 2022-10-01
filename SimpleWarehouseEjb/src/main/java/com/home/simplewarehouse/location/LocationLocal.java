@@ -6,8 +6,7 @@ import com.home.simplewarehouse.model.Location;
 
 public interface LocationLocal {
 	public void create(Location location);
-	public Location delete(String id);
-	public Location delete(Location location);
+	public void delete(Location location);
 	public Location getById(String id);
 	public List<Location> getAll();
 }

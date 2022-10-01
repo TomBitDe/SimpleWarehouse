@@ -18,11 +18,11 @@
 	</Appenders>
 
 	<Loggers>
-		<Logger name="com.home.simplewarehouse.location" level="trace" additivity="false">
+		<Logger name="com.home.simplewarehouse.location" level="info" additivity="false">
 			<AppenderRef ref="FilePart" />
 		</Logger>
 
-		<Logger name="com.home.simplewarehouse" level="trace" additivity="false">
+		<Logger name="com.home.simplewarehouse" level="info" additivity="false">
 			<AppenderRef ref="FileAll" />
 		</Logger>
 

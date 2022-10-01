@@ -2,6 +2,7 @@ package com.home.simplewarehouse.location;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -14,6 +15,8 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -26,6 +29,9 @@ public class LocationBean implements LocationLocal {
 	
 	@PersistenceContext
 	private EntityManager em;
+	
+	@EJB
+	private HandlingUnitLocal handlingUnitLocal;
 	
 	public LocationBean() {
 		super();
@@ -44,40 +50,30 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public Location delete(String id) {
-		LOG.trace("--> delete(" + id + ')');
+	public void delete(Location location) {
+		LOG.trace("--> delete(" + location + ')');
 
-		Location location = getById(id);
+		if (location != null && location.getId() != null) {
+			if (!em.contains(location)) {
+				location = em.merge(location);
+			}
+			
+			for (HandlingUnit item : location.getHandlingUnits()) {
+				item.setLocation(null);
+				em.persist(item);
+				em.flush();
+			}
 
-		if (location != null) {
 			em.remove(location);
 			em.flush();
 
 			LOG.debug("deleted: " + location);
-		}
+		} 
 		else {
-			LOG.debug("Id <" + id + "> not found");
+			LOG.debug("Location == null or Id == null");
 		}
-		LOG.trace("<-- delete(" + id + ") returns " + location);
 
-		return location;
-	}
-
-	@Override
-	public Location delete(Location location) {
-		LOG.trace("--> delete(" + location + ')');
-
-		if (location != null && location.getId() != null) {
-
-			Location oldLocation = delete(location.getId());
-
-			LOG.trace("<-- delete() returns " + location);
-
-			return oldLocation;
-		}
-		LOG.trace("<-- delete() returns null");
-
-		return null;
+		LOG.trace("<-- delete()");
 	}
 
 	@Override

@@ -2,6 +2,7 @@ package com.home.simplewarehouse.handlingunit;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -14,6 +15,7 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -26,6 +28,9 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	
 	@PersistenceContext
 	private EntityManager em;
+	
+	@EJB
+	private LocationLocal locationLocal;
 
 	public HandlingUnitBean() {
 		super();
@@ -44,40 +49,23 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public HandlingUnit delete(String id) {
-		LOG.trace("--> delete(" + id + ')');
-
-		HandlingUnit handlingUnit = getById(id);
-
-		if (handlingUnit != null) {
-			em.remove(handlingUnit);
-			em.flush();
-
-			LOG.debug("deleted: " + handlingUnit);
-		}
-		else {
-			LOG.debug("Id <" + id + "> not found");
-		}
-		LOG.trace("<-- delete(" + id + ") returns " + handlingUnit);
-
-		return handlingUnit;
-	}
-
-	@Override
-	public HandlingUnit delete(HandlingUnit handlingUnit) {
+	public void delete(HandlingUnit handlingUnit) {
 		LOG.trace("--> delete(" + handlingUnit + ')');
 
 		if (handlingUnit != null && handlingUnit.getId() != null) {
+			if (!em.contains(handlingUnit)) {
+				handlingUnit = em.merge(handlingUnit);
+			}
+			
+			if (handlingUnit.getLocation() != null) {
+			    handlingUnit.getLocation().removeHandlingUnit(handlingUnit);
+			}
+			
+			em.remove(handlingUnit);
+			em.flush();
 
-			HandlingUnit oldHandlingUnit = delete(handlingUnit.getId());
-
-			LOG.trace("<-- delete() returns " + handlingUnit);
-
-			return oldHandlingUnit;
 		}
-		LOG.trace("<-- delete() returns null");
-
-		return null;
+		LOG.trace("<-- delete()");
 	}
 
 	@Override

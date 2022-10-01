@@ -58,11 +58,10 @@ public class EntityBase {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append("EntityAudit [updateTimestamp=")
+		builder.append("updateTimestamp=")
 		    .append(updateTimestamp)
 			.append(", updateUserId=")
-			.append(updateUserId)
-		    .append("]");
+			.append(updateUserId);
 		
 		return builder.toString();
 	}

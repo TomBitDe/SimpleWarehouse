@@ -7,7 +7,9 @@ import java.util.Objects;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -32,7 +34,10 @@ public class HandlingUnit extends EntityBase implements Serializable {
     @Version
     private int version;
     
-    @ManyToOne( cascade=CascadeType.PERSIST )
+    @ManyToOne(targetEntity = Location.class
+    		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
+    		, fetch = FetchType.LAZY) // LAZY for better performance)
+	@JoinColumn(name = "LOCATION_ID", nullable = true)
     private Location location;
     
     public HandlingUnit() {
@@ -80,7 +85,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		return location;
 	}
 
-	protected void setLocation(Location location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 	
@@ -139,9 +144,9 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		    .append(id)
 		    .append(", version=")
 		    .append(version)
-		    .append(", location=")
-			.append(location)
-			.append(", ")
+		    .append(", ")
+		    .append(location == null ? "location=null" : location)
+            .append(", ")
 			.append(super.toString())			
 			.append("]");
 		

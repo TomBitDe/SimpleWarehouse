@@ -20,10 +20,15 @@ import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
+import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.model.EntityBase;
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.telemetryprovider.monitoring.boundary.MonitoringResource;
@@ -38,6 +43,9 @@ public class LocationBeanTest {
 	@EJB
 	LocationLocal locationLocal;
 	
+	@EJB
+	HandlingUnitLocal handlingUnitLocal;
+	
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
@@ -48,6 +56,7 @@ public class LocationBeanTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
 						LocationLocal.class, LocationBean.class,
+						HandlingUnitLocal.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -55,6 +64,24 @@ public class LocationBeanTest {
 		LOG.debug(archive.toString(true));
 
 		return archive;
+	}
+
+	@Before
+	public void beforeTest() {
+		
+	}
+	
+	@After
+	public void afterTest( ) {
+		// Cleanup locations
+		List<Location> locations = locationLocal.getAll();
+		
+		locations.stream().forEach(l -> locationLocal.delete(l));
+		
+		// Cleanup handling units
+		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
+		
+		handlingUnits.stream().forEach(h -> handlingUnitLocal.delete(h));		
 	}
 
 	/**
@@ -65,6 +92,8 @@ public class LocationBeanTest {
 	public void create_getById() {
 		LOG.info("Test create_getById");
 
+		assertTrue(locationLocal.getAll().isEmpty());
+		
 		Location expLocation = new Location("A");
 
 		locationLocal.create(expLocation);
@@ -73,39 +102,39 @@ public class LocationBeanTest {
 		
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
-		assertFalse(location.getUpdateTimestamp() == null);
+		assertNotNull(location.getUpdateTimestamp());
+		
+		assertNull(locationLocal.getById("B"));
 	}
 	
 	@Test
 	@InSequence(1)
-	public void deleteById_getById_create() {
-		LOG.info("Test deleteById_getById_create");
+	public void delete_getById_create() {
+		LOG.info("Test delete_getById_create");
 
-		if (locationLocal.getById("A") == null) { 
-		    locationLocal.create(new Location("A"));
-		}
+		assertTrue(locationLocal.getAll().isEmpty());
 		
-		Location location = locationLocal.getById("A");
+	    locationLocal.create(new Location("A"));
+
+	    Location location = locationLocal.getById("A");
 		LOG.info(location);
 		
 		assertEquals("A", location.getId());
 		
-		// Delete returns the deleted location
-		location = locationLocal.delete(location.getId());
+		// Delete the location
+		locationLocal.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getId());
-		
-		// Delete returns null because the location does not exist
-		assertNull(locationLocal.delete(location.getId()));
 		
 		locationLocal.create(new Location("A", "Test"));
 		location = locationLocal.getById("A");
 		LOG.info(location);
 				
 		assertEquals("Test", location.getUpdateUserId());
-		assertFalse(location.getUpdateTimestamp() == null);
+		assertNotNull(location.getUpdateTimestamp());
 		
-		location = locationLocal.delete(location.getId());
+		// Delete the location
+		locationLocal.delete(location);
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
@@ -115,8 +144,6 @@ public class LocationBeanTest {
 		
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
-		
-		location = locationLocal.delete(location.getId());
 	}
 
 	@Test
@@ -124,20 +151,17 @@ public class LocationBeanTest {
 	public void deleteByLocation() {
 		LOG.info("Test deleteByLocation");
 
-		if (locationLocal.getById("A") == null) { 
-		    locationLocal.create(new Location("A"));
-		}
+		assertTrue(locationLocal.getAll().isEmpty());
 		
-		Location location = locationLocal.getById("A");
+	    locationLocal.create(new Location("A"));
+
+	    Location location = locationLocal.getById("A");
 		assertEquals("A", location.getId());
 		
-		// Delete returns the deleted location
-		location = locationLocal.delete(location);
+		// Delete the location
+		locationLocal.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getId());
-		
-		// Delete returns null because the location does not exist
-		assertNull(locationLocal.delete(location));
 	}
 	
 	@Test
@@ -145,14 +169,7 @@ public class LocationBeanTest {
 	public void getAll() {
 		LOG.info("Test getAll");
 		
-		// Cleanup
-		List<Location> locations = locationLocal.getAll();
-		
-		locations.stream().forEach(l -> locationLocal.delete(l));
-		
-		locations = locationLocal.getAll();
-		
-		assertTrue(locations.isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
 		
 		// Prepare some locations
 		locationLocal.create(new Location("A", "Test"));
@@ -162,13 +179,55 @@ public class LocationBeanTest {
 		locationLocal.create(new Location("E", "Test"));
 
 		// Another test
-		locations = locationLocal.getAll();
+		List<Location> locations = locationLocal.getAll();
 		locations.stream().forEach(l -> l.toString());
 
 		assertFalse(locations.isEmpty());
 		assertEquals(5, locations.size());
+	}
+	
+	@Test
+	@InSequence(4)
+	public void deleteLocationWithHandlingUnits() {
+		LOG.info("Test deleteLocationWithHandlingUnits");
 		
-		//Cleanup
-		locations.stream().forEach(l -> locationLocal.delete(l));
+		assertTrue(locationLocal.getAll().isEmpty());
+		
+		// Prepare a location
+		locationLocal.create(new Location("A", "Test"));
+		Location locA = locationLocal.getById("A");
+		
+		// Drop to make a relation
+		new HandlingUnit("1", "Test").dropTo(locA);
+		HandlingUnit hU2 = new HandlingUnit("2", "Test");
+		hU2.dropTo(locA);
+		new HandlingUnit("3", "Test").dropTo(locA);
+		new HandlingUnit("4", "Test").dropTo(locA);
+		HandlingUnit hU5 = new HandlingUnit("5", "Test");
+		hU5.dropTo(locA);
+		
+		assertFalse(locA.getHandlingUnits().isEmpty());
+		assertEquals(5, locA.getHandlingUnits().size());
+		
+		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
+		
+		LOG.info(locA);
+		LOG.info(hU2);
+		LOG.info(hU5);
+		
+		// Now delete the location
+		locationLocal.delete(locA);
+		
+		hU2 = handlingUnitLocal.getById("2");
+		hU5 = handlingUnitLocal.getById("5");
+		
+		assertNotNull(hU2);
+		assertNotNull(hU5);
+		
+		assertNull(hU2.getLocation());
+		assertNull(hU5.getLocation());
+		
+		LOG.info(hU2);
+		LOG.info(hU5);
 	}
 }
