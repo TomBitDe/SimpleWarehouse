@@ -47,6 +47,8 @@ public class HandlingUnitTest {
 	
 	@Deployment
 	public static JavaArchive createTestArchive() {
+		LOG.trace("--> createTestArchive()");
+
 		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
 				/* Put the test-*.xml in JARs META-INF folder as *.xml */
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-persistence.xml"), "persistence.xml")
@@ -62,16 +64,22 @@ public class HandlingUnitTest {
 
 		LOG.debug(archive.toString(true));
 
+		LOG.trace("<-- createTestArchive()");
+		
 		return archive;
 	}
 	
 	@Before
 	public void beforeTest() {
+		LOG.trace("--> beforeTest()");
 		
+		LOG.trace("<-- beforeTest()");		
 	}
 	
 	@After
-	public void afterTest( ) {
+	public void afterTest() {
+		LOG.trace("--> afterTest()");
+
 		// Cleanup locations
 		List<Location> locations = locationLocal.getAll();
 		
@@ -81,6 +89,8 @@ public class HandlingUnitTest {
 		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
 		
 		handlingUnits.stream().forEach(h -> handlingUnitLocal.delete(h));		
+
+		LOG.trace("<-- afterTest()");		
 	}
 
 	/**
@@ -89,7 +99,7 @@ public class HandlingUnitTest {
 	@Test
 	@InSequence(0)
 	public void createAndGetById() {
-		LOG.info("Test createAndGetById");
+		LOG.info("--- Test createAndGetById");
 
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
@@ -105,7 +115,7 @@ public class HandlingUnitTest {
 	@Test
 	@InSequence(2)
 	public void deleteByHandlingUnit() {
-		LOG.info("Test deleteByHandlingUnit");
+		LOG.info("--- Test deleteByHandlingUnit");
 
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
@@ -124,7 +134,7 @@ public class HandlingUnitTest {
 	@Test
 	@InSequence(3)
 	public void getAll() {
-		LOG.info("Test getAll");
+		LOG.info("--- Test getAll");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		
@@ -140,12 +150,14 @@ public class HandlingUnitTest {
 
 		assertFalse(handlingUnits.isEmpty());
 		assertEquals(5, handlingUnits.size());
+		
+		handlingUnits.forEach(hU -> LOG.info(hU));
 	}
 	
 	@Test
 	@InSequence(4)
 	public void dropTo() {
-		LOG.info("Test dropTo");
+		LOG.info("--- Test dropTo");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -178,7 +190,7 @@ public class HandlingUnitTest {
 	@Test(expected = IllegalArgumentException.class)
 	@InSequence(5)
 	public void dropToNull() {
-		LOG.info("Test dropToNull");
+		LOG.info("--- Test dropToNull");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -198,7 +210,7 @@ public class HandlingUnitTest {
 	@Test
 	@InSequence(6)
 	public void pickFrom() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
-		LOG.info("Test pickFrom");
+		LOG.info("--- Test pickFrom");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -238,7 +250,7 @@ public class HandlingUnitTest {
 	@Test(expected = LocationIsEmptyException.class)
 	@InSequence(7)
 	public void pickFromEmptyLocation() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
-		LOG.info("Test pickFromEmptyLocation");
+		LOG.info("--- Test pickFromEmptyLocation");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -256,7 +268,7 @@ public class HandlingUnitTest {
 	@Test(expected = HandlingUnitNotOnLocationException.class)
 	@InSequence(8)
 	public void pickFromLocationNotContaining() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
-		LOG.info("Test pickFromLocationNotContaining");
+		LOG.info("--- Test pickFromLocationNotContaining");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -285,7 +297,7 @@ public class HandlingUnitTest {
 	@Test
 	@InSequence(9)
 	public void deleteHandlingUnitOnLocation() {
-		LOG.info("Test deleteHandlingUnitOnLocation");
+		LOG.info("---Test deleteHandlingUnitOnLocation");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -307,7 +319,7 @@ public class HandlingUnitTest {
 		// Now delete a handling unit that is related to a location
 		handlingUnitLocal.delete(hU1);
 		
-		LOG.info(hU1);
+		LOG.info("Delete: " + hU1);
 		
 		lOA = locationLocal.getById("A");
 		
@@ -316,5 +328,7 @@ public class HandlingUnitTest {
 		assertFalse(lOA.getHandlingUnits().isEmpty());
 		assertTrue(lOA.getHandlingUnits().contains(hU2));
 		assertFalse(lOA.getHandlingUnits().contains(hU1));
+		
+		LOG.info(lOA);
 	}
 }
