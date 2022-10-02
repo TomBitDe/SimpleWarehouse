@@ -17,13 +17,6 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigManager;
-import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigManagerBean;
-import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigService;
-import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataFromProperties;
-import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider;
-import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCache;
-import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCacheBean;
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
 
 @RunWith(Arquillian.class)
