@@ -48,6 +48,7 @@ public class LocationBeanTest {
 	
 	@Deployment
 	public static JavaArchive createTestArchive() {
+		LOG.trace("--> createTestArchive()");
 		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
 				/* Put the test-*.xml in JARs META-INF folder as *.xml */
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-persistence.xml"), "persistence.xml")
@@ -63,16 +64,21 @@ public class LocationBeanTest {
 
 		LOG.debug(archive.toString(true));
 
+		LOG.trace("<-- createTestArchive()");
 		return archive;
 	}
 
 	@Before
 	public void beforeTest() {
+		LOG.trace("--> beforeTest()");
 		
+		LOG.trace("<-- beforeTest()");		
 	}
 	
 	@After
-	public void afterTest( ) {
+	public void afterTest() {
+		LOG.trace("--> afterTest()");
+
 		// Cleanup locations
 		List<Location> locations = locationLocal.getAll();
 		
@@ -82,6 +88,8 @@ public class LocationBeanTest {
 		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
 		
 		handlingUnits.stream().forEach(h -> handlingUnitLocal.delete(h));		
+
+		LOG.trace("<-- afterTest()");
 	}
 
 	/**
@@ -90,15 +98,16 @@ public class LocationBeanTest {
 	@Test
 	@InSequence(0)
 	public void create_getById() {
-		LOG.info("Test create_getById");
+		LOG.info("--- Test create_getById");
 
 		assertTrue(locationLocal.getAll().isEmpty());
 		
 		Location expLocation = new Location("A");
 
 		locationLocal.create(expLocation);
+		LOG.info("Location created: " + expLocation);
 		Location location = locationLocal.getById(expLocation.getId());		
-		LOG.info(location);
+		LOG.info("Location getById: " + location);
 		
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
@@ -110,14 +119,14 @@ public class LocationBeanTest {
 	@Test
 	@InSequence(1)
 	public void delete_getById_create() {
-		LOG.info("Test delete_getById_create");
+		LOG.info("--- Test delete_getById_create");
 
 		assertTrue(locationLocal.getAll().isEmpty());
 		
 	    locationLocal.create(new Location("A"));
 
 	    Location location = locationLocal.getById("A");
-		LOG.info(location);
+		LOG.info("Location getById: " + location);
 		
 		assertEquals("A", location.getId());
 		
@@ -125,62 +134,67 @@ public class LocationBeanTest {
 		locationLocal.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getId());
+		LOG.info("Location deleted: " + location.getId());
 		
 		locationLocal.create(new Location("A", "Test"));
-		location = locationLocal.getById("A");
-		LOG.info(location);
-				
+		location = locationLocal.getById("A");				
+		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
-		
+		LOG.info("Location created: " + location);
+
 		// Delete the location
 		locationLocal.delete(location);
+		LOG.info("Location deleted: " + location.getId());
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
 		locationLocal.create(new Location("A", "Test", ts));
 		location = locationLocal.getById("A");
-		LOG.info(location);
-		
+		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
+		LOG.info("Location created: " + location);
 	}
 
 	@Test
 	@InSequence(2)
 	public void deleteByLocation() {
-		LOG.info("Test deleteByLocation");
+		LOG.info("--- Test deleteByLocation");
 
 		assertTrue(locationLocal.getAll().isEmpty());
 		
 	    locationLocal.create(new Location("A"));
 
 	    Location location = locationLocal.getById("A");
+		assertNotNull(location);
 		assertEquals("A", location.getId());
 		
 		// Delete the location
 		locationLocal.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getId());
+		assertNull(locationLocal.getById("A"));
+		LOG.info("Location deleted: " + location.getId());
 	}
 	
 	@Test
 	@InSequence(3)
 	public void getAll() {
-		LOG.info("Test getAll");
+		LOG.info("--- Test getAll");
 		
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-		// Prepare some locations
+		// Prepare some locations; 5 locations
 		locationLocal.create(new Location("A", "Test"));
 		locationLocal.create(new Location("B", "Test"));
 		locationLocal.create(new Location("C", "Test"));
 		locationLocal.create(new Location("D", "Test"));
 		locationLocal.create(new Location("E", "Test"));
 
-		// Another test
+		// Get them all and output
 		List<Location> locations = locationLocal.getAll();
-		locations.stream().forEach(l -> l.toString());
+		locations.stream().forEach( l -> LOG.info(l.toString()) );
 
 		assertFalse(locations.isEmpty());
 		assertEquals(5, locations.size());
@@ -189,13 +203,14 @@ public class LocationBeanTest {
 	@Test
 	@InSequence(4)
 	public void deleteLocationWithHandlingUnits() {
-		LOG.info("Test deleteLocationWithHandlingUnits");
+		LOG.info("--- Test deleteLocationWithHandlingUnits");
 		
 		assertTrue(locationLocal.getAll().isEmpty());
 		
 		// Prepare a location
 		locationLocal.create(new Location("A", "Test"));
 		Location locA = locationLocal.getById("A");
+		LOG.info("Location prepared: " + locA);
 		
 		// Drop to make a relation
 		new HandlingUnit("1", "Test").dropTo(locA);
@@ -206,17 +221,21 @@ public class LocationBeanTest {
 		HandlingUnit hU5 = new HandlingUnit("5", "Test");
 		hU5.dropTo(locA);
 		
+		assertNotNull(locA);	
 		assertFalse(locA.getHandlingUnits().isEmpty());
 		assertEquals(5, locA.getHandlingUnits().size());
 		
 		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
 		
-		LOG.info(locA);
+		LOG.info("5 HandlingUits dropped to " + locA.getId() + "   " + locA);
+
+		LOG.info("Sample hU2 and hU5");
 		LOG.info(hU2);
 		LOG.info(hU5);
 		
 		// Now delete the location
 		locationLocal.delete(locA);
+		LOG.info("Location deleted: " + locA.getId());
 		
 		hU2 = handlingUnitLocal.getById("2");
 		hU5 = handlingUnitLocal.getById("5");
@@ -227,6 +246,7 @@ public class LocationBeanTest {
 		assertNull(hU2.getLocation());
 		assertNull(hU5.getLocation());
 		
+		LOG.info("Sample hU2 and hU5 have no longer a location");
 		LOG.info(hU2);
 		LOG.info(hU5);
 	}
