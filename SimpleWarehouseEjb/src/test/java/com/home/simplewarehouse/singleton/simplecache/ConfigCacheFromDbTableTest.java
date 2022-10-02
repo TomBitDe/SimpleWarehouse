@@ -18,6 +18,13 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigManager;
+import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigManagerBean;
+import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataFromDbTable;
+import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider;
+import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCache;
+import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCacheBean;
+
 @RunWith(Arquillian.class)
 public class ConfigCacheFromDbTableTest {
 	private static final Logger LOG = LogManager.getLogger(ConfigCacheFromDbTableTest.class);

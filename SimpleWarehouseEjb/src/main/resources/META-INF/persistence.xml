@@ -5,7 +5,7 @@
 	<persistence-unit name="SimpleWarehouse-PU" transaction-type="JTA">
 		<class>com.home.simplewarehouse.model.HandlingUnit</class>
 		<class>com.home.simplewarehouse.model.Location</class>
-		<class>com.home.simplewarehouse.singleton.simplecache.model.ApplConfig</class>
+		<class>com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig</class>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
 			<property name="eclipselink.ddl-generation.output-mode" value="database" />

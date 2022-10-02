@@ -8,7 +8,7 @@
 			<ejb-name>ConfigCacheBean</ejb-name>
 			<session-type>Singleton</session-type>
 			<ejb-local-ref>
-				<ejb-ref-name>com.home.simplewarehouse.singleton.simplecache.ConfigCacheBean/cacheDataProvider</ejb-ref-name>
+				<ejb-ref-name>com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCacheBean/cacheDataProvider</ejb-ref-name>
 				<ejb-ref-type>Session</ejb-ref-type>
 				<ejb-link>CacheDataFromDbTable</ejb-link>
 				<!-- 

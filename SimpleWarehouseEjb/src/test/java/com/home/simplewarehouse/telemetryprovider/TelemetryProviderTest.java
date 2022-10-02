@@ -18,9 +18,9 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
-import com.home.simplewarehouse.telemetryprovider.monitoring.boundary.MonitoringResource;
-import com.home.simplewarehouse.telemetryprovider.requestcounter.GoodMorning;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.utils.telemetryprovider.requestcounter.GoodMorning;
 
 /**
  * Test the GoodMorning in TelemetryProvider.

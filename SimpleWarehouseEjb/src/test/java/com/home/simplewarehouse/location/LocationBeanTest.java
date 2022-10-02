@@ -30,8 +30,8 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
-import com.home.simplewarehouse.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
  * Test the location bean.

@@ -17,8 +17,8 @@ import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.home.simplewarehouse.singleton.simplecache.ApplConfigService;
-import com.home.simplewarehouse.singleton.simplecache.model.ApplConfig;
+import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigService;
+import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
 
 /**
  * RESTful Application configuration data service.

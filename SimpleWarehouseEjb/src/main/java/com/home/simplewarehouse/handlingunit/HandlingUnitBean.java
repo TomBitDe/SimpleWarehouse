@@ -17,7 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.model.HandlingUnit;
-import com.home.simplewarehouse.telemetryprovider.monitoring.PerformanceAuditor;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 @Stateless
 @Local(HandlingUnitLocal.class)
