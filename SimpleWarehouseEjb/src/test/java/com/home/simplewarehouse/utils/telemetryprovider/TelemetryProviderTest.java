@@ -1,4 +1,4 @@
-package com.home.simplewarehouse.telemetryprovider;
+package com.home.simplewarehouse.utils.telemetryprovider;
 
 import static org.junit.Assert.assertTrue;
 

@@ -1,4 +1,4 @@
-package com.home.simplewarehouse.singleton.simplecache;
+package com.home.simplewarehouse.patterns.singleton.simplecache;
 
 import static org.junit.Assert.assertNotNull;
 

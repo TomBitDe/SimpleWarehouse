@@ -1,9 +1,10 @@
-package com.home.simplewarehouse.singleton.simplecache;
+package com.home.simplewarehouse.patterns.singleton.simplecache;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
-import java.util.List;
 
 import javax.ejb.EJB;
 
@@ -11,6 +12,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -19,16 +21,14 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigManager;
 import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigManagerBean;
-import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigService;
 import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataFromProperties;
 import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider;
 import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCache;
 import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCacheBean;
-import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
 
 @RunWith(Arquillian.class)
-public class ApplConfigManagerTest {
-	private static final Logger LOG = LogManager.getLogger(ApplConfigManagerTest.class);
+public class ConfigCacheFromPropertiesTest {
+	private static final Logger LOG = LogManager.getLogger(ConfigCacheFromPropertiesTest.class);
 
 	@Deployment
 	public static JavaArchive createTestArchive() {
@@ -39,10 +39,9 @@ public class ApplConfigManagerTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"),
 						"glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
-				.addClasses(ApplConfigManager.class, ApplConfigService.class, ApplConfigManagerBean.class
-						,ConfigCache.class, ConfigCacheBean.class
-						,CacheDataProvider.class
-						,CacheDataFromProperties.class);
+				.addClasses(ConfigCache.class, ConfigCacheBean.class,
+						CacheDataProvider.class, CacheDataFromProperties.class,
+						ApplConfigManager.class, ApplConfigManagerBean.class);
 
 		LOG.debug(archive.toString(true));
 
@@ -50,16 +49,53 @@ public class ApplConfigManagerTest {
 	}
 
 	@EJB
-	ApplConfigManager applConfigManager;
+	ConfigCache configCache;
 
 	@Test
-	public void getAllTest()
+	@InSequence(1)
+	public void getDataNoDefaultTest()
 	{
-		LOG.debug("--> getAllTest");
+		LOG.debug("--> getDataNoDefaultTest");
 
-		List<ApplConfig> configList = applConfigManager.getAll();
-		assertTrue(configList.isEmpty());
+		String val = configCache.getData("kahdadhajkh");
+		assertNull(val);
 
-		LOG.debug("<-- getAllTest");
+		val = configCache.getData("Key1");
+		assertEquals("Test 1", val);
+
+		val = configCache.getData("Key2");
+		assertEquals("Test 2", val);
+
+		val = configCache.getData("Key3");
+		assertEquals("Test 3", val);
+
+		val = configCache.getData("Key4");
+		assertTrue(val.isEmpty());
+
+		LOG.debug("<-- getDataTest");
+	}
+
+	@Test
+	@InSequence(2)
+	public void getDataWithDefaultTest()
+	{
+		LOG.debug("--> getDataWithDefaultTest");
+
+		String val = configCache.getData("kahdadhajkh", "ABC");
+		assertEquals("ABC", val);
+
+		int numI = configCache.getData("Key5", 6);
+		assertEquals(6, numI);
+
+		numI = configCache.getData("Key99", 2);
+		assertEquals(2, numI);
+
+		long numL= configCache.getData("Key6", 77L);
+		assertEquals(23, numL);
+
+		numL = configCache.getData("Key99", 11L);
+		assertEquals(11L, numL);
+
+		LOG.debug("<-- getDataWithDefaultTest");
 	}
 }

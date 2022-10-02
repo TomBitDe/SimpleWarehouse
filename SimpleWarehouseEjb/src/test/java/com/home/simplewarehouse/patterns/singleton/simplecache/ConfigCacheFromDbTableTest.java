@@ -1,8 +1,7 @@
-package com.home.simplewarehouse.singleton.simplecache;
+package com.home.simplewarehouse.patterns.singleton.simplecache;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 
@@ -21,14 +20,14 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigManager;
 import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigManagerBean;
-import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataFromProperties;
+import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataFromDbTable;
 import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider;
 import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCache;
 import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCacheBean;
 
 @RunWith(Arquillian.class)
-public class ConfigCacheFromPropertiesTest {
-	private static final Logger LOG = LogManager.getLogger(ConfigCacheFromPropertiesTest.class);
+public class ConfigCacheFromDbTableTest {
+	private static final Logger LOG = LogManager.getLogger(ConfigCacheFromDbTableTest.class);
 
 	@Deployment
 	public static JavaArchive createTestArchive() {
@@ -40,7 +39,7 @@ public class ConfigCacheFromPropertiesTest {
 						"glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(ConfigCache.class, ConfigCacheBean.class,
-						CacheDataProvider.class, CacheDataFromProperties.class,
+						CacheDataProvider.class, CacheDataFromDbTable.class,
 						ApplConfigManager.class, ApplConfigManagerBean.class);
 
 		LOG.debug(archive.toString(true));
@@ -61,16 +60,16 @@ public class ConfigCacheFromPropertiesTest {
 		assertNull(val);
 
 		val = configCache.getData("Key1");
-		assertEquals("Test 1", val);
+		assertEquals(null, val);
 
 		val = configCache.getData("Key2");
-		assertEquals("Test 2", val);
+		assertEquals(null, val);
 
 		val = configCache.getData("Key3");
-		assertEquals("Test 3", val);
+		assertEquals(null, val);
 
 		val = configCache.getData("Key4");
-		assertTrue(val.isEmpty());
+		assertEquals(null, val);
 
 		LOG.debug("<-- getDataTest");
 	}
@@ -91,7 +90,7 @@ public class ConfigCacheFromPropertiesTest {
 		assertEquals(2, numI);
 
 		long numL= configCache.getData("Key6", 77L);
-		assertEquals(23, numL);
+		assertEquals(77L, numL);
 
 		numL = configCache.getData("Key99", 11L);
 		assertEquals(11L, numL);
