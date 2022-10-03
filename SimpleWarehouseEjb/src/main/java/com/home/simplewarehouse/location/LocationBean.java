@@ -1,5 +1,6 @@
 package com.home.simplewarehouse.location;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -46,7 +47,7 @@ public class LocationBean implements LocationLocal {
 	}
 	
 	@Override
-	public void create(Location location) {
+	public void create(final Location location) {
 		LOG.trace("--> create");
 
 		em.persist(location);
@@ -83,7 +84,7 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public Location getById(String id) {
+	public Location getById(final String id) {
 		LOG.trace("--> getById(" + id + ')');
 
 		Location location = em.find(Location.class, id);
@@ -98,10 +99,29 @@ public class LocationBean implements LocationLocal {
 		LOG.trace("--> getAll()");
 
 		TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l", Location.class);
-		List<Location> location = query.getResultList();
+		List<Location> locations = query.getResultList();
 
 		LOG.trace("<-- getAll()");
 
-		return location;
+		return locations;
+	}
+	
+	@Override
+	public List<Location> getAllContaining(final HandlingUnit handlingUnit) {
+		LOG.trace("--> getAllContaining() " + handlingUnit);
+		
+		List<Location> ret = new ArrayList<>();
+
+		List<Location> locations = getAll();
+		
+		for (Location item : locations) {
+			if (item.getHandlingUnits().contains(handlingUnit)) {
+				ret.add(item);
+			}
+		}
+
+		LOG.trace("<-- getAllContaining()");
+
+		return ret;
 	}
 }

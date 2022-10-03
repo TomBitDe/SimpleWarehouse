@@ -14,7 +14,7 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @param handlingUnit the given HandlingUnit
 	 */
-	public void create(HandlingUnit handlingUnit);
+	public void create(final HandlingUnit handlingUnit);
 	/**
 	 * Delete a HandlingUnit and remove
 	 * 
@@ -28,7 +28,7 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @return the corresponding HandlingUnit
 	 */
-	public HandlingUnit getById(String id);
+	public HandlingUnit getById(final String id);
 	/**
 	 * Pick from a Location the given HandlingUnit
 	 * 

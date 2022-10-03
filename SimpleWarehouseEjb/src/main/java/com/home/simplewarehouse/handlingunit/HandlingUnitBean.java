@@ -46,7 +46,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public void create(HandlingUnit handlingUnit) {
+	public void create(final HandlingUnit handlingUnit) {
 		LOG.trace("--> create");
 
 		em.persist(handlingUnit);
@@ -76,7 +76,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public HandlingUnit getById(String id) {
+	public HandlingUnit getById(final String id) {
 		LOG.trace("--> getById(" + id + ')');
 
 		HandlingUnit handlingUnit = em.find(HandlingUnit.class, id);
@@ -100,6 +100,14 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	
 	@Override
 	public void pickFrom(Location location, HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+		if (!em.contains(location)) {
+			location = em.merge(location);
+		}
+		
+		if (!em.contains(handlingUnit)) {
+			handlingUnit = em.merge(handlingUnit);
+		}
+		
 		if (location == null) {
 			throw new IllegalArgumentException("Location is null");
 		}
@@ -115,16 +123,41 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 		
 		handlingUnit.setLocation(null);
+		
+		em.flush();
 	}
 
 	@Override
 	public void dropTo(Location location, HandlingUnit handlingUnit) {
+		if (!em.contains(location)) {
+			location = em.merge(location);
+		}
+		
+		if (!em.contains(handlingUnit)) {
+			handlingUnit = em.merge(handlingUnit);
+		}
+		
 		if (location == null) {
 			throw new IllegalArgumentException("Location is null");
 		}
 		else {
+			List<Location> locations = locationLocal.getAllContaining(handlingUnit);
+			
+			for (Location item : locations) {
+				// HandlingUnit is already stored elsewhere
+				try {
+					LOG.warn("Handling unit " + handlingUnit.getId() + " is here: " + item);
+
+					pickFrom(item, handlingUnit);
+				}
+				catch(HandlingUnitNotOnLocationException | LocationIsEmptyException ex) {
+					LOG.warn("Correction PICK with error. Check " + item);
+				}				
+			}
+
 			handlingUnit.setLocation(location);
 			location.addHandlingUnit(handlingUnit);
-		}		
+		}
+		em.flush();
 	}
 }

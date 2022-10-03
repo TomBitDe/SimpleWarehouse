@@ -176,6 +176,9 @@ public class LocationBeanTest {
 		assertEquals("A", location.getLocationId());
 		assertNull(locationLocal.getById("A"));
 		LOG.info("Location deleted: " + location.getLocationId());
+		
+		location = locationLocal.getById("A");
+		assertNull(location);
 	}
 	
 	@Test
@@ -215,15 +218,24 @@ public class LocationBeanTest {
 		// Drop to make a relation
 		HandlingUnit hU1 = new HandlingUnit("1", "Test");
 		handlingUnitLocal.dropTo(locA, hU1);
+		
 		HandlingUnit hU2 = new HandlingUnit("2", "Test");
+		locA = locationLocal.getById("A");
 		handlingUnitLocal.dropTo(locA, hU2);
+
 		HandlingUnit hU3 = new HandlingUnit("3", "Test");
+		locA = locationLocal.getById("A");
 		handlingUnitLocal.dropTo(locA, hU3);
+
 		HandlingUnit hU4 = new HandlingUnit("4", "Test");
+		locA = locationLocal.getById("A");
 		handlingUnitLocal.dropTo(locA, hU4);
+
 		HandlingUnit hU5 = new HandlingUnit("5", "Test");
+		locA = locationLocal.getById("A");
 		handlingUnitLocal.dropTo(locA, hU5);
 		
+		locA = locationLocal.getById("A");
 		assertNotNull(locA);	
 		assertFalse(locA.getHandlingUnits().isEmpty());
 		assertEquals(5, locA.getHandlingUnits().size());
@@ -233,10 +245,13 @@ public class LocationBeanTest {
 		LOG.info("5 HandlingUits dropped to " + locA.getLocationId() + "   " + locA);
 
 		LOG.info("Sample hU2 and hU5");
+		hU2 = handlingUnitLocal.getById("2");
 		LOG.info(hU2);
+		hU5 = handlingUnitLocal.getById("5");
 		LOG.info(hU5);
 		
 		// Now delete the location
+		locA = locationLocal.getById("A");
 		locationLocal.delete(locA);
 		LOG.info("Location deleted: " + locA.getLocationId());
 		

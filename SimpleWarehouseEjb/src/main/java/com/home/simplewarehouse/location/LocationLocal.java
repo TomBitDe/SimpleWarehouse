@@ -2,6 +2,7 @@ package com.home.simplewarehouse.location;
 
 import java.util.List;
 
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 
 /**
@@ -13,7 +14,7 @@ public interface LocationLocal {
 	 * 
 	 * @param location the given Location
 	 */
-	public void create(Location location);
+	public void create(final Location location);
 	/**
 	 * Delete a Location and remove
 	 * 
@@ -27,11 +28,19 @@ public interface LocationLocal {
 	 * 
 	 * @return the corresponding Location
 	 */
-	public Location getById(String id);
+	public Location getById(final String id);
 	/**
 	 * Get a list of all Location items
 	 * 
 	 * @return the Location list
 	 */
 	public List<Location> getAll();
+	/**
+	 * Get a list of all Location items containing the given HandlingUnit
+	 * 
+	 * @param handlingUnit the handlingUnit to search for
+	 * 
+	 * @return the Location list
+	 */
+	public List<Location> getAllContaining(final HandlingUnit handlingUnit);
 }

@@ -21,6 +21,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -171,7 +172,10 @@ public class HandlingUnitTest {
 		
 		// Now drop
 		handlingUnitLocal.dropTo(lOA, hU1);
-		
+
+		hU1 = handlingUnitLocal.getById("1");
+		lOA = locationLocal.getById("A");
+
 		LOG.info(hU1);
 		
 		// Handling Unit is on location now
@@ -225,6 +229,9 @@ public class HandlingUnitTest {
 		// To prepare the pick do a drop before
 		handlingUnitLocal.dropTo(lOA, hU1);
 		
+		hU1 = handlingUnitLocal.getById("1");
+		lOA = locationLocal.getById("A");
+
 		// Handling Unit is on location now
 		assertTrue(hU1.getLocation().equals(lOA));
 		
@@ -239,6 +246,9 @@ public class HandlingUnitTest {
 
 		// Now do the pick
 		handlingUnitLocal.pickFrom(lOA, hU1);
+
+		hU1 = handlingUnitLocal.getById("1");
+		lOA = locationLocal.getById("A");
 		
 		assertNull(hU1.getLocation());
 		assertFalse(lOA.getHandlingUnits().contains(hU1));
@@ -282,6 +292,9 @@ public class HandlingUnitTest {
 		
 		handlingUnitLocal.dropTo(lOA, hU1);
 		
+		hU1 = handlingUnitLocal.getById("1");
+		lOA = locationLocal.getById("A");
+
 		handlingUnitLocal.create(new HandlingUnit("2"));
 
 		// Pick now
@@ -313,12 +326,20 @@ public class HandlingUnitTest {
 		
 		// Drop to make a relation
 		handlingUnitLocal.dropTo(lOA, hU1);
+		
+		lOA = locationLocal.getById("A");
+		
 		handlingUnitLocal.dropTo(lOA, hU2);
 		
+		hU1 = handlingUnitLocal.getById("1");
+		
 		// Now delete a handling unit that is related to a location
+		LOG.info("Delete: " + hU1);
 		handlingUnitLocal.delete(hU1);
 		
-		LOG.info("Delete: " + hU1);
+		hU1 = handlingUnitLocal.getById("1");
+		
+		assertNull(hU1);
 		
 		lOA = locationLocal.getById("A");
 		
@@ -326,8 +347,107 @@ public class HandlingUnitTest {
 		assertNotNull(lOA);
 		assertFalse(lOA.getHandlingUnits().isEmpty());
 		assertTrue(lOA.getHandlingUnits().contains(hU2));
-		assertFalse(lOA.getHandlingUnits().contains(hU1));
+		assertEquals(1, lOA.getHandlingUnits().size());
 		
 		LOG.info(lOA);
+	}
+	
+	@Test
+	@InSequence(10)
+	public void doubleDropSameLocation() {
+		LOG.info("---Test doubleDropSameLocation");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		// Prepare handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("2"));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		Location lOA = locationLocal.getById("A");
+		
+		// Drop to make a relation
+		handlingUnitLocal.dropTo(lOA, hU2);
+		
+		hU2 = handlingUnitLocal.getById("2");
+		lOA = locationLocal.getById("A");
+		LOG.info("First drop: " + hU2);
+		LOG.info("First drop: " + lOA);
+		
+		// Now drop again to same location
+		handlingUnitLocal.dropTo(lOA, hU2);
+		
+		hU2 = handlingUnitLocal.getById("2");
+		lOA = locationLocal.getById("A");
+		LOG.info("Second drop: " + hU2);
+		LOG.info("Second drop: " + lOA);
+		
+		// Check the location
+		assertNotNull(lOA);
+		assertFalse(lOA.getHandlingUnits().isEmpty());
+		assertTrue(lOA.getHandlingUnits().contains(hU2));
+		assertEquals(1, lOA.getHandlingUnits().size());
+		LOG.info(lOA);
+
+		// Check the handling unit
+		assertNotNull(hU2);
+		assertNotNull(hU2.getLocation());
+		assertTrue(hU2.getLocation().getLocationId().equals(lOA.getLocationId()));
+		LOG.info(hU2);
+	}
+
+	@Test
+	@InSequence(11)
+	public void doubleDropOtherLocation() {
+		LOG.info("---Test doubleDropOtherLocation");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		// Prepare handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("2"));
+		
+		locationLocal.create(new Location("A"));
+		locationLocal.create(new Location("B"));
+		
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		Location lOA = locationLocal.getById("A");
+		Location lOB = locationLocal.getById("B");
+		
+		// Drop to make a relation
+		handlingUnitLocal.dropTo(lOA, hU2);
+
+		hU2 = handlingUnitLocal.getById("2");
+		lOA = locationLocal.getById("A");
+		lOB = locationLocal.getById("B");
+		LOG.info("First drop: " + hU2);
+		LOG.info("First drop: " + lOA);
+		LOG.info("First drop: " + lOB);
+		
+		// Now drop again to other location
+		handlingUnitLocal.dropTo(lOB, hU2);
+
+		hU2 = handlingUnitLocal.getById("2");
+		lOA = locationLocal.getById("A");
+		lOB = locationLocal.getById("B");
+		LOG.info("Second drop: " + hU2);
+		LOG.info("Second drop: " + lOA);
+		LOG.info("Second drop: " + lOB);
+		
+		// Check the locations
+		assertNotNull(lOA);
+		assertTrue(lOA.getHandlingUnits().isEmpty());
+
+		assertNotNull(lOB);
+		assertFalse(lOB.getHandlingUnits().isEmpty());
+		assertTrue(lOB.getHandlingUnits().contains(hU2));
+		assertEquals(1, lOB.getHandlingUnits().size());
+
+		// Check the handling unit
+		assertNotNull(hU2);
+		assertNotNull(hU2.getLocation());
+		assertTrue(hU2.getLocation().getLocationId().equals(lOB.getLocationId()));
 	}
 }
