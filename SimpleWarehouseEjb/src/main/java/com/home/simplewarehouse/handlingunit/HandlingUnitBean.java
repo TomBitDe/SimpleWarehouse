@@ -17,6 +17,9 @@ import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.HandlingUnitNotOnLocationException;
+import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LocationIsEmptyException;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 @Stateless
@@ -89,5 +92,35 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		LOG.trace("<-- getAll()");
 
 		return handlingUnit;
+	}
+	
+	@Override
+	public void pickFrom(Location location, HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+		if (location == null) {
+			throw new IllegalArgumentException("Location is null");
+		}
+		if (location.getHandlingUnits() == null) {
+			throw new IllegalStateException("Location has illegal state (HandlingUnits is null)");
+		}
+		if (location.getHandlingUnits().isEmpty()) {
+			throw new LocationIsEmptyException("Location [" + location.getLocationId() + "] is EMPTY");
+		}
+		
+		if (! location.removeHandlingUnit(handlingUnit)) {
+			throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getLocationId() + ']');
+		}
+		
+		handlingUnit.setLocation(null);
+	}
+
+	@Override
+	public void dropTo(Location location, HandlingUnit handlingUnit) {
+		if (location == null) {
+			throw new IllegalArgumentException("Location is null");
+		}
+		else {
+			handlingUnit.setLocation(location);
+			location.addHandlingUnit(handlingUnit);
+		}		
 	}
 }

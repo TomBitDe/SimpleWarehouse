@@ -9,6 +9,7 @@ import static org.junit.Assert.assertTrue;
 import java.io.File;
 import java.util.List;
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -171,7 +172,7 @@ public class HandlingUnitTest {
 		Location lOA = locationLocal.getById("A");
 		
 		// Now drop
-		hU1.dropTo(lOA);
+		handlingUnitLocal.dropTo(lOA, hU1);
 		
 		LOG.info(hU1);
 		
@@ -187,7 +188,7 @@ public class HandlingUnitTest {
 		LOG.info(lOA);
 	}
 	
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = EJBException.class)
 	@InSequence(5)
 	public void dropToNull() {
 		LOG.info("--- Test dropToNull");
@@ -204,7 +205,7 @@ public class HandlingUnitTest {
 		Location lOA = null;
 		
 		// Now drop
-		hU1.dropTo(lOA);
+		handlingUnitLocal.dropTo(lOA, hU1);
 	}
 	
 	@Test
@@ -224,7 +225,7 @@ public class HandlingUnitTest {
 		Location lOA = locationLocal.getById("A");
 		
 		// To prepare the pick do a drop before
-		hU1.dropTo(lOA);
+		handlingUnitLocal.dropTo(lOA, hU1);
 		
 		// Handling Unit is on location now
 		assertTrue(hU1.getLocation().equals(lOA));
@@ -239,7 +240,7 @@ public class HandlingUnitTest {
 		LOG.info(lOA);
 
 		// Now do the pick
-		hU1.pickFrom(lOA);
+		handlingUnitLocal.pickFrom(lOA, hU1);
 		
 		assertNull(hU1.getLocation());
 		assertFalse(lOA.getHandlingUnits().contains(hU1));
@@ -262,7 +263,7 @@ public class HandlingUnitTest {
 		HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
 		
 		// Location is EMPTY because just newly created
-		handlingUnit.pickFrom(new Location("A"));
+		handlingUnitLocal.pickFrom(new Location("A"), handlingUnit);
 	}
 
 	@Test(expected = HandlingUnitNotOnLocationException.class)
@@ -281,7 +282,7 @@ public class HandlingUnitTest {
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = locationLocal.getById("A");
 		
-		hU1.dropTo(lOA);
+		handlingUnitLocal.dropTo(lOA, hU1);
 		
 		handlingUnitLocal.create(new HandlingUnit("2"));
 
@@ -291,7 +292,7 @@ public class HandlingUnitTest {
 		LOG.info(hU2);
 		
 		// Location contains hU1 but not hU2
-		hU2.pickFrom(lOA);
+		handlingUnitLocal.pickFrom(lOA, hU2);
 	}
 	
 	@Test
@@ -313,8 +314,8 @@ public class HandlingUnitTest {
 		Location lOA = locationLocal.getById("A");
 		
 		// Drop to make a relation
-		hU1.dropTo(lOA);
-		hU2.dropTo(lOA);
+		handlingUnitLocal.dropTo(lOA, hU1);
+		handlingUnitLocal.dropTo(lOA, hU2);
 		
 		// Now delete a handling unit that is related to a location
 		handlingUnitLocal.delete(hU1);

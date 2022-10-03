@@ -213,13 +213,16 @@ public class LocationBeanTest {
 		LOG.info("Location prepared: " + locA);
 		
 		// Drop to make a relation
-		new HandlingUnit("1", "Test").dropTo(locA);
+		HandlingUnit hU1 = new HandlingUnit("1", "Test");
+		handlingUnitLocal.dropTo(locA, hU1);
 		HandlingUnit hU2 = new HandlingUnit("2", "Test");
-		hU2.dropTo(locA);
-		new HandlingUnit("3", "Test").dropTo(locA);
-		new HandlingUnit("4", "Test").dropTo(locA);
+		handlingUnitLocal.dropTo(locA, hU2);
+		HandlingUnit hU3 = new HandlingUnit("3", "Test");
+		handlingUnitLocal.dropTo(locA, hU3);
+		HandlingUnit hU4 = new HandlingUnit("4", "Test");
+		handlingUnitLocal.dropTo(locA, hU4);
 		HandlingUnit hU5 = new HandlingUnit("5", "Test");
-		hU5.dropTo(locA);
+		handlingUnitLocal.dropTo(locA, hU5);
 		
 		assertNotNull(locA);	
 		assertFalse(locA.getHandlingUnits().isEmpty());

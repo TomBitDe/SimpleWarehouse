@@ -89,34 +89,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		this.location = location;
 	}
 	
-	public void dropTo(Location location) {
-		if (location == null) {
-			throw new IllegalArgumentException("Location is null");
-		}
-		else {
-			setLocation(location);
-			location.addHandlingUnit(this);
-		}
-	}
-	
-	public void pickFrom(Location location) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
-		if (location == null) {
-			throw new IllegalArgumentException("Location is null");
-		}
-		if (location.getHandlingUnits() == null) {
-			throw new IllegalStateException("Location has illegal state (HandlingUnits is null)");
-		}
-		if (location.getHandlingUnits().isEmpty()) {
-			throw new LocationIsEmptyException("Location [" + location.getLocationId() + "] is EMPTY");
-		}
-		
-		if (! location.removeHandlingUnit(this)) {
-			throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getLocationId() + ']');
-		}
-		
-		setLocation(null);
-	}
-
 	@Override
 	public int hashCode() {
 		// Only id; this is a must. Otherwise stack overflow
