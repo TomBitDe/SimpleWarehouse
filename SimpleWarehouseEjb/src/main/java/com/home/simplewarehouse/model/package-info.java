@@ -1,6 +1,6 @@
 /**
- * Entity model for Simple Warehouse application.
- * <p>
+ * Entity model for Simple Warehouse application.<br>
+ *
  * <pre>{@code
  * 
  *      +--------------+                         +----------------+
@@ -11,6 +11,6 @@
  *      |  ...         |                         |  ...           |
  *      +--------------+                         +----------------+
  *      
- * }</pre> 
+ * }</pre>
  */
 package com.home.simplewarehouse.model;
