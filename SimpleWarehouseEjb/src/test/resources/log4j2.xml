@@ -18,10 +18,10 @@
 	</Appenders>
 
 	<Loggers>
-		<Logger name="com.home.simplewarehouse.location" level="info" additivity="false">
+		<Logger name="com.home.simplewarehouse.location" level="info" additivity="true">
 			<AppenderRef ref="FilePart" />
 		</Logger>
-		<Logger name="com.home.simplewarehouse.handlingunit" level="info" additivity="false">
+		<Logger name="com.home.simplewarehouse.handlingunit" level="info" additivity="true">
 			<AppenderRef ref="FilePart" />
 		</Logger>
 
