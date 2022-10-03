@@ -11,7 +11,7 @@ import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Entity implementation class for Entity: ApplConfig
+ * Entity implementation class for Entity: ApplConfig.
  *
  */
 @XmlRootElement(name = "ApplConfig")
@@ -30,31 +30,65 @@ public class ApplConfig implements Serializable {
 	@Version
 	private int version;
 
+	/**
+	 * Default constructor
+	 */
 	public ApplConfig() {
 		super();
 	}
 
+	/**
+	 * Configuration with access key and given value
+	 * 
+	 * @param keyVal the access key
+	 * @param paramVal the given value
+	 */
 	public ApplConfig(String keyVal, String paramVal) {
 		this.keyVal = keyVal;
 		this.paramVal = paramVal;
 	}
 
+	/**
+	 * Get the key value
+	 * 
+	 * @return the key value
+	 */
 	public String getKeyVal() {
 		return this.keyVal;
 	}
 
+	/**
+	 * Set the key to the given value
+	 * 
+	 * @param KeyVal the value
+	 */
 	public void setKeyVal(String KeyVal) {
 		this.keyVal = KeyVal;
 	}
 
+	/**
+	 * Get the parameters value
+	 * 
+	 * @return the value
+	 */
 	public String getParamVal() {
 		return this.paramVal;
 	}
 
+	/**
+	 * Set the parameters value
+	 * 
+	 * @param ParamVal the value
+	 */
 	public void setParamVal(String ParamVal) {
 		this.paramVal = ParamVal;
 	}
 
+	/**
+	 * The entity version
+	 * 
+	 * @return the version value
+	 */
 	public int getVersion() {
 		return this.version;
 	}
@@ -83,6 +117,7 @@ public class ApplConfig implements Serializable {
 		return Objects.equals(keyVal, other.keyVal) && Objects.equals(paramVal, other.paramVal)
 				&& version == other.version;
 	}
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
