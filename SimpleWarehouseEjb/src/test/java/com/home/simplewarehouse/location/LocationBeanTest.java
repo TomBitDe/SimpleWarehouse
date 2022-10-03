@@ -106,7 +106,7 @@ public class LocationBeanTest {
 
 		locationLocal.create(expLocation);
 		LOG.info("Location created: " + expLocation);
-		Location location = locationLocal.getById(expLocation.getId());		
+		Location location = locationLocal.getById(expLocation.getLocationId());		
 		LOG.info("Location getById: " + location);
 		
 		assertEquals(expLocation, location);
@@ -128,13 +128,13 @@ public class LocationBeanTest {
 	    Location location = locationLocal.getById("A");
 		LOG.info("Location getById: " + location);
 		
-		assertEquals("A", location.getId());
+		assertEquals("A", location.getLocationId());
 		
 		// Delete the location
 		locationLocal.delete(location);
 		assertNotNull(location);
-		assertEquals("A", location.getId());
-		LOG.info("Location deleted: " + location.getId());
+		assertEquals("A", location.getLocationId());
+		LOG.info("Location deleted: " + location.getLocationId());
 		
 		locationLocal.create(new Location("A", "Test"));
 		location = locationLocal.getById("A");				
@@ -145,7 +145,7 @@ public class LocationBeanTest {
 
 		// Delete the location
 		locationLocal.delete(location);
-		LOG.info("Location deleted: " + location.getId());
+		LOG.info("Location deleted: " + location.getLocationId());
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
@@ -168,14 +168,14 @@ public class LocationBeanTest {
 
 	    Location location = locationLocal.getById("A");
 		assertNotNull(location);
-		assertEquals("A", location.getId());
+		assertEquals("A", location.getLocationId());
 		
 		// Delete the location
 		locationLocal.delete(location);
 		assertNotNull(location);
-		assertEquals("A", location.getId());
+		assertEquals("A", location.getLocationId());
 		assertNull(locationLocal.getById("A"));
-		LOG.info("Location deleted: " + location.getId());
+		LOG.info("Location deleted: " + location.getLocationId());
 	}
 	
 	@Test
@@ -227,7 +227,7 @@ public class LocationBeanTest {
 		
 		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
 		
-		LOG.info("5 HandlingUits dropped to " + locA.getId() + "   " + locA);
+		LOG.info("5 HandlingUits dropped to " + locA.getLocationId() + "   " + locA);
 
 		LOG.info("Sample hU2 and hU5");
 		LOG.info(hU2);
@@ -235,7 +235,7 @@ public class LocationBeanTest {
 		
 		// Now delete the location
 		locationLocal.delete(locA);
-		LOG.info("Location deleted: " + locA.getId());
+		LOG.info("Location deleted: " + locA.getLocationId());
 		
 		hU2 = handlingUnitLocal.getById("2");
 		hU5 = handlingUnitLocal.getById("5");
