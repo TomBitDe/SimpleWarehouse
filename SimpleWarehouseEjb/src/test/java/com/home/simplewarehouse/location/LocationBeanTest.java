@@ -242,7 +242,7 @@ public class LocationBeanTest {
 		
 		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
 		
-		LOG.info("5 HandlingUits dropped to " + locA.getLocationId() + "   " + locA);
+		LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
 
 		LOG.info("Sample hU2 and hU5");
 		hU2 = handlingUnitLocal.getById("2");
@@ -267,5 +267,56 @@ public class LocationBeanTest {
 		LOG.info("Sample hU2 and hU5 have no longer a location");
 		LOG.info(hU2);
 		LOG.info(hU5);
+	}
+
+	@Test
+	@InSequence(5)
+	public void deleteLocationWithOneHandlingUnit() {
+		LOG.info("--- Test deleteLocationWithOneHandlingUnit");
+		
+		assertTrue(locationLocal.getAll().isEmpty());
+		
+		// Prepare a location
+		locationLocal.create(new Location("A", "Test"));
+		Location locA = locationLocal.getById("A");
+		
+		// Test the special toString also
+		assertTrue(locA.toString().contains("handlingUnits=[]"));
+		
+		LOG.info("Location prepared: " + locA);
+		
+		// Drop to make a relation
+		HandlingUnit hU8 = new HandlingUnit("8", "Test");
+		handlingUnitLocal.dropTo(locA, hU8);
+		
+		locA = locationLocal.getById("A");
+		assertNotNull(locA);	
+		assertFalse(locA.getHandlingUnits().isEmpty());
+		assertEquals(1, locA.getHandlingUnits().size());
+
+		// Test the special toString also
+		assertTrue(locA.toString().contains("handlingUnits=[\"8\"]"));
+
+		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
+		
+		LOG.info("1 HandlingUnit dropped to " + locA.getLocationId() + "   " + locA);
+
+		LOG.info("Sample hU8");
+		hU8 = handlingUnitLocal.getById("8");
+		LOG.info(hU8);
+		
+		// Now delete the location
+		locA = locationLocal.getById("A");
+		locationLocal.delete(locA);
+		LOG.info("Location deleted: " + locA.getLocationId());
+		
+		hU8 = handlingUnitLocal.getById("8");
+		
+		assertNotNull(hU8);
+		
+		assertNull(hU8.getLocation());
+		
+		LOG.info("Sample hU1 has no longer a location");
+		LOG.info(hU8);
 	}
 }

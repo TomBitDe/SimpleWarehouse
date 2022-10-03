@@ -136,9 +136,21 @@ public class Location extends EntityBase implements Serializable {
 			builder.append("null");
 		}
 		else {
-		    handlingUnits.stream().forEach(item -> builder.append(item.getId()).append(" "));
+		    handlingUnits.stream().forEach(item -> builder
+		    		.append('"')
+		    		.append(item.getId())
+		    		.append('"')
+		    		.append(" "));
 		}
-		builder.append("]");
+		
+		// Replace trailing " " by "]" (see above) or just append "]"
+		int idx = builder.lastIndexOf(" ");
+		if (idx > 0) {
+		    builder.replace(idx, idx + 1, "]");
+		}
+		else {
+		    builder.append("]");
+		}
 		
 		return builder.toString();
 	}
