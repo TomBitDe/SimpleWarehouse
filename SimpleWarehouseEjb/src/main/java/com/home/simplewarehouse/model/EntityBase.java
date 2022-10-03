@@ -26,14 +26,27 @@ public class EntityBase {
     @Column(name = "UPDATE_USER")
     private String updateUserId;
     
+    /**
+     * Set the defaults for the entity base in default constructor
+     */
     public EntityBase() {
     	this.updateTimestamp = new Timestamp(System.currentTimeMillis());
     	this.updateUserId = USER_DEFAULT;
     }
     
+    /**
+     * Get the time stamp of the last update
+     * 
+     * @return the time stamp
+     */
 	public Timestamp getUpdateTimestamp() {
 		return updateTimestamp;
 	}
+	/**
+	 * Set the time stamp of the last update
+	 * 
+	 * @param updateTimestamp the time stamp
+	 */
 	public void setUpdateTimestamp(Timestamp updateTimestamp) {
 		if (updateTimestamp == null) {
 			updateTimestamp = new Timestamp(System.currentTimeMillis());		}
@@ -42,9 +55,20 @@ public class EntityBase {
 		}
 	}
 	
+	/**
+	 * Get the user id of the last update
+	 * 
+	 * @return the user id
+	 */
 	public String getUpdateUserId() {
 		return updateUserId;
 	}
+	
+	/**
+	 * Set the user id of the last update
+	 * 
+	 * @param updateUserId the user id
+	 */
 	public void setUpdateUserId(String updateUserId) {
 		if (updateUserId == null) {
 			this.updateUserId = USER_DEFAULT;
