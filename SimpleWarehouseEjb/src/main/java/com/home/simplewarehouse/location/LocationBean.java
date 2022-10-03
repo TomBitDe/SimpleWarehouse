@@ -53,7 +53,7 @@ public class LocationBean implements LocationLocal {
 	public void delete(Location location) {
 		LOG.trace("--> delete(" + location + ')');
 
-		if (location != null && location.getId() != null) {
+		if (location != null && location.getLocationId() != null) {
 			if (!em.contains(location)) {
 				location = em.merge(location);
 			}

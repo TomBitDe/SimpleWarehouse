@@ -107,11 +107,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
 			throw new IllegalStateException("Location has illegal state (HandlingUnits is null)");
 		}
 		if (location.getHandlingUnits().isEmpty()) {
-			throw new LocationIsEmptyException("Location [" + location.getId() + "] is EMPTY");
+			throw new LocationIsEmptyException("Location [" + location.getLocationId() + "] is EMPTY");
 		}
 		
 		if (! location.removeHandlingUnit(this)) {
-			throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getId() + ']');
+			throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getLocationId() + ']');
 		}
 		
 		setLocation(null);

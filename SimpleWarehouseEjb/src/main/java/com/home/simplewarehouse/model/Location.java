@@ -36,7 +36,7 @@ public class Location extends EntityBase implements Serializable {
 
     @Id
     @Column(name = "LOCATION_ID", nullable = false, length = 200)
-    private String id;
+    private String locationId;
     
     @Version
     private int version;
@@ -52,33 +52,33 @@ public class Location extends EntityBase implements Serializable {
     
     public Location(String id) {
     	super();
-    	this.id = id;
+    	this.locationId = id;
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
     	super.setUpdateUserId("System");
     }
     
     public Location(String id, String user) {
     	super();
-    	this.id = id;
+    	this.locationId = id;
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
     	super.setUpdateUserId(user);
     }
     
     public Location(String id, String user, Timestamp timestamp) {
     	super();
-    	this.id = id;
+    	this.locationId = id;
     	super.setUpdateTimestamp(timestamp);
     	super.setUpdateUserId(user);
     }
     
-    public String getId() {
-    	LOG.debug("id=" + id);
-        return this.id;
+    public String getLocationId() {
+    	LOG.debug("locationId=" + locationId);
+        return this.locationId;
     }
 
-    public void setId(final String id) {
-        this.id = id;
-        LOG.debug("id=" + id);
+    public void setLocationId(final String id) {
+        this.locationId = id;
+        LOG.debug("locationId=" + id);
     }
 
 	public int getVersion() {
@@ -109,8 +109,8 @@ public class Location extends EntityBase implements Serializable {
 
 	@Override
 	public int hashCode() {
-		// Only id; this is a must. Otherwise stack overflow
-		return Objects.hash(id);
+		// Only locationId; this is a must. Otherwise stack overflow
+		return Objects.hash(locationId);
 	}
 
 	@Override
@@ -123,8 +123,8 @@ public class Location extends EntityBase implements Serializable {
 			return false;
 		Location other = (Location) obj;
 		
-		// Only id; this is a must. Otherwise stack overflow
-		return Objects.equals(id, other.id);
+		// Only locationId; this is a must. Otherwise stack overflow
+		return Objects.equals(locationId, other.locationId);
 	}
 	
 	private String toString(Set<HandlingUnit> handlingUnits) {
@@ -146,8 +146,8 @@ public class Location extends EntityBase implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Location [id=")
-		    .append(id)
+		builder.append("Location [locationId=")
+		    .append(locationId)
 		    .append(", version=")
 		    .append(version)
 		    .append(", handlingUnits=")
