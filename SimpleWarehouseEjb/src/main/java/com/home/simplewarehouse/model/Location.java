@@ -43,7 +43,7 @@ public class Location extends EntityBase implements Serializable {
     
     @OneToMany( mappedBy="location"
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
-    		, fetch=FetchType.EAGER )
+    		, fetch = FetchType.EAGER )
     private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
     public Location() {
