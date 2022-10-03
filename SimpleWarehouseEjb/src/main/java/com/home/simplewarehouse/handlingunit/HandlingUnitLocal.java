@@ -3,9 +3,7 @@ package com.home.simplewarehouse.handlingunit;
 import java.util.List;
 
 import com.home.simplewarehouse.model.HandlingUnit;
-import com.home.simplewarehouse.model.HandlingUnitNotOnLocationException;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.model.LocationIsEmptyException;
 
 public interface HandlingUnitLocal {
 	public void create(HandlingUnit handlingUnit);

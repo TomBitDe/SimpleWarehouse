@@ -17,9 +17,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.model.HandlingUnit;
-import com.home.simplewarehouse.model.HandlingUnitNotOnLocationException;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.model.LocationIsEmptyException;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 @Stateless

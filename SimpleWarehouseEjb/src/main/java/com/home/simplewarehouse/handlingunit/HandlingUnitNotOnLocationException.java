@@ -1,4 +1,4 @@
-package com.home.simplewarehouse.model;
+package com.home.simplewarehouse.handlingunit;
 
 public class HandlingUnitNotOnLocationException extends Exception {
 	private static final long serialVersionUID = -8265509324969758651L;
