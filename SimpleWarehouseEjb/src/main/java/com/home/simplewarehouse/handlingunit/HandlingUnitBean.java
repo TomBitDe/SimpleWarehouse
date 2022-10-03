@@ -20,6 +20,9 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
+/**
+ * Bean class for HandlingUnit usage. 
+ */
 @Stateless
 @Local(HandlingUnitLocal.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
@@ -33,6 +36,9 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	@EJB
 	private LocationLocal locationLocal;
 
+	/**
+	 * Default constructor is mandatory
+	 */
 	public HandlingUnitBean() {
 		super();
 		LOG.trace("--> HandlingUnitBean()");

@@ -32,7 +32,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test the handling unit bean.
+ * Test the Handling Unit bean.
  */
 @RunWith(Arquillian.class)
 public class HandlingUnitTest {

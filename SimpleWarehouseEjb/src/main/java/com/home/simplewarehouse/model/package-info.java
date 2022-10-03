@@ -1,5 +1,5 @@
 /**
- * Entity model for Simple Warehouse application.<br>
+ * Entity model for the Simple Warehouse application.<br>
  *
  * <pre>{@code
  * 
