@@ -20,8 +20,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Any storage location.<br>
- * <br>
+ * Any storage location.
+ * <p>
  * A capacity of 0 means that an undefined number of goods can be stored in the location.<br>
  * A maxWeight of 0 means that the weight is not relevant for storing goods in the location.<br>
  * A maxHeight of 0 means that the height is not relevant for storing goods in the location.<br>
