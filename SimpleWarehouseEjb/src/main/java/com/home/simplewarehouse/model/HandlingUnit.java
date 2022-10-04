@@ -64,13 +64,13 @@ public class HandlingUnit extends EntityBase implements Serializable {
     }
 
     public String getId() {
-    	LOG.debug("id=" + id);
+    	LOG.debug("id=" + this.id);
         return this.id;
     }
 
     public void setId(String id) {
         this.id = id;
-    	LOG.debug("id=" + id);
+    	LOG.debug("id=" + this.id);
     }
 
 	public int getVersion() {

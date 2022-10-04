@@ -8,6 +8,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.List;
+
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
 
@@ -21,7 +22,6 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
