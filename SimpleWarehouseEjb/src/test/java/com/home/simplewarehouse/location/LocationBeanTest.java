@@ -209,6 +209,7 @@ public class LocationBeanTest {
 		LOG.info("--- Test deleteLocationWithHandlingUnits");
 		
 		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		
 		// Prepare a location
 		locationLocal.create(new Location("A", "Test"));
@@ -275,6 +276,7 @@ public class LocationBeanTest {
 		LOG.info("--- Test deleteLocationWithOneHandlingUnit");
 		
 		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		
 		// Prepare a location
 		locationLocal.create(new Location("A", "Test"));
