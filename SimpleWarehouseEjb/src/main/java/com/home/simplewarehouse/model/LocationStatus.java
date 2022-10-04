@@ -2,6 +2,7 @@ package com.home.simplewarehouse.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -160,6 +161,23 @@ public class LocationStatus extends EntityBase implements Serializable {
 
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(locationId, version);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		LocationStatus other = (LocationStatus) obj;
+		return Objects.equals(locationId, other.locationId) && version == other.version;
 	}
 
 	@Override
