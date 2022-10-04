@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Version;
 
@@ -46,6 +48,11 @@ public class Location extends EntityBase implements Serializable {
     		, fetch = FetchType.EAGER )
     private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn
+    private LocationStatus locationStatus;
+    
+    
     public Location() {
     	super();
     }
@@ -72,13 +79,13 @@ public class Location extends EntityBase implements Serializable {
     }
     
     public String getLocationId() {
-    	LOG.debug("locationId=" + locationId);
+    	LOG.debug("locationId=" + this.locationId);
         return this.locationId;
     }
 
     public void setLocationId(final String id) {
         this.locationId = id;
-        LOG.debug("locationId=" + id);
+        LOG.debug("locationId=" + this.locationId);
     }
 
 	public int getVersion() {
