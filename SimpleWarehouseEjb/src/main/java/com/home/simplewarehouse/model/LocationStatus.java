@@ -36,11 +36,11 @@ public class LocationStatus extends EntityBase implements Serializable {
 	private String errorStatus;
 	
 	/**
-	 * Location ltos status (long time out of service)
+	 * Location ltosStatus status (long time out of service)
 	 */
 	@Basic(optional = false)
-	@Column(name = "LTOS")
-	private String ltos;
+	@Column(name = "LTOS_STATUS")
+	private String ltosStatus;
 	
 	/**
 	 * Lock status of the location
@@ -63,19 +63,40 @@ public class LocationStatus extends EntityBase implements Serializable {
     public LocationStatus() {
     }
     
-    public LocationStatus(String id) {
+    public LocationStatus(String locationId) {
     	super();
     	
-    	this.locationId = id;
+    	this.locationId = locationId;
     	
     	this.errorStatus = ErrorStatus.NONE.name();
-    	this.ltos = Ltos.NO.name();
+    	this.ltosStatus = LtosStatus.NO.name();
     	this.lockStatus = LockStatus.UNLOCKED.name();
     	
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
     	super.setUpdateUserId("System");
     }
     
+	public LocationStatus(String locationId, ErrorStatus errorStatus, LtosStatus ltosStatus, LockStatus lockStatus) {
+		super();
+		
+		this.locationId = locationId;
+		
+		if (errorStatus == null)
+			this.errorStatus = ErrorStatus.NONE.name();
+		else
+		    this.errorStatus = errorStatus.name();
+		
+		if (ltosStatus == null)
+			this.ltosStatus = LtosStatus.NO.name();
+		else
+		    this.ltosStatus = ltosStatus.name();
+		
+		if (lockStatus == null)
+			this.lockStatus = LockStatus.UNLOCKED.name();
+		else
+			this.lockStatus = lockStatus.name();
+	}
+
 	public String getLocationId() {
 		LOG.debug("locationId=" + this.locationId);
 		return this.locationId;
@@ -99,16 +120,16 @@ public class LocationStatus extends EntityBase implements Serializable {
 		}
 	}
 
-	public Ltos getLtos() {
-		return Ltos.valueOf(this.ltos);
+	public LtosStatus getLtosStatus() {
+		return LtosStatus.valueOf(this.ltosStatus);
 	}
 
-	public void setLtos(Ltos ltos) {
-		if (ltos == null) {
-			this.ltos = Ltos.YES.name();
+	public void setLtosStatus(LtosStatus ltosStatus) {
+		if (ltosStatus == null) {
+			this.ltosStatus = LtosStatus.YES.name();
 		}
 		else {
-			this.ltos = ltos.name();
+			this.ltosStatus = ltosStatus.name();
 		}
 	}
 	
@@ -133,6 +154,14 @@ public class LocationStatus extends EntityBase implements Serializable {
 		this.version = version;
 	}
 
+	public Location getLocation() {
+		return location;
+	}
+
+	public void setLocation(Location location) {
+		this.location = location;
+	}
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -142,8 +171,8 @@ public class LocationStatus extends EntityBase implements Serializable {
 		    .append(locationId)
 		    .append(", errorStatus=")
 		    .append(errorStatus)
-		    .append(", ltos=")
-		    .append(ltos)
+		    .append(", ltosStatus=")
+		    .append(ltosStatus)
 		    .append(", lockStatus=")
 		    .append(lockStatus)
 		    .append("]");
