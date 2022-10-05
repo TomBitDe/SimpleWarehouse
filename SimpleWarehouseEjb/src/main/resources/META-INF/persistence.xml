@@ -9,9 +9,13 @@
 		<class>com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig</class>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />
-			<property name="eclipselink.ddl-generation.output-mode" value="database" />
-            <property name="eclipselink.logging.level.sql" value="WARNING"/>
-            <property name="eclipselink.logging.parameters" value="false"/>
+			<property name="eclipselink.create-ddl-jdbc-file-name" value="createDDL_ddlGeneration.jdbc"/>
+            <property name="eclipselink.drop-ddl-jdbc-file-name" value="dropDDL_ddlGeneration.jdbc"/>		
+			<property name="eclipselink.ddl-generation.output-mode" value="both" />
+			<property name="eclipselink.logging.level" value="FINEST"/>
+			<property name="eclipselink.logging.logger" value="ServerLogger"/>
+            <property name="eclipselink.logging.level.sql" value="FINEST"/>
+            <property name="eclipselink.logging.parameters" value="true"/>
 		</properties>
 	</persistence-unit>
 </persistence>

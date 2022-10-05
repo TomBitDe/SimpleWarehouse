@@ -77,6 +77,19 @@ public class LocationStatus extends EntityBase implements Serializable {
     	super.setUpdateUserId("System");
     }
     
+    public LocationStatus(String locationId, String user) {
+    	super();
+    	
+    	this.locationId = locationId;
+    	
+    	this.errorStatus = ErrorStatus.NONE.name();
+    	this.ltosStatus = LtosStatus.NO.name();
+    	this.lockStatus = LockStatus.UNLOCKED.name();
+    	
+    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
+    	super.setUpdateUserId(user);
+    }
+    
 	public LocationStatus(String locationId, ErrorStatus errorStatus, LtosStatus ltosStatus, LockStatus lockStatus) {
 		super();
 		
