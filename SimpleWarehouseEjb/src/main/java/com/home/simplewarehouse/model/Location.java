@@ -37,7 +37,7 @@ public class Location extends EntityBase implements Serializable {
     private static final Logger LOG = LogManager.getLogger(Location.class);
 
     @Id
-    @Column(name = "LOCATION_ID", nullable = false, length = 200)
+    @Column(name = "LOCATION_ID", nullable = false)
     private String locationId;
     
     @Version
@@ -49,7 +49,7 @@ public class Location extends EntityBase implements Serializable {
     private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
-    @PrimaryKeyJoinColumn
+    @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private LocationStatus locationStatus;
     
     
@@ -61,7 +61,7 @@ public class Location extends EntityBase implements Serializable {
     	super();
     	this.locationId = id;
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId("System");
+    	super.setUpdateUserId(USER_DEFAULT);
     }
     
     public Location(String id, String user) {
@@ -113,6 +113,14 @@ public class Location extends EntityBase implements Serializable {
 	    
 		return b;
 	}
+	
+	public LocationStatus getLocationStatus() {
+		return locationStatus;
+	}
+
+	public void setLocationStatus(LocationStatus locationStatus) {
+		this.locationStatus = locationStatus;
+	}
 
 	@Override
 	public int hashCode() {
@@ -161,7 +169,7 @@ public class Location extends EntityBase implements Serializable {
 		
 		return builder.toString();
 	}
-
+	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -169,6 +177,8 @@ public class Location extends EntityBase implements Serializable {
 		    .append(locationId)
 		    .append(", version=")
 		    .append(version)
+		    .append(", ")
+		    .append(locationStatus)
 		    .append(", handlingUnits=")
 		    .append(toString(handlingUnits))
 			.append(", ")

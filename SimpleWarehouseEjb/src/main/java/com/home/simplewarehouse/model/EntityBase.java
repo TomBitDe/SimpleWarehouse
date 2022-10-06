@@ -17,13 +17,13 @@ public class EntityBase {
      * The update time stamp of the entity
      */
     @Basic(optional = false)
-    @Column(name = "UPDATE_TS")
+    @Column(name = "UPDATE_TS", nullable = false)
     private Timestamp updateTimestamp;
     /**
      * The user id of the user who has done the last update
      */
     @Basic(optional = false)
-    @Column(name = "UPDATE_USER")
+    @Column(name = "UPDATE_USER", nullable = false)
     private String updateUserId;
     
     /**

@@ -27,6 +27,7 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -267,11 +268,19 @@ public class HandlingUnitTest {
 		// Prepare a handling unit
 		handlingUnitLocal.create(new HandlingUnit("1"));
 		
-		// Pick now
 		HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
+		LOG.info("Prepared: " + handlingUnit);
 		
-		// Location is EMPTY because just newly created
-		handlingUnitLocal.pickFrom(new Location("A"), handlingUnit);
+		// Pick now
+		try {
+			LOG.info("Pick now");
+		    handlingUnitLocal.pickFrom(new Location("A"), handlingUnit);
+		}
+		catch(LocationIsEmptyException isEmpty) {
+			LOG.info("Exception: " + isEmpty.getMessage());
+			// Location is EMPTY because just newly created
+			throw new LocationIsEmptyException("Expected exception", isEmpty);
+		}
 	}
 
 	@Test(expected = HandlingUnitNotOnLocationException.class)
@@ -297,19 +306,30 @@ public class HandlingUnitTest {
 
 		handlingUnitLocal.create(new HandlingUnit("2"));
 
-		// Pick now
 		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		
 		LOG.info(hU2);
 		
-		// Location contains hU1 but not hU2
-		handlingUnitLocal.pickFrom(lOA, hU2);
+		// Pick now
+		try {
+			LOG.info("Pick now");
+			handlingUnitLocal.pickFrom(lOA, hU2);
+		}
+		catch(HandlingUnitNotOnLocationException isNotOnLocation) {
+			LOG.info("Exception: " + isNotOnLocation.getMessage());
+			// Location contains hU1 but not hU2
+			throw new HandlingUnitNotOnLocationException("Expected exception", isNotOnLocation);
+		}
+		
+		// Check location is set to ERROR for manual adjustment (Inventur)
+		lOA = locationLocal.getById("A");
+		assertTrue(lOA.getLocationStatus().getErrorStatus().equals(ErrorStatus.ERROR));
 	}
 	
 	@Test
 	@InSequence(9)
 	public void deleteHandlingUnitOnLocation() {
-		LOG.info("---Test deleteHandlingUnitOnLocation");
+		LOG.info("--- Test deleteHandlingUnitOnLocation");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -355,7 +375,7 @@ public class HandlingUnitTest {
 	@Test
 	@InSequence(10)
 	public void doubleDropSameLocation() {
-		LOG.info("---Test doubleDropSameLocation");
+		LOG.info("--- Test doubleDropSameLocation");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -401,7 +421,7 @@ public class HandlingUnitTest {
 	@Test
 	@InSequence(11)
 	public void doubleDropOtherLocation() {
-		LOG.info("---Test doubleDropOtherLocation");
+		LOG.info("--- Test doubleDropOtherLocation");
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
@@ -439,11 +459,13 @@ public class HandlingUnitTest {
 		// Check the locations
 		assertNotNull(lOA);
 		assertTrue(lOA.getHandlingUnits().isEmpty());
+		assertTrue(lOA.getLocationStatus().getErrorStatus().equals(ErrorStatus.ERROR));
 
 		assertNotNull(lOB);
 		assertFalse(lOB.getHandlingUnits().isEmpty());
 		assertTrue(lOB.getHandlingUnits().contains(hU2));
 		assertEquals(1, lOB.getHandlingUnits().size());
+		assertTrue(lOB.getLocationStatus().getErrorStatus().equals(ErrorStatus.NONE));
 
 		// Check the handling unit
 		assertNotNull(hU2);

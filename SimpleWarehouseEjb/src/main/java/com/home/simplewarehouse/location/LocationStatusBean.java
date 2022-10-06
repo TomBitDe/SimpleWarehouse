@@ -42,7 +42,7 @@ public class LocationStatusBean implements LocationStatusLocal {
 	@Override
 	public void create(final LocationStatus locationStatus) {
 		LOG.trace("--> create");
-
+		
 		em.persist(locationStatus);
 		em.flush();
 

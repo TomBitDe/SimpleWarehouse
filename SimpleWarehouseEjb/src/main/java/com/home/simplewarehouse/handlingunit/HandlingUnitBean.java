@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -115,10 +116,16 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalStateException("Location has illegal state (HandlingUnits is null)");
 		}
 		if (location.getHandlingUnits().isEmpty()) {
+			// ATTENTION: Location error status does not need to be changed because the location was EMPTY!
+			//            NO manual adjustment is needed in this case!
 			throw new LocationIsEmptyException("Location [" + location.getLocationId() + "] is EMPTY");
 		}
 		
 		if (! location.removeHandlingUnit(handlingUnit)) {
+			// CAUTION: Set the location error status to ERROR
+			//          Manual adjustment is needed!
+			location.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+			
 			throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getLocationId() + ']');
 		}
 		
@@ -149,6 +156,8 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 					LOG.warn("Handling unit " + handlingUnit.getId() + " is here: " + item);
 
 					pickFrom(item, handlingUnit);
+					
+					item.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 				}
 				catch(HandlingUnitNotOnLocationException | LocationIsEmptyException ex) {
 					LOG.warn("Correction PICK with error. Check " + item);

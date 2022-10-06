@@ -26,6 +26,10 @@ public class LocationStatus extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(LocationStatus.class);
     
+    public static final ErrorStatus ERROR_STATUS_DEFAULT = ErrorStatus.NONE;
+    public static final LtosStatus LTOS_STATUS_DEFAULT = LtosStatus.NO;
+    public static final LockStatus LOCK_STATUS_DEFAULT = LockStatus.UNLOCKED;
+    
 	@Id
 	private String locationId;
 	
@@ -57,6 +61,12 @@ public class LocationStatus extends EntityBase implements Serializable {
     @MapsId
     @JoinColumn(name = "LOCATION_ID")
     private Location location;
+    
+    private void setStatusesDefaults() {
+    	this.errorStatus = ERROR_STATUS_DEFAULT.name();
+    	this.ltosStatus = LTOS_STATUS_DEFAULT.name();
+    	this.lockStatus = LOCK_STATUS_DEFAULT.name();
+    }
  
     /**
      * Set the defaults for the location status in default constructor
@@ -69,12 +79,10 @@ public class LocationStatus extends EntityBase implements Serializable {
     	
     	this.locationId = locationId;
     	
-    	this.errorStatus = ErrorStatus.NONE.name();
-    	this.ltosStatus = LtosStatus.NO.name();
-    	this.lockStatus = LockStatus.UNLOCKED.name();
+    	setStatusesDefaults();
     	
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId("System");
+    	super.setUpdateUserId(USER_DEFAULT);
     }
     
     public LocationStatus(String locationId, String user) {
@@ -82,15 +90,13 @@ public class LocationStatus extends EntityBase implements Serializable {
     	
     	this.locationId = locationId;
     	
-    	this.errorStatus = ErrorStatus.NONE.name();
-    	this.ltosStatus = LtosStatus.NO.name();
-    	this.lockStatus = LockStatus.UNLOCKED.name();
+    	setStatusesDefaults();
     	
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
     	super.setUpdateUserId(user);
     }
     
-	public LocationStatus(String locationId, ErrorStatus errorStatus, LtosStatus ltosStatus, LockStatus lockStatus) {
+	public LocationStatus(String locationId, ErrorStatus errorStatus, LtosStatus ltosStatus, LockStatus lockStatus, String user) {
 		super();
 		
 		this.locationId = locationId;
@@ -109,6 +115,9 @@ public class LocationStatus extends EntityBase implements Serializable {
 			this.lockStatus = LockStatus.UNLOCKED.name();
 		else
 			this.lockStatus = lockStatus.name();
+		
+		super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
+    	super.setUpdateUserId(user);
 	}
 
 	public String getLocationId() {
@@ -206,7 +215,9 @@ public class LocationStatus extends EntityBase implements Serializable {
 		    .append(ltosStatus)
 		    .append(", lockStatus=")
 		    .append(lockStatus)
-		    .append("]");
+		    .append(", ")
+			.append(super.toString())
+			.append("]");
 		
 		return builder.toString();
 	}

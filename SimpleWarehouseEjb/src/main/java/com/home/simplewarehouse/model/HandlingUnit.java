@@ -28,7 +28,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
 
     @Id
-    @Column(name = "ID", nullable = false, length = 200)
+    @Column(name = "ID", nullable = false)
     private String id;
 
     @Version

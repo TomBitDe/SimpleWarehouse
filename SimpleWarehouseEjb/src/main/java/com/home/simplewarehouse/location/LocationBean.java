@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
@@ -50,7 +51,15 @@ public class LocationBean implements LocationLocal {
 	public void create(final Location location) {
 		LOG.trace("--> create");
 
+		LocationStatus locationStatus = new LocationStatus(location.getLocationId());
+		
+		location.setLocationStatus(locationStatus);
+		
+		locationStatus.setLocation(location);
+		
+		// No need to    em.persist(locationStatus)    because it is done by    cascade = CascadeType.ALL
 		em.persist(location);
+		
 		em.flush();
 
 		LOG.trace("<-- create");
