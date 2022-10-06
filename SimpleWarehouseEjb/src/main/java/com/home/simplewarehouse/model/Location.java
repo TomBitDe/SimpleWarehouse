@@ -52,6 +52,9 @@ public class Location extends EntityBase implements Serializable {
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private LocationStatus locationStatus;
     
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
+    @PrimaryKeyJoinColumn(name = "LOCATION_ID")
+    private LocationCharacteristics locationCharacteristics;
     
     public Location() {
     	super();
@@ -122,6 +125,14 @@ public class Location extends EntityBase implements Serializable {
 		this.locationStatus = locationStatus;
 	}
 
+	public LocationCharacteristics getLocationCharacteristics() {
+		return locationCharacteristics;
+	}
+
+	public void setLocationCharacteristics(LocationCharacteristics locationCharacteristics) {
+		this.locationCharacteristics = locationCharacteristics;
+	}
+
 	@Override
 	public int hashCode() {
 		// Only locationId; this is a must. Otherwise stack overflow
@@ -179,6 +190,8 @@ public class Location extends EntityBase implements Serializable {
 		    .append(version)
 		    .append(", ")
 		    .append(locationStatus)
+		    .append(", ")
+		    .append(locationCharacteristics)
 		    .append(", handlingUnits=")
 		    .append(toString(handlingUnits))
 			.append(", ")
