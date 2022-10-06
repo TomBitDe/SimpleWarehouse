@@ -156,7 +156,7 @@ public class LocationCharacteristics extends EntityBase implements Serializable 
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append("LocationStatus [")
+		builder.append("LocationCharacteristics [")
 		    .append("locationId=")
 		    .append(locationId)
 		    .append(", capacity=")

@@ -20,6 +20,7 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LocationCharacteristics;
 import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -58,7 +59,14 @@ public class LocationBean implements LocationLocal {
 		
 		locationStatus.setLocation(location);
 		
+		LocationCharacteristics locationCharacteristics = new LocationCharacteristics(location.getLocationId());
+		
+		location.setLocationCharacteristics(locationCharacteristics);
+		
+		locationCharacteristics.setLocation(location);
+		
 		// No need to    em.persist(locationStatus)    because it is done by    cascade = CascadeType.ALL
+		// Same for      locationCharacteristics
 		em.persist(location);
 		
 		em.flush();
