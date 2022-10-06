@@ -257,7 +257,7 @@ public class HandlingUnitTest {
 		LOG.info(lOA);
 	}
 	
-	@Test(expected = LocationIsEmptyException.class)
+	@Test
 	@InSequence(7)
 	public void pickFromEmptyLocation() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.info("--- Test pickFromEmptyLocation");
@@ -277,13 +277,12 @@ public class HandlingUnitTest {
 		    handlingUnitLocal.pickFrom(new Location("A"), handlingUnit);
 		}
 		catch(LocationIsEmptyException isEmpty) {
-			LOG.info("Exception: " + isEmpty.getMessage());
 			// Location is EMPTY because just newly created
-			throw new LocationIsEmptyException("Expected exception", isEmpty);
+			LOG.info("Expected exception: " + isEmpty.getMessage());
 		}
 	}
 
-	@Test(expected = HandlingUnitNotOnLocationException.class)
+	@Test
 	@InSequence(8)
 	public void pickFromLocationNotContaining() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.info("--- Test pickFromLocationNotContaining");
@@ -318,12 +317,14 @@ public class HandlingUnitTest {
 		catch(HandlingUnitNotOnLocationException isNotOnLocation) {
 			LOG.info("Exception: " + isNotOnLocation.getMessage());
 			// Location contains hU1 but not hU2
-			throw new HandlingUnitNotOnLocationException("Expected exception", isNotOnLocation);
 		}
 		
 		// Check location is set to ERROR for manual adjustment (Inventur)
 		lOA = locationLocal.getById("A");
 		assertTrue(lOA.getLocationStatus().getErrorStatus().equals(ErrorStatus.ERROR));
+		
+		LOG.info("Locations in ERROR");
+		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
 	}
 	
 	@Test
@@ -466,6 +467,11 @@ public class HandlingUnitTest {
 		assertTrue(lOB.getHandlingUnits().contains(hU2));
 		assertEquals(1, lOB.getHandlingUnits().size());
 		assertTrue(lOB.getLocationStatus().getErrorStatus().equals(ErrorStatus.NONE));
+
+		LOG.info("Locations in ERROR");
+		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
+		LOG.info("Locations NOT in ERROR");
+		locationLocal.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
 
 		// Check the handling unit
 		assertNotNull(hU2);
