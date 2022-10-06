@@ -215,6 +215,8 @@ public class LocationStatus extends EntityBase implements Serializable {
 		    .append(ltosStatus)
 		    .append(", lockStatus=")
 		    .append(lockStatus)
+		    .append(", version=")
+		    .append(version)
 		    .append(", ")
 			.append(super.toString())
 			.append("]");

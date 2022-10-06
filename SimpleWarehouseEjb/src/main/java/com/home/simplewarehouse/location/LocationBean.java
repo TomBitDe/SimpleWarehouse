@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
@@ -123,13 +124,32 @@ public class LocationBean implements LocationLocal {
 
 		List<Location> locations = getAll();
 		
-		for (Location item : locations) {
-			if (item.getHandlingUnits().contains(handlingUnit)) {
-				ret.add(item);
+		for (Location location : locations) {
+			if (location.getHandlingUnits().contains(handlingUnit)) {
+				ret.add(location);
 			}
 		}
 
 		LOG.trace("<-- getAllContaining()");
+
+		return ret;
+	}
+	
+	@Override
+	public List<Location> getAllInErrorStatus(final ErrorStatus errorStatus) {
+		LOG.trace("--> getAllInErrorStatus() " + errorStatus.name());
+		
+		List<Location> ret = new ArrayList<>();
+
+		List<Location> locations = getAll();
+		
+		for (Location location : locations) {
+			if (location.getLocationStatus().getErrorStatus().equals(errorStatus)) {
+				ret.add(location);
+			}
+		}
+
+		LOG.trace("<-- getAllInErrorStatus()");
 
 		return ret;
 	}

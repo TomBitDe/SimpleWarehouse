@@ -2,6 +2,7 @@ package com.home.simplewarehouse.location;
 
 import java.util.List;
 
+import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 
@@ -43,4 +44,12 @@ public interface LocationLocal {
 	 * @return the Location list
 	 */
 	public List<Location> getAllContaining(final HandlingUnit handlingUnit);
+	/**
+	 * Get a list of all Location items with the given ErrorStatus
+	 * 
+	 * @param errorStatus the errorStatus to search for
+	 * 
+	 * @return the Location list
+	 */
+	public List<Location> getAllInErrorStatus(final ErrorStatus errorStatus);
 }
