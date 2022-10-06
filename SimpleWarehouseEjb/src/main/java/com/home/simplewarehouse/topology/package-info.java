@@ -1,4 +1,4 @@
 /**
- * Simple SampleWarehouseBeanTest topology data for testing.
+ * Sample Warehouse topology data for testing.
  */
 package com.home.simplewarehouse.topology;

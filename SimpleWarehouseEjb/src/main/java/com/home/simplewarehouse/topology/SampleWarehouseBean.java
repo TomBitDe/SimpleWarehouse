@@ -19,6 +19,9 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
+/**
+ * Bean class for Sample Warehouse usage. 
+ */
 @Stateless
 @Local(SampleWarehouseLocal.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
