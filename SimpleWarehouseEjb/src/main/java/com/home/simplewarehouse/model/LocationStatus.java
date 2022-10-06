@@ -72,7 +72,13 @@ public class LocationStatus extends EntityBase implements Serializable {
      * Set the defaults for the location status in default constructor
      */
     public LocationStatus() {
-    }
+    	super();
+    	
+    	setStatusesDefaults();
+    	
+    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
+    	super.setUpdateUserId(USER_DEFAULT);
+   }
     
     public LocationStatus(String locationId) {
     	super();
