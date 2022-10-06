@@ -32,7 +32,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test the location characteristics bean.
+ * Test the Location Characteristics bean.
  */
 @RunWith(Arquillian.class)
 public class LocationCharacteristicsBeanTest {

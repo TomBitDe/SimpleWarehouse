@@ -34,7 +34,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test the sample warehouse bean.
+ * Test the Sample Warehouse bean.
  */
 @RunWith(Arquillian.class)
 public class SampleWarehouseBeanTest {
