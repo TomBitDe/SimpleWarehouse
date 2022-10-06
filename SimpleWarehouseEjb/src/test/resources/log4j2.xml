@@ -27,6 +27,9 @@
 		<Logger name="com.home.simplewarehouse.handlingunit" level="info" additivity="true">
 			<AppenderRef ref="FilePart" />
 		</Logger>
+		<Logger name="com.home.simplewarehouse.topology" level="info" additivity="true">
+			<AppenderRef ref="FilePart" />
+		</Logger>
 
 		<Logger name="com.home.simplewarehouse" level="info" additivity="false">
 			<AppenderRef ref="FileAll" />
