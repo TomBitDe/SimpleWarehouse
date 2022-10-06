@@ -18,8 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Any kind of handling unit.<br>
- * <br>
+ * Any kind of handling unit.
  */
 @Entity
 @Table(name="HANDLING_UNIT")
