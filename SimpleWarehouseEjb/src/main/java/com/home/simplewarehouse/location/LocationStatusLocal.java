@@ -9,18 +9,6 @@ import com.home.simplewarehouse.model.LocationStatus;
  */
 public interface LocationStatusLocal {
 	/**
-	 * Create a LocationStatus and persist
-	 * 
-	 * @param locationStatus the given LocationStatus
-	 */
-	public void create(final LocationStatus locationStatus);
-	/**
-	 * Delete a LocationStatus and remove
-	 * 
-	 * @param locationStatus the given LocationStatus
-	 */
-	public void delete(LocationStatus locationStatus);
-	/**
 	 * Get a LocationStatus by its id
 	 * 
 	 * @param id the id

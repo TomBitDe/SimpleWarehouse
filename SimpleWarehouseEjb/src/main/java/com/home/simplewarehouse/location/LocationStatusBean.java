@@ -40,37 +40,6 @@ public class LocationStatusBean implements LocationStatusLocal {
 	}
 
 	@Override
-	public void create(final LocationStatus locationStatus) {
-		LOG.trace("--> create");
-		
-		em.persist(locationStatus);
-		em.flush();
-
-		LOG.trace("<-- create");
-	}
-
-	@Override
-	public void delete(LocationStatus locationStatus) {
-		LOG.trace("--> delete(" + locationStatus + ')');
-
-		if (locationStatus != null && locationStatus.getLocationId() != null) {
-			if (!em.contains(locationStatus)) {
-				locationStatus = em.merge(locationStatus);
-			}
-
-			em.remove(locationStatus);
-			em.flush();
-
-			LOG.debug("deleted: " + locationStatus);
-		} 
-		else {
-			LOG.debug("LocationStatus == null or Id == null");
-		}
-
-		LOG.trace("<-- delete()");
-	}
-
-	@Override
 	public LocationStatus getById(String id) {
 		LOG.trace("--> getById(" + id + ')');
 
