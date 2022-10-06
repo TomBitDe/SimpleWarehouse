@@ -13,7 +13,9 @@ import javax.interceptor.Interceptors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -27,7 +29,11 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 	@EJB
 	LocationLocal locationLocal;
 	
+	@EJB
+	HandlingUnitLocal handlingUnitLocal;
+	
 	List<Location> locationList = new ArrayList<>();
+	List<HandlingUnit> handlingUnitList = new ArrayList<>();
 
 	public SampleWarehouseBean() {
 		super();
@@ -38,11 +44,15 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 	public void initialize() {
 		LOG.trace("--> initialize()");
 		
-		for (char c = 'A'; c <= 'Z'; ++c) {
+		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
 			locationList.add(new Location(String.valueOf(c), SampleWarehouseBean.class.getSimpleName()));
 		}
-		
 		locationList.forEach(l -> locationLocal.create(l));
+		
+		for (int val = 1; val <= HANDLING_UNIT_NUM; ++val) {
+			handlingUnitList.add(new HandlingUnit(String.valueOf(val), SampleWarehouseBean.class.getSimpleName()));
+		}
+		handlingUnitList.forEach(h -> handlingUnitLocal.create(h));
 		
 		LOG.trace("<-- initialize()");
 	}
@@ -51,6 +61,7 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 		LOG.trace("--> cleanup()");
 		
 		locationLocal.getAll().forEach(l -> locationLocal.delete(l));
+		handlingUnitLocal.getAll().forEach(h -> handlingUnitLocal.delete(h));
 		
 		LOG.trace("<-- cleanup()");
 	}

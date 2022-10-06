@@ -47,6 +47,9 @@ public class SampleWarehouseBeanTest {
 	@EJB
 	private LocationStatusLocal locationStatusLocal;
 	
+	@EJB
+	private HandlingUnitLocal handlingUnitLocal;
+	
 	
 	@Deployment
 	public static JavaArchive createTestArchive() {
@@ -97,13 +100,19 @@ public class SampleWarehouseBeanTest {
 		
 		assertNotNull(locationLocal.getAll());
 		assertFalse(locationLocal.getAll().isEmpty());
-		assertEquals(26, locationLocal.getAll().size());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM, locationLocal.getAll().size());
 		
 		assertNotNull(locationStatusLocal.getAll());
 		assertFalse(locationStatusLocal.getAll().isEmpty());
-		assertEquals(26, locationStatusLocal.getAll().size());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM, locationStatusLocal.getAll().size());
 
 		locationLocal.getAll().forEach(l -> LOG.info(l));
+		
+		assertNotNull(handlingUnitLocal.getAll());
+		assertFalse(handlingUnitLocal.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitLocal.getAll().size());
+		
+		handlingUnitLocal.getAll().forEach(h -> LOG.info(h));
 	}
 	
 	@Test
@@ -118,5 +127,8 @@ public class SampleWarehouseBeanTest {
 		
 		assertNotNull(locationStatusLocal.getAll());
 		assertTrue(locationStatusLocal.getAll().isEmpty());
+
+		assertNotNull(handlingUnitLocal.getAll());
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
 	}
 }
