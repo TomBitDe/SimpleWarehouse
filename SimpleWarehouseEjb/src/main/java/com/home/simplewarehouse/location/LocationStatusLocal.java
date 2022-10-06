@@ -22,5 +22,4 @@ public interface LocationStatusLocal {
 	 * @return the LocationStatus list
 	 */
 	public List<LocationStatus> getAll();
-
 }
