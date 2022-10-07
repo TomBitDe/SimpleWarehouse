@@ -12,11 +12,13 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import static javax.persistence.LockModeType.NONE;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +28,7 @@ import org.apache.logging.log4j.Logger;
  */
 @Entity
 @Table(name="LOCATION")
+@NamedQuery(name = "findAllLocations", query = "select l from Location l", lockMode = NONE)
 public class Location extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Location.class);

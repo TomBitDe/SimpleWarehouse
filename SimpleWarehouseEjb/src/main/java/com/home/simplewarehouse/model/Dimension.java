@@ -13,6 +13,8 @@ import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.persistence.NamedQuery;
+import static javax.persistence.LockModeType.NONE;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +30,7 @@ import org.apache.logging.log4j.Logger;
  */
 @Entity
 @Table(name="DIMENSION")
+@NamedQuery(name = "findAllDimensions", query = "select d from Dimension d", lockMode = NONE)
 public class Dimension extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Dimension.class);
