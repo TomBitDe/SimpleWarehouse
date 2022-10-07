@@ -15,6 +15,9 @@
 		<Appender type="File" name="FilePart" fileName="${logpath}/SimpleWarehouse-Part.log" immediateFlush="true" append="true">
 			<Layout type="PatternLayout" pattern="%d{yyyy.MM.dd HH:mm:ss,SSS} [%highlight{%-5level}] %C{1.}.%M() - %msg%n%throwable{short.lineNumber}" />
 		</Appender>
+		<Appender type="File" name="FileUseCases" fileName="${logpath}/SimpleWarehouse-UseCases.log" immediateFlush="true" append="true">
+			<Layout type="PatternLayout" pattern="%d{yyyy.MM.dd HH:mm:ss,SSS} [%highlight{%-5level}] %C{1.}.%M() - %msg%n%throwable{short.lineNumber}" />
+		</Appender>
 		<Appender type="File" name="Sql" fileName="${logpath}/Sql.log" immediateFlush="true" append="true">
 			<Layout type="PatternLayout" pattern="%d{yyyy.MM.dd HH:mm:ss,SSS} [%highlight{%-5level}] %C{1.}.%M() - %msg%n%throwable{short.lineNumber}" />
 		</Appender>
@@ -30,12 +33,15 @@
 		<Logger name="com.home.simplewarehouse.topology" level="info" additivity="true">
 			<AppenderRef ref="FilePart" />
 		</Logger>
+		<Logger name="com.home.simplewarehouse.usecase" level="trace" additivity="true">
+			<AppenderRef ref="FileUseCases" />
+		</Logger>
 
 		<Logger name="com.home.simplewarehouse" level="info" additivity="false">
 			<AppenderRef ref="FileAll" />
 		</Logger>
 		
-		<Logger name="org.eclipse.persistence" level="trace" additivity="false">
+		<Logger name="org.eclipse" level="trace" additivity="false">
 			<AppenderRef ref="Sql" />
 		</Logger>
 
@@ -43,6 +49,7 @@
 		    <AppenderRef ref="STDOUT" />
 			<AppenderRef ref="FileAll" />
 			<AppenderRef ref="FilePart" />
+			<AppenderRef ref="FileUseCases" />
 			<AppenderRef ref="Sql" />
 		    <!--
 			-->
