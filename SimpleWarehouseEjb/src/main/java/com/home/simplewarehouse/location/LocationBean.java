@@ -54,18 +54,16 @@ public class LocationBean implements LocationLocal {
 		LOG.trace("--> create");
 
 		LocationStatus locationStatus = new LocationStatus(location.getLocationId());
-		
+		locationStatus.setLocation(location);
+				
 		location.setLocationStatus(locationStatus);
 		
-		locationStatus.setLocation(location);
-		
 		Dimension dimension = new Dimension(location.getLocationId());
+		dimension.setLocation(location);
 		
 		location.setDimension(dimension);
 		
-		dimension.setLocation(location);
-		
-		// No need to    em.persist(locationStatus)    because it is done by    cascade = CascadeType.ALL
+		// No need to    em.persist(locationStatus)  because it is done by  cascade = CascadeType.ALL
 		// Same for      dimension
 		em.persist(location);
 		
@@ -83,12 +81,13 @@ public class LocationBean implements LocationLocal {
 				location = em.merge(location);
 			}
 			
-			for (HandlingUnit item : location.getHandlingUnits()) {
-				item.setLocation(null);
-				em.persist(item);
+			for (HandlingUnit handlingUnit : location.getHandlingUnits()) {
+				handlingUnit.setLocation(null);
 				em.flush();
 			}
-
+			
+			// No need to    em.remove(locationStatus)  because it is done by  cascade = CascadeType.ALL
+			// Same for      dimension
 			em.remove(location);
 			em.flush();
 
