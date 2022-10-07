@@ -104,6 +104,7 @@ public class LocationStatusBeanTest {
 		locationLocal.create(expLocation);
 		assertEquals(expLocation, locationLocal.getById("A"));
 		
+	    // MANDATORY reread
 		LocationStatus locationStatus = locationStatusLocal.getById(expLocation.getLocationId());		
 		LOG.info("LocationStatus getById: " + locationStatus);
 		
@@ -116,6 +117,7 @@ public class LocationStatusBeanTest {
 		assertNotNull(locationStatus.getUpdateTimestamp());
 		
 		// This one has not been created
+	    // MANDATORY reread
 		assertNull(locationStatusLocal.getById("B"));
 	}
 	
@@ -139,6 +141,7 @@ public class LocationStatusBeanTest {
 		locationLocal.delete(expLocation);
 		
 		// Now check the location
+	    // MANDATORY reread
 		assertNull(locationLocal.getById("A"));
 		assertNull(locationStatusLocal.getById("A"));
 	}

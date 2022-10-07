@@ -106,6 +106,8 @@ public class LocationBeanTest {
 
 		locationLocal.create(expLocation);
 		LOG.info("Location created: " + expLocation);
+
+		// MANDATORY reread
 		Location location = locationLocal.getById(expLocation.getLocationId());		
 		LOG.info("Location getById: " + location);
 		
@@ -113,6 +115,7 @@ public class LocationBeanTest {
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
 		
+	    // MANDATORY reread
 		assertNull(locationLocal.getById("B"));
 	}
 	
@@ -125,6 +128,7 @@ public class LocationBeanTest {
 		
 	    locationLocal.create(new Location("A"));
 
+	    // MANDATORY reread
 	    Location location = locationLocal.getById("A");
 		LOG.info("Location getById: " + location);
 		
@@ -137,6 +141,8 @@ public class LocationBeanTest {
 		LOG.info("Location deleted: " + location.getLocationId());
 		
 		locationLocal.create(new Location("A", "Test"));
+
+		// MANDATORY reread
 		location = locationLocal.getById("A");				
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
@@ -150,6 +156,8 @@ public class LocationBeanTest {
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
 		locationLocal.create(new Location("A", "Test", ts));
+
+	    // MANDATORY reread
 		location = locationLocal.getById("A");
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
@@ -174,9 +182,12 @@ public class LocationBeanTest {
 		locationLocal.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
+
+		// MANDATORY reread
 		assertNull(locationLocal.getById("A"));
 		LOG.info("Location deleted: " + location.getLocationId());
 		
+	    // MANDATORY reread
 		location = locationLocal.getById("A");
 		assertNull(location);
 	}
@@ -236,6 +247,7 @@ public class LocationBeanTest {
 		locA = locationLocal.getById("A");
 		handlingUnitLocal.dropTo(locA, hU5);
 		
+	    // MANDATORY reread
 		locA = locationLocal.getById("A");
 		assertNotNull(locA);	
 		assertFalse(locA.getHandlingUnits().isEmpty());
@@ -246,16 +258,20 @@ public class LocationBeanTest {
 		LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
 
 		LOG.info("Sample hU2 and hU5");
+	    // MANDATORY reread
 		hU2 = handlingUnitLocal.getById("2");
 		LOG.info(hU2);
+	    // MANDATORY reread
 		hU5 = handlingUnitLocal.getById("5");
 		LOG.info(hU5);
 		
 		// Now delete the location
+	    // MANDATORY reread
 		locA = locationLocal.getById("A");
 		locationLocal.delete(locA);
 		LOG.info("Location deleted: " + locA.getLocationId());
 		
+	    // MANDATORY reread
 		hU2 = handlingUnitLocal.getById("2");
 		hU5 = handlingUnitLocal.getById("5");
 		
@@ -291,6 +307,7 @@ public class LocationBeanTest {
 		HandlingUnit hU8 = new HandlingUnit("8", "Test");
 		handlingUnitLocal.dropTo(locA, hU8);
 		
+	    // MANDATORY reread
 		locA = locationLocal.getById("A");
 		assertNotNull(locA);	
 		assertFalse(locA.getHandlingUnits().isEmpty());
@@ -304,14 +321,17 @@ public class LocationBeanTest {
 		LOG.info("1 HandlingUnit dropped to " + locA.getLocationId() + "   " + locA);
 
 		LOG.info("Sample hU8");
+	    // MANDATORY reread
 		hU8 = handlingUnitLocal.getById("8");
 		LOG.info(hU8);
 		
 		// Now delete the location
+	    // MANDATORY reread
 		locA = locationLocal.getById("A");
 		locationLocal.delete(locA);
 		LOG.info("Location deleted: " + locA.getLocationId());
 		
+	    // MANDATORY reread
 		hU8 = handlingUnitLocal.getById("8");
 		
 		assertNotNull(hU8);

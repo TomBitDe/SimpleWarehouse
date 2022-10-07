@@ -123,11 +123,15 @@ public class HandlingUnitTest {
 		handlingUnitLocal.create(new HandlingUnit("1"));
 
 	    HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
+	    
+	    // MANDATORY reread
 		assertEquals("1", handlingUnit.getId());
 		
 		// Delete returns the deleted handlingUnit
 		handlingUnitLocal.delete(handlingUnit);
 		assertNotNull(handlingUnit);
+
+	    // MANDATORY reread
 		assertEquals("1", handlingUnit.getId());
 		LOG.info(handlingUnit);
 	}
@@ -168,12 +172,14 @@ public class HandlingUnitTest {
 		
 		locationLocal.create(new Location("A"));
 		
+	    // MANDATORY reread
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = locationLocal.getById("A");
 		
 		// Now drop
 		handlingUnitLocal.dropTo(lOA, hU1);
 
+	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
 		lOA = locationLocal.getById("A");
 
@@ -204,6 +210,7 @@ public class HandlingUnitTest {
 		
 		locationLocal.create(new Location("A"));
 		
+	    // MANDATORY reread
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = null;
 		
@@ -230,6 +237,7 @@ public class HandlingUnitTest {
 		// To prepare the pick do a drop before
 		handlingUnitLocal.dropTo(lOA, hU1);
 		
+	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
 		lOA = locationLocal.getById("A");
 
@@ -248,6 +256,7 @@ public class HandlingUnitTest {
 		// Now do the pick
 		handlingUnitLocal.pickFrom(lOA, hU1);
 
+	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
 		lOA = locationLocal.getById("A");
 		
@@ -300,6 +309,7 @@ public class HandlingUnitTest {
 		
 		handlingUnitLocal.dropTo(lOA, hU1);
 		
+	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
 		lOA = locationLocal.getById("A");
 
@@ -320,6 +330,7 @@ public class HandlingUnitTest {
 		}
 		
 		// Check location is set to ERROR for manual adjustment (Inventur)
+	    // MANDATORY reread
 		lOA = locationLocal.getById("A");
 		assertEquals(ErrorStatus.ERROR,lOA.getLocationStatus().getErrorStatus());
 		
@@ -348,20 +359,24 @@ public class HandlingUnitTest {
 		// Drop to make a relation
 		handlingUnitLocal.dropTo(lOA, hU1);
 		
+	    // MANDATORY reread
 		lOA = locationLocal.getById("A");
 		
 		handlingUnitLocal.dropTo(lOA, hU2);
 		
+	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
 		
 		// Now delete a handling unit that is related to a location
 		LOG.info("Delete: " + hU1);
 		handlingUnitLocal.delete(hU1);
 		
+	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
 		
 		assertNull(hU1);
 		
+	    // MANDATORY reread
 		lOA = locationLocal.getById("A");
 		
 		// Check the location
@@ -392,6 +407,7 @@ public class HandlingUnitTest {
 		// Drop to make a relation
 		handlingUnitLocal.dropTo(lOA, hU2);
 		
+	    // MANDATORY reread
 		hU2 = handlingUnitLocal.getById("2");
 		lOA = locationLocal.getById("A");
 		LOG.info("First drop: " + hU2);
@@ -400,6 +416,7 @@ public class HandlingUnitTest {
 		// Now drop again to same location
 		handlingUnitLocal.dropTo(lOA, hU2);
 		
+	    // MANDATORY reread
 		hU2 = handlingUnitLocal.getById("2");
 		lOA = locationLocal.getById("A");
 		LOG.info("Second drop: " + hU2);
@@ -440,6 +457,7 @@ public class HandlingUnitTest {
 		// Drop to make a relation
 		handlingUnitLocal.dropTo(lOA, hU2);
 
+	    // MANDATORY reread
 		hU2 = handlingUnitLocal.getById("2");
 		lOA = locationLocal.getById("A");
 		lOB = locationLocal.getById("B");
@@ -450,6 +468,7 @@ public class HandlingUnitTest {
 		// Now drop again to other location
 		handlingUnitLocal.dropTo(lOB, hU2);
 
+	    // MANDATORY reread
 		hU2 = handlingUnitLocal.getById("2");
 		lOA = locationLocal.getById("A");
 		lOB = locationLocal.getById("B");

@@ -105,6 +105,7 @@ public class DimensionBeanTest {
 		locationLocal.create(expLocation);
 		assertEquals(expLocation, locationLocal.getById("A"));
 		
+	    // MANDATORY reread
 		Dimension dimension = dimensionLocal.getById(expLocation.getLocationId());		
 		LOG.info("Dimension getById: " + dimension);
 		
@@ -129,6 +130,7 @@ public class DimensionBeanTest {
 		Location expLocation = new Location("A");
 		
 		locationLocal.create(expLocation);
+	    // MANDATORY reread
 		assertEquals(expLocation, locationLocal.getById("A"));
 		
 		LOG.info("Location prepared: " + expLocation);
@@ -138,6 +140,7 @@ public class DimensionBeanTest {
 		locationLocal.delete(expLocation);
 		
 		// Now check the location
+	    // MANDATORY reread
 		assertNull(locationLocal.getById("A"));
 		assertNull(dimensionLocal.getById("A"));
 	}
