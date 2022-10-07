@@ -21,12 +21,15 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.location.LocationStatusBean;
+import com.home.simplewarehouse.location.LocationStatusLocal;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -59,6 +62,7 @@ public class HandlingUnitTest {
 				.addClasses(
 						HandlingUnitLocal.class, HandlingUnitBean.class,
 						LocationLocal.class, LocationBean.class,
+						LocationStatusLocal.class, LocationStatusBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -208,10 +212,10 @@ public class HandlingUnitTest {
 		// Prepare a handling unit and a location
 		handlingUnitLocal.create(new HandlingUnit("1"));
 		
-		locationLocal.create(new Location("A"));
-		
 	    // MANDATORY reread
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+
+		// For the test case
 		Location lOA = null;
 		
 		// Now drop
@@ -278,14 +282,22 @@ public class HandlingUnitTest {
 		handlingUnitLocal.create(new HandlingUnit("1"));
 		
 		HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
-		LOG.info("Prepared: " + handlingUnit);
+		LOG.info("Prepared: {}", handlingUnit);
+		
+		// Prepare a location
+		locationLocal.create(new Location("A"));
+		
+		Location location = locationLocal.getById("A");
+		LOG.info("Prepared: {}", location);
 		
 		// Pick now
 		try {
 			LOG.info("Pick now");
-		    handlingUnitLocal.pickFrom(new Location("A"), handlingUnit);
+		    handlingUnitLocal.pickFrom(location, handlingUnit);
+		    
+		    Assert.fail("Expected an LocationIsEmptyException to be thrown");
 		}
-		catch(LocationIsEmptyException isEmpty) {
+		catch (LocationIsEmptyException isEmpty) {
 			// Location is EMPTY because just newly created
 			LOG.info("Expected exception: " + isEmpty.getMessage());
 		}
@@ -325,8 +337,8 @@ public class HandlingUnitTest {
 			handlingUnitLocal.pickFrom(lOA, hU2);
 		}
 		catch(HandlingUnitNotOnLocationException isNotOnLocation) {
-			LOG.info("Exception: " + isNotOnLocation.getMessage());
 			// Location contains hU1 but not hU2
+			LOG.info("Exception: " + isNotOnLocation.getMessage());
 		}
 		
 		// Check location is set to ERROR for manual adjustment (Inventur)
