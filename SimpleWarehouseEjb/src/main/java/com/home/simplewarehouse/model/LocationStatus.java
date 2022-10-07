@@ -10,7 +10,6 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
-import javax.persistence.NamedQueries;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
@@ -25,12 +24,8 @@ import org.apache.logging.log4j.Logger;
  */
 @Entity
 @Table(name="LOCATION_STATUS")
-@NamedQueries({
-	
-	@NamedQuery(name = "findAllLocationStatuses", query = "select l from LocationStatus l", lockMode = NONE),
-		
-	@NamedQuery(name = "findAllLocationWithErrorStatus", query = "select l.location from LocationStatus l where l.errorStatus = ?1", lockMode = NONE) 
-})
+@NamedQuery(name = "findAllLocationStatuses", query = "select l from LocationStatus l", lockMode = NONE)
+@NamedQuery(name = "findAllLocationWithErrorStatus", query = "select l.location from LocationStatus l where l.errorStatus = ?1", lockMode = NONE) 
 public class LocationStatus extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(LocationStatus.class);
