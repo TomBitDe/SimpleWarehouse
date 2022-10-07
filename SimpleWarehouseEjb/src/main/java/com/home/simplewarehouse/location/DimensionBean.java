@@ -14,19 +14,19 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.model.LocationCharacteristics;
+import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
- * Bean class for LocationCharacteristics usage. 
+ * Bean class for Dimension usage. 
  */
 @Stateless
-@Local(LocationCharacteristicsLocal.class)
+@Local(DimensionLocal.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(PerformanceAuditor.class)
-public class LocationCharacteristicsBean implements LocationCharacteristicsLocal {
-	private static final Logger LOG = LogManager.getLogger(LocationCharacteristicsBean.class);
+public class DimensionBean implements DimensionLocal {
+	private static final Logger LOG = LogManager.getLogger(DimensionBean.class);
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -34,32 +34,32 @@ public class LocationCharacteristicsBean implements LocationCharacteristicsLocal
 	/**
 	 * Default constructor is mandatory
 	 */
-	public LocationCharacteristicsBean() {
+	public DimensionBean() {
 		super();
-		LOG.trace("--> LocationCharacteristicsBean()");
-		LOG.trace("<-- LocationCharacteristicsBean()");
+		LOG.trace("--> DimensionBean()");
+		LOG.trace("<-- DimensionBean()");
 	}
 
 	@Override
-	public LocationCharacteristics getById(String id) {
+	public Dimension getById(String id) {
 		LOG.trace("--> getById(" + id + ')');
 
-		LocationCharacteristics locationCharacteristics = em.find(LocationCharacteristics.class, id);
+		Dimension dimension = em.find(Dimension.class, id);
 
 		LOG.trace("<-- getById");
 
-		return locationCharacteristics;
+		return dimension;
 	}
 
 	@Override
-	public List<LocationCharacteristics> getAll() {
+	public List<Dimension> getAll() {
 		LOG.trace("--> getAll()");
 
-		TypedQuery<LocationCharacteristics> query = em.createQuery("SELECT lc FROM LocationCharacteristics lc", LocationCharacteristics.class);
-		List<LocationCharacteristics> locationCharacteristics = query.getResultList();
+		TypedQuery<Dimension> query = em.createQuery("SELECT dim FROM Dimension dim", Dimension.class);
+		List<Dimension> dimension = query.getResultList();
 
 		LOG.trace("<-- getAll()");
 
-		return locationCharacteristics;
+		return dimension;
 	}
 }

@@ -27,19 +27,19 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.model.LocationCharacteristics;
+import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test the Location Characteristics bean.
+ * Test the Dimension bean.
  */
 @RunWith(Arquillian.class)
-public class LocationCharacteristicsBeanTest {
-	private static final Logger LOG = LogManager.getLogger(LocationCharacteristicsBeanTest.class);
+public class DimensionBeanTest {
+	private static final Logger LOG = LogManager.getLogger(DimensionBeanTest.class);
 
 	@EJB
-	LocationCharacteristicsLocal locationCharacteristicsLocal;
+	DimensionLocal dimensionLocal;
 	
 	@EJB
 	LocationLocal locationLocal;
@@ -54,7 +54,7 @@ public class LocationCharacteristicsBeanTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						LocationCharacteristicsLocal.class, LocationCharacteristicsBean.class,
+						DimensionLocal.class, DimensionBean.class,
 						LocationStatusLocal.class, LocationStatusBean.class,
 						LocationLocal.class, LocationBean.class,
 						HandlingUnitLocal.class, HandlingUnitBean.class,
@@ -84,13 +84,13 @@ public class LocationCharacteristicsBeanTest {
 		
 		locations.stream().forEach(l -> locationLocal.delete(l));
 		
-		// No need to cleanup location characteristics because its done by cleanup locations (1:1 relation)
+		// No need to cleanup dimension because its done by cleanup locations (1:1 relation)
 
 		LOG.trace("<-- afterTest()");
 	}
 
 	/**
-	 * Location characteristics is always linked to location
+	 * Dimension is linked to location
 	 */
 	@Test
 	@InSequence(0)
@@ -98,24 +98,24 @@ public class LocationCharacteristicsBeanTest {
 		LOG.info("--- Test create_getById");
 
 		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(locationCharacteristicsLocal.getAll().isEmpty());
+		assertTrue(dimensionLocal.getAll().isEmpty());
 		
 		Location expLocation = new Location("A");
 		
 		locationLocal.create(expLocation);
 		assertEquals(expLocation, locationLocal.getById("A"));
 		
-		LocationCharacteristics locationCharacteristics = locationCharacteristicsLocal.getById(expLocation.getLocationId());		
-		LOG.info("LocationStatus getById: " + locationCharacteristics);
+		Dimension dimension = dimensionLocal.getById(expLocation.getLocationId());		
+		LOG.info("Dimension getById: " + dimension);
 		
-		// Now check the corresponding LocationCharacteristics
-		assertEquals("A", locationCharacteristics.getLocationId());
-		assertEquals(0, locationCharacteristics.getCapacity());
-		assertEquals(EntityBase.USER_DEFAULT, locationCharacteristics.getUpdateUserId());
-		assertNotNull(locationCharacteristics.getUpdateTimestamp());
+		// Now check the corresponding Dimension
+		assertEquals("A", dimension.getLocationId());
+		assertEquals(0, dimension.getCapacity());
+		assertEquals(EntityBase.USER_DEFAULT, dimension.getUpdateUserId());
+		assertNotNull(dimension.getUpdateTimestamp());
 		
 		// This one has not been created
-		assertNull(locationCharacteristicsLocal.getById("B"));
+		assertNull(dimensionLocal.getById("B"));
 	}
 	
 	@Test
@@ -124,7 +124,7 @@ public class LocationCharacteristicsBeanTest {
 		LOG.info("--- Test delete_getById_create");
 
 		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(locationCharacteristicsLocal.getAll().isEmpty());
+		assertTrue(dimensionLocal.getAll().isEmpty());
 		
 		Location expLocation = new Location("A");
 		
@@ -132,13 +132,13 @@ public class LocationCharacteristicsBeanTest {
 		assertEquals(expLocation, locationLocal.getById("A"));
 		
 		LOG.info("Location prepared: " + expLocation);
-		LOG.info("LocationCharacteristics implicite prepared: "+ expLocation.getLocationCharacteristics());
+		LOG.info("Dimension implicite prepared: "+ expLocation.getDimension());
 		
 		// Delete the location
 		locationLocal.delete(expLocation);
 		
 		// Now check the location
 		assertNull(locationLocal.getById("A"));
-		assertNull(locationCharacteristicsLocal.getById("A"));
+		assertNull(dimensionLocal.getById("A"));
 	}
 }

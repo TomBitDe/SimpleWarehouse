@@ -25,8 +25,8 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.location.LocationBean;
-import com.home.simplewarehouse.location.LocationCharacteristicsBean;
-import com.home.simplewarehouse.location.LocationCharacteristicsLocal;
+import com.home.simplewarehouse.location.DimensionBean;
+import com.home.simplewarehouse.location.DimensionLocal;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
@@ -50,7 +50,7 @@ public class SampleWarehouseBeanTest {
 	private LocationStatusLocal locationStatusLocal;
 	
 	@EJB
-	private LocationCharacteristicsLocal locationCharacteristicsLocal;
+	private DimensionLocal dimensionLocal;
 	
 	@EJB
 	private HandlingUnitLocal handlingUnitLocal;
@@ -68,7 +68,7 @@ public class SampleWarehouseBeanTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
 						SampleWarehouseLocal.class, SampleWarehouseBean.class,
-						LocationCharacteristicsLocal.class, LocationCharacteristicsBean.class,
+						DimensionLocal.class, DimensionBean.class,
 						LocationStatusLocal.class, LocationStatusBean.class,
 						LocationLocal.class, LocationBean.class,
 						HandlingUnitLocal.class, HandlingUnitBean.class,
@@ -112,9 +112,9 @@ public class SampleWarehouseBeanTest {
 		assertFalse(locationStatusLocal.getAll().isEmpty());
 		assertEquals(SampleWarehouseBean.LOCATION_NUM, locationStatusLocal.getAll().size());
 
-		assertNotNull(locationCharacteristicsLocal.getAll());
-		assertFalse(locationCharacteristicsLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM, locationCharacteristicsLocal.getAll().size());
+		assertNotNull(dimensionLocal.getAll());
+		assertFalse(dimensionLocal.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM, dimensionLocal.getAll().size());
 
 		locationLocal.getAll().forEach(l -> LOG.info(l));
 		
@@ -138,8 +138,8 @@ public class SampleWarehouseBeanTest {
 		assertNotNull(locationStatusLocal.getAll());
 		assertTrue(locationStatusLocal.getAll().isEmpty());
 
-		assertNotNull(locationCharacteristicsLocal.getAll());
-		assertTrue(locationCharacteristicsLocal.getAll().isEmpty());
+		assertNotNull(dimensionLocal.getAll());
+		assertTrue(dimensionLocal.getAll().isEmpty());
 
 		assertNotNull(handlingUnitLocal.getAll());
 		assertTrue(handlingUnitLocal.getAll().isEmpty());

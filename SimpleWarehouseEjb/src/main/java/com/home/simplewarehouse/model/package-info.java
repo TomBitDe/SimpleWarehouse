@@ -9,20 +9,20 @@
  *      |  id          |                         |  locationId              |<-----+---------------------+
  *      |  location    | <-- 0:1 ------- 0:N --> |  handlingUnits           |      |                     |
  *      |  ...         |                         |  locationStatus          |      |                     |
- *      +--------------+                         |  locationCharacteristics |      |                     |    
+ *      +--------------+                         |  dimension               |      |                     |    
  *                                               |  ...                     |      |                     |
  *                                               |                          |      |                     |
  *                                               +--------------------------+      |                     |
  *                                                                                1:1                   1:1
  *                                                                                 |                     |
  *                                                                                 v                     v
- *                                                                           +----------------+    +-------------------------+
- *                                                                           | LocationStatus |    | LocationCharacteristics |
- *                                                                           |                |    |                         |
- *                                                                           |  locationId    |    |  locationId             |
- *                                                                           |  errorStatus   |    |  capacity               |
- *                                                                           |  ...           |    |  ...                    |
- *                                                                           +----------------+    +-------------------------+
+ *                                                                           +----------------+    +-----------------+
+ *                                                                           | LocationStatus |    | Dimension       |
+ *                                                                           |                |    |                 |
+ *                                                                           |  locationId    |    |  locationId     |
+ *                                                                           |  errorStatus   |    |  capacity       |
+ *                                                                           |  ...           |    |  ...            |
+ *                                                                           +----------------+    +-----------------+
  *                                                                  
  * }</pre>
  */

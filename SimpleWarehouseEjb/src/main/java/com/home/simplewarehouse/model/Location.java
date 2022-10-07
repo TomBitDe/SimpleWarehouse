@@ -23,12 +23,6 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * Any storage location.
- * <p>
- * A capacity of 0 means that an undefined number of goods can be stored in the location.<br>
- * A maxWeight of 0 means that the weight is not relevant for storing goods in the location.<br>
- * A maxHeight of 0 means that the height is not relevant for storing goods in the location.<br>
- * A maxLength of 0 means that the length is not relevant for storing goods in the location.<br>
- * A maxWidth of 0 means that the width is not relevant for storing goods in the location.<br>
  */
 @Entity
 @Table(name="LOCATION")
@@ -54,7 +48,7 @@ public class Location extends EntityBase implements Serializable {
     
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
-    private LocationCharacteristics locationCharacteristics;
+    private Dimension dimension;
     
     public Location() {
     	super();
@@ -125,12 +119,12 @@ public class Location extends EntityBase implements Serializable {
 		this.locationStatus = locationStatus;
 	}
 
-	public LocationCharacteristics getLocationCharacteristics() {
-		return locationCharacteristics;
+	public Dimension getDimension() {
+		return dimension;
 	}
 
-	public void setLocationCharacteristics(LocationCharacteristics locationCharacteristics) {
-		this.locationCharacteristics = locationCharacteristics;
+	public void setDimension(Dimension dimension) {
+		this.dimension = dimension;
 	}
 
 	@Override
@@ -191,7 +185,7 @@ public class Location extends EntityBase implements Serializable {
 		    .append(", ")
 		    .append(locationStatus)
 		    .append(", ")
-		    .append(locationCharacteristics)
+		    .append(dimension)
 		    .append(", handlingUnits=")
 		    .append(toString(handlingUnits))
 			.append(", ")

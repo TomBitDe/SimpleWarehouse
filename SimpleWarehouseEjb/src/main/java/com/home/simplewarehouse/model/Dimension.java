@@ -18,7 +18,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Any location characteristics.
+ * Any dimension.
  * <p>
  * A capacity of 0 means that an undefined number of goods can be stored in the location.<br>
  * A maxWeight of 0 means that the weight is not relevant for storing goods in the location.<br>
@@ -27,10 +27,10 @@ import org.apache.logging.log4j.Logger;
  * A maxWidth of 0 means that the width is not relevant for storing goods in the location.<br>
  */
 @Entity
-@Table(name="LOCATION_CHARACTERISTICS")
-public class LocationCharacteristics extends EntityBase implements Serializable {
+@Table(name="DIMENSION")
+public class Dimension extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
-    private static final Logger LOG = LogManager.getLogger(LocationCharacteristics.class);
+    private static final Logger LOG = LogManager.getLogger(Dimension.class);
     
     public static final int CAPACITY_DEFAULT = 0;
     
@@ -49,45 +49,45 @@ public class LocationCharacteristics extends EntityBase implements Serializable 
     @JoinColumn(name = "LOCATION_ID")
     private Location location;
     
-    private void setCharacteristicsDefaults() {
+    private void setDimensionDefaults() {
     	this.capacity = 0;
     }
  
     /**
-     * Set the defaults for the location characteristics in default constructor
+     * Set the defaults for the dimension in default constructor
      */
-    public LocationCharacteristics() {
+    public Dimension() {
     	super();
     	
-    	setCharacteristicsDefaults();
+    	setDimensionDefaults();
     	
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
     	super.setUpdateUserId(USER_DEFAULT);
     }
     
-    public LocationCharacteristics(String locationId) {
+    public Dimension(String locationId) {
     	super();
     	
     	this.locationId = locationId;
     	
-    	setCharacteristicsDefaults();
+    	setDimensionDefaults();
     	
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
     	super.setUpdateUserId(USER_DEFAULT);
     }
     
-    public LocationCharacteristics(String locationId, String user) {
+    public Dimension(String locationId, String user) {
     	super();
     	
     	this.locationId = locationId;
     	
-    	setCharacteristicsDefaults();
+    	setDimensionDefaults();
     	
     	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
     	super.setUpdateUserId(user);
     }
     
-	public LocationCharacteristics(String locationId, int capacity, String user) {
+	public Dimension(String locationId, int capacity, String user) {
 		super();
 		
 		this.locationId = locationId;
@@ -148,7 +148,7 @@ public class LocationCharacteristics extends EntityBase implements Serializable 
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		LocationCharacteristics other = (LocationCharacteristics) obj;
+		Dimension other = (Dimension) obj;
 		return Objects.equals(locationId, other.locationId) && version == other.version;
 	}
 
@@ -156,7 +156,7 @@ public class LocationCharacteristics extends EntityBase implements Serializable 
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		
-		builder.append("LocationCharacteristics [")
+		builder.append("Dimension [")
 		    .append("locationId=")
 		    .append(locationId)
 		    .append(", capacity=")
