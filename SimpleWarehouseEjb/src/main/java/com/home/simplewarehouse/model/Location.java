@@ -29,6 +29,8 @@ import org.apache.logging.log4j.Logger;
 public class Location extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Location.class);
+    
+    private static final String ID_FORMATTER = "locationId={0}";
 
     @Id
     @Column(name = "LOCATION_ID", nullable = false)
@@ -76,13 +78,13 @@ public class Location extends EntityBase implements Serializable {
     }
     
     public String getLocationId() {
-    	LOG.debug("locationId=" + this.locationId);
+    	LOG.debug(ID_FORMATTER, this.locationId);
         return this.locationId;
     }
 
     public void setLocationId(final String id) {
         this.locationId = id;
-        LOG.debug("locationId=" + this.locationId);
+        LOG.debug(ID_FORMATTER, this.locationId);
     }
 
 	public int getVersion() {

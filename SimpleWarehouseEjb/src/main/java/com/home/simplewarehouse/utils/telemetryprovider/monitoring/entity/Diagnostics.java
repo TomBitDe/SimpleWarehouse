@@ -8,7 +8,7 @@ public class Diagnostics {
     private Map<String,String> parameters = null;
 
     private Diagnostics(String name,Object value){
-        this.parameters = new HashMap<String,String>();
+        this.parameters = new HashMap<>();
         this.parameters.put(name, String.valueOf(value));
     }
     public static Diagnostics with(String name,Object value){

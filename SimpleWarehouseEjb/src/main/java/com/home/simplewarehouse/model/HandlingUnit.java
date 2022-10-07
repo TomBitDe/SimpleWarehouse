@@ -25,6 +25,8 @@ import org.apache.logging.log4j.Logger;
 public class HandlingUnit extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
+    
+    private static final String ID_FORMATTER = "id={0}";
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -63,13 +65,13 @@ public class HandlingUnit extends EntityBase implements Serializable {
     }
 
     public String getId() {
-    	LOG.debug("id=" + this.id);
+    	LOG.debug(ID_FORMATTER, this.id);
         return this.id;
     }
 
     public void setId(String id) {
         this.id = id;
-    	LOG.debug("id=" + this.id);
+    	LOG.debug(ID_FORMATTER, this.id);
     }
 
 	public int getVersion() {

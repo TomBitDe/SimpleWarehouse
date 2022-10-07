@@ -76,7 +76,7 @@ public class LocationBean implements LocationLocal {
 
 	@Override
 	public void delete(Location location) {
-		LOG.trace("--> delete(" + location + ')');
+		LOG.trace("--> delete({})", location);
 
 		if (location != null && location.getLocationId() != null) {
 			if (!em.contains(location)) {
@@ -92,7 +92,7 @@ public class LocationBean implements LocationLocal {
 			em.remove(location);
 			em.flush();
 
-			LOG.debug("deleted: " + location);
+			LOG.debug("deleted: {}", location);
 		} 
 		else {
 			LOG.debug("Location == null or Id == null");
@@ -103,7 +103,7 @@ public class LocationBean implements LocationLocal {
 
 	@Override
 	public Location getById(final String id) {
-		LOG.trace("--> getById(" + id + ')');
+		LOG.trace("--> getById({})", id);
 
 		Location location = em.find(Location.class, id);
 
@@ -126,7 +126,7 @@ public class LocationBean implements LocationLocal {
 	
 	@Override
 	public List<Location> getAllContaining(final HandlingUnit handlingUnit) {
-		LOG.trace("--> getAllContaining() " + handlingUnit);
+		LOG.trace("--> getAllContaining({})", handlingUnit);
 		
 		List<Location> ret = new ArrayList<>();
 
@@ -145,7 +145,7 @@ public class LocationBean implements LocationLocal {
 	
 	@Override
 	public List<Location> getAllInErrorStatus(final ErrorStatus errorStatus) {
-		LOG.trace("--> getAllInErrorStatus() " + errorStatus.name());
+		LOG.trace("--> getAllInErrorStatus({})", errorStatus);
 		
 		List<Location> ret = new ArrayList<>();
 

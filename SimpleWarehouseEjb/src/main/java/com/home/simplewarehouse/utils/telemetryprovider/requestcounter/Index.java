@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 
 @Model
 public class Index {
-	private static AtomicLong REQUEST_COUNTER = new AtomicLong(0);
+	private static AtomicLong requestCounter = new AtomicLong(0);
 
 	@Inject
 	Event<Diagnostics> diagnostics;
@@ -25,7 +25,7 @@ public class Index {
 
 	@PostConstruct
 	public void onNewRequest() {
-		final Diagnostics requests = Diagnostics.with("request", REQUEST_COUNTER.incrementAndGet());
+		final Diagnostics requests = Diagnostics.with("request", requestCounter.incrementAndGet());
 		diagnostics.fire(requests);
 
 		try {

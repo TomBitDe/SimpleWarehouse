@@ -27,6 +27,7 @@ public class GoodMorning {
     	catch (Exception ex)
     	{
     		LOG.fatal(ex.getMessage());
+    		Thread.currentThread().interrupt();
 		}
 
     	LOG.info("<-- say()");

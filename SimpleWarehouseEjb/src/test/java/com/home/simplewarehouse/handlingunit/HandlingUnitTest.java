@@ -180,7 +180,7 @@ public class HandlingUnitTest {
 		LOG.info(hU1);
 		
 		// Handling Unit is on location now
-		assertTrue(hU1.getLocation().equals(lOA));
+		assertEquals(lOA, hU1.getLocation());
 		
 		assertFalse(lOA.getHandlingUnits().isEmpty());
 		assertEquals(1, lOA.getHandlingUnits().size());
@@ -234,7 +234,7 @@ public class HandlingUnitTest {
 		lOA = locationLocal.getById("A");
 
 		// Handling Unit is on location now
-		assertTrue(hU1.getLocation().equals(lOA));
+		assertEquals(lOA, hU1.getLocation());
 		
 		assertFalse(lOA.getHandlingUnits().isEmpty());
 		assertEquals(1, lOA.getHandlingUnits().size());
@@ -321,7 +321,7 @@ public class HandlingUnitTest {
 		
 		// Check location is set to ERROR for manual adjustment (Inventur)
 		lOA = locationLocal.getById("A");
-		assertTrue(lOA.getLocationStatus().getErrorStatus().equals(ErrorStatus.ERROR));
+		assertEquals(ErrorStatus.ERROR,lOA.getLocationStatus().getErrorStatus());
 		
 		LOG.info("Locations in ERROR");
 		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
@@ -415,7 +415,7 @@ public class HandlingUnitTest {
 		// Check the handling unit
 		assertNotNull(hU2);
 		assertNotNull(hU2.getLocation());
-		assertTrue(hU2.getLocation().getLocationId().equals(lOA.getLocationId()));
+		assertEquals(lOA.getLocationId(), hU2.getLocation().getLocationId());
 		LOG.info(hU2);
 	}
 
@@ -460,13 +460,13 @@ public class HandlingUnitTest {
 		// Check the locations
 		assertNotNull(lOA);
 		assertTrue(lOA.getHandlingUnits().isEmpty());
-		assertTrue(lOA.getLocationStatus().getErrorStatus().equals(ErrorStatus.ERROR));
+		assertEquals(ErrorStatus.ERROR, lOA.getLocationStatus().getErrorStatus());
 
 		assertNotNull(lOB);
 		assertFalse(lOB.getHandlingUnits().isEmpty());
 		assertTrue(lOB.getHandlingUnits().contains(hU2));
 		assertEquals(1, lOB.getHandlingUnits().size());
-		assertTrue(lOB.getLocationStatus().getErrorStatus().equals(ErrorStatus.NONE));
+		assertEquals(ErrorStatus.NONE, lOB.getLocationStatus().getErrorStatus());
 
 		LOG.info("Locations in ERROR");
 		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
@@ -476,6 +476,6 @@ public class HandlingUnitTest {
 		// Check the handling unit
 		assertNotNull(hU2);
 		assertNotNull(hU2.getLocation());
-		assertTrue(hU2.getLocation().getLocationId().equals(lOB.getLocationId()));
+		assertEquals(lOB.getLocationId(), hU2.getLocation().getLocationId());
 	}
 }

@@ -32,6 +32,8 @@ public class Dimension extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Dimension.class);
     
+    private static final String ID_FORMATTER = "locationId={0}";
+    
     public static final int CAPACITY_DEFAULT = 0;
     
 	@Id
@@ -102,13 +104,13 @@ public class Dimension extends EntityBase implements Serializable {
 	}
 
 	public String getLocationId() {
-		LOG.debug("locationId=" + this.locationId);
+		LOG.debug(ID_FORMATTER, this.locationId);
 		return this.locationId;
 	}
 
 	public void setLocationId(String locationId) {
 		this.locationId = locationId;
-		LOG.debug("locationId=" + this.locationId);
+		LOG.debug(ID_FORMATTER, this.locationId);
 	}
 
 	public int getCapacity() {

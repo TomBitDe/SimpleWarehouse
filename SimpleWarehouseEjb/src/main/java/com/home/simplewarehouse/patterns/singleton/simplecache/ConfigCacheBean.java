@@ -22,6 +22,9 @@ import org.apache.logging.log4j.Logger;
 @Singleton
 public class ConfigCacheBean implements ConfigCache {
 	private static final Logger LOG = LogManager.getLogger(ConfigCacheBean.class);
+	
+	private static final String KEY_DEFAULT_VALUE_FORMATTER = "Key=[{}] DefaultValue=[{}]";
+	private static final String VALUE_FORMATTER = "Value=[{}]";
 
 	private Map<String, String> cache;
 
@@ -74,7 +77,7 @@ public class ConfigCacheBean implements ConfigCache {
 			LOG.info("EMPTY!");
 		}
 		else {
-			map.forEach((k,v) -> LOG.info("Key=[" + k + "] Value=[" + v + ']'));
+			map.forEach((k,v) -> LOG.info("Key=[{}] Value=[{}]", k, v));
 		}
 
 		LOG.trace("<-- createFreshCache");
@@ -85,11 +88,11 @@ public class ConfigCacheBean implements ConfigCache {
 	@Override
 	@Lock(LockType.READ)
 	public String getData(String key) {
-		LOG.trace("Key=[" + key + ']');
+		LOG.trace("Key=[{}]", key);
 
 		String val = cache.get(key);
 
-		LOG.trace("Value=[" + val + ']');
+		LOG.trace(VALUE_FORMATTER, val);
 
 	    return val;
 	}
@@ -97,7 +100,7 @@ public class ConfigCacheBean implements ConfigCache {
 	@Override
 	@Lock(LockType.READ)
 	public String getData(String key, String defaultValue) {
-		LOG.trace("Key=[" + key + "] DefaultValue=[" + defaultValue + ']');
+		LOG.trace(KEY_DEFAULT_VALUE_FORMATTER, key, defaultValue);
 
 		String val = cache.get(key);
 
@@ -105,7 +108,7 @@ public class ConfigCacheBean implements ConfigCache {
 			val = defaultValue;
 		}
 
-		LOG.trace("Value=[" + val + ']');
+		LOG.trace(VALUE_FORMATTER, val);
 
 	    return val;
 	}
@@ -113,7 +116,7 @@ public class ConfigCacheBean implements ConfigCache {
 	@Override
 	@Lock(LockType.READ)
 	public int getData(String key, int defaultValue) {
-		LOG.trace("Key=[" + key + "] DefaultValue=[" + defaultValue + ']');
+		LOG.trace(KEY_DEFAULT_VALUE_FORMATTER, key, defaultValue);
 
 		int val;
 
@@ -124,7 +127,7 @@ public class ConfigCacheBean implements ConfigCache {
 			val = defaultValue;
 		}
 
-		LOG.trace("Value=[" + val + ']');
+		LOG.trace(VALUE_FORMATTER, val);
 
 	    return val;
 	}
@@ -132,7 +135,7 @@ public class ConfigCacheBean implements ConfigCache {
 	@Override
 	@Lock(LockType.READ)
 	public long getData(String key, long defaultValue) {
-		LOG.trace("Key=[" + key + "] DefaultValue=[" + defaultValue + ']');
+		LOG.trace(KEY_DEFAULT_VALUE_FORMATTER, key, defaultValue);
 
 		long val;
 
@@ -143,7 +146,7 @@ public class ConfigCacheBean implements ConfigCache {
 			val = defaultValue;
 		}
 
-		LOG.trace("Value=[" + val + ']');
+		LOG.trace(VALUE_FORMATTER, val);
 
 	    return val;
 	}

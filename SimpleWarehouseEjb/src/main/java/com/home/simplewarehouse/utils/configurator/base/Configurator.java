@@ -190,7 +190,7 @@ public class Configurator implements ConfiguratorMXBean {
 
 		if (valueForFieldName == null) {
 			this.unconfiguredFields.add(fieldName);
-			LOG.fatal("No configuration in Configurator for fieldName [" + fieldName + ']');
+			LOG.fatal("No configuration in Configurator for fieldName [{}]", fieldName);
 			throw new NotConfiguredException("No configuration in Configurator for fieldName [" + fieldName + ']');
 		}
 

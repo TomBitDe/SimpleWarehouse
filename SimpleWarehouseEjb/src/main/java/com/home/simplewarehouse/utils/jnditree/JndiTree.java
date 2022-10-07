@@ -34,8 +34,6 @@ import org.apache.logging.log4j.Logger;
 public class JndiTree {
 	private static final Logger LOG = LogManager.getLogger(JndiTree.class);
 
-	private InitialContext ctx;
-
 	/**
 	 * Fetch all JNDI tree context as a text string (little bit formatted)
 	 *
@@ -45,7 +43,7 @@ public class JndiTree {
 	@Path("/treeAsText")
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getJndiTreeAsText() {
-		StringBuffer buffer = new StringBuffer();
+		StringBuilder buffer = new StringBuilder();
 
 		buffer.append("JNDI-Context-Listing\n");
 
@@ -64,8 +62,8 @@ public class JndiTree {
 	@Produces(MediaType.TEXT_PLAIN)
 	public String getEntryAsText(@PathParam("key") String key) {
 
-		BufferedReader bufReader = new BufferedReader(new StringReader(fetchTreeAsText(new StringBuffer()).toString()));
-		StringBuffer retBuffer = new StringBuffer();
+		BufferedReader bufReader = new BufferedReader(new StringReader(fetchTreeAsText(new StringBuilder()).toString()));
+		StringBuilder retBuffer = new StringBuilder();
 
 		retBuffer.append("JNDI-Context-Listing for KEY=" + key + "\n\n");
 
@@ -93,9 +91,9 @@ public class JndiTree {
 	 *
 	 * @return the buffer containing the tree context
 	 */
-	private StringBuffer fetchTreeAsText(StringBuffer buffer) {
+	private StringBuilder fetchTreeAsText(StringBuilder buffer) {
 		try {
-			ctx = new InitialContext();
+			InitialContext ctx = new InitialContext();
 
 			writeJndiContextAsStringBuffer(buffer, ctx, "");
 		}
@@ -107,13 +105,13 @@ public class JndiTree {
 	}
 
 	/**
-	 * Write the JNDI context into a StringBuffer
+	 * Write the JNDI context into a StringBuilder
 	 *
 	 * @param buffer a buffer to use
 	 * @param ctx    the context ( InitialContext() ) to work on
 	 * @param name   prefix for the printout
 	 */
-	private void writeJndiContextAsStringBuffer(StringBuffer buffer, Context ctx, String name) {
+	private void writeJndiContextAsStringBuffer(StringBuilder buffer, Context ctx, String name) {
 		buffer.append("\n");
 
 		try {

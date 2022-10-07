@@ -41,7 +41,7 @@ public class LocationStatusBean implements LocationStatusLocal {
 
 	@Override
 	public LocationStatus getById(String id) {
-		LOG.trace("--> getById(" + id + ')');
+		LOG.trace("--> getById({})", id);
 
 		LocationStatus locationStatus = em.find(LocationStatus.class, id);
 

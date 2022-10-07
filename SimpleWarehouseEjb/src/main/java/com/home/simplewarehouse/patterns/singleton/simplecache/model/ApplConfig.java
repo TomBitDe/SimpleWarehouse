@@ -62,8 +62,8 @@ public class ApplConfig implements Serializable {
 	 * 
 	 * @param KeyVal the value
 	 */
-	public void setKeyVal(String KeyVal) {
-		this.keyVal = KeyVal;
+	public void setKeyVal(String keyVal) {
+		this.keyVal = keyVal;
 	}
 
 	/**
@@ -80,8 +80,8 @@ public class ApplConfig implements Serializable {
 	 * 
 	 * @param ParamVal the value
 	 */
-	public void setParamVal(String ParamVal) {
-		this.paramVal = ParamVal;
+	public void setParamVal(String paramVal) {
+		this.paramVal = paramVal;
 	}
 
 	/**

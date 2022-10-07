@@ -67,7 +67,7 @@ public class ApplConfigManagerBean implements ApplConfigManager, ApplConfigServi
 
 	@Override
 	public List<ApplConfig> getContent(int offset, int count) {
-		LOG.trace("--> getContent(" + offset + ", " + count + ")");
+		LOG.trace("--> getContent({}, {})", offset, count);
 
         if (offset < 0) {
             throw new IllegalArgumentException("offset < 0");
@@ -82,14 +82,14 @@ public class ApplConfigManagerBean implements ApplConfigManager, ApplConfigServi
 
         List<ApplConfig> configList = query.getResultList();
 
-		LOG.trace("<-- getContent(" + offset + ", " + count + ")");
+		LOG.trace("<-- getContent({}, {})", offset, count);
 
 		return configList;
 	}
 
 	@Override
 	public ApplConfig getById(String keyVal) {
-		LOG.trace("--> getById(" + keyVal + ')');
+		LOG.trace("--> getById({})", keyVal);
 
 		ApplConfig applConfigItem = em.find(ApplConfig.class, keyVal);
 
@@ -124,19 +124,19 @@ public class ApplConfigManagerBean implements ApplConfigManager, ApplConfigServi
 
 	@Override
 	public ApplConfig delete(String keyVal) {
-		LOG.trace("--> delete(" + keyVal + ')');
+		LOG.trace("--> delete({})", keyVal);
 
 		ApplConfig config = em.find(ApplConfig.class, keyVal);
 
 		if (config != null) {
 			em.remove(config);
 
-			LOG.debug("deleted: " + config);
+			LOG.debug("deleted: {}", config);
 		}
 		else {
-			LOG.debug("Key value <" + keyVal + "> not found");
+			LOG.debug("Key value <{}> not found", keyVal);
 		}
-		LOG.trace("<-- delete(" + keyVal + ')');
+		LOG.trace("<-- delete({})", keyVal);
 
 		return config;
     }

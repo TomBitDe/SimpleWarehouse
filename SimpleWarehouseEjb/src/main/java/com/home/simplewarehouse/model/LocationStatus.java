@@ -26,6 +26,8 @@ public class LocationStatus extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(LocationStatus.class);
     
+    private static final String ID_FORMATTER = "locationId={0}";
+    
     public static final ErrorStatus ERROR_STATUS_DEFAULT = ErrorStatus.NONE;
     public static final LtosStatus LTOS_STATUS_DEFAULT = LtosStatus.NO;
     public static final LockStatus LOCK_STATUS_DEFAULT = LockStatus.UNLOCKED;
@@ -127,13 +129,13 @@ public class LocationStatus extends EntityBase implements Serializable {
 	}
 
 	public String getLocationId() {
-		LOG.debug("locationId=" + this.locationId);
+		LOG.debug(ID_FORMATTER, this.locationId);
 		return this.locationId;
 	}
 
 	public void setLocationId(String locationId) {
 		this.locationId = locationId;
-		LOG.debug("locationId=" + this.locationId);
+		LOG.debug(ID_FORMATTER, this.locationId);
 	}
 
 	public ErrorStatus getErrorStatus() {

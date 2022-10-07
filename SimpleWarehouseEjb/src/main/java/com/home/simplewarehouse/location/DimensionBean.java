@@ -15,7 +15,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.model.Dimension;
-import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
@@ -42,7 +41,7 @@ public class DimensionBean implements DimensionLocal {
 
 	@Override
 	public Dimension getById(String id) {
-		LOG.trace("--> getById(" + id + ')');
+		LOG.trace("--> getById({})", id);
 
 		Dimension dimension = em.find(Dimension.class, id);
 

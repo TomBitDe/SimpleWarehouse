@@ -58,7 +58,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 
 	@Override
 	public void delete(HandlingUnit handlingUnit) {
-		LOG.trace("--> delete(" + handlingUnit + ')');
+		LOG.trace("--> delete({})", handlingUnit);
 
 		if (handlingUnit != null && handlingUnit.getId() != null) {
 			if (!em.contains(handlingUnit)) {
@@ -78,7 +78,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 
 	@Override
 	public HandlingUnit getById(final String id) {
-		LOG.trace("--> getById(" + id + ')');
+		LOG.trace("--> getById({})", id);
 
 		HandlingUnit handlingUnit = em.find(HandlingUnit.class, id);
 
@@ -153,14 +153,14 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			for (Location item : locations) {
 				// HandlingUnit is already stored elsewhere
 				try {
-					LOG.warn("Handling unit " + handlingUnit.getId() + " is here: " + item);
+					LOG.warn("Handling unit {} is here: {}", handlingUnit.getId(), item);
 
 					pickFrom(item, handlingUnit);
 					
 					item.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 				}
 				catch(HandlingUnitNotOnLocationException | LocationIsEmptyException ex) {
-					LOG.warn("Correction PICK with error. Check " + item);
+					LOG.warn("Correction PICK with error. Check {}", item);
 				}				
 			}
 

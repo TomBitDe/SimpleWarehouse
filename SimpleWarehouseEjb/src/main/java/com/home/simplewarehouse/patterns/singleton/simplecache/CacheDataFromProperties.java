@@ -40,15 +40,15 @@ public class CacheDataFromProperties implements CacheDataProvider {
 		InputStream inputStream = null;
 
 		try {
-			LOG.info("Refresh cache from [" + GLOBAL_PROPS + ']');
+			LOG.info("Refresh cache from [{}]", GLOBAL_PROPS);
 
 			inputStream = this.getClass().getClassLoader().getResourceAsStream(GLOBAL_PROPS);
 
 	        if (inputStream == null) {
-	        	LOG.warn("InputStream is: " + inputStream + " --> cache is EMPTY!");
+	        	LOG.warn("InputStream is: {} --> cache is EMPTY!", inputStream);
 	        }
 	        else {
-		        LOG.info("InputStream is: " + inputStream);
+		        LOG.info("InputStream is: {}", inputStream);
 
 		        Properties properties = new Properties();
 
@@ -56,14 +56,11 @@ public class CacheDataFromProperties implements CacheDataProvider {
 				inputStream.close();
 
 				properties.forEach((key, val) -> map.put((String) key, (String) val));
-				LOG.info(GLOBAL_PROPS + " = " + map);
+				LOG.info("{} = {}", GLOBAL_PROPS, map);
 	        }
 		}
         catch (IOException e) {
 			LOG.error(e.getMessage());
-			if (inputStream != null) {
-				try { inputStream.close(); } catch (IOException ex) {}
-			}
 		}
 
 		LOG.trace("<-- loadCacheData");

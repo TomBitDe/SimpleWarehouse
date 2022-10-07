@@ -101,7 +101,6 @@
 				<configuration>
 					<ejbVersion>3.1</ejbVersion>
 					<include>META-INF/**</include>
-					<!-- <ejbJar>/META-INF/ejb-jar.xml</ejbJar> -->
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
