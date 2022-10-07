@@ -47,11 +47,11 @@ public class Location extends EntityBase implements Serializable {
     		, fetch = FetchType.EAGER )
     private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
-    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private LocationStatus locationStatus;
     
-    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private Dimension dimension;
     
