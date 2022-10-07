@@ -2,6 +2,7 @@ package com.home.simplewarehouse.war.showjnditree;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.logging.Logger;
 
 import javax.naming.Binding;
 import javax.naming.Context;
@@ -18,6 +19,8 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class JndiContextServlet extends HttpServlet {
    private static final long serialVersionUID = 1L;
+   
+   private static final Logger LOG = Logger.getLogger(JndiContextServlet.class.getName());
 
    @Override
    protected void doGet( HttpServletRequest req, HttpServletResponse resp ) throws ServletException, IOException
@@ -70,7 +73,7 @@ public class JndiContextServlet extends HttpServlet {
          }
       }
       catch( NamingException ex ) {
-         System.err.println(ex.getLocalizedMessage());
+    	  LOG.severe(ex.getLocalizedMessage());
       }
 
       writer.println( "</ul>" );
