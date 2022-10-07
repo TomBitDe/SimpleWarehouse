@@ -49,7 +49,7 @@ public class EntityBase {
 	 */
 	public void setUpdateTimestamp(Timestamp updateTimestamp) {
 		if (updateTimestamp == null) {
-			updateTimestamp = new Timestamp(System.currentTimeMillis());		}
+			this.updateTimestamp = new Timestamp(System.currentTimeMillis());		}
 		else {
 			this.updateTimestamp = updateTimestamp;
 		}
