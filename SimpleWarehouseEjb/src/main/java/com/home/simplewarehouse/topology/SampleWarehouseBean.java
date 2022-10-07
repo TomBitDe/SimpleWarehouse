@@ -47,11 +47,13 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 	public void initialize() {
 		LOG.trace("--> initialize()");
 		
+		locationList.clear();
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
 			locationList.add(new Location(String.valueOf(c), SampleWarehouseBean.class.getSimpleName()));
 		}
 		locationList.forEach(l -> locationLocal.create(l));
 		
+		handlingUnitList.clear();
 		for (int val = 1; val <= HANDLING_UNIT_NUM; ++val) {
 			handlingUnitList.add(new HandlingUnit(String.valueOf(val), SampleWarehouseBean.class.getSimpleName()));
 		}
