@@ -124,13 +124,115 @@ public class PickUseCasesTest {
 	}
 
 	/**
-	 * Expected is that the empty location is NOT set to ERROR
-	 * TODO: what should happen with the unit?
+	 * No exceptional case<br>
+	 * <br>
+     * <pre>{@code
+     * 
+     *      +----------+                       +----------+
+     *      | lA       |                       | lA       |
+     *      |          |                       |          |
+     *      |  hu1     |   pickFrom(lA, hu1)   |  EMPTY   |
+     *      |          |                       |          |
+     *      |          |                       |          |
+     *      +----------+                       +----------+
+     *                                         
+     *                                          hu1
+     *                      
+     * }</pre>
+	 * <br>
+	 * All preconditions are fulfilled:<br>
+	 * - location is filled with related handlingUnit<br>
+	 * - location is in "normal" state<br>
+	 * <br>
+	 * Expected is that after pickFrom:<br>
+	 * - no exception is raised<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the location no longer contains the handlingUnit<br> 
+	 * - the location is not in ERROR<br>
 	 */
 	@Test
 	@InSequence(1)
+	public void pickFormLocation() {
+		// Check preconditions - have locations and units from sampleWarehouse ?
+		assertFalse(unitLocal.getAll().isEmpty());
+		assertFalse(locationLocal.getAll().isEmpty());
+
+		HandlingUnit hu1 = unitLocal.getById("1");
+		// Check hu1 exists
+		assertNotNull(hu1);
+		// Check hu1 is not placed elsewhere
+		assertNull(hu1.getLocation());
+		
+		Location lA = locationLocal.getById("A");
+		// Check lA exists
+		assertNotNull(lA);
+		// Check lA is empty
+		assertTrue(lA.getHandlingUnits().isEmpty());
+		
+		try {
+			// Drop hu1 on lA to prepare for the test case
+			unitLocal.dropTo(lA, hu1);
+			
+			// MANDATORY read again because of dropTo
+			lA = locationLocal.getById(lA.getLocationId());
+			hu1 = unitLocal.getById(hu1.getId());
+			
+			unitLocal.pickFrom(lA, hu1);
+		}
+		catch (LocationIsEmptyException | HandlingUnitNotOnLocationException ex) {
+			Assert.fail("Not expected: " + ex);
+		}
+
+		// MANDATORY read again because of pickFrom
+		hu1 = unitLocal.getById(hu1.getId());
+		lA = locationLocal.getById(lA.getLocationId());
+		
+		// Check lA no longer contains hu1
+		assertFalse(lA.getHandlingUnits().contains(hu1));
+		
+		// Check hu1 is not linked to lA
+		assertNull(hu1.getLocation());
+
+		// Check if location is in ERROR
+		assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
+
+		LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu1, lA);
+		LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
+	}
+	
+	/**
+	 * Exceptional case<br>
+	 * Location is EMPTY<br>
+	 * <br>
+     * <pre>{@code
+     * 
+     *      +----------+                       +----------+
+     *      | lA       |                       | lA       |
+     *      |          |                       |          |
+     *      |  EMPTY   |   pickFrom(lA, hu1)   |  EMPTY   |
+     *      |          |                       |          |
+     *      |          |   LocationIsEmpty     |          |
+     *      +----------+      Exception        +----------+
+     *                                         
+     *                                          hu1
+     *                      
+     * }</pre>
+	 * <br>
+	 * Preconditions not fulfilled:<br>
+	 * - location is NOT filled with related handlingUnit<br>
+	 * <br>
+	 * Expected is that after pickFrom:<br>
+	 * - a LocationIsEmptyException is raised<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
+     * <br>
+	 * TODO: what should happen with the unit?<br>
+	 */
+	@Test
+	@InSequence(10)
 	public void pickFromEmptyLocation() {
-		// Check preconditions
+		// Have locations and units ?
 		assertFalse(unitLocal.getAll().isEmpty());
 		assertFalse(locationLocal.getAll().isEmpty());
 		
@@ -151,13 +253,19 @@ public class PickUseCasesTest {
 		}
 		catch (LocationIsEmptyException le) {
 			// MANDATORY read again because of pickFrom
-			hu1= unitLocal.getById(hu1.getId());
+			hu1 = unitLocal.getById(hu1.getId());
 			lA = locationLocal.getById(lA.getLocationId());
 
-			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu1, lA);
+			// Check lA does not contain hu1
+			assertFalse(lA.getHandlingUnits().contains(hu1));
 			
-			// Check if location is in ERROR now
+			// Check hu1 is not linked to lA
+			assertNull(hu1.getLocation());
+
+			// Check if location is in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
+			
+			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu1, lA);
 			LOG.info("Location is NOT in ERROR:\n\t{}", lA.getLocationStatus());
 		}
 		catch (HandlingUnitNotOnLocationException no) {
@@ -166,13 +274,39 @@ public class PickUseCasesTest {
 	}
 
 	/**
-	 * Expected is that the filled location is SET to ERROR
-	 * TODO: what should happen with the unit?
+	 * Exceptional case<br>
+	 * Location is filled with other handlingUnit but not the requested one<br>
+	 * <br>
+     * <pre>{@code
+     * 
+     *      +----------+                                +----------+
+     *      | lB       |                                | lB       |
+     *      |          |                                |          |
+     *      |  hu2     |       pickFrom(lB, hu3)        |  hu2     |
+     *      |          |                                |          |
+     *      |          |   HandlingUnitNotOnLocation    | ERROR    |
+     *      +----------+          Exception             +----------+
+     *                                         
+     *                                                   hu3
+     *                      
+     * }</pre>
+	 * <br>
+	 * Preconditions not fulfilled:<br>
+	 * - location is NOT filled with related handlingUnit<br>
+	 * <br>
+	 * Expected is that after pickFrom:<br>
+	 * - a HandlingUnitNotOnLocationException is raised<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is SET in ERROR because is was NOT EMPTY before and needs check<br>
+	 * - the location is still filled with the other handlingUnit<br>
+     * <br>
+	 * TODO: what should happen with the unit?<br>
 	 */
 	@Test
-	@InSequence(2)
+	@InSequence(12)
 	public void pickFromFilledLocationButUnitIsNotPlacedAnywhere() {
-		// Check preconditions
+		// Have locations and units ?
 		assertFalse(unitLocal.getAll().isEmpty());
 		assertFalse(locationLocal.getAll().isEmpty());
 		
@@ -205,16 +339,107 @@ public class PickUseCasesTest {
 		catch (HandlingUnitNotOnLocationException no) {
 			// MANDATORY read again because of pickFrom
 			lB = locationLocal.getById(lB.getLocationId());
-			hu3= unitLocal.getById(hu3.getId());
+			hu3 = unitLocal.getById(hu3.getId());
+			hu2 = unitLocal.getById(hu2.getId());
 			
-			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu3, lB);
+			// Check lB does not contain hu3
+			assertFalse(lB.getHandlingUnits().contains(hu3));
 			
+			// Check hu3 is not linked to lB
+			assertNull(hu3.getLocation());
+
 			// Check if location is in ERROR now
 			assertEquals(ErrorStatus.ERROR, lB.getLocationStatus().getErrorStatus());
+
+			// Check lB still contains hu2
+			assertTrue(lB.getHandlingUnits().contains(hu2));
+			// Check hu2 is still linked to lB
+			assertEquals(lB, hu2.getLocation());
+			
+			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu3, lB);
 			LOG.info("Location is in ERROR:\n\t{}", lB.getLocationStatus());
 		}
 		catch (LocationIsEmptyException le) {
 			Assert.fail("Not expected: " + le);			
 		}
 	}
+
+	/**
+	 * Exceptional case<br>
+	 * Requested location is EMPTY. HandlingUnit is placed on other location but not requested.<br>
+	 * <br>
+     * <pre>{@code
+     * 
+     *      +----------+                                +----------+
+     *      | lA       |                                | lA       |
+     *      |          |                                |          |
+     *      |  hu1     |                                |  hu1     |
+     *      |          |                                |          |
+     *      |          |                                | ERROR    |
+     *      +----------+                                +----------+
+     *                                                   
+     *      +----------+                                +----------+
+     *      | lB       |                                | lB       |
+     *      |          |                                |          |
+     *      |  EMPTY   |       pickFrom(lB, hu1)        |  EMPTY   |
+     *      |          |                                |          |
+     *      |          |   HandlingUnitNotOnLocation    |          |
+     *      +----------+          Exception             +----------+
+     *                      
+     * }</pre>
+	 * <br>
+	 * Preconditions not fulfilled:<br>
+	 * - location is NOT filled with the handlingUnit<br>
+	 * <br>
+	 * Expected is that after pickFrom:<br>
+	 * - a HandlingUnitNotOnLocationException is raised<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the handlingUnit is still connected to the OTHER location<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is not in ERROR because is was EMPTY before and needs no check<br>
+	 * - the OTHER location is still filled with the handlingUnit<br>
+	 * - the OTHER location is SET in ERROR because is was NOT EMPTY before and needs check<br>
+     * <br>
+	 * TODO: what should happen with the unit?<br>
+	 */
+
+	/**
+	 * Exceptional case<br>
+	 * Requested location is FILLED with other HandlingUnit. Requested HandlingUnit is placed
+	 * on other location.<br>
+	 * <br>
+     * <pre>{@code
+     * 
+     *      +----------+                                +----------+
+     *      | lB       |                                | lB       |
+     *      |          |                                |          |
+     *      |  hu1     |                                |  hu1     |
+     *      |          |                                |          |
+     *      |          |                                | ERROR    |
+     *      +----------+                                +----------+
+     *                                                   
+     *      +----------+                                +----------+
+     *      | lA       |                                | lA       |
+     *      |          |                                |          |
+     *      |  hu2     |       pickFrom(lA, hu1)        |  hu2     |
+     *      |          |                                |          |
+     *      |          |   HandlingUnitNotOnLocation    | ERROR    |
+     *      +----------+          Exception             +----------+
+     *                      
+     * }</pre>
+	 * <br>
+	 * Preconditions not fulfilled:<br>
+	 * - location is NOT filled with the handlingUnit<br>
+	 * <br>
+	 * Expected is that after pickFrom:<br>
+	 * - a HandlingUnitNotOnLocationException is raised<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the handlingUnit is still connected to the OTHER location<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is SET in ERROR because is was NOT EMPTY before and needs check<br>
+	 * - the OTHER location is still filled with the handlingUnit<br>
+	 * - the OTHER location is SET in ERROR because is was NOT EMPTY before and needs check<br>
+     * <br>
+	 * TODO: what should happen with the unit?<br>
+	 */
 }
