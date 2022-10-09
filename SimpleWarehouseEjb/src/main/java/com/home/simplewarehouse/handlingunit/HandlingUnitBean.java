@@ -31,6 +31,8 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 public class HandlingUnitBean implements HandlingUnitLocal {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitBean.class);
 	
+	private static final String HU_IS_HERE_FORMATTER = "Handling unit {} is here: {}";
+	
 	@PersistenceContext
 	private EntityManager em;
 	
@@ -112,24 +114,53 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		if (location == null) {
 			throw new IllegalArgumentException("Location is null");
 		}
-		if (location.getHandlingUnits() == null) {
-			throw new IllegalStateException("Location has illegal state (HandlingUnits is null)");
+		
+		if (handlingUnit == null) {
+			throw new IllegalArgumentException("HandlingUnit is null");
 		}
+		
 		if (location.getHandlingUnits().isEmpty()) {
+			// Check handlingUnit is already stored elsewhere
+			List<Location> locations = locationLocal.getAllContaining(handlingUnit);
+			
+			for (Location item : locations) {
+				// HandlingUnit is already stored elsewhere
+				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), item);
+
+				item.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+			}
+			em.flush();
+			
 			// ATTENTION: Location error status does not need to be changed because the location was EMPTY!
 			//            NO manual adjustment is needed in this case!
 			throw new LocationIsEmptyException("Location [" + location.getLocationId() + "] is EMPTY");
 		}
-		
-		if (! location.removeHandlingUnit(handlingUnit)) {
-			// CAUTION: Set the location error status to ERROR
-			//          Manual adjustment is needed!
-			location.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
-			
-			throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getLocationId() + ']');
+		else {
+			if (location.getHandlingUnits().contains(handlingUnit)) {
+				// Pick it now
+				handlingUnit.setLocation(null);
+				location.removeHandlingUnit(handlingUnit);
+				
+				em.flush();
+			}
+			else {
+				// Check handlingUnit is already stored elsewhere
+				List<Location> locations = locationLocal.getAllContaining(handlingUnit);
+				
+				for (Location other : locations) {
+					// HandlingUnit is already stored elsewhere
+					LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
+
+					other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+				}
+				
+				location.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+				
+				em.flush();
+								
+				throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getLocationId() + ']');
+			}
 		}
-		
-		handlingUnit.setLocation(null);
 		
 		em.flush();
 	}
@@ -153,7 +184,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			for (Location item : locations) {
 				// HandlingUnit is already stored elsewhere
 				try {
-					LOG.warn("Handling unit {} is here: {}", handlingUnit.getId(), item);
+					LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), item);
 
 					pickFrom(item, handlingUnit);
 					

@@ -66,6 +66,12 @@ public class PickUseCasesTest {
 	@EJB
 	private LocationLocal locationLocal;
 	
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		LOG.trace("--> createTestArchive()");
@@ -90,7 +96,17 @@ public class PickUseCasesTest {
 		LOG.trace("<-- createTestArchive()");
 		return archive;
 	}
+	
+	/**
+	 * Mandatory default constructor<br>
+	 */
+	public PickUseCasesTest() {
+		// DO NOTHING HERE!
+	}
 
+	/**
+	 * What to do before ALL tests will be executed (once before all tests)
+	 */
 	@BeforeClass
 	public static void beforeClass() {
 		LOG.trace("--> beforeClass()");
@@ -98,6 +114,9 @@ public class PickUseCasesTest {
 		LOG.trace("<-- beforeClass()");		
 	}
 	
+	/**
+	 * What to do after ALL tests have been done (once after all tests)
+	 */
 	@AfterClass
 	public static void afterClass() {
 		LOG.trace("--> afterClass()");
@@ -105,15 +124,29 @@ public class PickUseCasesTest {
 		LOG.trace("<-- afterClass()");
 	}
 	
+	/**
+	 * What to do before an individual test will be executed (each test)<br>
+	 * <br>
+	 * Initialize with the SampleWarehouse data
+	 */
 	@Before
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
 		
 		sampleWarehouseLocal.initialize();
 				
+		// Have locations and units ?
+		assertFalse(unitLocal.getAll().isEmpty());
+		assertFalse(locationLocal.getAll().isEmpty());
+
 		LOG.trace("<-- beforeTest()");		
 	}
 	
+	/**
+	 * What to do after an individual test has been executed (each test)<br>
+	 * <br>
+	 * Cleanup the SampleWarehouse data
+	 */
 	@After
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
@@ -122,9 +155,37 @@ public class PickUseCasesTest {
 
 		LOG.trace("<-- afterTest()");
 	}
+	
+	private HandlingUnit prepareUnitAndCheck(final String unitId) {
+		HandlingUnit hu = unitLocal.getById(unitId);
+		// Check hu1 exists
+		assertNotNull(hu);
+		// Check hu1 is not placed elsewhere
+		assertNull(hu.getLocation());
+		
+		return hu;
+	}
+
+	private Location prepareLocationAndCheck(final String locationId) {
+		Location loc = locationLocal.getById(locationId);
+		// Check lA exists
+		assertNotNull(loc);
+		// Check lA is empty
+		assertTrue(loc.getHandlingUnits().isEmpty());
+		
+		return loc;
+	}
+	
+	private Location reRead(final Location loc) {
+		return locationLocal.getById(loc.getLocationId());
+	}
+	
+	private HandlingUnit reRead(final HandlingUnit hu) {
+		return unitLocal.getById(hu.getId());
+	}
 
 	/**
-	 * No exceptional case<br>
+	 * Not an exceptional case<br>
 	 * <br>
      * <pre>{@code
      * 
@@ -153,30 +214,19 @@ public class PickUseCasesTest {
 	@Test
 	@InSequence(1)
 	public void pickFormLocation() {
-		// Check preconditions - have locations and units from sampleWarehouse ?
-		assertFalse(unitLocal.getAll().isEmpty());
-		assertFalse(locationLocal.getAll().isEmpty());
+		HandlingUnit hu1 = prepareUnitAndCheck("1");
+		
+		Location lA = prepareLocationAndCheck("A");
+		
+		// Drop hu1 on lA to prepare for the test case
+		unitLocal.dropTo(lA, hu1);
+		
+		// MANDATORY read again because of dropTo
+		lA = reRead(lA);
+		hu1 = reRead(hu1);
 
-		HandlingUnit hu1 = unitLocal.getById("1");
-		// Check hu1 exists
-		assertNotNull(hu1);
-		// Check hu1 is not placed elsewhere
-		assertNull(hu1.getLocation());
-		
-		Location lA = locationLocal.getById("A");
-		// Check lA exists
-		assertNotNull(lA);
-		// Check lA is empty
-		assertTrue(lA.getHandlingUnits().isEmpty());
-		
 		try {
-			// Drop hu1 on lA to prepare for the test case
-			unitLocal.dropTo(lA, hu1);
-			
-			// MANDATORY read again because of dropTo
-			lA = locationLocal.getById(lA.getLocationId());
-			hu1 = unitLocal.getById(hu1.getId());
-			
+			// Test now
 			unitLocal.pickFrom(lA, hu1);
 		}
 		catch (LocationIsEmptyException | HandlingUnitNotOnLocationException ex) {
@@ -184,8 +234,8 @@ public class PickUseCasesTest {
 		}
 
 		// MANDATORY read again because of pickFrom
-		hu1 = unitLocal.getById(hu1.getId());
-		lA = locationLocal.getById(lA.getLocationId());
+		lA = reRead(lA);
+		hu1 = reRead(hu1);
 		
 		// Check lA no longer contains hu1
 		assertFalse(lA.getHandlingUnits().contains(hu1));
@@ -232,29 +282,17 @@ public class PickUseCasesTest {
 	@Test
 	@InSequence(10)
 	public void pickFromEmptyLocation() {
-		// Have locations and units ?
-		assertFalse(unitLocal.getAll().isEmpty());
-		assertFalse(locationLocal.getAll().isEmpty());
+		HandlingUnit hu1 = prepareUnitAndCheck("1");
 		
-		HandlingUnit hu1 = unitLocal.getById("1");
-		// Check hu1 exists
-		assertNotNull(hu1);
-		// Check hu1 is not placed elsewhere
-		assertNull(hu1.getLocation());
-		
-		Location lA = locationLocal.getById("A");
-		// Check lA exists
-		assertNotNull(lA);
-		// Check lA is empty
-		assertTrue(lA.getHandlingUnits().isEmpty());
+		Location lA = prepareLocationAndCheck("A");
 		
 		try {
 			unitLocal.pickFrom(lA, hu1);
 		}
 		catch (LocationIsEmptyException le) {
 			// MANDATORY read again because of pickFrom
-			hu1 = unitLocal.getById(hu1.getId());
-			lA = locationLocal.getById(lA.getLocationId());
+			lA = reRead(lA);
+			hu1 = reRead(hu1);
 
 			// Check lA does not contain hu1
 			assertFalse(lA.getHandlingUnits().contains(hu1));
@@ -306,30 +344,22 @@ public class PickUseCasesTest {
 	@Test
 	@InSequence(12)
 	public void pickFromFilledLocationButUnitIsNotPlacedAnywhere() {
-		// Have locations and units ?
-		assertFalse(unitLocal.getAll().isEmpty());
-		assertFalse(locationLocal.getAll().isEmpty());
-		
 		// Fill the lB with hu2
-		Location lB = locationLocal.getById("B");
-		assertNotNull(lB);
+		Location lB = prepareLocationAndCheck("B");
 		
-		HandlingUnit hu2 = unitLocal.getById("2");
-		assertNotNull(hu2);
+		HandlingUnit hu2 = prepareUnitAndCheck("2");
 		
 		unitLocal.dropTo(lB, hu2);
 		
 		// Check lB is filled with hu2 only
 		// MANDATORY read again because of dropTo before
-		lB = locationLocal.getById(lB.getLocationId());
-		hu2 = unitLocal.getById(hu2.getId());
+		lB = reRead(lB);
+		hu2 = reRead(hu2);
 		assertEquals(1, locationLocal.getAllContaining(hu2).size());
 		assertEquals(lB.getLocationId(), locationLocal.getAllContaining(hu2).get(0).getLocationId());
 		
 		// Take hu3
-		HandlingUnit hu3 = unitLocal.getById("3");
-		assertNotNull(hu3);
-		assertNull(hu3.getLocation());
+		HandlingUnit hu3 = prepareUnitAndCheck("3");
 		
 		// Pick hu3 from lB now
 		try {
@@ -338,9 +368,9 @@ public class PickUseCasesTest {
 		}
 		catch (HandlingUnitNotOnLocationException no) {
 			// MANDATORY read again because of pickFrom
-			lB = locationLocal.getById(lB.getLocationId());
-			hu3 = unitLocal.getById(hu3.getId());
-			hu2 = unitLocal.getById(hu2.getId());
+			lB = reRead(lB);
+			hu2 = reRead(hu2);
+			hu3 = reRead(hu3);
 			
 			// Check lB does not contain hu3
 			assertFalse(lB.getHandlingUnits().contains(hu3));
@@ -366,7 +396,7 @@ public class PickUseCasesTest {
 
 	/**
 	 * Exceptional case<br>
-	 * Requested location is EMPTY. HandlingUnit is placed on other location but not requested.<br>
+	 * Requested location is EMPTY. HandlingUnit is placed on other location but not the requested.<br>
 	 * <br>
      * <pre>{@code
      * 
@@ -383,7 +413,7 @@ public class PickUseCasesTest {
      *      |          |                                |          |
      *      |  EMPTY   |       pickFrom(lB, hu1)        |  EMPTY   |
      *      |          |                                |          |
-     *      |          |   HandlingUnitNotOnLocation    |          |
+     *      |          |       LocationIsEmpty          |          |
      *      +----------+          Exception             +----------+
      *                      
      * }</pre>
@@ -402,7 +432,55 @@ public class PickUseCasesTest {
      * <br>
 	 * TODO: what should happen with the unit?<br>
 	 */
+	@Test
+	@InSequence(15)
+	public void pickFromEmptyLocationButUnitPlacedSomewhereElse() {
+		HandlingUnit hu1 = prepareUnitAndCheck("1");
+		
+		Location lA = prepareLocationAndCheck("A");
+		
+		unitLocal.dropTo(lA, hu1);
+		
+		hu1 = reRead(hu1);
+		lA = reRead(lA);
+		
+		Location lB = prepareLocationAndCheck("B");
+		
+		try {
+			// Test case now
+			unitLocal.pickFrom(lB, hu1);
+		
+		}
+		catch (LocationIsEmptyException le) {
+			// MANDATORY read again because of pickFrom
+			hu1 = reRead(hu1);
+			lB = reRead(lB);
+			lA = reRead(lA);
+			
+			// Check lB does not contain hu1
+			assertFalse(lB.getHandlingUnits().contains(hu1));
+			
+			// Check hu1 is still linked to lA
+			assertEquals(lA, hu1.getLocation());
 
+			// Check if lA is in ERROR now
+			assertEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
+
+			// Check lB is still EMPTY
+			assertTrue(lB.getHandlingUnits().isEmpty());
+			
+			// Check if lB is NOT in ERROR now
+			assertEquals(ErrorStatus.NONE, lB.getLocationStatus().getErrorStatus());
+
+			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu1, lA);
+			LOG.info("Location is in ERROR:\n\t{}", lA.getLocationStatus());
+			LOG.info("Location is in NONE:\n\t{}", lB.getLocationStatus());
+		}
+		catch (HandlingUnitNotOnLocationException no) {
+			Assert.fail("Not expected: " + no);			
+		}		
+	}
+	
 	/**
 	 * Exceptional case<br>
 	 * Requested location is FILLED with other HandlingUnit. Requested HandlingUnit is placed
@@ -442,4 +520,65 @@ public class PickUseCasesTest {
      * <br>
 	 * TODO: what should happen with the unit?<br>
 	 */
+	@Test
+	@InSequence(17)
+	public void pickFromFilledLocationButUnitPlacedSomewhereElse() {
+		HandlingUnit hu1 = prepareUnitAndCheck("1");
+		
+		Location lB = prepareLocationAndCheck("B");
+		
+		unitLocal.dropTo(lB, hu1);
+		
+		hu1 = reRead(hu1);
+		lB = reRead(lB);
+		
+		HandlingUnit hu2 = prepareUnitAndCheck("2");
+
+		Location lA = prepareLocationAndCheck("A");
+		
+		unitLocal.dropTo(lA, hu2);
+		
+		hu2 = reRead(hu2);
+		lA = reRead(lA);
+
+		try {
+			// Test case now
+			unitLocal.pickFrom(lA, hu1);
+		
+		}
+		catch (HandlingUnitNotOnLocationException no) {
+			// MANDATORY read again because of pickFrom
+			hu1 = reRead(hu1);
+			hu2 = reRead(hu2);
+			lB = reRead(lB);
+			lA = reRead(lA);
+			
+			// Check lB still contains hu1
+			assertEquals(lB, hu1.getLocation());
+			assertTrue(lB.getHandlingUnits().contains(hu1));
+
+			// Check if lB is in ERROR now
+			assertEquals(ErrorStatus.ERROR, lB.getLocationStatus().getErrorStatus());
+
+			// Check lA still contains hu2
+			assertTrue(lA.getHandlingUnits().contains(hu2));
+			
+			// Check if lA is in ERROR now
+			assertEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
+
+			 // Check lA does NOT contain hu1
+			assertFalse(lA.getHandlingUnits().contains(hu1));
+			
+			 // Check lB does NOT contain hu2
+			assertFalse(lB.getHandlingUnits().contains(hu2));
+			
+			LOG.info("Expected:\n\t{}\n\tis NOT on\n\t{}", hu1, lA);
+			LOG.info("Location is in ERROR:\n\t{}", lA.getLocationStatus());
+			LOG.info("Location is in ERROR:\n\t{}", lB.getLocationStatus());
+			LOG.info("Expected:\n\t{}\n\tis on\n\t{}", hu1, lA);
+		}
+		catch (LocationIsEmptyException le) {
+			Assert.fail("Not expected: " + le);			
+		}		
+	}
 }
