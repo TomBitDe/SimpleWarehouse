@@ -1,6 +1,9 @@
 /**
  * Use cases to test.<br>
- * <p>
- * Only complex use cases are tested.
+ * <br>
+ * Only complex use cases are tested:<br>
+ * <br>
+ * - Pick from a location<br>
+ * - Drop to a location<br>
  */
 package com.home.simplewarehouse.usecase;
