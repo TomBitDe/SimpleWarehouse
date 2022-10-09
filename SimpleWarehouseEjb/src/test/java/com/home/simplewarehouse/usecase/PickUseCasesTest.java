@@ -157,30 +157,56 @@ public class PickUseCasesTest {
 	}
 	
 	private HandlingUnit prepareUnitAndCheck(final String unitId) {
+		LOG.trace("--> prepareUnitAndCheck()");
+
 		HandlingUnit hu = unitLocal.getById(unitId);
 		// Check hu1 exists
 		assertNotNull(hu);
 		// Check hu1 is not placed elsewhere
 		assertNull(hu.getLocation());
 		
+		LOG.trace("<-- prepareUnitAndCheck()");
+
 		return hu;
 	}
 
 	private Location prepareLocationAndCheck(final String locationId) {
+		LOG.trace("--> prepareLocationAndCheck()");
+
 		Location loc = locationLocal.getById(locationId);
 		// Check lA exists
 		assertNotNull(loc);
 		// Check lA is empty
 		assertTrue(loc.getHandlingUnits().isEmpty());
 		
+		LOG.trace("<-- prepareLocationAndCheck()");
+
 		return loc;
 	}
 	
 	private Location reRead(final Location loc) {
+		LOG.trace("--> reRead({})", loc);
+
+		if (loc == null) {
+			LOG.warn("loc == null");
+			return loc;
+		}
+		
+		LOG.trace("<-- reRead({})", loc);
+		
 		return locationLocal.getById(loc.getLocationId());
 	}
 	
 	private HandlingUnit reRead(final HandlingUnit hu) {
+		LOG.trace("--> reRead({})", hu);
+
+		if (hu == null) {
+			LOG.warn("hu == null");
+			return hu;
+		}
+
+		LOG.trace("<-- reRead({})", hu);
+
 		return unitLocal.getById(hu.getId());
 	}
 
