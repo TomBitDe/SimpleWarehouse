@@ -223,7 +223,7 @@ public class DropUseCasesTest {
 	 * <br>
 	 * All preconditions are fulfilled:<br>
 	 * - location is EMPTY<br>
-	 * - location is in "normal" state<br>
+	 * - location is in "normal" status<br>
 	 * <br>
 	 * Expected is that after dropTo:<br>
 	 * - no exception is raised<br>
@@ -279,7 +279,7 @@ public class DropUseCasesTest {
 	 * <br>
 	 * All preconditions are fulfilled:<br>
 	 * - location is EMPTY<br>
-	 * - location is in "normal" state<br>
+	 * - location is in "normal" status<br>
 	 * <br>
 	 * Expected is that after dropTo:<br>
 	 * - no exception is raised<br>
@@ -328,6 +328,7 @@ public class DropUseCasesTest {
 	 * <br>
 	 * Preconditions fulfilled:<br>
 	 * - location is EMPTY<br>
+	 * - location is in "normal" status<br>
 	 * <br>
 	 * Expected is that after second dropTo:<br>
 	 * - no exception is raised<br>
@@ -407,9 +408,11 @@ public class DropUseCasesTest {
 	 * <br>
 	 * Preconditions fulfilled:<br>
 	 * - location is EMPTY<br>
+	 * - location is in "normal" status<br>
 	 * - OTHER location is EMPTY<br>
+	 * - OTHER location is in "normal" status<br>
 	 * <br>
-	 * Expected is that after pickFrom:<br>
+	 * Expected is that after second dropTo:<br>
 	 * - no exception is raised<br>
 	 * - the location does not contain the handlingUnit<br> 
 	 * - the location is EMPTY now<br>

@@ -1,6 +1,6 @@
 /**
- * Use cases to test.<br>
- * <br>
+ * Use cases to test.
+ * <p>
  * Only complex use cases are tested:<br>
  * <br>
  * - Pick from a location<br>
