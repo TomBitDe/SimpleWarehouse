@@ -167,6 +167,11 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 
 	@Override
 	public void dropTo(Location location, HandlingUnit handlingUnit) {
+		if (handlingUnit == null) {
+			LOG.warn("HandlingUnit is null; this is valid but nothing will happen!");
+			return;
+		}
+		
 		if (!em.contains(location)) {
 			location = em.merge(location);
 		}
@@ -178,26 +183,25 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		if (location == null) {
 			throw new IllegalArgumentException("Location is null");
 		}
-		else {
-			List<Location> locations = locationLocal.getAllContaining(handlingUnit);
-			
-			for (Location item : locations) {
-				// HandlingUnit is already stored elsewhere
-				try {
-					LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), item);
-
-					pickFrom(item, handlingUnit);
+		
+		List<Location> locations = locationLocal.getAllContaining(handlingUnit);
+		
+		for (Location item : locations) {
+			// HandlingUnit is already stored elsewhere
+			try {
+				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), item);
+				pickFrom(item, handlingUnit);
 					
-					item.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
-				}
-				catch(HandlingUnitNotOnLocationException | LocationIsEmptyException ex) {
-					LOG.warn("Correction PICK with error. Check {}", item);
-				}				
+				item.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 			}
-
-			handlingUnit.setLocation(location);
-			location.addHandlingUnit(handlingUnit);
+			catch(HandlingUnitNotOnLocationException | LocationIsEmptyException ex) {
+				LOG.warn("Correction PICK with error. Check {}", item);
+			}				
 		}
+
+		handlingUnit.setLocation(location);
+		location.addHandlingUnit(handlingUnit);
+
 		em.flush();
 	}
 }

@@ -153,30 +153,56 @@ public class DropUseCasesTest {
 	}
 	
 	private HandlingUnit prepareUnitAndCheck(final String unitId) {
+		LOG.trace("--> prepareUnitAndCheck()");
+
 		HandlingUnit hu = unitLocal.getById(unitId);
 		// Check hu1 exists
 		assertNotNull(hu);
 		// Check hu1 is not placed elsewhere
 		assertNull(hu.getLocation());
 		
+		LOG.trace("<-- prepareUnitAndCheck()");
+
 		return hu;
 	}
 
 	private Location prepareLocationAndCheck(final String locationId) {
+		LOG.trace("--> prepareLocationAndCheck()");
+
 		Location loc = locationLocal.getById(locationId);
 		// Check lA exists
 		assertNotNull(loc);
 		// Check lA is empty
 		assertTrue(loc.getHandlingUnits().isEmpty());
 		
+		LOG.trace("<-- prepareLocationAndCheck()");
+
 		return loc;
 	}
 	
 	private Location reRead(final Location loc) {
+		LOG.trace("--> reRead({})", loc);
+
+		if (loc == null) {
+			LOG.warn("loc == null");
+			return loc;
+		}
+		
+		LOG.trace("<-- reRead({})", loc);
+		
 		return locationLocal.getById(loc.getLocationId());
 	}
 	
 	private HandlingUnit reRead(final HandlingUnit hu) {
+		LOG.trace("--> reRead({})", hu);
+
+		if (hu == null) {
+			LOG.warn("hu == null");
+			return hu;
+		}
+
+		LOG.trace("<-- reRead({})", hu);
+
 		return unitLocal.getById(hu.getId());
 	}
 
@@ -185,13 +211,13 @@ public class DropUseCasesTest {
 	 * <br>
      * <pre>{@code
      * 
-     *      +----------+                       +----------+
-     *      | lA       |   hu1                 | lA       |
-     *      |          |                       |          |
-     *      |  EMPTY   |   dropTo(lA, hu1)     |  hu1     |
-     *      |          |                       |          |
-     *      |          |                       |          |
-     *      +----------+                       +----------+
+     *      +----------+                     +----------+
+     *      | lA       |   hu1               | lA       |
+     *      |          |                     |          |
+     *      |  EMPTY   |   dropTo(lA, hu1)   |  hu1     |
+     *      |          |                     |          |
+     *      |          |                     |          |
+     *      +----------+                     +----------+
      *                      
      * }</pre>
 	 * <br>
@@ -203,7 +229,7 @@ public class DropUseCasesTest {
 	 * - no exception is raised<br>
 	 * - the location is no longer EMPTY<br> 
 	 * - the location contains the handlingUnit<br>
-	 * - the location is still in "normal" state<br>
+	 * - the location is still in "normal" status<br>
 	 * - the handlingUnit is connected to the location<br>
 	 */
 	@Test
@@ -237,73 +263,217 @@ public class DropUseCasesTest {
 	}
 	
 	/**
-	 * Exceptional case<br>
-	 * Location is EMPTY<br>
+	 * Not an exceptional case<br>
 	 * <br>
      * <pre>{@code
      * 
-     *      +----------+                       +----------+
-     *      | lA       |                       | lA       |
-     *      |          |                       |          |
-     *      |  EMPTY   |   pickFrom(lA, hu1)   |  EMPTY   |
-     *      |          |                       |          |
-     *      |          |   LocationIsEmpty     |          |
-     *      +----------+      Exception        +----------+
-     *                                         
-     *                                          hu1
+     *      +----------+                      +----------+
+     *      | lA       |                      | lA       |
+     *      |          |                      |          |
+     *      |  EMPTY   |   dropTo(lA, null)   |  EMPTY   |
+     *      |          |                      |          |
+     *      |          |                      |          |
+     *      +----------+                      +----------+
      *                      
      * }</pre>
 	 * <br>
-	 * Preconditions not fulfilled:<br>
-	 * - location is NOT filled with related handlingUnit<br>
+	 * All preconditions are fulfilled:<br>
+	 * - location is EMPTY<br>
+	 * - location is in "normal" state<br>
 	 * <br>
-	 * Expected is that after pickFrom:<br>
-	 * - a LocationIsEmptyException is raised<br>
-	 * - the handlingUnit is not connected to the location<br>
-	 * - the location does not contain the handlingUnit<br> 
-	 * - the location is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
-     * <br>
-	 * TODO: what should happen with the unit?<br>
+	 * Expected is that after dropTo:<br>
+	 * - no exception is raised<br>
+	 * - the location is still EMPTY<br> 
+	 * - the location is still in "normal" status<br>
 	 */
+	@Test
+	@InSequence(2)
+	public void dropNullToLocation() {
+		HandlingUnit hu1 = null;
+		
+		Location lA = prepareLocationAndCheck("A");
+		
+		// Drop hu1 on lA
+		unitLocal.dropTo(lA, hu1);
+		
+		// MANDATORY read because of dropTo
+		lA = reRead(lA);
+		
+		// Check location is still EMPTY
+		assertTrue(lA.getHandlingUnits().isEmpty());
+		
+		// Check if location is in status NONE
+		assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
 
+		LOG.info("Expected:\n\tEMPTY \n\t{}", lA);
+		LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
+	}
+	
+	/**
+	 * Exceptional case<br>
+	 * <br>
+	 * Double drop handlingUnit on same Location<br>
+	 * <br>
+     * <pre>{@code
+     * 
+     *      +----------+                     +----------+                     +----------+
+     *      | lA       |                     | lA       |                     | lA       |
+     *      |          |   First             |          |   Second            |          |
+     *      |  EMPTY   |   dropTo(lA, hu1)   |  hu1     |   dropTo(lA, hu1)   |  hu1     |
+     *      |          |                     |          |                     |          |
+     *      |          |                     |          |                     |  ERROR   |
+     *      +----------+                     +----------+                     +----------+
+     *                                                                                 
+     * }</pre>
+	 * <br>
+	 * Preconditions fulfilled:<br>
+	 * - location is EMPTY<br>
+	 * <br>
+	 * Expected is that after second dropTo:<br>
+	 * - no exception is raised<br>
+	 * - the location contains the handlingUnit<br> 
+	 * - the location is in ERROR because double drop on the same location needs manual check<br>
+	 * - the handlingUnit is connected to the location<br>
+     * <br>
+	 */
+	@Test
+	@InSequence(10)
+	public void doubleDropSameToLocation() {
+		// Prepare handling unit and a location
+		HandlingUnit hu2 = prepareUnitAndCheck("2");
+		
+		Location lA = prepareLocationAndCheck("A");
+
+		// Drop to make a relation
+		unitLocal.dropTo(lA, hu2);
+		
+	    // MANDATORY reread
+		hu2 = reRead(hu2);
+		lA = reRead(lA);
+		LOG.info("First drop: " + hu2);
+		LOG.info("First drop: " + lA);
+		
+		// Now drop again to same location
+		unitLocal.dropTo(lA, hu2);
+		
+	    // MANDATORY reread
+		hu2 = reRead(hu2);
+		lA = reRead(lA);
+		LOG.info("Second drop: " + hu2);
+		LOG.info("Second drop: " + lA);
+		
+		// Check the location
+		assertNotNull(lA);
+		assertFalse(lA.getHandlingUnits().isEmpty());
+		assertTrue(lA.getHandlingUnits().contains(hu2));
+		assertEquals(1, lA.getHandlingUnits().size());
+
+		// Check if location is in status ERROR
+		assertEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
+		
+		LOG.info(lA);
+
+		// Check the handling unit
+		assertNotNull(hu2);
+		assertNotNull(hu2.getLocation());
+		assertEquals(lA.getLocationId(), hu2.getLocation().getLocationId());
+		LOG.info(hu2);
+	}
 
 	/**
 	 * Exceptional case<br>
-	 * Requested location is EMPTY. HandlingUnit is placed on other location but not the requested.<br>
+	 * <br>
+	 * Double drop handlingUnit first time on location, second time on OTHER location<br>
 	 * <br>
      * <pre>{@code
      * 
-     *      +----------+                                +----------+
-     *      | lA       |                                | lA       |
-     *      |          |                                |          |
-     *      |  hu1     |                                |  hu1     |
-     *      |          |                                |          |
-     *      |          |                                | ERROR    |
-     *      +----------+                                +----------+
+     *      +----------+  +----------+                     +----------+  +----------+
+     *      | lA       |  | lB       |                     | lA       |  | lB       |
+     *      |          |  |          |   First             |          |  |          |
+     *      |  EMPTY   |  |  EMPTY   |   dropTo(lA, hu2)   |  hu2     |  |  EMPTY   |
+     *      |          |  |          |                     |          |  |          |
+     *      |          |  |          |                     |          |  |          |
+     *      +----------+  +----------+                     +----------+  +----------+
      *                                                   
-     *      +----------+                                +----------+
-     *      | lB       |                                | lB       |
-     *      |          |                                |          |
-     *      |  EMPTY   |       pickFrom(lB, hu1)        |  EMPTY   |
-     *      |          |                                |          |
-     *      |          |       LocationIsEmpty          |          |
-     *      +----------+          Exception             +----------+
+     *      +----------+  +----------+                     +----------+  +----------+
+     *      | lA       |  | lB       |                     | lA       |  | lB       |
+     *      |          |  |          |   Second            |          |  |          |
+     *      |  hu2     |  |  EMPTY   |   dropTo(lB, hu2)   |  EMPTY   |  |  hu2     |
+     *      |          |  |          |                     |          |  |          |
+     *      |          |  |          |                     |  ERROR   |  |          |
+     *      +----------+  +----------+                     +----------+  +----------+
      *                      
      * }</pre>
 	 * <br>
-	 * Preconditions not fulfilled:<br>
-	 * - location is NOT filled with the handlingUnit<br>
+	 * Preconditions fulfilled:<br>
+	 * - location is EMPTY<br>
+	 * - OTHER location is EMPTY<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
-	 * - a HandlingUnitNotOnLocationException is raised<br>
-	 * - the handlingUnit is not connected to the location<br>
-	 * - the handlingUnit is still connected to the OTHER location<br>
+	 * - no exception is raised<br>
 	 * - the location does not contain the handlingUnit<br> 
-	 * - the location is not in ERROR because is was EMPTY before and needs no check<br>
-	 * - the OTHER location is still filled with the handlingUnit<br>
-	 * - the OTHER location is SET in ERROR because is was NOT EMPTY before and needs check<br>
+	 * - the location is EMPTY now<br>
+	 * - the location is in ERROR because is was FILLED before and needs check now<br>
+	 * - the OTHER location is filled with the handlingUnit<br>
+	 * - the OTHER location is in "normal" status because is was EMPTY before and needs NO check<br>
+	 * - the handlingUnit is not connected to the location any longer<br>
+	 * - the handlingUnit is connected to the OTHER location<br>
      * <br>
-	 * TODO: what should happen with the unit?<br>
 	 */
-	
+	@Test
+	@InSequence(15)
+	public void doubleDropToOtherLocation() {
+		// Prepare handling unit and a locations
+		HandlingUnit hu2 = prepareUnitAndCheck("2");
+		
+		Location lA = prepareLocationAndCheck("A");
+		Location lB = prepareLocationAndCheck("B");
+		
+		hu2 = reRead(hu2);
+		lA = reRead(lA);
+		lB = reRead(lB);
+
+		// Drop to make a relation
+		unitLocal.dropTo(lA, hu2);
+
+	    // MANDATORY reread
+		hu2 = reRead(hu2);
+		lA = reRead(lA);
+		lB = reRead(lB);
+		LOG.info("First drop: " + hu2);
+		LOG.info("First drop: " + lA);
+		LOG.info("First drop: " + lB);
+		
+		// Now drop again to other location
+		unitLocal.dropTo(lB, hu2);
+
+	    // MANDATORY reread
+		hu2 = reRead(hu2);
+		lA = reRead(lA);
+		lB = reRead(lB);
+		LOG.info("Second drop: " + hu2);
+		LOG.info("Second drop: " + lA);
+		LOG.info("Second drop: " + lB);
+		
+		// Check the locations
+		assertNotNull(lA);
+		assertTrue(lA.getHandlingUnits().isEmpty());
+		assertEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
+
+		assertNotNull(lB);
+		assertFalse(lB.getHandlingUnits().isEmpty());
+		assertTrue(lB.getHandlingUnits().contains(hu2));
+		assertEquals(1, lB.getHandlingUnits().size());
+		assertEquals(ErrorStatus.NONE, lB.getLocationStatus().getErrorStatus());
+
+		LOG.info("Locations in ERROR");
+		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
+		LOG.info("Locations NOT in ERROR");
+		locationLocal.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
+
+		// Check the handling unit
+		assertNotNull(hu2);
+		assertNotNull(hu2.getLocation());
+		assertEquals(lB.getLocationId(), hu2.getLocation().getLocationId());
+	}	
 }
