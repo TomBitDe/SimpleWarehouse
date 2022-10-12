@@ -312,7 +312,7 @@ public class DropUseCasesTest {
 	/**
 	 * Exceptional case<br>
 	 * <br>
-	 * Double drop handlingUnit on same Location<br>
+	 * Double drop handlingUnit to same Location<br>
 	 * <br>
      * <pre>{@code
      * 
@@ -321,7 +321,7 @@ public class DropUseCasesTest {
      *      |          |   First             |          |   Second            |          |
      *      |  EMPTY   |   dropTo(lA, hu1)   |  hu1     |   dropTo(lA, hu1)   |  hu1     |
      *      |          |                     |          |                     |          |
-     *      |          |                     |          |                     |  ERROR   |
+     *      |          |                     |          |                     |          |
      *      +----------+                     +----------+                     +----------+
      *                                                                                 
      * }</pre>
@@ -333,13 +333,13 @@ public class DropUseCasesTest {
 	 * Expected is that after second dropTo:<br>
 	 * - no exception is raised<br>
 	 * - the location contains the handlingUnit<br> 
-	 * - the location is in ERROR because double drop on the same location needs manual check<br>
+	 * - the location is in "normal" status because double drop on the same location needs no check<br>
 	 * - the handlingUnit is connected to the location<br>
      * <br>
 	 */
 	@Test
 	@InSequence(10)
-	public void doubleDropSameToLocation() {
+	public void doubleDropToSameLocation() {
 		// Prepare handling unit and a location
 		HandlingUnit hu2 = prepareUnitAndCheck("2");
 		
@@ -369,8 +369,8 @@ public class DropUseCasesTest {
 		assertTrue(lA.getHandlingUnits().contains(hu2));
 		assertEquals(1, lA.getHandlingUnits().size());
 
-		// Check if location is in status ERROR
-		assertEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
+		// Check if location is in "normal" status
+		assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
 		
 		LOG.info(lA);
 

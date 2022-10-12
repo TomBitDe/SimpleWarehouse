@@ -123,11 +123,16 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			// Check handlingUnit is already stored elsewhere
 			List<Location> locations = locationLocal.getAllContaining(handlingUnit);
 			
-			for (Location item : locations) {
+			for (Location other : locations) {
+				if (other.getLocationId().equals(location.getLocationId())) {
+					// The current location is not "elsewhere" so skip that
+					continue;
+				}
+				
 				// HandlingUnit is already stored elsewhere
-				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), item);
+				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
 
-				item.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+				other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 			}
 			em.flush();
 			
@@ -148,6 +153,11 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 				List<Location> locations = locationLocal.getAllContaining(handlingUnit);
 				
 				for (Location other : locations) {
+					if (other.getLocationId().equals(location.getLocationId())) {
+						// The current location is not "elsewhere" so skip that
+						continue;
+					}
+					
 					// HandlingUnit is already stored elsewhere
 					LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
 
@@ -186,16 +196,21 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		List<Location> locations = locationLocal.getAllContaining(handlingUnit);
 		
-		for (Location item : locations) {
+		for (Location other : locations) {
+			if (other.getLocationId().equals(location.getLocationId())) {
+				// The current location is not "elsewhere" so skip that
+				continue;
+			}
+
 			// HandlingUnit is already stored elsewhere
 			try {
-				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), item);
-				pickFrom(item, handlingUnit);
+				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
+				pickFrom(other, handlingUnit);
 					
-				item.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+				other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 			}
 			catch(HandlingUnitNotOnLocationException | LocationIsEmptyException ex) {
-				LOG.warn("Correction PICK with error. Check {}", item);
+				LOG.warn("Correction PICK with error. Check {}", other);
 			}				
 		}
 
