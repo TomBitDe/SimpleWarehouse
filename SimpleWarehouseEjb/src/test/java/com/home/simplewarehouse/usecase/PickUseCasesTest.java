@@ -326,7 +326,7 @@ public class PickUseCasesTest {
 			// Check hu1 is not linked to lA
 			assertNull(hu1.getLocation());
 
-			// Check if location is in ERROR
+			// Check if location is not in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu1, lA);
