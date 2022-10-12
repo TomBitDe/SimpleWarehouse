@@ -3,6 +3,10 @@
  * <p>
  * <h3>Concepts</h3>
  * <br>
+ * <h3>Location dimension</h3>
+ * <br>
+ * <h3>Location status</h3>
+ * <br>
  * <h3>Storage location access FIFO, LIFO, RANDOM</h3>
  * <br>
  * <h4>FIFO</h4>
