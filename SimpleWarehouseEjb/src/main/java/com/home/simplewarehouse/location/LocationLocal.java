@@ -45,6 +45,15 @@ public interface LocationLocal {
 	 */
 	public List<Location> getAllContaining(final HandlingUnit handlingUnit);
 	/**
+	 * Get a list of all Location items containing the given HandlingUnit but not on exceptLocation
+	 * 
+	 * @param handlingUnit the handlingUnit to search for
+	 * @param exceptLocation the location not to consider
+	 * 
+	 * @return the Location list
+	 */
+	public List<Location> getAllContainingExceptLocation(final HandlingUnit handlingUnit, final Location exceptLocation);
+	/**
 	 * Get a list of all Location items with the given ErrorStatus
 	 * 
 	 * @param errorStatus the errorStatus to search for

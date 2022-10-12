@@ -143,6 +143,26 @@ public class LocationBean implements LocationLocal {
 	}
 	
 	@Override
+	public List<Location> getAllContainingExceptLocation(final HandlingUnit handlingUnit,
+			final Location exceptLocation) {
+		LOG.trace("--> getAllContaining({})", handlingUnit);
+		
+		List<Location> ret = new ArrayList<>();
+
+		List<Location> locations = getAll();
+		
+		for (Location location : locations) {
+			if (! location.equals(exceptLocation) && location.getHandlingUnits().contains(handlingUnit)) {
+				ret.add(location);
+			}
+		}
+
+		LOG.trace("<-- getAllContaining()");
+
+		return ret;
+	}
+	
+	@Override
 	public List<Location> getAllInErrorStatus(final ErrorStatus errorStatus) {
 		LOG.trace("--> getAllInErrorStatus({})", errorStatus);
 		

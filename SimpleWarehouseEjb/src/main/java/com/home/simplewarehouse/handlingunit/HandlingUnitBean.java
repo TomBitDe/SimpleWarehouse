@@ -121,14 +121,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		if (location.getHandlingUnits().isEmpty()) {
 			// Check handlingUnit is already stored elsewhere
-			List<Location> locations = locationLocal.getAllContaining(handlingUnit);
+			List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit
+					, location);
 			
 			for (Location other : locations) {
-				if (other.getLocationId().equals(location.getLocationId())) {
-					// The current location is not "elsewhere" so skip that
-					continue;
-				}
-				
 				// HandlingUnit is already stored elsewhere
 				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
 
@@ -150,14 +146,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			}
 			else {
 				// Check handlingUnit is already stored elsewhere
-				List<Location> locations = locationLocal.getAllContaining(handlingUnit);
+				List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit
+						, location);
 				
-				for (Location other : locations) {
-					if (other.getLocationId().equals(location.getLocationId())) {
-						// The current location is not "elsewhere" so skip that
-						continue;
-					}
-					
+				for (Location other : locations) {					
 					// HandlingUnit is already stored elsewhere
 					LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
 
@@ -194,14 +186,9 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalArgumentException("Location is null");
 		}
 		
-		List<Location> locations = locationLocal.getAllContaining(handlingUnit);
+		List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit, location);
 		
 		for (Location other : locations) {
-			if (other.getLocationId().equals(location.getLocationId())) {
-				// The current location is not "elsewhere" so skip that
-				continue;
-			}
-
 			// HandlingUnit is already stored elsewhere
 			try {
 				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
