@@ -81,7 +81,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Mandatory default constructor<br>
+	 * Mandatory default constructor
 	 */
 	public HandlingUnitTest() {
 		super();

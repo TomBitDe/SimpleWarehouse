@@ -27,6 +27,18 @@ public class TimerOtherSessionsBean {
 	@Resource
 	private TimerService timerService;
 
+	/**
+	 * Default constructor
+	 */
+	public TimerOtherSessionsBean() {
+		super();
+	}
+
+	/**
+	 * Do a programmatic timeout
+	 * 
+	 * @param timer the time to use
+	 */
 	@Timeout
 	public void programmaticTimeout(Timer timer) {
 		this.setLastProgrammaticTimeout(new Date());

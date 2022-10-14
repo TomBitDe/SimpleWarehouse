@@ -43,6 +43,18 @@ public class TimerJpaSessionsBean {
 	@EJB
 	private HandlingUnitLocal handlingUnitLocal;
 
+	/**
+	 * Default constructor
+	 */
+	public TimerJpaSessionsBean() {
+		super();
+	}
+
+	/**
+	 * Do a programmatic timeout
+	 * 
+	 * @param timer the time to use
+	 */
 	@Timeout
 	public void programmaticTimeout(Timer timer) {
 		this.setLastProgrammaticTimeout(new Date());
