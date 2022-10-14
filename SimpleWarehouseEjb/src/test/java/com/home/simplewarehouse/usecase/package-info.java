@@ -2,8 +2,9 @@
  * Use cases to test.
  * <p>
  * Only complex use cases are tested:<br>
- * <br>
- * - Pick from a location<br>
- * - Drop to a location<br>
+ * <ul>
+ * <li>Pick a handlingUnit from a location</li>
+ * <li>Drop a handlingUnit to a location</li>
+ * </ul>
  */
 package com.home.simplewarehouse.usecase;
