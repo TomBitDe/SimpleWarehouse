@@ -49,6 +49,12 @@ public class HandlingUnitTest {
 	@EJB
 	LocationLocal locationLocal;
 	
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		LOG.trace("--> createTestArchive()");
@@ -74,6 +80,19 @@ public class HandlingUnitTest {
 		return archive;
 	}
 	
+	/**
+	 * Mandatory default constructor<br>
+	 */
+	public HandlingUnitTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+	
+	/**
+	 * What to do before an individual test will be executed (each test)<br>
+	 * <br>
+	 * Initialize with the SampleWarehouse data
+	 */
 	@Before
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
@@ -81,6 +100,11 @@ public class HandlingUnitTest {
 		LOG.trace("<-- beforeTest()");		
 	}
 	
+	/**
+	 * What to do after an individual test has been executed (each test)<br>
+	 * <br>
+	 * Cleanup the SampleWarehouse data
+	 */
 	@After
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
@@ -99,7 +123,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Simple handling unit with no reference to a handlingUnit
+	 * Simple handling unit with no reference to a location
 	 */
 	@Test
 	@InSequence(0)
@@ -117,6 +141,9 @@ public class HandlingUnitTest {
 		LOG.info(handlingUnit);
 	}
 
+	/**
+	 * Test delete of a simple handling unit with no reference to a location
+	 */
 	@Test
 	@InSequence(2)
 	public void deleteByHandlingUnit() {
@@ -140,6 +167,9 @@ public class HandlingUnitTest {
 		LOG.info(handlingUnit);
 	}
 	
+	/**
+	 * Test the getAll method
+	 */
 	@Test
 	@InSequence(3)
 	public void getAll() {
@@ -163,6 +193,9 @@ public class HandlingUnitTest {
 		handlingUnits.forEach(hU -> LOG.info(hU));
 	}
 	
+	/**
+	 * Test the dropTo method to create reference to a location
+	 */
 	@Test
 	@InSequence(4)
 	public void dropTo() {
@@ -201,6 +234,9 @@ public class HandlingUnitTest {
 		LOG.info(lOA);
 	}
 	
+	/**
+	 * Test the dropTo method to create reference to a none existing location
+	 */
 	@Test(expected = EJBException.class)
 	@InSequence(5)
 	public void dropToNull() {
@@ -222,6 +258,9 @@ public class HandlingUnitTest {
 		handlingUnitLocal.dropTo(lOA, hU1);
 	}
 	
+	/**
+	 * Test the pickFrom method to remove the reference to a location
+	 */
 	@Test
 	@InSequence(6)
 	public void pickFrom() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
@@ -270,6 +309,9 @@ public class HandlingUnitTest {
 		LOG.info(lOA);
 	}
 	
+	/**
+	 * Test the pickFrom method to remove the reference to an EMPTY location 
+	 */
 	@Test
 	@InSequence(7)
 	public void pickFromEmptyLocation() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
@@ -303,6 +345,12 @@ public class HandlingUnitTest {
 		}
 	}
 
+	/**
+	 * Test pickFrom a Location that does not contain the handling unit
+	 * 
+	 * @throws LocationIsEmptyException in case the location is EMPTY
+	 * @throws HandlingUnitNotOnLocationException in case the handling unit is not on that location
+	 */
 	@Test
 	@InSequence(8)
 	public void pickFromLocationNotContaining() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
@@ -350,6 +398,9 @@ public class HandlingUnitTest {
 		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
 	}
 	
+	/**
+	 * Test delete a handling unit with reference to a location
+	 */
 	@Test
 	@InSequence(9)
 	public void deleteHandlingUnitOnLocation() {
@@ -400,6 +451,9 @@ public class HandlingUnitTest {
 		LOG.info(lOA);
 	}
 	
+	/**
+	 * Test a double drop to the same location
+	 */
 	@Test
 	@InSequence(10)
 	public void doubleDropSameLocation() {
@@ -448,6 +502,9 @@ public class HandlingUnitTest {
 		LOG.info(hU2);
 	}
 
+	/**
+	 * Test double drop to other location
+	 */
 	@Test
 	@InSequence(11)
 	public void doubleDropOtherLocation() {

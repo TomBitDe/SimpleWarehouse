@@ -17,10 +17,19 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * Test the cache data loading coming from DB table. 
+ */
 @RunWith(Arquillian.class)
 public class CacheDataFromDbTableTest {
 	private static final Logger LOG = LogManager.getLogger(CacheDataFromDbTableTest.class);
 
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
@@ -43,6 +52,17 @@ public class CacheDataFromDbTableTest {
 	@EJB
 	CacheDataProvider cacheDataProvider;
 
+	/**
+	 * Mandatory default constructor
+	 */
+	public CacheDataFromDbTableTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+	
+	/**
+	 * Test loading of cache data
+	 */
 	@Test
 	public void loadCacheDataTest()
 	{

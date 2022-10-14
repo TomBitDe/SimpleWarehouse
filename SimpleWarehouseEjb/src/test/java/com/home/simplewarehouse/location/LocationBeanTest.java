@@ -40,12 +40,12 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.Moni
 public class LocationBeanTest {
 	private static final Logger LOG = LogManager.getLogger(LocationBeanTest.class);
 
-	@EJB
-	LocationLocal locationLocal;
-	
-	@EJB
-	HandlingUnitLocal handlingUnitLocal;
-	
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		LOG.trace("--> createTestArchive()");
@@ -68,6 +68,23 @@ public class LocationBeanTest {
 		return archive;
 	}
 
+	@EJB
+	LocationLocal locationLocal;
+	
+	@EJB
+	HandlingUnitLocal handlingUnitLocal;
+	
+	/**
+	 * Mandatory default constructor
+	 */
+	public LocationBeanTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+	
+	/**
+	 * What to do before an individual test will be executed (each test)
+	 */
 	@Before
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
@@ -75,6 +92,9 @@ public class LocationBeanTest {
 		LOG.trace("<-- beforeTest()");		
 	}
 	
+	/**
+	 * What to do after an individual test will be executed (each test)
+	 */
 	@After
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
@@ -119,6 +139,9 @@ public class LocationBeanTest {
 		assertNull(locationLocal.getById("B"));
 	}
 	
+	/**
+	 * Test the delete, getById and create sequence
+	 */
 	@Test
 	@InSequence(1)
 	public void delete_getById_create() {
@@ -165,6 +188,9 @@ public class LocationBeanTest {
 		LOG.info("Location created: " + location);
 	}
 
+	/**
+	 * Test the delete by location
+	 */
 	@Test
 	@InSequence(2)
 	public void deleteByLocation() {
@@ -192,6 +218,9 @@ public class LocationBeanTest {
 		assertNull(location);
 	}
 	
+	/**
+	 * Test getAll method
+	 */
 	@Test
 	@InSequence(3)
 	public void getAll() {
@@ -214,6 +243,9 @@ public class LocationBeanTest {
 		assertEquals(5, locations.size());
 	}
 	
+	/**
+	 * Test delete a location with handling units on it
+	 */
 	@Test
 	@InSequence(4)
 	public void deleteLocationWithHandlingUnits() {
@@ -286,6 +318,9 @@ public class LocationBeanTest {
 		LOG.info(hU5);
 	}
 
+	/**
+	 * Test delete a location with one single handling unit on it
+	 */
 	@Test
 	@InSequence(5)
 	public void deleteLocationWithOneHandlingUnit() {

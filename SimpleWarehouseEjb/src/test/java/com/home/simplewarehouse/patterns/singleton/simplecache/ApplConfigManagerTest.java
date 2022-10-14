@@ -19,10 +19,19 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
 
+/**
+ * Test the Application Configuration Manager. 
+ */
 @RunWith(Arquillian.class)
 public class ApplConfigManagerTest {
 	private static final Logger LOG = LogManager.getLogger(ApplConfigManagerTest.class);
 
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
@@ -43,8 +52,19 @@ public class ApplConfigManagerTest {
 	}
 
 	@EJB
-	ApplConfigManager applConfigManager;
+	private ApplConfigManager applConfigManager;
 
+	/**
+	 * Mandatory default constructor
+	 */
+	public ApplConfigManagerTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+
+	/**
+	 * Test the getAll method
+	 */
 	@Test
 	public void getAllTest()
 	{

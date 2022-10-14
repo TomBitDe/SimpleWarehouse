@@ -18,10 +18,19 @@ import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+/**
+ * Test getting configuration data coming from cache.
+ */
 @RunWith(Arquillian.class)
 public class ConfigCacheFromDbTableTest {
 	private static final Logger LOG = LogManager.getLogger(ConfigCacheFromDbTableTest.class);
 
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
@@ -43,6 +52,17 @@ public class ConfigCacheFromDbTableTest {
 	@EJB
 	ConfigCache configCache;
 
+	/**
+	 * Mandatory default constructor
+	 */
+	public ConfigCacheFromDbTableTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+	
+	/**
+	 * Test get data where no default values exist
+	 */
 	@Test
 	@InSequence(1)
 	public void getDataNoDefaultTest()
@@ -67,6 +87,9 @@ public class ConfigCacheFromDbTableTest {
 		LOG.debug("<-- getDataTest");
 	}
 
+	/**
+	 * Test get data where default values exist
+	 */
 	@Test
 	@InSequence(2)
 	public void getDataWithDefaultTest()

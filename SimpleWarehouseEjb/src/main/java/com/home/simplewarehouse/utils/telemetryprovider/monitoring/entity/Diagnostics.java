@@ -11,13 +11,16 @@ public class Diagnostics {
         this.parameters = new HashMap<>();
         this.parameters.put(name, String.valueOf(value));
     }
+    
     public static Diagnostics with(String name,Object value){
         return new Diagnostics(name, value);
     }
+    
     public Diagnostics and(String name,Object value){
         this.parameters.put(name, String.valueOf(value));
         return this;
     }
+    
     public Map<String,String> asMap(){
         return this.parameters;
     }

@@ -38,24 +38,14 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.Moni
  */
 @RunWith(Arquillian.class)
 public class SampleWarehouseBeanTest {
-	private static final Logger LOG = LogManager.getLogger(SampleWarehouseBeanTest.class);
+	private static final Logger LOG = LogManager.getLogger(SampleWarehouseBeanTest.class);	
 	
-	@EJB
-	private SampleWarehouseLocal sampleWarehouseLocal;
-	
-	@EJB
-	private LocationLocal locationLocal;
-	
-	@EJB
-	private LocationStatusLocal locationStatusLocal;
-	
-	@EJB
-	private DimensionLocal dimensionLocal;
-	
-	@EJB
-	private HandlingUnitLocal handlingUnitLocal;
-	
-	
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		LOG.trace("--> createTestArchive()");
@@ -83,6 +73,32 @@ public class SampleWarehouseBeanTest {
 		return archive;
 	}
 	
+	@EJB
+	private SampleWarehouseLocal sampleWarehouseLocal;
+	
+	@EJB
+	private LocationLocal locationLocal;
+	
+	@EJB
+	private LocationStatusLocal locationStatusLocal;
+	
+	@EJB
+	private DimensionLocal dimensionLocal;
+	
+	@EJB
+	private HandlingUnitLocal handlingUnitLocal;
+
+	/**
+	 * Mandatory default constructor
+	 */
+	public SampleWarehouseBeanTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+
+	/**
+	 * All that is needed to be done before any test
+	 */
 	@Before
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
@@ -90,6 +106,9 @@ public class SampleWarehouseBeanTest {
 		LOG.trace("<-- beforeTest()");		
 	}
 	
+	/**
+	 * All that is needed to be done after any test
+	 */
 	@After
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
@@ -97,6 +116,9 @@ public class SampleWarehouseBeanTest {
 		LOG.trace("<-- afterTest()");		
 	}
 
+	/**
+	 * Test the initialization
+	 */
 	@Test
 	@InSequence(0)
 	public void initializeTest() {
@@ -125,6 +147,9 @@ public class SampleWarehouseBeanTest {
 		handlingUnitLocal.getAll().forEach(h -> LOG.info(h));
 	}
 	
+	/**
+	 * Test the cleanup
+	 */
 	@Test
 	@InSequence(1)
 	public void cleanupTest() {
@@ -145,6 +170,9 @@ public class SampleWarehouseBeanTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 	}
 
+	/**
+	 * Sequence testing for initialization
+	 */
 	@Test
 	@InSequence(2)
 	public void secondInitializeTest() {
@@ -173,6 +201,9 @@ public class SampleWarehouseBeanTest {
 		handlingUnitLocal.getAll().forEach(h -> LOG.info(h));
 	}
 	
+	/**
+	 * Sequence testing for cleanup
+	 */
 	@Test
 	@InSequence(3)
 	public void secondCleanupTest() {

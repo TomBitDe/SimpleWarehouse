@@ -98,7 +98,7 @@ public class PickUseCasesTest {
 	}
 	
 	/**
-	 * Mandatory default constructor<br>
+	 * Mandatory default constructor
 	 */
 	public PickUseCasesTest() {
 		// DO NOTHING HERE!
@@ -456,7 +456,6 @@ public class PickUseCasesTest {
 	 * - the OTHER location is still filled with the handlingUnit<br>
 	 * - the OTHER location is SET in ERROR because is was NOT EMPTY before and needs check<br>
      * <br>
-	 * TODO: what should happen with the unit?<br>
 	 */
 	@Test
 	@InSequence(15)
@@ -544,7 +543,6 @@ public class PickUseCasesTest {
 	 * - the OTHER location is still filled with the handlingUnit<br>
 	 * - the OTHER location is SET in ERROR because is was NOT EMPTY before and needs check<br>
      * <br>
-	 * TODO: what should happen with the unit?<br>
 	 */
 	@Test
 	@InSequence(17)

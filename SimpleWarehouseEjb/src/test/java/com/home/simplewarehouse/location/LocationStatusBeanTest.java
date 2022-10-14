@@ -38,12 +38,12 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.Moni
 public class LocationStatusBeanTest {
 	private static final Logger LOG = LogManager.getLogger(LocationStatusBeanTest.class);
 
-	@EJB
-	LocationStatusLocal locationStatusLocal;
-	
-	@EJB
-	LocationLocal locationLocal;
-	
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		LOG.trace("--> createTestArchive()");
@@ -67,6 +67,23 @@ public class LocationStatusBeanTest {
 		return archive;
 	}
 
+	@EJB
+	LocationStatusLocal locationStatusLocal;
+	
+	@EJB
+	LocationLocal locationLocal;
+	
+	/**
+	 * Mandatory default constructor
+	 */
+	public LocationStatusBeanTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+
+	/**
+	 * What to do before an individual test will be executed (each test)
+	 */
 	@Before
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
@@ -74,6 +91,9 @@ public class LocationStatusBeanTest {
 		LOG.trace("<-- beforeTest()");		
 	}
 	
+	/**
+	 * What to do after an individual test will be executed (each test)
+	 */
 	@After
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
@@ -121,6 +141,9 @@ public class LocationStatusBeanTest {
 		assertNull(locationStatusLocal.getById("B"));
 	}
 	
+	/**
+	 * Test the delete, getById and create sequence
+	 */
 	@Test
 	@InSequence(1)
 	public void delete_getById_create() {

@@ -29,9 +29,12 @@ import com.home.simplewarehouse.utils.telemetryprovider.requestcounter.GoodMorni
 public class TelemetryProviderTest {
 	private static final Logger LOG = LogManager.getLogger(TelemetryProviderTest.class);
 
-	@EJB
-	GoodMorning goodMorning;
-
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static Archive<?> createTestArchive() {
 		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
@@ -48,6 +51,17 @@ public class TelemetryProviderTest {
 		LOG.debug(archive.toString(true));
 
 		return archive;
+	}
+
+	@EJB
+	GoodMorning goodMorning;
+	
+	/**
+	 * Mandatory default constructor
+	 */
+	public TelemetryProviderTest() {
+		super();
+		// DO NOTHING HERE!
 	}
 
 	/**

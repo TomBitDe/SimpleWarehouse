@@ -94,9 +94,10 @@ public class DropUseCasesTest {
 	}
 	
 	/**
-	 * Mandatory default constructor<br>
+	 * Mandatory default constructor
 	 */
 	public DropUseCasesTest() {
+		super();
 		// DO NOTHING HERE!
 	}
 

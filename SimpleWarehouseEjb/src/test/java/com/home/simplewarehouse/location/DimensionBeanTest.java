@@ -38,12 +38,12 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.Moni
 public class DimensionBeanTest {
 	private static final Logger LOG = LogManager.getLogger(DimensionBeanTest.class);
 
-	@EJB
-	DimensionLocal dimensionLocal;
-	
-	@EJB
-	LocationLocal locationLocal;
-	
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
 	@Deployment
 	public static JavaArchive createTestArchive() {
 		LOG.trace("--> createTestArchive()");
@@ -68,6 +68,23 @@ public class DimensionBeanTest {
 		return archive;
 	}
 
+	@EJB
+	DimensionLocal dimensionLocal;
+	
+	@EJB
+	LocationLocal locationLocal;
+	
+	/**
+	 * Mandatory default constructor
+	 */
+	public DimensionBeanTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+
+	/**
+	 * All that is needed to be done before any test
+	 */
 	@Before
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
@@ -75,6 +92,9 @@ public class DimensionBeanTest {
 		LOG.trace("<-- beforeTest()");		
 	}
 	
+	/**
+	 * All that is needed to be done after any test
+	 */
 	@After
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
@@ -118,7 +138,10 @@ public class DimensionBeanTest {
 		// This one has not been created
 		assertNull(dimensionLocal.getById("B"));
 	}
-	
+
+	/**
+	 * Test the delete, getById and create sequence
+	 */
 	@Test
 	@InSequence(1)
 	public void delete_getById_create() {
