@@ -29,7 +29,14 @@ public class ApplConfigRestService {
 	@EJB
 	ApplConfigService applConfigService;
 
-    /**
+	/**
+	 * Mandatory default constructor
+	 */
+	public ApplConfigRestService() {
+		super();
+	}
+
+	/**
      * Get a list of all application configuration entries.
      *
      * @return the configuration list

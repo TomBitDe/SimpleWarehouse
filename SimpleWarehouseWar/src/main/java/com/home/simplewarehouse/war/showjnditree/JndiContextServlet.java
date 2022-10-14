@@ -22,6 +22,13 @@ public class JndiContextServlet extends HttpServlet {
    
    private static final Logger LOG = Logger.getLogger(JndiContextServlet.class.getName());
 
+   /**
+	* Mandatory default constructor
+	*/
+   public JndiContextServlet() {
+	   super();
+   }
+	
    @Override
    protected void doGet( HttpServletRequest req, HttpServletResponse resp ) throws ServletException, IOException
    {
