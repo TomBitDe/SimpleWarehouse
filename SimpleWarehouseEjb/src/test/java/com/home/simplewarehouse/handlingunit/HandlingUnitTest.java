@@ -260,6 +260,9 @@ public class HandlingUnitTest {
 	
 	/**
 	 * Test the pickFrom method to remove the reference to a location
+	 * 
+	 * @throws LocationIsEmptyException in case the Location is empty
+	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
 	 */
 	@Test
 	@InSequence(6)
@@ -310,7 +313,10 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the pickFrom method to remove the reference to an EMPTY location 
+	 * Test the pickFrom method to remove the reference to an EMPTY location
+	 * 
+	 * @throws LocationIsEmptyException in case the Location is empty
+	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
 	 */
 	@Test
 	@InSequence(7)
