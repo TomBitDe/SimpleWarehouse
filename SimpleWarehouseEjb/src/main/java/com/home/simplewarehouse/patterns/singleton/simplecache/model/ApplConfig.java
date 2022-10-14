@@ -49,7 +49,7 @@ public class ApplConfig implements Serializable {
 	}
 
 	/**
-	 * Get the key value
+	 * Gets the key value
 	 * 
 	 * @return the key value
 	 */
@@ -58,16 +58,16 @@ public class ApplConfig implements Serializable {
 	}
 
 	/**
-	 * Set the key to the given value
+	 * Sets the key to the given value
 	 * 
-	 * @param KeyVal the value
+	 * @param keyVal the value
 	 */
 	public void setKeyVal(String keyVal) {
 		this.keyVal = keyVal;
 	}
 
 	/**
-	 * Get the parameters value
+	 * Gets the parameters value
 	 * 
 	 * @return the value
 	 */
@@ -78,7 +78,7 @@ public class ApplConfig implements Serializable {
 	/**
 	 * Set the parameters value
 	 * 
-	 * @param ParamVal the value
+	 * @param paramVal the value
 	 */
 	public void setParamVal(String paramVal) {
 		this.paramVal = paramVal;
