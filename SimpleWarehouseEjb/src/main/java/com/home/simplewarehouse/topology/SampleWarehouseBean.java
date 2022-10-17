@@ -49,7 +49,13 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 		locationList.clear();
 		
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
-			locationList.add(new RandomLocation(String.valueOf(c), SampleWarehouseBean.class.getSimpleName()));
+			locationList.add(new RandomLocation("" + c, SampleWarehouseBean.class.getSimpleName()));
+		}
+		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
+			locationList.add(new RandomLocation("FIFO" + c, SampleWarehouseBean.class.getSimpleName()));
+		}
+		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
+			locationList.add(new RandomLocation("LIFO" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		locationList.forEach(l -> locationLocal.create(l));
 		

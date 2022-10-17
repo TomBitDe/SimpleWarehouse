@@ -5,6 +5,7 @@ import static javax.persistence.LockModeType.NONE;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
@@ -135,16 +136,16 @@ public class Location extends EntityBase implements Serializable {
 		return Objects.equals(locationId, other.locationId);
 	}
 	
-	private String toString(LinkedList<HandlingUnit> handlingUnits) {
+	private String toString(List<HandlingUnit> list) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("[");
 		
-		if (handlingUnits == null) {
+		if (list == null) {
 			builder.append("null");
 		}
 		else {
-		    handlingUnits.stream().forEach(item -> builder
+		    list.stream().forEach(item -> builder
 		    		.append('"')
 		    		.append(item.getId())
 		    		.append('"')
@@ -187,7 +188,7 @@ public class Location extends EntityBase implements Serializable {
 		return true;
 	}
 
-	public LinkedList<HandlingUnit> getHandlingUnits() {
+	public List<HandlingUnit> getHandlingUnits() {
 		return new LinkedList<>();
 	}
 

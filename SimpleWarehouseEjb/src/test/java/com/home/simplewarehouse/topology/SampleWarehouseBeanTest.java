@@ -128,15 +128,15 @@ public class SampleWarehouseBeanTest {
 		
 		assertNotNull(locationLocal.getAll());
 		assertFalse(locationLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM, locationLocal.getAll().size());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3 , locationLocal.getAll().size());
 		
 		assertNotNull(locationStatusLocal.getAll());
 		assertFalse(locationStatusLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM, locationStatusLocal.getAll().size());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationStatusLocal.getAll().size());
 
 		assertNotNull(dimensionLocal.getAll());
 		assertFalse(dimensionLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM, dimensionLocal.getAll().size());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, dimensionLocal.getAll().size());
 
 		locationLocal.getAll().forEach(l -> LOG.info(l));
 		
@@ -182,15 +182,15 @@ public class SampleWarehouseBeanTest {
 		
 		assertNotNull(locationLocal.getAll());
 		assertFalse(locationLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM, locationLocal.getAll().size());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationLocal.getAll().size());
 		
 		assertNotNull(locationStatusLocal.getAll());
 		assertFalse(locationStatusLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM, locationStatusLocal.getAll().size());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationStatusLocal.getAll().size());
 
 		assertNotNull(dimensionLocal.getAll());
 		assertFalse(dimensionLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM, dimensionLocal.getAll().size());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, dimensionLocal.getAll().size());
 
 		locationLocal.getAll().forEach(l -> LOG.info(l));
 		

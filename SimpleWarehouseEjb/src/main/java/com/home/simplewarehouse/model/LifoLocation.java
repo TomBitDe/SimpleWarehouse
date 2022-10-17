@@ -1,8 +1,10 @@
 package com.home.simplewarehouse.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
@@ -31,10 +33,10 @@ public class LifoLocation extends Location implements Serializable {
     }
 
 	@Override
-	public LinkedList<HandlingUnit> getHandlingUnits() {
+	public List<HandlingUnit> getHandlingUnits() {
 		LOG.trace("--> getHandlingUnits()");
 
-		LinkedList<HandlingUnit> ret = new LinkedList<>();
+		List<HandlingUnit> ret = new ArrayList<>();
 		
 		handlingUnits.forEach(ret::add);
 		
