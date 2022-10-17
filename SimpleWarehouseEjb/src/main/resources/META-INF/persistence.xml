@@ -5,6 +5,9 @@
 	<persistence-unit name="SimpleWarehouse-PU" transaction-type="JTA">
 		<class>com.home.simplewarehouse.model.HandlingUnit</class>
 		<class>com.home.simplewarehouse.model.Location</class>
+		<class>com.home.simplewarehouse.model.RandomLocation</class>
+		<class>com.home.simplewarehouse.model.FifoLocation</class>
+		<class>com.home.simplewarehouse.model.LifoLocation</class>
 		<class>com.home.simplewarehouse.model.LocationStatus</class>
 		<class>com.home.simplewarehouse.model.Dimension</class>
 		<class>com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig</class>

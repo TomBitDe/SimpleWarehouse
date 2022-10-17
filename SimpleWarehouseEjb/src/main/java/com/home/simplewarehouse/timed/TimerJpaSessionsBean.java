@@ -70,8 +70,11 @@ public class TimerJpaSessionsBean {
 
 		this.setLastAutomaticTimeout(new Date());
 
-		sampleWarehouseLocal.initialize();
-		
+		// Initialize only if no sample data exist
+		if (handlingUnitLocal.getAll().isEmpty() && locationLocal.getAll().isEmpty()) {
+			sampleWarehouseLocal.initialize();			
+		}
+
 		HandlingUnit h1 = handlingUnitLocal.getById("1");
 		HandlingUnit h2 = handlingUnitLocal.getById("2");
 		HandlingUnit h3 = handlingUnitLocal.getById("3");
@@ -88,24 +91,27 @@ public class TimerJpaSessionsBean {
 		lA = locationLocal.getById("A");
 		LOG.info(lA);
 		
-		handlingUnitLocal.delete(h1);
-		lA = locationLocal.getById("A");
-		LOG.info(lA);
+		try {
+			handlingUnitLocal.pickFrom(lA, h1);
+			lA = locationLocal.getById("A");
+			LOG.info(lA);
 
-		handlingUnitLocal.delete(h2);
-		lA = locationLocal.getById("A");
-		LOG.info(lA);
+			handlingUnitLocal.pickFrom(lA, h2);
+			lA = locationLocal.getById("A");
+			LOG.info(lA);
 
-		handlingUnitLocal.delete(h3);
-		lA = locationLocal.getById("A");
-		LOG.info(lA);
+			handlingUnitLocal.pickFrom(lA, h3);
+			lA = locationLocal.getById("A");
+			LOG.info(lA);
 
-		handlingUnitLocal.delete(h4);
-		lA = locationLocal.getById("A");
-		LOG.info(lA);
+			handlingUnitLocal.pickFrom(lA, h4);
+			lA = locationLocal.getById("A");
+			LOG.info(lA);
+		}
+		catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
 		
-		sampleWarehouseLocal.cleanup();
-
 		LOG.trace("<-- automaticTimeout()");
 	}
 

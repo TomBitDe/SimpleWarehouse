@@ -17,6 +17,7 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
@@ -48,7 +49,7 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 		locationList.clear();
 		
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
-			locationList.add(new Location(String.valueOf(c), SampleWarehouseBean.class.getSimpleName()));
+			locationList.add(new RandomLocation(String.valueOf(c), SampleWarehouseBean.class.getSimpleName()));
 		}
 		locationList.forEach(l -> locationLocal.create(l));
 		

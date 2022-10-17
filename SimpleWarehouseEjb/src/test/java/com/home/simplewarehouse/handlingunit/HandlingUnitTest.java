@@ -33,6 +33,7 @@ import com.home.simplewarehouse.location.LocationStatusLocal;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -207,7 +208,7 @@ public class HandlingUnitTest {
 		// Prepare a handling unit and a location
 		handlingUnitLocal.create(new HandlingUnit("1"));
 		
-		locationLocal.create(new Location("A"));
+		locationLocal.create(new RandomLocation("A"));
 		
 	    // MANDATORY reread
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
@@ -275,7 +276,7 @@ public class HandlingUnitTest {
 		// Prepare a handling unit and a location
 		handlingUnitLocal.create(new HandlingUnit("1"));
 		
-		locationLocal.create(new Location("A"));
+		locationLocal.create(new RandomLocation("A"));
 		
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = locationLocal.getById("A");
@@ -333,7 +334,7 @@ public class HandlingUnitTest {
 		LOG.info("Prepared: {}", handlingUnit);
 		
 		// Prepare a location
-		locationLocal.create(new Location("A"));
+		locationLocal.create(new RandomLocation("A"));
 		
 		Location location = locationLocal.getById("A");
 		LOG.info("Prepared: {}", location);
@@ -368,7 +369,7 @@ public class HandlingUnitTest {
 		// Prepare handling units and a location
 		handlingUnitLocal.create(new HandlingUnit("1"));
 		
-		locationLocal.create(new Location("A"));
+		locationLocal.create(new RandomLocation("A"));
 		
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = locationLocal.getById("A");
@@ -419,7 +420,7 @@ public class HandlingUnitTest {
 		handlingUnitLocal.create(new HandlingUnit("1"));
 		handlingUnitLocal.create(new HandlingUnit("2"));
 		
-		locationLocal.create(new Location("A"));
+		locationLocal.create(new RandomLocation("A"));
 		
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		HandlingUnit hU2 = handlingUnitLocal.getById("2");
@@ -471,7 +472,7 @@ public class HandlingUnitTest {
 		// Prepare handling unit and a location
 		handlingUnitLocal.create(new HandlingUnit("2"));
 		
-		locationLocal.create(new Location("A"));
+		locationLocal.create(new RandomLocation("A"));
 		
 		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		Location lOA = locationLocal.getById("A");
@@ -522,8 +523,8 @@ public class HandlingUnitTest {
 		// Prepare handling unit and a location
 		handlingUnitLocal.create(new HandlingUnit("2"));
 		
-		locationLocal.create(new Location("A"));
-		locationLocal.create(new Location("B"));
+		locationLocal.create(new RandomLocation("A"));
+		locationLocal.create(new RandomLocation("B"));
 		
 		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		Location lOA = locationLocal.getById("A");

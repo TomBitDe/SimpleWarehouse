@@ -1,33 +1,39 @@
 package com.home.simplewarehouse.model;
 
+import static javax.persistence.LockModeType.NONE;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.Objects;
-import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import static javax.persistence.LockModeType.NONE;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Any storage location.
+ * Any location.
  */
 @Entity
 @Table(name="LOCATION")
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@DiscriminatorColumn(name="ACCESS_LIMIT", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("LOCATION")
 @NamedQuery(name = "findAllLocations", query = "select l from Location l", lockMode = NONE)
 public class Location extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -42,11 +48,6 @@ public class Location extends EntityBase implements Serializable {
     @Version
     private int version;
     
-    @OneToMany( mappedBy="location"
-    		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
-    		, fetch = FetchType.EAGER )
-    private Set<HandlingUnit> handlingUnits = new HashSet<>();
-
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private LocationStatus locationStatus;
@@ -98,24 +99,6 @@ public class Location extends EntityBase implements Serializable {
 		this.version = version;
 	}
 
-	public Set<HandlingUnit> getHandlingUnits() {
-		return Collections.unmodifiableSet (handlingUnits);
-	}
-
-	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
-		handlingUnit.setLocation(this);
-		
-		return this.handlingUnits.add(handlingUnit);
-	}
-	
-	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
-		boolean b = handlingUnits.remove( handlingUnit );
-	    
-		if ( b ) handlingUnit.setLocation(null);
-	    
-		return b;
-	}
-	
 	public LocationStatus getLocationStatus() {
 		return locationStatus;
 	}
@@ -152,7 +135,7 @@ public class Location extends EntityBase implements Serializable {
 		return Objects.equals(locationId, other.locationId);
 	}
 	
-	private String toString(Set<HandlingUnit> handlingUnits) {
+	private String toString(LinkedList<HandlingUnit> handlingUnits) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("[");
@@ -192,12 +175,23 @@ public class Location extends EntityBase implements Serializable {
 		    .append(", ")
 		    .append(dimension)
 		    .append(", handlingUnits=")
-		    .append(toString(handlingUnits))
+		    .append(toString(getHandlingUnits()))
 			.append(", ")
 			.append(super.toString())
 			.append("]");
 		
 		return builder.toString();
 	}
-	
+
+	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
+		return true;
+	}
+
+	public LinkedList<HandlingUnit> getHandlingUnits() {
+		return new LinkedList<>();
+	}
+
+	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
+		return true;
+	}
 }
