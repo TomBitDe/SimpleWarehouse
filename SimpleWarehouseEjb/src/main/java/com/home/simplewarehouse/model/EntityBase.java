@@ -6,11 +6,16 @@ import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 /**
  * Important attributes (content) for tracking when using entities.
  */
 @MappedSuperclass
 public class EntityBase {
+	private static final Logger LOG = LogManager.getLogger(EntityBase.class);
+	
 	public static final String USER_DEFAULT = "System";
 	
     /**
@@ -30,8 +35,18 @@ public class EntityBase {
      * Set the defaults for the entity base in default constructor
      */
     public EntityBase() {
-    	this.updateTimestamp = new Timestamp(System.currentTimeMillis());
     	this.updateUserId = USER_DEFAULT;
+    	this.updateTimestamp = new Timestamp(System.currentTimeMillis());
+    }
+    
+    public EntityBase(String user) {
+    	setUpdateUserId(user);
+    	this.updateTimestamp = new Timestamp(System.currentTimeMillis());
+    }
+    
+    public EntityBase(String user, Timestamp timestamp) {
+    	setUpdateUserId(user);
+    	setUpdateTimestamp(timestamp);
     }
     
     /**
@@ -49,7 +64,11 @@ public class EntityBase {
 	 */
 	public void setUpdateTimestamp(Timestamp updateTimestamp) {
 		if (updateTimestamp == null) {
-			this.updateTimestamp = new Timestamp(System.currentTimeMillis());		}
+			Timestamp defaultTimestamp = new Timestamp(System.currentTimeMillis());
+			
+			LOG.info("Invalid parameter updateTimestamp ({}); set DEFAULT value ({})", updateTimestamp
+					, defaultTimestamp);
+			this.updateTimestamp = defaultTimestamp;		}
 		else {
 			this.updateTimestamp = updateTimestamp;
 		}
@@ -71,6 +90,8 @@ public class EntityBase {
 	 */
 	public void setUpdateUserId(String updateUserId) {
 		if (updateUserId == null) {
+			LOG.info("Invalid parameter updateUserId ({}); set DEFAULT value ({})", updateUserId
+					, USER_DEFAULT);
 			this.updateUserId = USER_DEFAULT;
 		}
 		else {

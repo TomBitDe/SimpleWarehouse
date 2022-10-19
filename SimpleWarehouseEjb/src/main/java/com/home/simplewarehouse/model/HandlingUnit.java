@@ -44,6 +44,9 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	@JoinColumn(name = "LOCATION_ID", nullable = true)
     private Location location;
     
+    @Column(name = "LOCAPOS", nullable = true)
+    private Integer locaPos = null;
+    
     public HandlingUnit() {
     	super();
     }
@@ -54,17 +57,13 @@ public class HandlingUnit extends EntityBase implements Serializable {
     }
 
     public HandlingUnit(String id, String user) {
-    	super();
+    	super(user);
     	this.id = id;
-    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(user);
     }
     
     public HandlingUnit(String id, String user, Timestamp timestamp) {
-    	super();
+    	super(user, timestamp);
     	this.id = id;
-    	super.setUpdateTimestamp(timestamp);
-    	super.setUpdateUserId(user);
     }
 
     public String getId() {
@@ -93,6 +92,14 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		this.location = location;
 	}
 	
+	public Integer getLocaPos() {
+		return locaPos;
+	}
+
+	public void setLocaPos(Integer locaPos) {
+		this.locaPos = locaPos;
+	}
+
 	@Override
 	public int hashCode() {
 		// Only id; this is a must. Otherwise stack overflow
@@ -122,6 +129,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		    .append(version)
 		    .append(", ")
 		    .append(location == null ? "location=null" : location)
+		    .append(", ")
+		    .append(locaPos == null ? "locaPos=null" : locaPos)
             .append(", ")
 			.append(super.toString())			
 			.append("]");

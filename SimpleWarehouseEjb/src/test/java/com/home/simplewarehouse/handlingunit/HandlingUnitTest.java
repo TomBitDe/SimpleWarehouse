@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
+import java.sql.Timestamp;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -138,6 +139,46 @@ public class HandlingUnitTest {
 		handlingUnitLocal.create(expHandlingUnit);
 		HandlingUnit handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
 		assertEquals(expHandlingUnit, handlingUnit);
+		
+		LOG.info(handlingUnit);
+		
+		expHandlingUnit = new HandlingUnit("2", null);
+
+		handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		assertEquals(expHandlingUnit, handlingUnit);
+		assertNotNull(handlingUnit.getUpdateUserId());
+		assertNotNull(handlingUnit.getUpdateTimestamp());
+		
+		LOG.info(handlingUnit);
+		
+		expHandlingUnit = new HandlingUnit("3", null, null);
+
+		handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		assertEquals(expHandlingUnit, handlingUnit);
+		assertNotNull(handlingUnit.getUpdateUserId());
+		assertNotNull(handlingUnit.getUpdateTimestamp());
+		
+		LOG.info(handlingUnit);
+		
+		expHandlingUnit = new HandlingUnit("4", "Scott Tiger");
+
+		handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		assertEquals(expHandlingUnit, handlingUnit);
+		assertEquals(expHandlingUnit.getUpdateUserId(), handlingUnit.getUpdateUserId());
+		assertNotNull(handlingUnit.getUpdateTimestamp());
+		
+		LOG.info(handlingUnit);
+		
+		expHandlingUnit = new HandlingUnit("5", "Willi", new Timestamp(System.currentTimeMillis()));
+
+		handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		assertEquals(expHandlingUnit, handlingUnit);
+		assertEquals(expHandlingUnit.getUpdateUserId(), handlingUnit.getUpdateUserId());
+		assertEquals(expHandlingUnit.getUpdateTimestamp(), handlingUnit.getUpdateTimestamp());
 		
 		LOG.info(handlingUnit);
 	}

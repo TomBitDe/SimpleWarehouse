@@ -1,7 +1,8 @@
 package com.home.simplewarehouse.model;
 
+import static javax.persistence.LockModeType.NONE;
+
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.util.Objects;
 
 import javax.persistence.Basic;
@@ -10,11 +11,10 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
+import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import javax.persistence.NamedQuery;
-import static javax.persistence.LockModeType.NONE;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -65,9 +65,6 @@ public class Dimension extends EntityBase implements Serializable {
     	super();
     	
     	setDimensionDefaults();
-    	
-    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(USER_DEFAULT);
     }
     
     public Dimension(String locationId) {
@@ -76,24 +73,18 @@ public class Dimension extends EntityBase implements Serializable {
     	this.locationId = locationId;
     	
     	setDimensionDefaults();
-    	
-    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(USER_DEFAULT);
     }
     
     public Dimension(String locationId, String user) {
-    	super();
+    	super(user);
     	
     	this.locationId = locationId;
     	
     	setDimensionDefaults();
-    	
-    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(user);
     }
     
 	public Dimension(String locationId, int capacity, String user) {
-		super();
+		super(user);
 		
 		this.locationId = locationId;
 		
@@ -101,9 +92,6 @@ public class Dimension extends EntityBase implements Serializable {
 			this.capacity = 0;
 		else
 		    this.capacity = capacity;
-		
-		super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(user);
 	}
 
 	public String getLocationId() {

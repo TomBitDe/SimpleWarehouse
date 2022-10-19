@@ -64,22 +64,16 @@ public class Location extends EntityBase implements Serializable {
     public Location(String id) {
     	super();
     	this.locationId = id;
-    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(USER_DEFAULT);
     }
     
     public Location(String id, String user) {
-    	super();
+    	super(user);
     	this.locationId = id;
-    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(user);
     }
     
     public Location(String id, String user, Timestamp timestamp) {
-    	super();
+    	super(user, timestamp);
     	this.locationId = id;
-    	super.setUpdateTimestamp(timestamp);
-    	super.setUpdateUserId(user);
     }
     
     public String getLocationId() {
