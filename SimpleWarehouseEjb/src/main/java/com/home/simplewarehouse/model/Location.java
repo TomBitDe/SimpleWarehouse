@@ -32,7 +32,7 @@ import org.apache.logging.log4j.Logger;
  */
 @Entity
 @Table(name="LOCATION")
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="ACCESS_LIMIT", discriminatorType = DiscriminatorType.STRING)
 @DiscriminatorValue("LOCATION")
 @NamedQuery(name = "findAllLocations", query = "select l from Location l", lockMode = NONE)
@@ -185,7 +185,7 @@ public class Location extends EntityBase implements Serializable {
 	}
 
 	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
-		return true;
+		return false;
 	}
 
 	public List<HandlingUnit> getHandlingUnits() {
@@ -193,6 +193,6 @@ public class Location extends EntityBase implements Serializable {
 	}
 
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
-		return true;
+		return false;
 	}
 }

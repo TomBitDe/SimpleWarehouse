@@ -34,24 +34,15 @@ public class RandomLocation extends Location implements Serializable {
     }
 
     public RandomLocation(String id) {
-    	super();
-    	super.setLocationId(id);
-    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(USER_DEFAULT);
+    	super(id);
     }
     
     public RandomLocation(String id, String user) {
-    	super();
-    	super.setLocationId(id);
-    	super.setUpdateTimestamp(new Timestamp(System.currentTimeMillis()));
-    	super.setUpdateUserId(user);
+    	super(id, user);
     }
     
     public RandomLocation(String id, String user, Timestamp timestamp) {
-    	super();
-    	super.setLocationId(id);
-    	super.setUpdateTimestamp(timestamp);
-    	super.setUpdateUserId(user);
+    	super(id, user, timestamp);
     }
 
     @Override

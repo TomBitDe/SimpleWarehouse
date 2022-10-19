@@ -1,10 +1,11 @@
 package com.home.simplewarehouse.model;
 
 import java.io.Serializable;
+import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Queue;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.DiscriminatorValue;
@@ -26,10 +27,22 @@ public class FifoLocation extends Location implements Serializable {
     @OneToMany( mappedBy="location"
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.EAGER )
-	private Queue<HandlingUnit> handlingUnits = new LinkedList<>();
+	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
     public FifoLocation() {
     	super();
+    }
+
+    public FifoLocation(String id) {
+    	super(id);
+    }
+    
+    public FifoLocation(String id, String user) {
+    	super(id, user);
+    }
+    
+    public FifoLocation(String id, String user, Timestamp timestamp) {
+    	super(id, user, timestamp);
     }
 
 	@Override
