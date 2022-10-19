@@ -106,20 +106,32 @@ public class LocationStatus extends EntityBase implements Serializable {
 		
 		this.locationId = locationId;
 		
-		if (errorStatus == null)
-			this.errorStatus = ErrorStatus.NONE.name();
-		else
+		if (errorStatus == null) {
+			LOG.info("Invalid parameter errorStatus ({}); set DEFAULT value ({})", errorStatus
+					, ERROR_STATUS_DEFAULT.name());
+			this.errorStatus = ERROR_STATUS_DEFAULT.name();
+		}
+		else {
 		    this.errorStatus = errorStatus.name();
+		}
 		
-		if (ltosStatus == null)
-			this.ltosStatus = LtosStatus.NO.name();
-		else
+		if (ltosStatus == null) {
+			LOG.info("Invalid parameter ltosStatus ({}); set DEFAULT value ({})", ltosStatus
+					, LTOS_STATUS_DEFAULT.name());
+			this.ltosStatus = LTOS_STATUS_DEFAULT.name();
+		}
+		else {
 		    this.ltosStatus = ltosStatus.name();
+		}
 		
-		if (lockStatus == null)
-			this.lockStatus = LockStatus.UNLOCKED.name();
-		else
+		if (lockStatus == null) {
+			LOG.info("Invalid parameter lockStatus ({}); set DEFAULT value ({})", lockStatus
+					, LOCK_STATUS_DEFAULT.name());
+			this.lockStatus = LOCK_STATUS_DEFAULT.name();
+		}
+		else {
 			this.lockStatus = lockStatus.name();
+		}
 	}
 
 	public String getLocationId() {

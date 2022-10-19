@@ -88,10 +88,16 @@ public class Dimension extends EntityBase implements Serializable {
 		
 		this.locationId = locationId;
 		
-		if (capacity < 0)
-			this.capacity = 0;
-		else
+		if (capacity < 0) {
+			int defaultCapacity = 0;
+			
+			LOG.info("Invalid parameter capacity ({}); set DEFAULT value ({})", capacity
+					, defaultCapacity);
+			this.capacity = defaultCapacity;			
+		}
+		else {
 		    this.capacity = capacity;
+		}
 	}
 
 	public String getLocationId() {
