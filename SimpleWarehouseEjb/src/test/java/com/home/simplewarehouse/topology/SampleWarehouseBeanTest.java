@@ -24,9 +24,9 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
-import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.DimensionBean;
 import com.home.simplewarehouse.location.DimensionLocal;
+import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
