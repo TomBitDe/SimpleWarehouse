@@ -35,28 +35,28 @@ public class LifoLocation extends Location implements Serializable {
 	@Override
 	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> addHandlingUnit()");
-
-		getHandlingUnits().forEach(h -> h.setLocaPos(h.getLocaPos() + 1));
+		
+		handlingUnits.forEach(h -> h.setLocaPos(h.getLocaPos() + 1));
 		
 		handlingUnit.setLocation(this);		
 		handlingUnit.setLocaPos(1);
 		
 		LOG.trace("<-- addHandlingUnit()");
 		
-		return getHandlingUnits().add(handlingUnit);
+		return handlingUnits.add(handlingUnit);
 	}
 	
 	@Override
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
 		
-		boolean b = getHandlingUnits().remove( handlingUnit );
+		boolean b = handlingUnits.remove( handlingUnit );
 	    
 		if ( b ) {
 			handlingUnit.setLocation(null);
 			handlingUnit.setLocaPos(null);
 			
-			getHandlingUnits().forEach(h -> h.setLocaPos(h.getLocaPos() - 1));
+			handlingUnits.forEach(h -> h.setLocaPos(h.getLocaPos() - 1));
 		}
 	    
 		LOG.trace("<-- removeHandlingUnit()");
@@ -68,7 +68,7 @@ public class LifoLocation extends Location implements Serializable {
 	protected String toString(List<HandlingUnit> list) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("LIFO [");
+		builder.append("LIFO=[");
 		
 		if (list == null) {
 			builder.append("null");

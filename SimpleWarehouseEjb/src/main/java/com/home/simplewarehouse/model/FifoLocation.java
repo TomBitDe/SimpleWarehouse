@@ -39,7 +39,7 @@ public class FifoLocation extends Location implements Serializable {
 
 		handlingUnit.setLocation(this);
 
-		HandlingUnit max = getHandlingUnits().stream()
+		HandlingUnit max = handlingUnits.stream()
 				.max(Comparator.comparing(HandlingUnit::getLocaPos))
 				.orElse(null);
 
@@ -52,20 +52,20 @@ public class FifoLocation extends Location implements Serializable {
 		
 		LOG.trace("<-- addHandlingUnit()");
 		
-		return getHandlingUnits().add(handlingUnit);
+		return handlingUnits.add(handlingUnit);
 	}
 	
 	@Override
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
 		
-		boolean b = getHandlingUnits().remove( handlingUnit );
+		boolean b = handlingUnits.remove( handlingUnit );
 	    
 		if ( b ) {
 			handlingUnit.setLocation(null);
 			handlingUnit.setLocaPos(null);
 			
-			getHandlingUnits().forEach(h -> h.setLocaPos(h.getLocaPos() - 1));
+			handlingUnits.forEach(h -> h.setLocaPos(h.getLocaPos() - 1));
 		}
 
 		LOG.trace("<-- removeHandlingUnit()");
@@ -77,7 +77,7 @@ public class FifoLocation extends Location implements Serializable {
 	protected String toString(List<HandlingUnit> list) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("FIFO [");
+		builder.append("FIFO=[");
 		
 		if (list == null) {
 			builder.append("null");

@@ -63,7 +63,7 @@ public class Location extends EntityBase implements Serializable {
     @OneToMany( mappedBy="location"
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.EAGER )
-	private Set<HandlingUnit> handlingUnits = new HashSet<>();
+	protected Set<HandlingUnit> handlingUnits = new HashSet<>();
 
     public Location() {
     	super();
@@ -218,6 +218,7 @@ public class Location extends EntityBase implements Serializable {
 			.append(", ")
 			.append("handlingUnits ")
 			.append(toString(getHandlingUnits()))
+			.append(", ")
 			.append(super.toString())
 			.append("]");
 		
