@@ -19,7 +19,6 @@ import com.home.simplewarehouse.model.FifoLocation;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
@@ -51,14 +50,17 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 		locationList.clear();
 		
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
-			locationList.add(new RandomLocation("" + c, SampleWarehouseBean.class.getSimpleName()));
+			locationList.add(new Location("" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
+		
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
 			locationList.add(new FifoLocation("FIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
+		
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
 			locationList.add(new LifoLocation("LIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
+		
 		locationList.forEach(l -> locationLocal.create(l));
 		
 		List<HandlingUnit> handlingUnitList = new ArrayList<>();

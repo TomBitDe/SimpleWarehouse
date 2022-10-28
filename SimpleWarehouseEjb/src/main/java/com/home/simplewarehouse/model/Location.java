@@ -4,9 +4,11 @@ import static javax.persistence.LockModeType.NONE;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -19,6 +21,7 @@ import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
@@ -32,9 +35,9 @@ import org.apache.logging.log4j.Logger;
  */
 @Entity
 @Table(name="LOCATION")
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="ACCESS_LIMIT", discriminatorType = DiscriminatorType.STRING)
-@DiscriminatorValue("LOCATION")
+@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="ACCESS_LIMIT", discriminatorType=DiscriminatorType.STRING, length=20)
+@DiscriminatorValue("RANDOM")
 @NamedQuery(name = "findAllLocations", query = "select l from Location l", lockMode = NONE)
 public class Location extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -57,6 +60,11 @@ public class Location extends EntityBase implements Serializable {
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private Dimension dimension;
     
+    @OneToMany( mappedBy="location"
+    		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
+    		, fetch = FetchType.EAGER )
+	private Set<HandlingUnit> handlingUnits = new HashSet<>();
+
     public Location() {
     	super();
     }
@@ -110,6 +118,44 @@ public class Location extends EntityBase implements Serializable {
 		this.dimension = dimension;
 	}
 
+	public List<HandlingUnit> getHandlingUnits() {
+		LOG.trace("--> getHandlingUnits()");
+
+		List<HandlingUnit> ret = new ArrayList<>();
+		
+		handlingUnits.forEach(ret::add);
+		
+		LOG.trace("<-- getHandlingUnits()");
+
+		return ret;
+	}
+
+	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
+		LOG.trace("--> addHandlingUnit()");
+
+		handlingUnit.setLocation(this);
+		handlingUnit.setLocaPos(null);
+		
+		LOG.trace("<-- addHandlingUnit()");
+		
+		return this.handlingUnits.add(handlingUnit);
+	}
+	
+	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
+		LOG.trace("--> removeHandlingUnit()");
+		
+		boolean b = handlingUnits.remove( handlingUnit );
+	    
+		if ( b ) {
+			handlingUnit.setLocation(null);
+			handlingUnit.setLocaPos(null);
+		}
+	    
+		LOG.trace("<-- removeHandlingUnit()");
+
+		return b;
+	}	
+
 	@Override
 	public int hashCode() {
 		// Only locationId; this is a must. Otherwise stack overflow
@@ -130,10 +176,10 @@ public class Location extends EntityBase implements Serializable {
 		return Objects.equals(locationId, other.locationId);
 	}
 	
-	private String toString(List<HandlingUnit> list) {
+	protected String toString(List<HandlingUnit> list) {
 		StringBuilder builder = new StringBuilder();
 
-		builder.append("[");
+		builder.append("RANDOM=[");
 		
 		if (list == null) {
 			builder.append("null");
@@ -157,7 +203,7 @@ public class Location extends EntityBase implements Serializable {
 		
 		return builder.toString();
 	}
-	
+
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
@@ -169,24 +215,12 @@ public class Location extends EntityBase implements Serializable {
 		    .append(locationStatus)
 		    .append(", ")
 		    .append(dimension)
-		    .append(", handlingUnits=")
-		    .append(toString(getHandlingUnits()))
 			.append(", ")
+			.append("handlingUnits ")
+			.append(toString(getHandlingUnits()))
 			.append(super.toString())
 			.append("]");
 		
 		return builder.toString();
-	}
-
-	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
-		return false;
-	}
-
-	public List<HandlingUnit> getHandlingUnits() {
-		return new LinkedList<>();
-	}
-
-	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
-		return false;
 	}
 }
