@@ -35,6 +35,9 @@ public class HandlingUnit extends EntityBase implements Serializable {
     @Column(name = "ID", nullable = false)
     private String id;
 
+    @Column(name = "LOCAPOS", nullable = true)
+    private Integer locaPos = null;
+    
     @Version
     private int version;
     
@@ -43,9 +46,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     		, fetch = FetchType.LAZY) // LAZY for better performance)
 	@JoinColumn(name = "LOCATION_ID", nullable = true)
     private Location location;
-    
-    @Column(name = "LOCAPOS", nullable = true)
-    private Integer locaPos = null;
     
     public HandlingUnit() {
     	super();
@@ -123,15 +123,15 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("HandlingUnit [id=")
+		builder.append(System.lineSeparator() + "\tHandlingUnit [id=")
 		    .append(id)
+		    .append(", locaPos=")
+		    .append(locaPos == null ? "null" : locaPos)		    
 		    .append(", version=")
 		    .append(version)
 		    .append(", ")
 		    .append(location == null ? "location=null" : location)
-		    .append(", ")
-		    .append(locaPos == null ? "locaPos=null" : locaPos)
-            .append(", ")
+		    .append(", " + System.lineSeparator() + '\t')
 			.append(super.toString())			
 			.append("]");
 		

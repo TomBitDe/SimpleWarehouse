@@ -207,18 +207,18 @@ public class Location extends EntityBase implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Location [locationId=")
+		builder.append(System.lineSeparator() + "\tLocation [locationId=")
 		    .append(locationId)
 		    .append(", version=")
 		    .append(version)
-		    .append(", ")
+		    .append(", " + System.lineSeparator() + '\t' + '\t')
 		    .append(locationStatus)
-		    .append(", ")
+		    .append(", " + System.lineSeparator() + '\t' + '\t')
 		    .append(dimension)
-			.append(", ")
+			.append(", " + System.lineSeparator() + '\t' + '\t')
 			.append("handlingUnits ")
 			.append(toString(getHandlingUnits()))
-			.append(", ")
+			.append(", " + System.lineSeparator() + '\t' + '\t')
 			.append(super.toString())
 			.append("]");
 		
