@@ -31,7 +31,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Any location.
+ * Location with access limit RANDOM.
  */
 @Entity
 @Table(name="LOCATION")

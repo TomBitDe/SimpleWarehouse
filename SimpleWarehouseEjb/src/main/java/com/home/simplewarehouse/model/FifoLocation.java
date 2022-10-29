@@ -11,6 +11,9 @@ import javax.persistence.Entity;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Location with access limit FIFO.
+ */
 @Entity
 @DiscriminatorValue("FIFO")
 public class FifoLocation extends Location implements Serializable {
