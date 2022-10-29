@@ -83,6 +83,7 @@ public class LocationBean implements LocationLocal {
 			
 			for (HandlingUnit handlingUnit : location.getHandlingUnits()) {
 				handlingUnit.setLocation(null);
+				handlingUnit.setLocaPos(null);		
 				em.flush();
 			}
 			
