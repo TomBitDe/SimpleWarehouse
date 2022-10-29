@@ -36,11 +36,11 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test the Location bean.
+ * Test the LIFO Location.
  */
 @RunWith(Arquillian.class)
-public class LifoLocationBeanTest {
-	private static final Logger LOG = LogManager.getLogger(LifoLocationBeanTest.class);
+public class LifoLocationTest {
+	private static final Logger LOG = LogManager.getLogger(LifoLocationTest.class);
 
 	/**
 	 * Configure the deployment.<br>
@@ -79,7 +79,7 @@ public class LifoLocationBeanTest {
 	/**
 	 * Mandatory default constructor
 	 */
-	public LifoLocationBeanTest() {
+	public LifoLocationTest() {
 		super();
 		// DO NOTHING HERE!
 	}
@@ -127,7 +127,7 @@ public class LifoLocationBeanTest {
 		Location expLocation = new LifoLocation("A");
 
 		locationLocal.create(expLocation);
-		LOG.info("Location created: " + expLocation);
+		LOG.info("Lifo Location created: " + expLocation);
 
 		// MANDATORY reread
 		Location location = locationLocal.getById(expLocation.getLocationId());		
@@ -137,7 +137,7 @@ public class LifoLocationBeanTest {
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
 		
-	    // MANDATORY reread
+	    // Should be null because never created
 		assertNull(locationLocal.getById("B"));
 	}
 	
@@ -239,7 +239,7 @@ public class LifoLocationBeanTest {
 
 		// Get them all and output
 		List<Location> locations = locationLocal.getAll();
-		locations.stream().forEach( l -> LOG.info(l.toString()) );
+		// locations.stream().forEach( l -> LOG.info(l.toString()) );
 
 		assertFalse(locations.isEmpty());
 		assertEquals(5, locations.size());
@@ -313,7 +313,9 @@ public class LifoLocationBeanTest {
 		assertNotNull(hU5);
 		
 		assertNull(hU2.getLocation());
+		assertNull(hU2.getLocaPos());
 		assertNull(hU5.getLocation());
+		assertNull(hU5.getLocaPos());
 		
 		LOG.info("Sample hU2 and hU5 have no longer a location");
 		LOG.info(hU2);
@@ -374,8 +376,9 @@ public class LifoLocationBeanTest {
 		assertNotNull(hU8);
 		
 		assertNull(hU8.getLocation());
+		assertNull(hU8.getLocaPos());
 		
-		LOG.info("Sample hU1 has no longer a location");
+		LOG.info("Sample hU8 has no longer a location");
 		LOG.info(hU8);
 	}
 }
