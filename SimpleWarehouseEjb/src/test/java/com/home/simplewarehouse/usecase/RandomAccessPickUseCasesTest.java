@@ -240,7 +240,7 @@ public class RandomAccessPickUseCasesTest {
 	 */
 	@Test
 	@InSequence(1)
-	public void pickFormLocation() {
+	public void pickFromLocation() {
 		HandlingUnit hu1 = prepareUnitAndCheck("1");
 		
 		Location lA = prepareLocationAndCheck("A");
