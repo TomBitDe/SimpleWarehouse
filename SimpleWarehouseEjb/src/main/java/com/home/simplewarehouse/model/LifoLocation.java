@@ -3,6 +3,7 @@ package com.home.simplewarehouse.model;
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -74,7 +75,11 @@ public class LifoLocation extends Location implements Serializable {
 			builder.append("null");
 		}
 		else {
-		    list.stream().forEach(item -> builder
+			List<HandlingUnit> result = list.stream().sorted((o1, o2) -> o1.getLocaPos()
+					.compareTo(o2.getLocaPos()))
+					.collect(Collectors.toList());
+			
+			result.stream().forEach(item -> builder
 		    		.append('"')
 		    		.append(item.getId())
 		    		.append(" Pos ")
