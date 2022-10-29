@@ -119,7 +119,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalArgumentException("HandlingUnit is null");
 		}
 		
-		if (((List<HandlingUnit>) location.getHandlingUnits()).isEmpty()) {
+		if ((location.getHandlingUnits()).isEmpty()) {
 			// Check handlingUnit is already stored elsewhere
 			List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit
 					, location);
