@@ -429,18 +429,17 @@ public class LifoLocationTest {
 		
 		LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
 
-		LOG.info("Sample hU5 and hU2 locaPos check");
 	    // MANDATORY reread
 		hU5 = handlingUnitLocal.getById("5");
 		assertEquals(locA, hU5.getLocation());
 		assertEquals(Integer.valueOf(1), hU5.getLocaPos());
-		LOG.info(hU5);
+		LOG.info("Sample hU5 locaPos check: {}", hU5);
 		
 	    // MANDATORY reread
 		hU2 = handlingUnitLocal.getById("2");
 		assertEquals(locA, hU2.getLocation());
 		assertEquals(Integer.valueOf(4), hU2.getLocaPos());
-		LOG.info(hU2);
+		LOG.info("Sample hU2 locaPos check: {}", hU2);
 		
 		try {
 			handlingUnitLocal.pickFrom(locA, hU5);
