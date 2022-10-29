@@ -46,14 +46,15 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test pick use cases.
+ * Test pick use cases for a RANDOM access location.
  */
 @RunWith(Arquillian.class)
-public class PickUseCasesTest {
-	private static final Logger LOG = LogManager.getLogger(PickUseCasesTest.class);
+public class RandomAccessPickUseCasesTest {
+	private static final Logger LOG = LogManager.getLogger(RandomAccessPickUseCasesTest.class);
 
 	@EJB
 	private SampleWarehouseLocal sampleWarehouseLocal;
+	
 	@EJB
 	private LocationStatusLocal locationStatusLocal;
 	
@@ -100,7 +101,7 @@ public class PickUseCasesTest {
 	/**
 	 * Mandatory default constructor
 	 */
-	public PickUseCasesTest() {
+	public RandomAccessPickUseCasesTest() {
 		// DO NOTHING HERE!
 	}
 
