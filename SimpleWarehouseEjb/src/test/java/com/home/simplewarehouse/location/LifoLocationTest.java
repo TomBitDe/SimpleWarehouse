@@ -124,14 +124,14 @@ public class LifoLocationTest {
 
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-		Location expLocation = new LifoLocation("A");
+		LifoLocation expLocation = new LifoLocation("A");
 
 		locationLocal.create(expLocation);
 		LOG.info("Lifo Location created: " + expLocation);
 
 		// MANDATORY reread
 		Location location = locationLocal.getById(expLocation.getLocationId());		
-		LOG.info("Location getById: " + location);
+		LOG.info("LifoLocation getById: " + location);
 		
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
@@ -155,7 +155,7 @@ public class LifoLocationTest {
 
 	    // MANDATORY reread
 	    Location location = locationLocal.getById("A");
-		LOG.info("Location getById: " + location);
+		LOG.info("Lifo Location getById: " + location);
 		
 		assertEquals("A", location.getLocationId());
 		
@@ -163,7 +163,7 @@ public class LifoLocationTest {
 		locationLocal.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
-		LOG.info("Location deleted: " + location.getLocationId());
+		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
 		locationLocal.create(new LifoLocation("A", "Test"));
 
@@ -172,11 +172,11 @@ public class LifoLocationTest {
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
-		LOG.info("Location created: " + location);
+		LOG.info("Lifo Location created: " + location);
 
 		// Delete the location
 		locationLocal.delete(location);
-		LOG.info("Location deleted: " + location.getLocationId());
+		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
@@ -187,7 +187,7 @@ public class LifoLocationTest {
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
-		LOG.info("Location created: " + location);
+		LOG.info("Lifo Location created: " + location);
 	}
 
 	/**
@@ -202,7 +202,7 @@ public class LifoLocationTest {
 		
 	    locationLocal.create(new LifoLocation("A"));
 
-	    Location location = locationLocal.getById("A");
+	    LifoLocation location = (LifoLocation) locationLocal.getById("A");
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		
@@ -213,10 +213,10 @@ public class LifoLocationTest {
 
 		// MANDATORY reread
 		assertNull(locationLocal.getById("A"));
-		LOG.info("Location deleted: " + location.getLocationId());
+		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
 	    // MANDATORY reread
-		location = locationLocal.getById("A");
+		location = (LifoLocation) locationLocal.getById("A");
 		assertNull(location);
 	}
 	
@@ -259,7 +259,7 @@ public class LifoLocationTest {
 		// Prepare a location
 		locationLocal.create(new LifoLocation("A", "Test"));
 		Location locA = locationLocal.getById("A");
-		LOG.info("Location prepared: " + locA);
+		LOG.info("Lifo Location prepared: " + locA);
 		
 		// Drop to make a relation
 		HandlingUnit hU1 = new HandlingUnit("1", "Test");
@@ -303,7 +303,7 @@ public class LifoLocationTest {
 	    // MANDATORY reread
 		locA = locationLocal.getById("A");
 		locationLocal.delete(locA);
-		LOG.info("Location deleted: " + locA.getLocationId());
+		LOG.info("Lifo Location deleted: " + locA.getLocationId());
 		
 	    // MANDATORY reread
 		hU2 = handlingUnitLocal.getById("2");
@@ -312,12 +312,12 @@ public class LifoLocationTest {
 		assertNotNull(hU2);
 		assertNotNull(hU5);
 		
+		LOG.info("Sample hU2 and hU5 have no longer a location and locaPos");
 		assertNull(hU2.getLocation());
 		assertNull(hU2.getLocaPos());
 		assertNull(hU5.getLocation());
 		assertNull(hU5.getLocaPos());
 		
-		LOG.info("Sample hU2 and hU5 have no longer a location");
 		LOG.info(hU2);
 		LOG.info(hU5);
 	}
@@ -340,14 +340,14 @@ public class LifoLocationTest {
 		// Test the special toString also
 		assumeTrue(locA.toString().contains("handlingUnits LIFO=[]"));
 		
-		LOG.info("Location prepared: " + locA);
+		LOG.info("Lifo Location prepared: " + locA);
 		
 		// Drop to make a relation
 		HandlingUnit hU8 = new HandlingUnit("8", "Test");
 		handlingUnitLocal.dropTo(locA, hU8);
 		
 	    // MANDATORY reread
-		locA = locationLocal.getById("A");
+		locA = (LifoLocation) locationLocal.getById("A");
 		assertNotNull(locA);	
 		assertFalse(locA.getHandlingUnits().isEmpty());
 		assertEquals(1, locA.getHandlingUnits().size());
@@ -357,18 +357,19 @@ public class LifoLocationTest {
 
 		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
 		
-		LOG.info("1 HandlingUnit dropped to " + locA.getLocationId() + "   " + locA);
+		LOG.info("1 HandlingUnit dropped on " + locA.getLocationId() + locA);
 
-		LOG.info("Sample hU8");
 	    // MANDATORY reread
 		hU8 = handlingUnitLocal.getById("8");
-		LOG.info(hU8);
+		assertNotNull(hU8.getLocation());
+		assertNotNull(hU8.getLocaPos());
+		LOG.info("Sample hU8 {}", hU8);
 		
 		// Now delete the location
 	    // MANDATORY reread
 		locA = locationLocal.getById("A");
 		locationLocal.delete(locA);
-		LOG.info("Location deleted: " + locA.getLocationId());
+		LOG.info("Lifo Location deleted: " + locA.getLocationId());
 		
 	    // MANDATORY reread
 		hU8 = handlingUnitLocal.getById("8");
@@ -378,7 +379,6 @@ public class LifoLocationTest {
 		assertNull(hU8.getLocation());
 		assertNull(hU8.getLocaPos());
 		
-		LOG.info("Sample hU8 has no longer a location");
-		LOG.info(hU8);
+		LOG.info("Sample hU8 has no longer a location {}", hU8);
 	}
 }
