@@ -202,7 +202,7 @@ public class LifoLocationTest {
 		
 	    locationLocal.create(new LifoLocation("A"));
 
-	    LifoLocation location = (LifoLocation) locationLocal.getById("A");
+	    Location location = locationLocal.getById("A");
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		
@@ -216,7 +216,7 @@ public class LifoLocationTest {
 		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
 	    // MANDATORY reread
-		location = (LifoLocation) locationLocal.getById("A");
+		location = locationLocal.getById("A");
 		assertNull(location);
 	}
 	
@@ -347,7 +347,7 @@ public class LifoLocationTest {
 		handlingUnitLocal.dropTo(locA, hU8);
 		
 	    // MANDATORY reread
-		locA = (LifoLocation) locationLocal.getById("A");
+		locA = locationLocal.getById("A");
 		assertNotNull(locA);	
 		assertFalse(locA.getHandlingUnits().isEmpty());
 		assertEquals(1, locA.getHandlingUnits().size());
