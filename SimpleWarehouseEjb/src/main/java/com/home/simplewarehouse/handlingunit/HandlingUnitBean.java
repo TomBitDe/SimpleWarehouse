@@ -201,7 +201,6 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			}				
 		}
 
-		handlingUnit.setLocation(location);
 		location.addHandlingUnit(handlingUnit);
 
 		em.flush();
