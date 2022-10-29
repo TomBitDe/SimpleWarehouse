@@ -11,5 +11,3 @@ echo=
 del .\logs\*.log*
 echo=
 dir .\logs
-
-pause
