@@ -2,9 +2,7 @@ package com.home.simplewarehouse.handlingunit;
 
 import java.util.List;
 
-import com.home.simplewarehouse.model.FifoLocation;
 import com.home.simplewarehouse.model.HandlingUnit;
-import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 
 /**
