@@ -32,6 +32,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitBean.class);
 	
 	private static final String HU_IS_HERE_FORMATTER = "Handling unit {} is here: {}";
+	private static final String LOCATION_IS_NULL_MSG = "Location is null";
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -103,20 +104,22 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	
 	@Override
 	public void pickFrom(Location location, HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+		LOG.trace("--> pickFrom()");
+
+		if (location == null) {
+			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
+		}
+		
+		if (handlingUnit == null) {
+			throw new IllegalArgumentException("HandlingUnit is null");
+		}
+		
 		if (!em.contains(location)) {
 			location = em.merge(location);
 		}
 		
 		if (!em.contains(handlingUnit)) {
 			handlingUnit = em.merge(handlingUnit);
-		}
-		
-		if (location == null) {
-			throw new IllegalArgumentException("Location is null");
-		}
-		
-		if (handlingUnit == null) {
-			throw new IllegalArgumentException("HandlingUnit is null");
 		}
 		
 		if ((location.getHandlingUnits()).isEmpty()) {
@@ -140,6 +143,8 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			if (location.getHandlingUnits().contains(handlingUnit)) {
 				// Pick it now
 				handlingUnit.setLocation(null);
+				handlingUnit.setLocaPos(null);
+				
 				location.removeHandlingUnit(handlingUnit);
 				
 				em.flush();
@@ -163,12 +168,44 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 				throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getLocationId() + ']');
 			}
 		}
+
+		LOG.trace("<-- pickFrom()");
+	}
+
+	@Override
+	public HandlingUnit pickFrom(Location location) throws LocationIsEmptyException {
+		LOG.trace("--> pickFrom()");
+
+		if (location == null) {
+			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
+		}
+		
+		if (!em.contains(location)) {
+			location = em.merge(location);
+		}
+		
+		List<HandlingUnit> picksAvailable = location.getToPick();
+		
+		if (picksAvailable.isEmpty()) {
+			// ATTENTION: Location error status does not need to be changed because the location was EMPTY!
+			//            NO manual adjustment is needed in this case!
+			throw new LocationIsEmptyException("Location [" + location.getLocationId() + "] is EMPTY");
+		}
+		
+		// Pick it now
+		location.removeHandlingUnit(picksAvailable.get(0));
 		
 		em.flush();
+		
+		LOG.trace("<-- pickFrom()");
+
+		return getById(picksAvailable.get(0).getId());
 	}
 
 	@Override
 	public void dropTo(Location location, HandlingUnit handlingUnit) {
+		LOG.trace("--> dropTo()");
+
 		if (handlingUnit == null) {
 			LOG.warn("HandlingUnit is null; this is valid but nothing will happen!");
 			return;
@@ -183,7 +220,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 		
 		if (location == null) {
-			throw new IllegalArgumentException("Location is null");
+			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
 		}
 		
 		List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit, location);
@@ -202,6 +239,8 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 
 		location.addHandlingUnit(handlingUnit);
+
+		LOG.trace("<-- dropTo()");
 
 		em.flush();
 	}

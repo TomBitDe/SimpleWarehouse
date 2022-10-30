@@ -2,6 +2,7 @@ package com.home.simplewarehouse.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,6 +69,22 @@ public class LifoLocation extends Location implements Serializable {
 		return b;
 	}
 	
+	@Override
+	public List<HandlingUnit> getToPick() {
+		LOG.trace("--> getToPick()");
+
+		List<HandlingUnit> ret = new ArrayList<>();
+		
+		if (! handlingUnits.isEmpty()) {
+			ret = handlingUnits.stream().filter(hu -> hu.getLocaPos() == 1)
+					.collect(Collectors.toList());
+		}
+		
+		LOG.trace("<-- getToPick()");
+
+		return ret;
+	}
+
 	@Override
 	protected String toString(List<HandlingUnit> list) {
 		StringBuilder builder = new StringBuilder();

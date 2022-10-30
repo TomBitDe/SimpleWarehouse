@@ -2,7 +2,9 @@ package com.home.simplewarehouse.handlingunit;
 
 import java.util.List;
 
+import com.home.simplewarehouse.model.FifoLocation;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 
 /**
@@ -32,13 +34,22 @@ public interface HandlingUnitLocal {
 	/**
 	 * Pick from a Location the given HandlingUnit
 	 * 
-	 * @param location the Location
+	 * @param location the Location to pick from
 	 * @param handlingUnit the HandlingUnit
 	 * 
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
 	 */
 	public void pickFrom(Location location, HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException;
+	/**
+	 * Pick from a FIFO / LIFO Location
+	 * 
+	 * @param location the Location to pick from
+	 * @return the HandlingUnit after pick
+	 * 
+	 * @throws LocationIsEmptyException in case the Location is empty
+	 */
+	public HandlingUnit pickFrom(Location location) throws LocationIsEmptyException;
 	/**
 	 * Drop a HandlingUnit on a Location
 	 * 

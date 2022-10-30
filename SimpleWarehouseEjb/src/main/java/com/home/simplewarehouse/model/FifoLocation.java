@@ -2,8 +2,10 @@ package com.home.simplewarehouse.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
@@ -74,6 +76,22 @@ public class FifoLocation extends Location implements Serializable {
 		LOG.trace("<-- removeHandlingUnit()");
 
 		return b;
+	}
+	
+	@Override
+	public List<HandlingUnit> getToPick() {
+		LOG.trace("--> getToPick()");
+
+		List<HandlingUnit> ret = new ArrayList<>();
+		
+		if (! handlingUnits.isEmpty()) {
+			ret = handlingUnits.stream().filter(hu -> hu.getLocaPos() == 1)
+					.collect(Collectors.toList());
+		}
+		
+		LOG.trace("<-- getToPick()");
+
+		return ret;
 	}
 
 	@Override

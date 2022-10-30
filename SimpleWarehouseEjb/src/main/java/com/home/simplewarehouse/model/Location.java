@@ -9,6 +9,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -154,7 +155,17 @@ public class Location extends EntityBase implements Serializable {
 		LOG.trace("<-- removeHandlingUnit()");
 
 		return b;
-	}	
+	}
+	
+	public List<HandlingUnit> getToPick() {
+		LOG.trace("--> getToPick()");
+
+		List<HandlingUnit> ret = getHandlingUnits().stream().collect( Collectors.toList() );
+		
+		LOG.trace("<-- getToPick()");
+
+		return ret;
+	}
 
 	@Override
 	public int hashCode() {
