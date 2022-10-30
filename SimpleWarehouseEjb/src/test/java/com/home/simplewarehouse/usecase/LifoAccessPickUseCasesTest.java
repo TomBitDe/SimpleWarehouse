@@ -218,13 +218,13 @@ public class LifoAccessPickUseCasesTest {
      *      +----------+                +----------+
      *      | lA       |                | lA       |
      *      |          |                |          |
-     *      |  hu4     |                |          |
-     *      |  hu3     |                |  hu4     |
-     *      |  hu2     |                |  hu3     |
-     *      |  hu1     |  pickFrom(lA)  |  hu2     |
+     *      |  hu1     |                |          |
+     *      |  hu2     |                |  hu1     |
+     *      |  hu3     |                |  hu2     |
+     *      |  hu4     |  pickFrom(lA)  |  hu3     |
      *      +----------+                +----------+
      *                                         
-     *                                     hu1
+     *                                     hu4
      *                      
      * }</pre>
 	 * <br>
@@ -298,16 +298,16 @@ public class LifoAccessPickUseCasesTest {
 	 * <br>
      * <pre>{@code
      * 
-     *      +----------+                +----------+
-     *      | lA       |                | lA       |
-     *      |          |                |          |
-     *      |  hu4     |                |          |
-     *      |  hu3     |                |  hu4     |
-     *      |  hu2     |                |  hu3     |
-     *      |  hu1     |  pickFrom(lA)  |  hu2     |
-     *      +----------+                +----------+
-     *                                         
-     *                                     hu1
+     *      +----------+                +----------+                +----------+
+     *      | lA       |                | lA       |                | lA       |
+     *      |          |                |          |                |          |
+     *      |  hu1     |                |          |                |          |
+     *      |  hu2     |                |  hu1     |                |          |
+     *      |  hu3     |                |  hu2     |                |  hu1     |
+     *      |  hu4     |  pickFrom(lA)  |  hu3     |  pickFrom(lA)  |  hu2     |
+     *      +----------+                +----------+                +----------+  ...
+     *                                                                     
+     *                                     hu4                         hu3
      *                      
      * }</pre>
 	 * <br>
