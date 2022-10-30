@@ -199,13 +199,26 @@ public class HandlingUnitTest {
 	    // MANDATORY reread
 		assertEquals("1", handlingUnit.getId());
 		
-		// Delete returns the deleted handlingUnit
+		// Delete the handlingUnit
 		handlingUnitLocal.delete(handlingUnit);
 		assertNotNull(handlingUnit);
 
 	    // MANDATORY reread
 		assertEquals("1", handlingUnit.getId());
 		LOG.info(handlingUnit);
+		
+		// Delete null
+		handlingUnit = null;
+		handlingUnitLocal.delete(handlingUnit);
+		assertTrue(true);
+		
+		handlingUnitLocal.create(new HandlingUnit("1"));
+		handlingUnit = handlingUnitLocal.getById("1");
+		assertNotNull(handlingUnit);
+		handlingUnit.setId(null);
+		handlingUnitLocal.delete(handlingUnit);
+		handlingUnit = handlingUnitLocal.getById("1");
+		assertNotNull(handlingUnit);
 	}
 	
 	/**
@@ -278,7 +291,6 @@ public class HandlingUnitTest {
 	/**
 	 * Test the dropTo method to create reference to a none existing location
 	 */
-	@Test(expected = EJBException.class)
 	@InSequence(5)
 	public void dropToNull() {
 		LOG.info("--- Test dropToNull");
@@ -292,11 +304,42 @@ public class HandlingUnitTest {
 	    // MANDATORY reread
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 
-		// For the test case
-		Location lOA = null;
+		// Check invalid drop to location null
+		try {
+			handlingUnitLocal.dropTo(null, hU1);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
+	}
+	
+	/**
+	 * Test the dropTo method to create reference to a none existing handlingUnit
+	 */
+	@InSequence(8)
+	public void dropNullTo() {
+		LOG.info("--- Test dropNullTo");
 		
-		// Now drop
-		handlingUnitLocal.dropTo(lOA, hU1);
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+		
+		// Prepare a handling unit and a location
+		locationLocal.create(new Location("A"));
+		
+	    // MANDATORY reread
+		Location lOA = locationLocal.getById("A");
+
+		// Check invalid drop to handlingUnit null
+		try {
+			handlingUnitLocal.dropTo(lOA, null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
 	}
 	
 	/**
@@ -306,7 +349,7 @@ public class HandlingUnitTest {
 	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
 	 */
 	@Test
-	@InSequence(6)
+	@InSequence(10)
 	public void pickFrom() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.info("--- Test pickFrom");
 		
@@ -351,6 +394,27 @@ public class HandlingUnitTest {
 		assertFalse(lOA.getHandlingUnits().contains(hU1));
 		LOG.info(hU1);
 		LOG.info(lOA);
+		
+		// Some exceptional cases
+		try {
+			handlingUnitLocal.pickFrom(null, hU1);
+			
+			Assert.fail("Expected an Exception to be thrown");
+		}
+		catch (EJBException ex) {
+			// Location is null not allowed
+			LOG.info("Expected exception: " + ex.getMessage());
+		}
+
+		try {
+			handlingUnitLocal.pickFrom(lOA, null);
+			
+			Assert.fail("Expected an Exception to be thrown");
+		}
+		catch (EJBException ex) {
+			// Location is null not allowed
+			LOG.info("Expected exception: " + ex.getMessage());
+		}
 	}
 	
 	/**
@@ -360,7 +424,7 @@ public class HandlingUnitTest {
 	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
 	 */
 	@Test
-	@InSequence(7)
+	@InSequence(14)
 	public void pickFromEmptyLocation() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.info("--- Test pickFromEmptyLocation");
 		
@@ -399,7 +463,7 @@ public class HandlingUnitTest {
 	 * @throws HandlingUnitNotOnLocationException in case the handling unit is not on that location
 	 */
 	@Test
-	@InSequence(8)
+	@InSequence(18)
 	public void pickFromLocationNotContaining() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.info("--- Test pickFromLocationNotContaining");
 		
@@ -449,7 +513,7 @@ public class HandlingUnitTest {
 	 * Test delete a handling unit with reference to a location
 	 */
 	@Test
-	@InSequence(9)
+	@InSequence(20)
 	public void deleteHandlingUnitOnLocation() {
 		LOG.info("--- Test deleteHandlingUnitOnLocation");
 		
@@ -502,7 +566,7 @@ public class HandlingUnitTest {
 	 * Test a double drop to the same location
 	 */
 	@Test
-	@InSequence(10)
+	@InSequence(23)
 	public void doubleDropSameLocation() {
 		LOG.info("--- Test doubleDropSameLocation");
 		
@@ -553,7 +617,7 @@ public class HandlingUnitTest {
 	 * Test double drop to other location
 	 */
 	@Test
-	@InSequence(11)
+	@InSequence(25)
 	public void doubleDropOtherLocation() {
 		LOG.info("--- Test doubleDropOtherLocation");
 		

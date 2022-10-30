@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -478,6 +479,27 @@ public class LifoLocationTest {
 		}
 		catch (LocationIsEmptyException | HandlingUnitNotOnLocationException ex) {
 			Assert.fail("Not expected: " + ex);
+		}
+	}
+
+	/**
+	 * Test exceptional cases
+	 */
+	@Test
+	@InSequence(10)
+	public void checkExceptionalCases() {
+		LOG.info("--- Test checkExceptionalCases");
+		
+		try {
+			handlingUnitLocal.pickFrom(null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (LocationIsEmptyException lieex) {
+			Assert.fail("Not expected: " + lieex);
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
 		}
 	}
 }

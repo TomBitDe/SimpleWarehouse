@@ -217,6 +217,19 @@ public class LocationBeanTest {
 	    // MANDATORY reread
 		location = locationLocal.getById("A");
 		assertNull(location);
+		
+		// Delete null
+		location = null;
+		locationLocal.delete(location);
+		assertTrue(true);
+
+		locationLocal.create(new Location("A"));
+		location = locationLocal.getById("A");
+		assertNotNull(location);
+		location.setLocationId(null);
+		locationLocal.delete(location);
+		location = locationLocal.getById("A");
+		assertNotNull(location);
 	}
 	
 	/**

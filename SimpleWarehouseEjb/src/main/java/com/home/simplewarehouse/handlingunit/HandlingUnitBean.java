@@ -211,16 +211,16 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			return;
 		}
 		
+		if (location == null) {
+			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
+		}
+		
 		if (!em.contains(location)) {
 			location = em.merge(location);
 		}
 		
 		if (!em.contains(handlingUnit)) {
 			handlingUnit = em.merge(handlingUnit);
-		}
-		
-		if (location == null) {
-			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
 		}
 		
 		List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit, location);
@@ -234,7 +234,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 				other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 			}
 			catch(HandlingUnitNotOnLocationException | LocationIsEmptyException ex) {
-				LOG.warn("Correction PICK with error. Check {}", other);
+				LOG.error("Correction PICK with error. Check {}", other);
 			}				
 		}
 
