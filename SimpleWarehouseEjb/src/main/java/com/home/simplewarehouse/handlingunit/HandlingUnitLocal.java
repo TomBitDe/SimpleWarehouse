@@ -40,10 +40,12 @@ public interface HandlingUnitLocal {
 	 */
 	public void pickFrom(Location location, HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException;
 	/**
-	 * Pick from a FIFO / LIFO Location
+	 * Pick from a FIFO / LIFO Location<br>
+	 * Because of FIFO / LIFO the HandlingUnit is not a parameter.<br>
+	 * The HandlingUnit returned depends on the access limitation.
 	 * 
 	 * @param location the Location to pick from
-	 * @return the HandlingUnit after pick
+	 * @return the HandlingUnit after pick 
 	 * 
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 */
