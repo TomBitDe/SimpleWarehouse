@@ -184,7 +184,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			location = em.merge(location);
 		}
 		
-		List<HandlingUnit> picksAvailable = location.getToPick();
+		List<HandlingUnit> picksAvailable = location.getAvailablePicks();
 		
 		if (picksAvailable.isEmpty()) {
 			// ATTENTION: Location error status does not need to be changed because the location was EMPTY!

@@ -70,8 +70,8 @@ public class LifoLocation extends Location implements Serializable {
 	}
 	
 	@Override
-	public List<HandlingUnit> getToPick() {
-		LOG.trace("--> getToPick()");
+	public List<HandlingUnit> getAvailablePicks() {
+		LOG.trace("--> getAvailablePicks()");
 
 		List<HandlingUnit> ret = new ArrayList<>();
 		
@@ -80,7 +80,7 @@ public class LifoLocation extends Location implements Serializable {
 					.collect(Collectors.toList());
 		}
 		
-		LOG.trace("<-- getToPick()");
+		LOG.trace("<-- getAvailablePicks()");
 
 		return ret;
 	}

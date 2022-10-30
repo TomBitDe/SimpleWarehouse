@@ -157,12 +157,12 @@ public class Location extends EntityBase implements Serializable {
 		return b;
 	}
 	
-	public List<HandlingUnit> getToPick() {
-		LOG.trace("--> getToPick()");
+	public List<HandlingUnit> getAvailablePicks() {
+		LOG.trace("--> getAvailablePicks()");
 
 		List<HandlingUnit> ret = getHandlingUnits().stream().collect( Collectors.toList() );
 		
-		LOG.trace("<-- getToPick()");
+		LOG.trace("<-- getAvailablePicks()");
 
 		return ret;
 	}
