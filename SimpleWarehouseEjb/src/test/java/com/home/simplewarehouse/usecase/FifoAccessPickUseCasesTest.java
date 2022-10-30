@@ -160,9 +160,9 @@ public class FifoAccessPickUseCasesTest {
 		LOG.trace("--> prepareUnitAndCheck()");
 
 		HandlingUnit hu = unitLocal.getById(unitId);
-		// Check hu1 exists
+		// Check hu exists
 		assertNotNull(hu);
-		// Check hu1 is not placed elsewhere
+		// Check hu is not placed elsewhere
 		assertNull(hu.getLocation());
 		
 		LOG.trace("<-- prepareUnitAndCheck()");
@@ -174,9 +174,9 @@ public class FifoAccessPickUseCasesTest {
 		LOG.trace("--> prepareLocationAndCheck()");
 
 		Location loc = locationLocal.getById(locationId);
-		// Check lA exists
+		// Check loc exists
 		assertNotNull(loc);
-		// Check lA is empty
+		// Check loc is empty
 		assertTrue(loc.getHandlingUnits().isEmpty());
 		
 		LOG.trace("<-- prepareLocationAndCheck()");
@@ -185,7 +185,7 @@ public class FifoAccessPickUseCasesTest {
 	}
 	
 	private Location reRead(final Location loc) {
-		LOG.trace("--> reRead({})", loc);
+		LOG.trace("--> reRead()");
 
 		if (loc == null) {
 			LOG.warn("loc == null");
@@ -198,7 +198,7 @@ public class FifoAccessPickUseCasesTest {
 	}
 	
 	private HandlingUnit reRead(final HandlingUnit hu) {
-		LOG.trace("--> reRead({})", hu);
+		LOG.trace("--> reRead()", hu);
 
 		if (hu == null) {
 			LOG.warn("hu == null");
