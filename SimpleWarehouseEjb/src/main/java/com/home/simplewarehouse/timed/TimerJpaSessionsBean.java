@@ -13,11 +13,7 @@ import javax.ejb.TimerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
-import com.home.simplewarehouse.location.LocationLocal;
-import com.home.simplewarehouse.model.HandlingUnit;
-import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.topology.SampleWarehouseLocal;
+import com.home.simplewarehouse.timed.scenarios.DropPickRandomLocationLocal;
 
 /**
  * Implementation of a timer controlled bean
@@ -35,14 +31,8 @@ public class TimerJpaSessionsBean {
 	private TimerService timerService;
 
 	@EJB
-	private SampleWarehouseLocal sampleWarehouseLocal;
+	private DropPickRandomLocationLocal dropPickRandomLocation;
 	
-	@EJB
-	private LocationLocal locationLocal;
-
-	@EJB
-	private HandlingUnitLocal handlingUnitLocal;
-
 	/**
 	 * Default constructor
 	 */
@@ -69,48 +59,9 @@ public class TimerJpaSessionsBean {
 		LOG.trace("--> automaticTimeout()");
 
 		this.setLastAutomaticTimeout(new Date());
-
-		// Initialize only if no sample data exist
-		if (handlingUnitLocal.getAll().isEmpty() && locationLocal.getAll().isEmpty()) {
-			sampleWarehouseLocal.initialize();			
-		}
-
-		HandlingUnit h1 = handlingUnitLocal.getById("1");
-		HandlingUnit h2 = handlingUnitLocal.getById("2");
-		HandlingUnit h3 = handlingUnitLocal.getById("3");
-		HandlingUnit h4 = handlingUnitLocal.getById("4");
-
-		Location lA = locationLocal.getById("A");
-		LOG.info(lA);
 		
-		handlingUnitLocal.dropTo(lA, h1);
-		handlingUnitLocal.dropTo(lA, h2);
-		handlingUnitLocal.dropTo(lA, h3);
-		handlingUnitLocal.dropTo(lA, h4);
-		
-		lA = locationLocal.getById("A");
-		LOG.info(lA);
-		
-		try {
-			handlingUnitLocal.pickFrom(lA, h1);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			handlingUnitLocal.pickFrom(lA, h2);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			handlingUnitLocal.pickFrom(lA, h3);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			handlingUnitLocal.pickFrom(lA, h4);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-		}
-		catch (Exception e) {
-			LOG.error(e.getMessage());
-		}
+		// Add the session beans here
+		dropPickRandomLocation.processScenario();
 		
 		LOG.trace("<-- automaticTimeout()");
 	}
