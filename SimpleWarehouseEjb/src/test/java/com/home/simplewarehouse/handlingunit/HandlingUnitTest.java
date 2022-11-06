@@ -90,9 +90,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * What to do before an individual test will be executed (each test)<br>
-	 * <br>
-	 * Initialize with the SampleWarehouse data
+	 * What to do before an individual test will be executed (each test)
 	 */
 	@Before
 	public void beforeTest() {
@@ -104,7 +102,7 @@ public class HandlingUnitTest {
 	/**
 	 * What to do after an individual test has been executed (each test)<br>
 	 * <br>
-	 * Cleanup the SampleWarehouse data
+	 * Cleanup the sample data
 	 */
 	@After
 	public void afterTest() {
