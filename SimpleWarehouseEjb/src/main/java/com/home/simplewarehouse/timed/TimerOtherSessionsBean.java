@@ -48,7 +48,7 @@ public class TimerOtherSessionsBean {
 	/**
 	 * Call all the session beans to run them in the application server periodically
 	 */
-	@Schedule(minute="*/1", hour="*")
+	@Schedule(minute="*/1", hour="*", persistent = false)
 	public void automaticTimeout() {
 		LOG.trace("--> automaticTimeout()");
 
