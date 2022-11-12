@@ -54,6 +54,7 @@ public class TimerOtherSessionsBean {
 
 		this.setLastAutomaticTimeout(new Date());
 
+		// Add the session beans here
 		
 		LOG.trace("<-- automaticTimeout()");
 	}
