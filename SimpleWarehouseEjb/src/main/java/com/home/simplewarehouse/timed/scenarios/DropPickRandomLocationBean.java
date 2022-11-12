@@ -62,16 +62,18 @@ public class DropPickRandomLocationBean implements DropPickRandomLocationLocal {
 		Location lA = locationLocal.getById("A");
 		LOG.info(lA);
 		
+		// Drop to location in random order
 		handlingUnitLocal.dropTo(lA, h1);
+		handlingUnitLocal.dropTo(lA, h4);
 		handlingUnitLocal.dropTo(lA, h2);
 		handlingUnitLocal.dropTo(lA, h3);
-		handlingUnitLocal.dropTo(lA, h4);
 		
 		lA = locationLocal.getById("A");
 		LOG.info(lA);
 		
+		// Now pick from location randomly
 		try {
-			handlingUnitLocal.pickFrom(lA, h1);
+			handlingUnitLocal.pickFrom(lA, h3);
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 
@@ -79,7 +81,7 @@ public class DropPickRandomLocationBean implements DropPickRandomLocationLocal {
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 
-			handlingUnitLocal.pickFrom(lA, h3);
+			handlingUnitLocal.pickFrom(lA, h1);
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 
