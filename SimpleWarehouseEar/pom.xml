@@ -20,7 +20,7 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<payara.adminPort>4848</payara.adminPort>
 		<payara.hostname>localhost</payara.hostname>
-		<payara.home>C:/Users/Tom/Programme/Payara_Server</payara.home>
+		<payara.home>C:/Users/Tom/Programme/Payara_Server/payara5</payara.home>
 		<payara.domainDir>${payara.home}/glassfish/domains</payara.domainDir>
 		<payara.domainName>domain1</payara.domainName>
 		<payara.username></payara.username>
