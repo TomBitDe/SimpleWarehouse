@@ -12,7 +12,7 @@
 		<shrinkwrap.resolvers.version>3.1.4</shrinkwrap.resolvers.version>
 		<arquillian.version>1.6.0.Final</arquillian.version>
 		<h2.version>1.4.200</h2.version>
-		<log4j.version>2.17.2</log4j.version>
+		<log4j.version>2.19.0</log4j.version>
 	</properties>
 
 	<dependencyManagement>
