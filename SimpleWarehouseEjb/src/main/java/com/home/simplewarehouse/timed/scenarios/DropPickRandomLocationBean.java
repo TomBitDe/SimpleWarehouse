@@ -27,6 +27,8 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 public class DropPickRandomLocationBean implements DropPickRandomLocationLocal {
 	private static final Logger LOG = LogManager.getLogger(DropPickRandomLocationBean.class);
 	
+	private static final String PICK_FORMATTER = "Pick {}";
+	
 	@EJB
 	private SampleWarehouseLocal sampleWarehouseLocal;
 	
@@ -73,22 +75,22 @@ public class DropPickRandomLocationBean implements DropPickRandomLocationLocal {
 		
 		// Now pick from location randomly
 		try {
-			LOG.info("Pick {}", h3.getId());
+			LOG.info(PICK_FORMATTER, h3.getId());
 			handlingUnitLocal.pickFrom(lA, h3);
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 
-			LOG.info("Pick {}", h2.getId());
+			LOG.info(PICK_FORMATTER, h2.getId());
 			handlingUnitLocal.pickFrom(lA, h2);
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 
-			LOG.info("Pick {}", h1.getId());
+			LOG.info(PICK_FORMATTER, h1.getId());
 			handlingUnitLocal.pickFrom(lA, h1);
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 
-			LOG.info("Pick {}", h4.getId());
+			LOG.info(PICK_FORMATTER, h4.getId());
 			handlingUnitLocal.pickFrom(lA, h4);
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
