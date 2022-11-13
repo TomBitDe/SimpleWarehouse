@@ -123,14 +123,15 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(System.lineSeparator() + "\tHandlingUnit [id=")
+		builder.append("HandlingUnit [")
+			.append(System.lineSeparator() + "\tid=")
 		    .append(id)
 		    .append(", locaPos=")
 		    .append(locaPos == null ? "null" : locaPos)		    
 		    .append(", version=")
 		    .append(version)
 		    .append(", ")
-		    .append(location == null ? "location=null" : location)
+		    .append(location == null ? "Location=null" : location)
 		    .append(", " + System.lineSeparator() + '\t')
 			.append(super.toString())			
 			.append("]");
