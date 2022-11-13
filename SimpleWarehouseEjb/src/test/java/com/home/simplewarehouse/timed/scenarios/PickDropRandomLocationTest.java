@@ -39,8 +39,11 @@ public class PickDropRandomLocationTest {
 	SampleWarehouseLocal sampleWarehouseLocal;
 	
 	@EJB
-	DropPickRandomLocationLocal dropPickRandomLocationLocal;
+	DropPickRandomLocationLocal1 dropPickRandomLocationLocal1;
 	
+	@EJB
+	DropPickRandomLocationLocal2 dropPickRandomLocationLocal2;
+
 	@EJB
 	LocationLocal locationLocal;
 	
@@ -62,7 +65,8 @@ public class PickDropRandomLocationTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
 						SampleWarehouseLocal.class, SampleWarehouseBean.class,
-						DropPickRandomLocationLocal.class, DropPickRandomLocationBean.class,
+						DropPickRandomLocationLocal1.class, DropPickRandomLocationBean1.class,
+						DropPickRandomLocationLocal2.class, DropPickRandomLocationBean2.class,
 						HandlingUnitLocal.class, HandlingUnitBean.class,
 						LocationLocal.class, LocationBean.class,
 						PerformanceAuditor.class,
@@ -108,10 +112,21 @@ public class PickDropRandomLocationTest {
 
 	@Test
 	@InSequence(0)
-	public void processScenario() {
-		LOG.info("--- Test processScenario");
+	public void processScenario1() {
+		LOG.info("--- Test processScenario1");
 		
-		dropPickRandomLocationLocal.processScenario();
+		dropPickRandomLocationLocal1.processScenario();
+		
+		// Just satisfy the test
+		assertNotNull(locationLocal.getAll());
+	}
+
+	@Test
+	@InSequence(0)
+	public void processScenario2() {
+		LOG.info("--- Test processScenario2");
+		
+		dropPickRandomLocationLocal2.processScenario();
 		
 		// Just satisfy the test
 		assertNotNull(locationLocal.getAll());

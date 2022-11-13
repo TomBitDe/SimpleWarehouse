@@ -13,7 +13,7 @@ import javax.ejb.TimerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.timed.scenarios.DropPickRandomLocationLocal;
+import com.home.simplewarehouse.timed.scenarios.DropPickRandomLocationLocal2;
 
 /**
  * Implementation of a timer controlled bean
@@ -21,8 +21,8 @@ import com.home.simplewarehouse.timed.scenarios.DropPickRandomLocationLocal;
  * Call JPA session beans to test when running in the application server.
  */
 @Singleton
-public class TimerJpaSessionsBean {
-	private static final Logger LOG = LogManager.getLogger(TimerJpaSessionsBean.class);
+public class TimerJpaSessionsBean2 {
+	private static final Logger LOG = LogManager.getLogger(TimerJpaSessionsBean2.class);
 
 	private Date lastProgrammaticTimeout;
 	private Date lastAutomaticTimeout;
@@ -31,12 +31,12 @@ public class TimerJpaSessionsBean {
 	private TimerService timerService;
 
 	@EJB
-	private DropPickRandomLocationLocal dropPickRandomLocation;
+	private DropPickRandomLocationLocal2 dropPickRandomLocation2;
 	
 	/**
 	 * Default constructor
 	 */
-	public TimerJpaSessionsBean() {
+	public TimerJpaSessionsBean2() {
 		super();
 	}
 
@@ -61,7 +61,7 @@ public class TimerJpaSessionsBean {
 		this.setLastAutomaticTimeout(new Date());
 		
 		// Add the session beans here
-		dropPickRandomLocation.processScenario();
+		dropPickRandomLocation2.processScenario();
 		
 		LOG.trace("<-- automaticTimeout()");
 	}

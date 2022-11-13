@@ -21,11 +21,11 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
  * Drop many HandlingUnit on a single Location and then do many picks.
  */
 @Stateless
-@Local(DropPickRandomLocationLocal.class)
+@Local(DropPickRandomLocationLocal1.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(PerformanceAuditor.class)
-public class DropPickRandomLocationBean implements DropPickRandomLocationLocal {
-	private static final Logger LOG = LogManager.getLogger(DropPickRandomLocationBean.class);
+public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1 {
+	private static final Logger LOG = LogManager.getLogger(DropPickRandomLocationBean1.class);
 	
 	private static final String PICK_FORMATTER = "Pick {}";
 	
@@ -41,10 +41,10 @@ public class DropPickRandomLocationBean implements DropPickRandomLocationLocal {
 	/**
 	 * Default constructor
 	 */
-	public DropPickRandomLocationBean() {
+	public DropPickRandomLocationBean1() {
 		super();
-		LOG.trace("--> DropPickRandomLocationBean()");
-		LOG.trace("<-- DropPickRandomLocationBean()");
+		LOG.trace("--> DropPickRandomLocationBean1()");
+		LOG.trace("<-- DropPickRandomLocationBean1()");
 	}
 
 	@Override
