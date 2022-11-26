@@ -27,8 +27,6 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1 {
 	private static final Logger LOG = LogManager.getLogger(DropPickRandomLocationBean1.class);
 	
-	private static final String PICK_FORMATTER = "Pick {}";
-	
 	@EJB
 	private SampleWarehouseLocal sampleWarehouseLocal;
 	
