@@ -72,32 +72,6 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		
 		lA = locationLocal.getById("A");
 		LOG.info(lA);
-		
-		// Now pick from location randomly
-		try {
-			LOG.info(PICK_FORMATTER, h3.getId());
-			handlingUnitLocal.pickFrom(lA, h3);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			LOG.info(PICK_FORMATTER, h2.getId());
-			handlingUnitLocal.pickFrom(lA, h2);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			LOG.info(PICK_FORMATTER, h1.getId());
-			handlingUnitLocal.pickFrom(lA, h1);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			LOG.info(PICK_FORMATTER, h4.getId());
-			handlingUnitLocal.pickFrom(lA, h4);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-		}
-		catch (Exception e) {
-			LOG.error(e.getMessage());
-		}
 
 		LOG.trace("<-- processScenario()");		
 	}

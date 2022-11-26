@@ -12,7 +12,6 @@ import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.location.LocationLocal;
-import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.topology.SampleWarehouseLocal;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -26,8 +25,6 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 @Interceptors(PerformanceAuditor.class)
 public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal1 {
 	private static final Logger LOG = LogManager.getLogger(DropPickRandomLocationBean2.class);
-	
-	private static final String PICK_FORMATTER = "Pick {}";
 	
 	@EJB
 	private SampleWarehouseLocal sampleWarehouseLocal;
@@ -43,8 +40,8 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal1
 	 */
 	public DropPickRandomLocationBean2() {
 		super();
-		LOG.trace("--> DropPickRandomLocationBean1()");
-		LOG.trace("<-- DropPickRandomLocationBean1()");
+		LOG.trace("--> DropPickRandomLocationBean2()");
+		LOG.trace("<-- DropPickRandomLocationBean2()");
 	}
 
 	@Override
@@ -56,42 +53,24 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal1
 			sampleWarehouseLocal.initialize();			
 		}
 
-		HandlingUnit h7 = handlingUnitLocal.getById("7");
-		HandlingUnit h8 = handlingUnitLocal.getById("8");
-		HandlingUnit h9 = handlingUnitLocal.getById("9");
-		HandlingUnit h10 = handlingUnitLocal.getById("10");
-
 		Location lA = locationLocal.getById("A");
-		LOG.info(lA);
-		
-		// Drop to location in random order
-		handlingUnitLocal.dropTo(lA, h10);
-		handlingUnitLocal.dropTo(lA, h7);
-		handlingUnitLocal.dropTo(lA, h8);
-		handlingUnitLocal.dropTo(lA, h9);
-		
-		lA = locationLocal.getById("A");
 		LOG.info(lA);
 		
 		// Now pick from location randomly
 		try {
-			LOG.info(PICK_FORMATTER, h7.getId());
-			handlingUnitLocal.pickFrom(lA, h7);
+			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("4"));
+			lA = locationLocal.getById("A");
+			LOG.info(locationLocal.getById("A"));
+
+			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("1"));
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 
-			LOG.info(PICK_FORMATTER, h10.getId());
-			handlingUnitLocal.pickFrom(lA, h10);
+			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("3"));
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 
-			LOG.info(PICK_FORMATTER, h8.getId());
-			handlingUnitLocal.pickFrom(lA, h8);
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			LOG.info(PICK_FORMATTER, h9.getId());
-			handlingUnitLocal.pickFrom(lA, h9);
+			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("2"));
 			lA = locationLocal.getById("A");
 			LOG.info(lA);
 		}
