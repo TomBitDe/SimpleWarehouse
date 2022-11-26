@@ -341,7 +341,7 @@ public class FifoLocationTest {
 		Location locA = locationLocal.getById("A");
 		
 		// Test the special toString also
-		assumeTrue(locA.toString().contains("handlingUnits FIFO=[]"));
+		assumeTrue(locA.toString().contains("HandlingUnits FIFO=[]"));
 		
 		LOG.info("Fifo Location prepared: " + locA);
 		
@@ -356,7 +356,7 @@ public class FifoLocationTest {
 		assertEquals(1, locA.getHandlingUnits().size());
 
 		// Test the special toString also
-		assertTrue(locA.toString().contains("handlingUnits FIFO=[\"8 Pos 1\"]"));
+		assertTrue(locA.toString().contains("HandlingUnits FIFO=[\"8 Pos 1\"]"));
 
 		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
 		

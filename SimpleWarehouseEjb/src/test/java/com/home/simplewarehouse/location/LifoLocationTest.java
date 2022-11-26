@@ -342,7 +342,7 @@ public class LifoLocationTest {
 		Location locA = locationLocal.getById("A");
 		
 		// Test the special toString also
-		assumeTrue(locA.toString().contains("handlingUnits LIFO=[]"));
+		assumeTrue(locA.toString().contains("HandlingUnits LIFO=[]"));
 		
 		LOG.info("Lifo Location prepared: " + locA);
 		
@@ -357,7 +357,7 @@ public class LifoLocationTest {
 		assertEquals(1, locA.getHandlingUnits().size());
 
 		// Test the special toString also
-		assertTrue(locA.toString().contains("handlingUnits LIFO=[\"8 Pos 1\"]"));
+		assertTrue(locA.toString().contains("HandlingUnits LIFO=[\"8 Pos 1\"]"));
 
 		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
 		

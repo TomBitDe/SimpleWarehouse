@@ -348,7 +348,7 @@ public class LocationBeanTest {
 		Location locA = locationLocal.getById("A");
 		
 		// Test the special toString also
-		assumeTrue(locA.toString().contains("handlingUnits RANDOM=[]"));
+		assumeTrue(locA.toString().contains("HandlingUnits RANDOM=[]"));
 		
 		LOG.info("Location prepared: " + locA);
 		
@@ -363,7 +363,7 @@ public class LocationBeanTest {
 		assertEquals(1, locA.getHandlingUnits().size());
 
 		// Test the special toString also
-		assertTrue(locA.toString().contains("handlingUnits RANDOM=[\"8\"]"));
+		assertTrue(locA.toString().contains("HandlingUnits RANDOM=[\"8\"]"));
 
 		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
 		
