@@ -181,4 +181,58 @@ public class LocationBean implements LocationLocal {
 
 		return ret;
 	}
+
+	@Override
+	public boolean isFull(final Location location) {
+		LOG.trace("--> isFull({})", location.getLocationId());
+
+		Location loc = getById(location.getLocationId());
+		
+		if (loc.getDimension().getCapacity() <= 0) {
+			LOG.trace("<-- isFull()");
+			return false;
+		}
+		
+		LOG.trace("<-- isFull()");
+		
+		return (loc.getDimension().getCapacity() >= loc.getHandlingUnits().size());
+	}
+
+	@Override
+	public List<Location> getAllFull() {
+		LOG.trace("--> getAllFull()");
+		
+		List<Location> ret = new ArrayList<>();
+
+		List<Location> locations = getAll();
+		
+		for (Location location : locations) {
+			if (isFull(location)) {
+				ret.add(location);
+			}
+		}
+
+		LOG.trace("<-- getAllFull()");
+
+		return ret;
+	}
+
+	@Override
+	public List<Location> getAllWithFreeCapacity() {
+		LOG.trace("--> getAllWithFreeCapacity()");
+		
+		List<Location> ret = new ArrayList<>();
+
+		List<Location> locations = getAll();
+		
+		for (Location location : locations) {
+			if (!isFull(location)) {
+				ret.add(location);
+			}
+		}
+
+		LOG.trace("<-- getAllWithFreeCapacity()");
+
+		return ret;
+	}
 }

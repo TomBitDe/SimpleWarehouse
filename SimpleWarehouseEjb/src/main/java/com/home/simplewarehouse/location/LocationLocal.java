@@ -61,4 +61,24 @@ public interface LocationLocal {
 	 * @return the Location list
 	 */
 	public List<Location> getAllInErrorStatus(final ErrorStatus errorStatus);
+	/**
+	 * Check if a Location is fully occupied related to its capacity
+	 * 
+	 * @param location the location to check
+	 * 
+	 * @return true if fully occupied else false
+	 */
+	public boolean isFull(final Location location);
+	/**
+	 * Get a list of all full Locations
+	 * 
+	 * @return the Location list
+	 */
+	public List<Location> getAllFull();
+	/**
+	 * Get a list of all Locations with free capacity
+	 * 
+	 * @return the Location list
+	 */
+	public List<Location> getAllWithFreeCapacity();
 }

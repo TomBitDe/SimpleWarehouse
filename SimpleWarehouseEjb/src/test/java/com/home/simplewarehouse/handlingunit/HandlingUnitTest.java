@@ -265,25 +265,30 @@ public class HandlingUnitTest {
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = locationLocal.getById("A");
 		
-		// Now drop
-		handlingUnitLocal.dropTo(lOA, hU1);
+		try {
+			// Now drop
+			handlingUnitLocal.dropTo(lOA, hU1);
 
-	    // MANDATORY reread
-		hU1 = handlingUnitLocal.getById("1");
-		lOA = locationLocal.getById("A");
+			// MANDATORY reread
+			hU1 = handlingUnitLocal.getById("1");
+			lOA = locationLocal.getById("A");
 
-		LOG.info(hU1);
-		
-		// Handling Unit is on location now
-		assertEquals(lOA, hU1.getLocation());
-		
-		assertFalse(lOA.getHandlingUnits().isEmpty());
-		assertEquals(1, lOA.getHandlingUnits().size());
-		
-		// Location must contain handling unit now
-		assertTrue(lOA.getHandlingUnits().contains(hU1));
-		
-		LOG.info(lOA);
+			LOG.info(hU1);
+
+			// Handling Unit is on location now
+			assertEquals(lOA, hU1.getLocation());
+
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertEquals(1, lOA.getHandlingUnits().size());
+
+			// Location must contain handling unit now
+			assertTrue(lOA.getHandlingUnits().contains(hU1));
+
+			LOG.info(lOA);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 	}
 	
 	/**
@@ -307,6 +312,9 @@ public class HandlingUnitTest {
 			handlingUnitLocal.dropTo(null, hU1);
 
 			Assert.fail("Exception expected");
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
 		}
 		catch (EJBException ex) {
 			assertTrue(true);
@@ -334,6 +342,9 @@ public class HandlingUnitTest {
 			handlingUnitLocal.dropTo(lOA, null);
 
 			Assert.fail("Exception expected");
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
 		}
 		catch (EJBException ex) {
 			assertTrue(true);
@@ -363,7 +374,12 @@ public class HandlingUnitTest {
 		Location lOA = locationLocal.getById("A");
 		
 		// To prepare the pick do a drop before
-		handlingUnitLocal.dropTo(lOA, hU1);
+		try {
+			handlingUnitLocal.dropTo(lOA, hU1);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 		
 	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
@@ -476,7 +492,12 @@ public class HandlingUnitTest {
 		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = locationLocal.getById("A");
 		
-		handlingUnitLocal.dropTo(lOA, hU1);
+		try {
+			handlingUnitLocal.dropTo(lOA, hU1);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 		
 	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
@@ -529,12 +550,17 @@ public class HandlingUnitTest {
 		Location lOA = locationLocal.getById("A");
 		
 		// Drop to make a relation
-		handlingUnitLocal.dropTo(lOA, hU1);
+		try {
+			handlingUnitLocal.dropTo(lOA, hU1);
 		
-	    // MANDATORY reread
-		lOA = locationLocal.getById("A");
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
 		
-		handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitLocal.dropTo(lOA, hU2);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 		
 	    // MANDATORY reread
 		hU1 = handlingUnitLocal.getById("1");
@@ -579,36 +605,41 @@ public class HandlingUnitTest {
 		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		Location lOA = locationLocal.getById("A");
 		
-		// Drop to make a relation
-		handlingUnitLocal.dropTo(lOA, hU2);
-		
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		lOA = locationLocal.getById("A");
-		LOG.info("First drop: " + hU2);
-		LOG.info("First drop: " + lOA);
-		
-		// Now drop again to same location
-		handlingUnitLocal.dropTo(lOA, hU2);
-		
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		lOA = locationLocal.getById("A");
-		LOG.info("Second drop: " + hU2);
-		LOG.info("Second drop: " + lOA);
-		
-		// Check the location
-		assertNotNull(lOA);
-		assertFalse(lOA.getHandlingUnits().isEmpty());
-		assertTrue(lOA.getHandlingUnits().contains(hU2));
-		assertEquals(1, lOA.getHandlingUnits().size());
-		LOG.info(lOA);
+		try {
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU2);
 
-		// Check the handling unit
-		assertNotNull(hU2);
-		assertNotNull(hU2.getLocation());
-		assertEquals(lOA.getLocationId(), hU2.getLocation().getLocationId());
-		LOG.info(hU2);
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			lOA = locationLocal.getById("A");
+			LOG.info("First drop: " + hU2);
+			LOG.info("First drop: " + lOA);
+
+			// Now drop again to same location
+			handlingUnitLocal.dropTo(lOA, hU2);
+
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			lOA = locationLocal.getById("A");
+			LOG.info("Second drop: " + hU2);
+			LOG.info("Second drop: " + lOA);
+
+			// Check the location
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(lOA.getHandlingUnits().contains(hU2));
+			assertEquals(1, lOA.getHandlingUnits().size());
+			LOG.info(lOA);
+
+			// Check the handling unit
+			assertNotNull(hU2);
+			assertNotNull(hU2.getLocation());
+			assertEquals(lOA.getLocationId(), hU2.getLocation().getLocationId());
+			LOG.info(hU2);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 	}
 
 	/**
@@ -631,48 +662,53 @@ public class HandlingUnitTest {
 		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		Location lOA = locationLocal.getById("A");
 		Location lOB = locationLocal.getById("B");
-		
-		// Drop to make a relation
-		handlingUnitLocal.dropTo(lOA, hU2);
 
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		lOA = locationLocal.getById("A");
-		lOB = locationLocal.getById("B");
-		LOG.info("First drop: " + hU2);
-		LOG.info("First drop: " + lOA);
-		LOG.info("First drop: " + lOB);
-		
-		// Now drop again to other location
-		handlingUnitLocal.dropTo(lOB, hU2);
+		try {
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU2);
 
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		lOA = locationLocal.getById("A");
-		lOB = locationLocal.getById("B");
-		LOG.info("Second drop: " + hU2);
-		LOG.info("Second drop: " + lOA);
-		LOG.info("Second drop: " + lOB);
-		
-		// Check the locations
-		assertNotNull(lOA);
-		assertTrue(lOA.getHandlingUnits().isEmpty());
-		assertEquals(ErrorStatus.ERROR, lOA.getLocationStatus().getErrorStatus());
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			lOA = locationLocal.getById("A");
+			lOB = locationLocal.getById("B");
+			LOG.info("First drop: " + hU2);
+			LOG.info("First drop: " + lOA);
+			LOG.info("First drop: " + lOB);
 
-		assertNotNull(lOB);
-		assertFalse(lOB.getHandlingUnits().isEmpty());
-		assertTrue(lOB.getHandlingUnits().contains(hU2));
-		assertEquals(1, lOB.getHandlingUnits().size());
-		assertEquals(ErrorStatus.NONE, lOB.getLocationStatus().getErrorStatus());
+			// Now drop again to other location
+			handlingUnitLocal.dropTo(lOB, hU2);
 
-		LOG.info("Locations in ERROR");
-		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
-		LOG.info("Locations NOT in ERROR");
-		locationLocal.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			lOA = locationLocal.getById("A");
+			lOB = locationLocal.getById("B");
+			LOG.info("Second drop: " + hU2);
+			LOG.info("Second drop: " + lOA);
+			LOG.info("Second drop: " + lOB);
 
-		// Check the handling unit
-		assertNotNull(hU2);
-		assertNotNull(hU2.getLocation());
-		assertEquals(lOB.getLocationId(), hU2.getLocation().getLocationId());
+			// Check the locations
+			assertNotNull(lOA);
+			assertTrue(lOA.getHandlingUnits().isEmpty());
+			assertEquals(ErrorStatus.ERROR, lOA.getLocationStatus().getErrorStatus());
+
+			assertNotNull(lOB);
+			assertFalse(lOB.getHandlingUnits().isEmpty());
+			assertTrue(lOB.getHandlingUnits().contains(hU2));
+			assertEquals(1, lOB.getHandlingUnits().size());
+			assertEquals(ErrorStatus.NONE, lOB.getLocationStatus().getErrorStatus());
+
+			LOG.info("Locations in ERROR");
+			locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
+			LOG.info("Locations NOT in ERROR");
+			locationLocal.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
+
+			// Check the handling unit
+			assertNotNull(hU2);
+			assertNotNull(hU2.getLocation());
+			assertEquals(lOB.getLocationId(), hU2.getLocation().getLocationId());
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 	}
 }

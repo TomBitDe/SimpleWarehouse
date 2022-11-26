@@ -20,6 +20,7 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -27,6 +28,7 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.location.DimensionBean;
 import com.home.simplewarehouse.location.DimensionLocal;
 import com.home.simplewarehouse.location.LocationBean;
@@ -241,27 +243,32 @@ public class RandomAccessDropUseCasesTest {
 		
 		Location lA = prepareLocationAndCheck("A");
 		
-		// Drop hu1 on lA
-		unitLocal.dropTo(lA, hu1);
-		
-		// MANDATORY read because of dropTo
-		lA = reRead(lA);
-		hu1 = reRead(hu1);
-		
-		// Check location is no longer EMPTY
-		assertFalse(lA.getHandlingUnits().isEmpty());
-		
-		// Check lA contains hu1
-		assertTrue(lA.getHandlingUnits().contains(hu1));
-		
-		// Check if location is in status NONE
-		assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
-		
-		// Check hu1 is linked to lA
-		assertEquals(lA, hu1.getLocation());
+		try {
+			// Drop hu1 on lA
+			unitLocal.dropTo(lA, hu1);
 
-		LOG.info("Expected:\n\t{}\n\tis on\n\t{}", hu1, lA);
-		LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
+			// MANDATORY read because of dropTo
+			lA = reRead(lA);
+			hu1 = reRead(hu1);
+
+			// Check location is no longer EMPTY
+			assertFalse(lA.getHandlingUnits().isEmpty());
+
+			// Check lA contains hu1
+			assertTrue(lA.getHandlingUnits().contains(hu1));
+
+			// Check if location is in status NONE
+			assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
+
+			// Check hu1 is linked to lA
+			assertEquals(lA, hu1.getLocation());
+
+			LOG.info("Expected:\n\t{}\n\tis on\n\t{}", hu1, lA);
+			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 	}
 	
 	/**
@@ -295,20 +302,25 @@ public class RandomAccessDropUseCasesTest {
 		
 		Location lA = prepareLocationAndCheck("A");
 		
-		// Drop hu1 on lA
-		unitLocal.dropTo(lA, hu1);
-		
-		// MANDATORY read because of dropTo
-		lA = reRead(lA);
-		
-		// Check location is still EMPTY
-		assertTrue(lA.getHandlingUnits().isEmpty());
-		
-		// Check if location is in status NONE
-		assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
+		try {
+			// Drop hu1 on lA
+			unitLocal.dropTo(lA, hu1);
 
-		LOG.info("Expected:\n\tEMPTY \n\t{}", lA);
-		LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
+			// MANDATORY read because of dropTo
+			lA = reRead(lA);
+
+			// Check location is still EMPTY
+			assertTrue(lA.getHandlingUnits().isEmpty());
+
+			// Check if location is in status NONE
+			assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
+
+			LOG.info("Expected:\n\tEMPTY \n\t{}", lA);
+			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);			
+		}
 	}
 	
 	/**
@@ -347,40 +359,45 @@ public class RandomAccessDropUseCasesTest {
 		
 		Location lA = prepareLocationAndCheck("A");
 
-		// Drop to make a relation
-		unitLocal.dropTo(lA, hu2);
-		
-	    // MANDATORY reread
-		hu2 = reRead(hu2);
-		lA = reRead(lA);
-		LOG.info("First drop: " + hu2);
-		LOG.info("First drop: " + lA);
-		
-		// Now drop again to same location
-		unitLocal.dropTo(lA, hu2);
-		
-	    // MANDATORY reread
-		hu2 = reRead(hu2);
-		lA = reRead(lA);
-		LOG.info("Second drop: " + hu2);
-		LOG.info("Second drop: " + lA);
-		
-		// Check the location
-		assertNotNull(lA);
-		assertFalse(lA.getHandlingUnits().isEmpty());
-		assertTrue(lA.getHandlingUnits().contains(hu2));
-		assertEquals(1, lA.getHandlingUnits().size());
+		try {
+			// Drop to make a relation
+			unitLocal.dropTo(lA, hu2);
 
-		// Check if location is in "normal" status
-		assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
-		
-		LOG.info(lA);
+			// MANDATORY reread
+			hu2 = reRead(hu2);
+			lA = reRead(lA);
+			LOG.info("First drop: " + hu2);
+			LOG.info("First drop: " + lA);
 
-		// Check the handling unit
-		assertNotNull(hu2);
-		assertNotNull(hu2.getLocation());
-		assertEquals(lA.getLocationId(), hu2.getLocation().getLocationId());
-		LOG.info(hu2);
+			// Now drop again to same location
+			unitLocal.dropTo(lA, hu2);
+
+			// MANDATORY reread
+			hu2 = reRead(hu2);
+			lA = reRead(lA);
+			LOG.info("Second drop: " + hu2);
+			LOG.info("Second drop: " + lA);
+
+			// Check the location
+			assertNotNull(lA);
+			assertFalse(lA.getHandlingUnits().isEmpty());
+			assertTrue(lA.getHandlingUnits().contains(hu2));
+			assertEquals(1, lA.getHandlingUnits().size());
+
+			// Check if location is in "normal" status
+			assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
+
+			LOG.info(lA);
+
+			// Check the handling unit
+			assertNotNull(hu2);
+			assertNotNull(hu2.getLocation());
+			assertEquals(lA.getLocationId(), hu2.getLocation().getLocationId());
+			LOG.info(hu2);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);			
+		}
 	}
 
 	/**
@@ -438,47 +455,52 @@ public class RandomAccessDropUseCasesTest {
 		lA = reRead(lA);
 		lB = reRead(lB);
 
-		// Drop to make a relation
-		unitLocal.dropTo(lA, hu2);
+		try {
+			// Drop to make a relation
+			unitLocal.dropTo(lA, hu2);
 
-	    // MANDATORY reread
-		hu2 = reRead(hu2);
-		lA = reRead(lA);
-		lB = reRead(lB);
-		LOG.info("First drop: " + hu2);
-		LOG.info("First drop: " + lA);
-		LOG.info("First drop: " + lB);
-		
-		// Now drop again to other location
-		unitLocal.dropTo(lB, hu2);
+			// MANDATORY reread
+			hu2 = reRead(hu2);
+			lA = reRead(lA);
+			lB = reRead(lB);
+			LOG.info("First drop: " + hu2);
+			LOG.info("First drop: " + lA);
+			LOG.info("First drop: " + lB);
 
-	    // MANDATORY reread
-		hu2 = reRead(hu2);
-		lA = reRead(lA);
-		lB = reRead(lB);
-		LOG.info("Second drop: " + hu2);
-		LOG.info("Second drop: " + lA);
-		LOG.info("Second drop: " + lB);
-		
-		// Check the locations
-		assertNotNull(lA);
-		assertTrue(lA.getHandlingUnits().isEmpty());
-		assertEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
+			// Now drop again to other location
+			unitLocal.dropTo(lB, hu2);
 
-		assertNotNull(lB);
-		assertFalse(lB.getHandlingUnits().isEmpty());
-		assertTrue(lB.getHandlingUnits().contains(hu2));
-		assertEquals(1, lB.getHandlingUnits().size());
-		assertEquals(ErrorStatus.NONE, lB.getLocationStatus().getErrorStatus());
+			// MANDATORY reread
+			hu2 = reRead(hu2);
+			lA = reRead(lA);
+			lB = reRead(lB);
+			LOG.info("Second drop: " + hu2);
+			LOG.info("Second drop: " + lA);
+			LOG.info("Second drop: " + lB);
 
-		LOG.info("Locations in ERROR");
-		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
-		LOG.info("Locations NOT in ERROR");
-		locationLocal.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
+			// Check the locations
+			assertNotNull(lA);
+			assertTrue(lA.getHandlingUnits().isEmpty());
+			assertEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 
-		// Check the handling unit
-		assertNotNull(hu2);
-		assertNotNull(hu2.getLocation());
-		assertEquals(lB.getLocationId(), hu2.getLocation().getLocationId());
+			assertNotNull(lB);
+			assertFalse(lB.getHandlingUnits().isEmpty());
+			assertTrue(lB.getHandlingUnits().contains(hu2));
+			assertEquals(1, lB.getHandlingUnits().size());
+			assertEquals(ErrorStatus.NONE, lB.getLocationStatus().getErrorStatus());
+
+			LOG.info("Locations in ERROR");
+			locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
+			LOG.info("Locations NOT in ERROR");
+			locationLocal.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
+
+			// Check the handling unit
+			assertNotNull(hu2);
+			assertNotNull(hu2.getLocation());
+			assertEquals(lB.getLocationId(), hu2.getLocation().getLocationId());
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 	}	
 }

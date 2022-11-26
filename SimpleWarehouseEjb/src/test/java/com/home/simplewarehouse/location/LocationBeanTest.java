@@ -22,12 +22,14 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -275,61 +277,67 @@ public class LocationBeanTest {
 		
 		// Drop to make a relation
 		HandlingUnit hU1 = new HandlingUnit("1", "Test");
-		handlingUnitLocal.dropTo(locA, hU1);
 		
-		HandlingUnit hU2 = new HandlingUnit("2", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU2);
+		try {
+			handlingUnitLocal.dropTo(locA, hU1);
 
-		HandlingUnit hU3 = new HandlingUnit("3", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU3);
+			HandlingUnit hU2 = new HandlingUnit("2", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU2);
 
-		HandlingUnit hU4 = new HandlingUnit("4", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU4);
+			HandlingUnit hU3 = new HandlingUnit("3", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU3);
 
-		HandlingUnit hU5 = new HandlingUnit("5", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU5);
-		
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		assertNotNull(locA);	
-		assertFalse(locA.getHandlingUnits().isEmpty());
-		assertEquals(5, locA.getHandlingUnits().size());
-		
-		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
-		
-		LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
+			HandlingUnit hU4 = new HandlingUnit("4", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU4);
 
-		LOG.info("Sample hU2 and hU5");
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		LOG.info(hU2);
-	    // MANDATORY reread
-		hU5 = handlingUnitLocal.getById("5");
-		LOG.info(hU5);
-		
-		// Now delete the location
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		locationLocal.delete(locA);
-		LOG.info("Location deleted: " + locA.getLocationId());
-		
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		hU5 = handlingUnitLocal.getById("5");
-		
-		assertNotNull(hU2);
-		assertNotNull(hU5);
-		
-		assertNull(hU2.getLocation());
-		assertNull(hU5.getLocation());
-		
-		LOG.info("Sample hU2 and hU5 have no longer a location");
-		LOG.info(hU2);
-		LOG.info(hU5);
+			HandlingUnit hU5 = new HandlingUnit("5", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU5);
+
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			assertNotNull(locA);
+			assertFalse(locA.getHandlingUnits().isEmpty());
+			assertEquals(5, locA.getHandlingUnits().size());
+
+			assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
+
+			LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
+
+			LOG.info("Sample hU2 and hU5");
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			LOG.info(hU2);
+			// MANDATORY reread
+			hU5 = handlingUnitLocal.getById("5");
+			LOG.info(hU5);
+
+			// Now delete the location
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			locationLocal.delete(locA);
+			LOG.info("Location deleted: " + locA.getLocationId());
+
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			hU5 = handlingUnitLocal.getById("5");
+
+			assertNotNull(hU2);
+			assertNotNull(hU5);
+
+			assertNull(hU2.getLocation());
+			assertNull(hU5.getLocation());
+
+			LOG.info("Sample hU2 and hU5 have no longer a location");
+			LOG.info(hU2);
+			LOG.info(hU5);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);			
+		}
 	}
 
 	/**
@@ -354,6 +362,8 @@ public class LocationBeanTest {
 		
 		// Drop to make a relation
 		HandlingUnit hU8 = new HandlingUnit("8", "Test");
+		
+		try {
 		handlingUnitLocal.dropTo(locA, hU8);
 		
 	    // MANDATORY reread
@@ -389,5 +399,9 @@ public class LocationBeanTest {
 		
 		LOG.info("Sample hU1 has no longer a location");
 		LOG.info(hU8);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);			
+		}
 	}
 }

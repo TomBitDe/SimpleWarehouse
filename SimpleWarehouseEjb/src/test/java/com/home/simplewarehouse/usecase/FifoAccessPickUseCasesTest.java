@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.DimensionBean;
 import com.home.simplewarehouse.location.DimensionLocal;
@@ -249,19 +250,19 @@ public class FifoAccessPickUseCasesTest {
 		
 		Location lA = prepareLocationAndCheck("FIFO_A");
 		
-		// Drop on lA to prepare for the test case
-		unitLocal.dropTo(lA, hu1); // First in
-		lA = reRead(lA);
-		unitLocal.dropTo(lA, hu2);
-		lA = reRead(lA);
-		unitLocal.dropTo(lA, hu3);
-		lA = reRead(lA);
-		unitLocal.dropTo(lA, hu4);		
-		lA = reRead(lA);
-
-		HandlingUnit picked = null;
-		
 		try {
+			// Drop on lA to prepare for the test case
+			unitLocal.dropTo(lA, hu1); // First in
+			lA = reRead(lA);
+			unitLocal.dropTo(lA, hu2);
+			lA = reRead(lA);
+			unitLocal.dropTo(lA, hu3);
+			lA = reRead(lA);
+			unitLocal.dropTo(lA, hu4);
+			lA = reRead(lA);
+
+			HandlingUnit picked = null;
+
 			// Test now
 			picked = unitLocal.pickFrom(lA);
 
@@ -288,7 +289,7 @@ public class FifoAccessPickUseCasesTest {
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", picked, lA);
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
-		catch (LocationIsEmptyException ex) {
+		catch (LocationIsEmptyException | LocationCapacityExceededException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}
@@ -334,35 +335,35 @@ public class FifoAccessPickUseCasesTest {
 		
 		Location lA = prepareLocationAndCheck("FIFO_A");
 		
-		// Drop on lA to prepare for the test case
-		unitLocal.dropTo(lA, hu1); // First in
-		lA = reRead(lA);
-		unitLocal.dropTo(lA, hu2);
-		lA = reRead(lA);
-		unitLocal.dropTo(lA, hu3);
-		lA = reRead(lA);
-		unitLocal.dropTo(lA, hu4);		
-		lA = reRead(lA);
-		unitLocal.dropTo(lA, hu5);		
-		lA = reRead(lA);
-		unitLocal.dropTo(lA, hu6);		
-		lA = reRead(lA);
-
-		HandlingUnit picked = null;
-		
 		try {
+			// Drop on lA to prepare for the test case
+			unitLocal.dropTo(lA, hu1); // First in
+			lA = reRead(lA);
+			unitLocal.dropTo(lA, hu2);
+			lA = reRead(lA);
+			unitLocal.dropTo(lA, hu3);
+			lA = reRead(lA);
+			unitLocal.dropTo(lA, hu4);
+			lA = reRead(lA);
+			unitLocal.dropTo(lA, hu5);
+			lA = reRead(lA);
+			unitLocal.dropTo(lA, hu6);
+			lA = reRead(lA);
+
+			HandlingUnit picked = null;
+
 			// Test now
 			picked = unitLocal.pickFrom(lA);
 
 			// MANDATORY read again because of pickFrom
 			lA = reRead(lA);
-			
+
 			// After pick first in 1 first out must be 1
 			assertEquals("1", picked.getId());
-			
+
 			// Check lA no longer contains picked
 			assertFalse(lA.getHandlingUnits().contains(picked));
-						
+
 			// Check picked is not linked to lA and has locaPos null
 			assertNull(picked.getLocation());
 			assertNull(picked.getLocaPos());
@@ -390,7 +391,7 @@ public class FifoAccessPickUseCasesTest {
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
-		catch (LocationIsEmptyException ex) {
+		catch (LocationIsEmptyException | LocationCapacityExceededException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}

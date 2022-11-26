@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
+import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.DimensionBean;
 import com.home.simplewarehouse.location.DimensionLocal;
@@ -245,18 +246,18 @@ public class RandomAccessPickUseCasesTest {
 		
 		Location lA = prepareLocationAndCheck("A");
 		
-		// Drop hu1 on lA to prepare for the test case
-		unitLocal.dropTo(lA, hu1);
-		
-		// MANDATORY read again because of dropTo
-		lA = reRead(lA);
-		hu1 = reRead(hu1);
-
 		try {
+			// Drop hu1 on lA to prepare for the test case
+			unitLocal.dropTo(lA, hu1);
+
+			// MANDATORY read again because of dropTo
+			lA = reRead(lA);
+			hu1 = reRead(hu1);
+
 			// Test now
 			unitLocal.pickFrom(lA, hu1);
 		}
-		catch (LocationIsEmptyException | HandlingUnitNotOnLocationException ex) {
+		catch (LocationIsEmptyException | LocationCapacityExceededException | HandlingUnitNotOnLocationException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 
@@ -375,21 +376,19 @@ public class RandomAccessPickUseCasesTest {
 		Location lB = prepareLocationAndCheck("B");
 		
 		HandlingUnit hu2 = prepareUnitAndCheck("2");
-		
-		unitLocal.dropTo(lB, hu2);
-		
-		// Check lB is filled with hu2 only
-		// MANDATORY read again because of dropTo before
-		lB = reRead(lB);
-		hu2 = reRead(hu2);
-		assertEquals(1, locationLocal.getAllContaining(hu2).size());
-		assertEquals(lB.getLocationId(), locationLocal.getAllContaining(hu2).get(0).getLocationId());
-		
-		// Take hu3
 		HandlingUnit hu3 = prepareUnitAndCheck("3");
 		
-		// Pick hu3 from lB now
 		try {
+			unitLocal.dropTo(lB, hu2);
+
+			// Check lB is filled with hu2 only
+			// MANDATORY read again because of dropTo before
+			lB = reRead(lB);
+			hu2 = reRead(hu2);
+			assertEquals(1, locationLocal.getAllContaining(hu2).size());
+			assertEquals(lB.getLocationId(), locationLocal.getAllContaining(hu2).get(0).getLocationId());
+
+			// Pick hu3 from lB now
 			// MANDATORE read again of lB and hu3 is done before :-)
 			unitLocal.pickFrom(lB, hu3);
 		}
@@ -416,8 +415,8 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu3, lB);
 			LOG.info("Location is in ERROR:\n\t{}", lB.getLocationStatus());
 		}
-		catch (LocationIsEmptyException le) {
-			Assert.fail("Not expected: " + le);			
+		catch (LocationIsEmptyException | LocationCapacityExceededException lec) {
+			Assert.fail("Not expected: " + lec);			
 		}
 	}
 
@@ -464,18 +463,16 @@ public class RandomAccessPickUseCasesTest {
 		HandlingUnit hu1 = prepareUnitAndCheck("1");
 		
 		Location lA = prepareLocationAndCheck("A");
-		
-		unitLocal.dropTo(lA, hu1);
-		
-		hu1 = reRead(hu1);
-		lA = reRead(lA);
-		
 		Location lB = prepareLocationAndCheck("B");
 		
 		try {
+			unitLocal.dropTo(lA, hu1);
+
+			hu1 = reRead(hu1);
+			lA = reRead(lA);
+
 			// Test case now
-			unitLocal.pickFrom(lB, hu1);
-		
+			unitLocal.pickFrom(lB, hu1);		
 		}
 		catch (LocationIsEmptyException le) {
 			// MANDATORY read again because of pickFrom
@@ -502,7 +499,7 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Location is in ERROR:\n\t{}", lA.getLocationStatus());
 			LOG.info("Location is in NONE:\n\t{}", lB.getLocationStatus());
 		}
-		catch (HandlingUnitNotOnLocationException no) {
+		catch (HandlingUnitNotOnLocationException | LocationCapacityExceededException no) {
 			Assert.fail("Not expected: " + no);			
 		}		
 	}
@@ -549,27 +546,24 @@ public class RandomAccessPickUseCasesTest {
 	@InSequence(17)
 	public void pickFromFilledLocationButUnitPlacedSomewhereElse() {
 		HandlingUnit hu1 = prepareUnitAndCheck("1");
+		HandlingUnit hu2 = prepareUnitAndCheck("2");
 		
+		Location lA = prepareLocationAndCheck("A");
 		Location lB = prepareLocationAndCheck("B");
 		
-		unitLocal.dropTo(lB, hu1);
-		
-		hu1 = reRead(hu1);
-		lB = reRead(lB);
-		
-		HandlingUnit hu2 = prepareUnitAndCheck("2");
-
-		Location lA = prepareLocationAndCheck("A");
-		
-		unitLocal.dropTo(lA, hu2);
-		
-		hu2 = reRead(hu2);
-		lA = reRead(lA);
-
 		try {
+			unitLocal.dropTo(lB, hu1);
+
+			hu1 = reRead(hu1);
+			lB = reRead(lB);
+
+			unitLocal.dropTo(lA, hu2);
+
+			hu2 = reRead(hu2);
+			lA = reRead(lA);
+
 			// Test case now
 			unitLocal.pickFrom(lA, hu1);
-		
 		}
 		catch (HandlingUnitNotOnLocationException no) {
 			// MANDATORY read again because of pickFrom
@@ -602,7 +596,7 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Location is in ERROR:\n\t{}", lB.getLocationStatus());
 			LOG.info("Expected:\n\t{}\n\tis on\n\t{}", hu1, lA);
 		}
-		catch (LocationIsEmptyException le) {
+		catch (LocationIsEmptyException | LocationCapacityExceededException le) {
 			Assert.fail("Not expected: " + le);			
 		}		
 	}

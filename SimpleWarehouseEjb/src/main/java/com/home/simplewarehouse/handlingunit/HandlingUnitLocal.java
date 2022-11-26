@@ -55,8 +55,10 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @param location the given Location
 	 * @param handlingUnit the HandlingUnit
+	 * 
+	 * @throws LocationCapacityExceededException in case the Location capacity will exceed by this drop
 	 */
-	public void dropTo(Location location, HandlingUnit handlingUnit);
+	public void dropTo(Location location, HandlingUnit handlingUnit) throws LocationCapacityExceededException;
 	/**
 	 * Get a list of all HandlingUnit items
 	 * 

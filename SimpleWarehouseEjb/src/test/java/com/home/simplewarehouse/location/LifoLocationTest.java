@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
+import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -267,63 +268,68 @@ public class LifoLocationTest {
 		
 		// Drop to make a relation
 		HandlingUnit hU1 = new HandlingUnit("1", "Test");
-		handlingUnitLocal.dropTo(locA, hU1);
-		
-		HandlingUnit hU2 = new HandlingUnit("2", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU2);
+		try {
+			handlingUnitLocal.dropTo(locA, hU1);
 
-		HandlingUnit hU3 = new HandlingUnit("3", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU3);
+			HandlingUnit hU2 = new HandlingUnit("2", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU2);
 
-		HandlingUnit hU4 = new HandlingUnit("4", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU4);
+			HandlingUnit hU3 = new HandlingUnit("3", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU3);
 
-		HandlingUnit hU5 = new HandlingUnit("5", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU5);
-		
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		assertNotNull(locA);	
-		assertFalse(locA.getHandlingUnits().isEmpty());
-		assertEquals(5, locA.getHandlingUnits().size());
-		
-		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
-		
-		LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
+			HandlingUnit hU4 = new HandlingUnit("4", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU4);
 
-		LOG.info("Sample hU2 and hU5");
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		LOG.info(hU2);
-	    // MANDATORY reread
-		hU5 = handlingUnitLocal.getById("5");
-		LOG.info(hU5);
-		
-		// Now delete the location
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		locationLocal.delete(locA);
-		LOG.info("Lifo Location deleted: " + locA.getLocationId());
-		
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		hU5 = handlingUnitLocal.getById("5");
-		
-		assertNotNull(hU2);
-		assertNotNull(hU5);
-		
-		LOG.info("Sample hU2 and hU5 have no longer a location and locaPos");
-		assertNull(hU2.getLocation());
-		assertNull(hU2.getLocaPos());
-		assertNull(hU5.getLocation());
-		assertNull(hU5.getLocaPos());
-		
-		LOG.info(hU2);
-		LOG.info(hU5);
+			HandlingUnit hU5 = new HandlingUnit("5", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU5);
+
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			assertNotNull(locA);
+			assertFalse(locA.getHandlingUnits().isEmpty());
+			assertEquals(5, locA.getHandlingUnits().size());
+
+			assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
+
+			LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
+
+			LOG.info("Sample hU2 and hU5");
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			LOG.info(hU2);
+			// MANDATORY reread
+			hU5 = handlingUnitLocal.getById("5");
+			LOG.info(hU5);
+
+			// Now delete the location
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			locationLocal.delete(locA);
+			LOG.info("Lifo Location deleted: " + locA.getLocationId());
+
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			hU5 = handlingUnitLocal.getById("5");
+
+			assertNotNull(hU2);
+			assertNotNull(hU5);
+
+			LOG.info("Sample hU2 and hU5 have no longer a location and locaPos");
+			assertNull(hU2.getLocation());
+			assertNull(hU2.getLocaPos());
+			assertNull(hU5.getLocation());
+			assertNull(hU5.getLocaPos());
+
+			LOG.info(hU2);
+			LOG.info(hU5);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 	}
 
 	/**
@@ -348,6 +354,8 @@ public class LifoLocationTest {
 		
 		// Drop to make a relation
 		HandlingUnit hU8 = new HandlingUnit("8", "Test");
+
+		try {
 		handlingUnitLocal.dropTo(locA, hU8);
 		
 	    // MANDATORY reread
@@ -384,6 +392,10 @@ public class LifoLocationTest {
 		assertNull(hU8.getLocaPos());
 		
 		LOG.info("Sample hU8 has no longer a location {}", hU8);
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Not expected: " + lcee);
+		}
 	}
 	
 	/**
@@ -404,47 +416,48 @@ public class LifoLocationTest {
 		
 		// Drop to make a relation
 		HandlingUnit hU1 = new HandlingUnit("1", "Test");
-		handlingUnitLocal.dropTo(locA, hU1);
-		
-		HandlingUnit hU2 = new HandlingUnit("2", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU2);
-
-		HandlingUnit hU3 = new HandlingUnit("3", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU3);
-
-		HandlingUnit hU4 = new HandlingUnit("4", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU4);
-
-		HandlingUnit hU5 = new HandlingUnit("5", "Test");
-		locA = locationLocal.getById("A");
-		handlingUnitLocal.dropTo(locA, hU5);
-		
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		assertNotNull(locA);	
-		assertFalse(locA.getHandlingUnits().isEmpty());
-		assertEquals(5, locA.getHandlingUnits().size());
-		
-		LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
-
-	    // MANDATORY reread
-		hU5 = handlingUnitLocal.getById("5");
-		assertEquals(locA, hU5.getLocation());
-		assertEquals(Integer.valueOf(1), hU5.getLocaPos());
-		LOG.info("Sample hU5 locaPos check: {}", hU5);
-		
-	    // MANDATORY reread
-		hU2 = handlingUnitLocal.getById("2");
-		assertEquals(locA, hU2.getLocation());
-		assertEquals(Integer.valueOf(4), hU2.getLocaPos());
-		LOG.info("Sample hU2 locaPos check: {}", hU2);
 		
 		try {
+			handlingUnitLocal.dropTo(locA, hU1);
+
+			HandlingUnit hU2 = new HandlingUnit("2", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU2);
+
+			HandlingUnit hU3 = new HandlingUnit("3", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU3);
+
+			HandlingUnit hU4 = new HandlingUnit("4", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU4);
+
+			HandlingUnit hU5 = new HandlingUnit("5", "Test");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU5);
+
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			assertNotNull(locA);
+			assertFalse(locA.getHandlingUnits().isEmpty());
+			assertEquals(5, locA.getHandlingUnits().size());
+
+			LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
+
+			// MANDATORY reread
+			hU5 = handlingUnitLocal.getById("5");
+			assertEquals(locA, hU5.getLocation());
+			assertEquals(Integer.valueOf(1), hU5.getLocaPos());
+			LOG.info("Sample hU5 locaPos check: {}", hU5);
+
+			// MANDATORY reread
+			hU2 = handlingUnitLocal.getById("2");
+			assertEquals(locA, hU2.getLocation());
+			assertEquals(Integer.valueOf(4), hU2.getLocaPos());
+			LOG.info("Sample hU2 locaPos check: {}", hU2);
+
 			handlingUnitLocal.pickFrom(locA, hU5);
-			
+
 			locA = locationLocal.getById("A");
 			assertEquals(4, locA.getHandlingUnits().size());
 			LOG.info("After FIRST PICK {}", locA);
@@ -452,21 +465,21 @@ public class LifoLocationTest {
 			hU5 = handlingUnitLocal.getById("5");
 			assertNull(hU5.getLocation());
 			assertNull(hU5.getLocaPos());
-						
+
 			hU4 = handlingUnitLocal.getById("4");
 			assertNotNull(hU4);
 			assertEquals(locA, hU4.getLocation());
 			assertEquals(Integer.valueOf(1), hU4.getLocaPos());
-			
+
 			handlingUnitLocal.pickFrom(locA, hU4);
-			
+
 			locA = locationLocal.getById("A");
 			hU3 = handlingUnitLocal.getById("3");
 			handlingUnitLocal.pickFrom(locA, hU3);
-			
+
 			locA = locationLocal.getById("A");
 			hU2 = handlingUnitLocal.getById("2");
-			handlingUnitLocal.pickFrom(locA, hU2);			
+			handlingUnitLocal.pickFrom(locA, hU2);
 
 			locA = locationLocal.getById("A");
 			assertEquals(1, locA.getHandlingUnits().size());
@@ -477,7 +490,7 @@ public class LifoLocationTest {
 			assertEquals(locA, hU1.getLocation());
 			assertEquals(Integer.valueOf(1), hU1.getLocaPos());
 		}
-		catch (LocationIsEmptyException | HandlingUnitNotOnLocationException ex) {
+		catch (LocationIsEmptyException | LocationCapacityExceededException | HandlingUnitNotOnLocationException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}

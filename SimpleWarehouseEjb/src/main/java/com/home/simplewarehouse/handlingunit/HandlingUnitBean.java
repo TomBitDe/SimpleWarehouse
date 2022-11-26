@@ -203,7 +203,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public void dropTo(Location location, HandlingUnit handlingUnit) {
+	public void dropTo(Location location, HandlingUnit handlingUnit) throws LocationCapacityExceededException {
 		LOG.trace("--> dropTo()");
 
 		if (handlingUnit == null) {
@@ -221,6 +221,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		if (!em.contains(handlingUnit)) {
 			handlingUnit = em.merge(handlingUnit);
+		}
+		
+		if (locationLocal.isFull(location)) {
+			throw new LocationCapacityExceededException("Location has no more capacity");
 		}
 		
 		List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit, location);
