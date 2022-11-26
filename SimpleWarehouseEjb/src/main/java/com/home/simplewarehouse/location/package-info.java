@@ -8,6 +8,10 @@
  * <h3>Location status</h3>
  * <br>
  * <h3>Storage location access FIFO, LIFO, RANDOM</h3>
+ * A storage location can contain zero, one or more handling units. If a location contains
+ * more than one handling units then access to the handling units can be limited. For that
+ * reason different kinds of locations exist. In the following examples hu1, hu2, hu3, ... 
+ * are different handling units.
  * <br>
  * <h4>FIFO</h4>
  * <br>
