@@ -44,6 +44,8 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.Moni
 public class HandlingUnitTest {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitTest.class);
 
+	private static final int CAPACITY_MAX = 2;
+	
 	@EJB
 	HandlingUnitLocal handlingUnitLocal;
 	
@@ -709,6 +711,66 @@ public class HandlingUnitTest {
 		}
 		catch (LocationCapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
+		}
+	}
+
+	/**
+	 * Test drop to location capacity exceeds
+	 */
+	@Test
+	@InSequence(28)
+	public void dropToLocationCapacityExceeds() {
+		LOG.info("--- Test dropToLocationCapacityExceeds");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		// Prepare handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("2"));
+		handlingUnitLocal.create(new HandlingUnit("3"));
+		handlingUnitLocal.create(new HandlingUnit("4"));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		HandlingUnit hU3 = handlingUnitLocal.getById("3");
+		HandlingUnit hU4 = handlingUnitLocal.getById("4");
+		Location lOA = locationLocal.getById("A");
+		
+		// Now set the capacity to limit
+		lOA.getDimension().setCapacity(2);
+
+		try {
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU2);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(lOA, hU3);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+		}
+		catch (LocationCapacityExceededException lcee) {
+			Assert.fail("Unexpected exception: " +  lcee.getMessage());
+		}
+
+		try {
+			handlingUnitLocal.dropTo(lOA, hU4);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			Assert.fail("Exception expected");
+		}
+		catch (LocationCapacityExceededException lcee) {
+			assertTrue(true);
+			LOG.info(lcee.getMessage());
+
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertEquals(CAPACITY_MAX, lOA.getHandlingUnits().size());
 		}
 	}
 }

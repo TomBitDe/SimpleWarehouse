@@ -195,7 +195,7 @@ public class LocationBean implements LocationLocal {
 		
 		LOG.trace("<-- isFull()");
 		
-		return (loc.getDimension().getCapacity() >= loc.getHandlingUnits().size());
+		return (loc.getHandlingUnits().size() >= loc.getDimension().getCapacity());
 	}
 
 	@Override
