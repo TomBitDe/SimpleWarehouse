@@ -4,6 +4,11 @@
  * <h3>Concepts</h3>
  * <br>
  * <h3>Location dimension</h3>
+ * Any attributes that define the dimension limitations for a location like capacity, height, weight.
+ * <h4>Capacity</h4>
+ * A capacity of 0 means that there is no limitation concerning the number of handling units that can
+ * be dropped on a location.<br>
+ * If the capacity if greater than 0 then this is the maximum capacity for the location.
  * <br>
  * <h3>Location status</h3>
  * <br>
