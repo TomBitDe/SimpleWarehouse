@@ -243,11 +243,19 @@ public class LocationBean implements LocationLocal {
 		Location loc = getById(location.getLocationId());
 		
 		if (loc.getDimension().getMaxWeight() <= 0) {
-			LOG.trace("<-- overweight()");
+			LOG.trace("<-- overweight(NOT_RELEVANT)");
 			return false;
 		}
 		
-		LOG.trace("<-- overweight()");
+		int expSum = loc.getHandlingUnits().stream().mapToInt(HandlingUnit::getWeight).sum() + weight;
+		
+		if (expSum >= loc.getDimension().getMaxWeight()) {
+			LOG.trace("<-- overweight(true)");
+
+			return true;
+		}
+		
+		LOG.trace("<-- overweight(false)");
 		
 		return false;
 	}
