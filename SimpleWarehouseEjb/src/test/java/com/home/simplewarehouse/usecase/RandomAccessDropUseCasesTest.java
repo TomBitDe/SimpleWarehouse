@@ -35,6 +35,7 @@ import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -266,8 +267,8 @@ public class RandomAccessDropUseCasesTest {
 			LOG.info("Expected:\n\t{}\n\tis on\n\t{}", hu1, lA);
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 	}
 	
@@ -318,8 +319,8 @@ public class RandomAccessDropUseCasesTest {
 			LOG.info("Expected:\n\tEMPTY \n\t{}", lA);
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);			
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);			
 		}
 	}
 	
@@ -395,8 +396,8 @@ public class RandomAccessDropUseCasesTest {
 			assertEquals(lA.getLocationId(), hu2.getLocation().getLocationId());
 			LOG.info(hu2);
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);			
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);			
 		}
 	}
 
@@ -499,8 +500,8 @@ public class RandomAccessDropUseCasesTest {
 			assertNotNull(hu2.getLocation());
 			assertEquals(lB.getLocationId(), hu2.getLocation().getLocationId());
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 	}	
 }

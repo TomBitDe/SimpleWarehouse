@@ -38,6 +38,7 @@ import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -257,7 +258,7 @@ public class RandomAccessPickUseCasesTest {
 			// Test now
 			unitLocal.pickFrom(lA, hu1);
 		}
-		catch (LocationIsEmptyException | CapacityExceededException | HandlingUnitNotOnLocationException ex) {
+		catch (LocationIsEmptyException | CapacityExceededException | WeightExceededException| HandlingUnitNotOnLocationException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 
@@ -415,7 +416,7 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu3, lB);
 			LOG.info("Location is in ERROR:\n\t{}", lB.getLocationStatus());
 		}
-		catch (LocationIsEmptyException | CapacityExceededException lec) {
+		catch (LocationIsEmptyException | CapacityExceededException | WeightExceededException lec) {
 			Assert.fail("Not expected: " + lec);			
 		}
 	}
@@ -499,7 +500,7 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Location is in ERROR:\n\t{}", lA.getLocationStatus());
 			LOG.info("Location is in NONE:\n\t{}", lB.getLocationStatus());
 		}
-		catch (HandlingUnitNotOnLocationException | CapacityExceededException no) {
+		catch (HandlingUnitNotOnLocationException | CapacityExceededException | WeightExceededException no) {
 			Assert.fail("Not expected: " + no);			
 		}		
 	}
@@ -596,7 +597,7 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Location is in ERROR:\n\t{}", lB.getLocationStatus());
 			LOG.info("Expected:\n\t{}\n\tis on\n\t{}", hu1, lA);
 		}
-		catch (LocationIsEmptyException | CapacityExceededException le) {
+		catch (LocationIsEmptyException | CapacityExceededException | WeightExceededException le) {
 			Assert.fail("Not expected: " + le);			
 		}		
 	}

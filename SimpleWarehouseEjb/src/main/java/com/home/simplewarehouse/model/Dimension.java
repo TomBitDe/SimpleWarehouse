@@ -38,6 +38,7 @@ public class Dimension extends EntityBase implements Serializable {
     private static final String ID_FORMATTER = "locationId={0}";
     
     public static final int CAPACITY_DEFAULT = 0;
+    public static final int WEIGHT_DEFAULT = 0;
     
 	@Id
 	private String locationId;
@@ -45,6 +46,10 @@ public class Dimension extends EntityBase implements Serializable {
 	@Basic(optional = false)
 	@Column(name = "MAX_CAPACITY", nullable = false)
 	private int maxCapacity;
+		
+	@Basic(optional = false)
+	@Column(name = "MAX_WEIGHT", nullable = false)
+	private int maxWeight;
 		
     @Version
     private int version;
@@ -56,6 +61,7 @@ public class Dimension extends EntityBase implements Serializable {
     
     private void setDimensionDefaults() {
     	this.maxCapacity = CAPACITY_DEFAULT;
+    	this.maxWeight = WEIGHT_DEFAULT;
     }
  
     /**
@@ -90,13 +96,18 @@ public class Dimension extends EntityBase implements Serializable {
 		
     	setDimensionDefaults();
 
-    	if (maxCapacity < 0) {
-			LOG.info("Invalid parameter maxCapacity ({}); keep DEFAULT value ({})", maxCapacity
-					, CAPACITY_DEFAULT);
-		}
-		else {
-		    this.maxCapacity = maxCapacity;
-		}
+    	setMaxCapacity(maxCapacity);
+    }
+
+	public Dimension(String locationId, int maxCapacity, int maxWeight, String user) {
+		super(user);
+		
+		this.locationId = locationId;
+		
+    	setDimensionDefaults();
+
+    	setMaxCapacity(maxCapacity);
+    	setMaxWeight(maxWeight);
 	}
 
 	public String getLocationId() {
@@ -114,7 +125,27 @@ public class Dimension extends EntityBase implements Serializable {
 	}
 
 	public void setMaxCapacity(int maxCapacity) {
-		this.maxCapacity = maxCapacity;
+    	if (maxCapacity < 0) {
+			LOG.info("Invalid parameter maxCapacity ({}); keep DEFAULT value ({})", maxCapacity
+					, CAPACITY_DEFAULT);
+		}
+		else {
+		    this.maxCapacity = maxCapacity;
+		}
+	}
+
+	public int getMaxWeight() {
+		return this.maxWeight;
+	}
+
+	public void setMaxWeight(int maxWeight) {
+    	if (maxWeight < 0) {
+			LOG.info("Invalid parameter maxWeight ({}); keep DEFAULT value ({})", maxWeight
+					, WEIGHT_DEFAULT);
+		}
+		else {
+		    this.maxWeight = maxWeight;
+		}
 	}
 
 	public int getVersion() {

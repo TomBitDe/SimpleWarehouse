@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.topology.SampleWarehouseLocal;
@@ -64,19 +65,19 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		LOG.info(lA);
 		
 		try {
-		// Drop to location in random order
-		handlingUnitLocal.dropTo(lA, h1);
-		handlingUnitLocal.dropTo(lA, h4);
-		handlingUnitLocal.dropTo(lA, h2);
-		handlingUnitLocal.dropTo(lA, h3);
+			// Drop to location in random order
+			handlingUnitLocal.dropTo(lA, h1);
+			handlingUnitLocal.dropTo(lA, h4);
+			handlingUnitLocal.dropTo(lA, h2);
+			handlingUnitLocal.dropTo(lA, h3);
 		
-		lA = locationLocal.getById("A");
-		LOG.info(lA);
+			lA = locationLocal.getById("A");
+			LOG.info(lA);
 
-		LOG.trace("<-- processScenario()");
+			LOG.trace("<-- processScenario()");
 		}
-		catch (CapacityExceededException lcee) {
-			LOG.fatal("Unexpected exception : {}", lcee.getMessage());
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			LOG.fatal("Unexpected exception : {}", dimex.getMessage());
 		}
 	}
 }

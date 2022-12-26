@@ -29,7 +29,9 @@ public class HandlingUnit extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
     
+    private static final int WEIGHT_DEFAULT = 0;
     private static final String ID_FORMATTER = "id={0}";
+    private static final String ID_WEIGHT_FORMATTER = "id={0} weight={1}";
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -37,6 +39,9 @@ public class HandlingUnit extends EntityBase implements Serializable {
 
     @Column(name = "LOCAPOS", nullable = true)
     private Integer locaPos = null;
+    
+    @Column(name = "WEIGHT", nullable = false)
+    private Integer weight;
     
     @Version
     private int version;
@@ -54,16 +59,25 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id) {
     	super();
     	this.id = id;
+    	setWeight(WEIGHT_DEFAULT);
     }
 
     public HandlingUnit(String id, String user) {
     	super(user);
     	this.id = id;
+    	setWeight(WEIGHT_DEFAULT);
     }
     
     public HandlingUnit(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.id = id;
+    	setWeight(WEIGHT_DEFAULT);
+    }
+
+    public HandlingUnit(String id, int weight, String user, Timestamp timestamp) {
+    	super(user, timestamp);
+    	this.id = id;
+    	setWeight(weight);
     }
 
     public String getId() {
@@ -74,6 +88,21 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public void setId(String id) {
         this.id = id;
     	LOG.debug(ID_FORMATTER, this.id);
+    }
+
+    public int getWeight() {
+    	LOG.debug(ID_WEIGHT_FORMATTER, this.id, this.weight);
+        return this.weight;
+    }
+
+    public void setWeight(int weight) {
+    	if (weight < 0) {
+    		this.weight = WEIGHT_DEFAULT;
+    	}
+    	else {
+            this.weight = weight;
+    	}
+    	LOG.debug(ID_WEIGHT_FORMATTER, this.id, this.weight);
     }
 
 	public int getVersion() {
@@ -126,6 +155,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		builder.append("HandlingUnit [")
 			.append(System.lineSeparator() + "\tid=")
 		    .append(id)
+		    .append(", weight=")
+		    .append(weight)		    
 		    .append(", locaPos=")
 		    .append(locaPos == null ? "null" : locaPos)		    
 		    .append(", version=")

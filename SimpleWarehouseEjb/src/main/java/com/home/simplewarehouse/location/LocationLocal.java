@@ -81,4 +81,12 @@ public interface LocationLocal {
 	 * @return the Location list
 	 */
 	public List<Location> getAllWithFreeCapacity();
+	/**
+	 * 
+	 * @param location the location to check
+	 * @param weight the additional weight
+	 * 
+	 * @return true if the additional weight will exceed the weight limit else false
+	 */
+	public boolean overweight(final Location location, final int weight);
 }

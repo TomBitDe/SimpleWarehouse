@@ -235,4 +235,20 @@ public class LocationBean implements LocationLocal {
 
 		return ret;
 	}
+
+	@Override
+	public boolean overweight(Location location, int weight) {
+		LOG.trace("--> overweight({}, {})", location.getLocationId(), weight);
+
+		Location loc = getById(location.getLocationId());
+		
+		if (loc.getDimension().getMaxWeight() <= 0) {
+			LOG.trace("<-- overweight()");
+			return false;
+		}
+		
+		LOG.trace("<-- overweight()");
+		
+		return false;
+	}
 }

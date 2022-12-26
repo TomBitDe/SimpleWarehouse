@@ -334,8 +334,8 @@ public class LocationBeanTest {
 			LOG.info(hU2);
 			LOG.info(hU5);
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);			
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);			
 		}
 	}
 
@@ -363,44 +363,44 @@ public class LocationBeanTest {
 		HandlingUnit hU8 = new HandlingUnit("8", "Test");
 		
 		try {
-		handlingUnitLocal.dropTo(locA, hU8);
+			handlingUnitLocal.dropTo(locA, hU8);
 		
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		assertNotNull(locA);	
-		assertFalse(locA.getHandlingUnits().isEmpty());
-		assertEquals(1, locA.getHandlingUnits().size());
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			assertNotNull(locA);	
+			assertFalse(locA.getHandlingUnits().isEmpty());
+			assertEquals(1, locA.getHandlingUnits().size());
 
-		// Test the special toString also
-		assertTrue(locA.toString().contains("HandlingUnits RANDOM=[\"8\"]"));
+			// Test the special toString also
+			assertTrue(locA.toString().contains("HandlingUnits RANDOM=[\"8\"]"));
 
-		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
+			assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
 		
-		LOG.info("1 HandlingUnit dropped to " + locA.getLocationId() + "   " + locA);
+			LOG.info("1 HandlingUnit dropped to " + locA.getLocationId() + "   " + locA);
 
-		LOG.info("Sample hU8");
-	    // MANDATORY reread
-		hU8 = handlingUnitLocal.getById("8");
-		LOG.info(hU8);
+			LOG.info("Sample hU8");
+			// MANDATORY reread
+			hU8 = handlingUnitLocal.getById("8");
+			LOG.info(hU8);
 		
-		// Now delete the location
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		locationLocal.delete(locA);
-		LOG.info("Location deleted: " + locA.getLocationId());
+			// Now delete the location
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			locationLocal.delete(locA);
+			LOG.info("Location deleted: " + locA.getLocationId());
 		
-	    // MANDATORY reread
-		hU8 = handlingUnitLocal.getById("8");
+			// MANDATORY reread
+			hU8 = handlingUnitLocal.getById("8");
 		
-		assertNotNull(hU8);
+			assertNotNull(hU8);
 		
-		assertNull(hU8.getLocation());
+			assertNull(hU8.getLocation());
 		
-		LOG.info("Sample hU1 has no longer a location");
-		LOG.info(hU8);
+			LOG.info("Sample hU1 has no longer a location");
+			LOG.info(hU8);
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);			
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);			
 		}
 	}
 }

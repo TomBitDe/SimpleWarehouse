@@ -32,6 +32,7 @@ import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -289,8 +290,8 @@ public class HandlingUnitTest {
 
 			LOG.info(lOA);
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 	}
 	
@@ -316,8 +317,8 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 		catch (EJBException ex) {
 			assertTrue(true);
@@ -346,8 +347,8 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 		catch (EJBException ex) {
 			assertTrue(true);
@@ -380,8 +381,8 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitLocal.dropTo(lOA, hU1);
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 		
 	    // MANDATORY reread
@@ -498,8 +499,8 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitLocal.dropTo(lOA, hU1);
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 		
 	    // MANDATORY reread
@@ -561,8 +562,8 @@ public class HandlingUnitTest {
 		
 			handlingUnitLocal.dropTo(lOA, hU2);
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 		
 	    // MANDATORY reread
@@ -640,8 +641,8 @@ public class HandlingUnitTest {
 			assertEquals(lOA.getLocationId(), hU2.getLocation().getLocationId());
 			LOG.info(hU2);
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 	}
 
@@ -710,8 +711,8 @@ public class HandlingUnitTest {
 			assertNotNull(hU2.getLocation());
 			assertEquals(lOB.getLocationId(), hU2.getLocation().getLocationId());
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Not expected: " + lcee);
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Not expected: " + dimex);
 		}
 	}
 
@@ -750,8 +751,8 @@ public class HandlingUnitTest {
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 		}
-		catch (CapacityExceededException lcee) {
-			Assert.fail("Unexpected exception: " +  lcee.getMessage());
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Unexpected exception: " +  dimex.getMessage());
 		}
 
 		try {
@@ -761,9 +762,9 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (CapacityExceededException lcee) {
+		catch (CapacityExceededException | WeightExceededException dimex) {
 			assertTrue(true);
-			LOG.info(lcee.getMessage());
+			LOG.info(dimex.getMessage());
 
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
