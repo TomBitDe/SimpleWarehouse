@@ -15,6 +15,7 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -203,7 +204,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public void dropTo(Location location, HandlingUnit handlingUnit) throws LocationCapacityExceededException {
+	public void dropTo(Location location, HandlingUnit handlingUnit) throws CapacityExceededException {
 		LOG.trace("--> dropTo()");
 
 		if (handlingUnit == null) {
@@ -224,7 +225,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 		
 		if (locationLocal.isFull(location)) {
-			throw new LocationCapacityExceededException("Location has no more capacity");
+			throw new CapacityExceededException("Location has no more capacity");
 		}
 		
 		List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit, location);

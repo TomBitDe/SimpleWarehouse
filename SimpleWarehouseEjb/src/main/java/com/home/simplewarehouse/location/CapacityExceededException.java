@@ -1,9 +1,9 @@
-package com.home.simplewarehouse.handlingunit;
+package com.home.simplewarehouse.location;
 
 /**
  * Exception thrown when trying to drop a HandlingUnit to a Location that has no more capacity.  
  */
-public class LocationCapacityExceededException extends Exception {
+public class CapacityExceededException extends Exception {
 	private static final long serialVersionUID = -8265509324969758651L;
 
 	/**
@@ -11,7 +11,7 @@ public class LocationCapacityExceededException extends Exception {
 	 * 
 	 * @param errorMessage the error message content
 	 */
-	public LocationCapacityExceededException(String errorMessage) {
+	public CapacityExceededException(String errorMessage) {
 		super(errorMessage);
 	}
 	
@@ -21,7 +21,7 @@ public class LocationCapacityExceededException extends Exception {
 	 * @param errorMessage the error message content
 	 * @param err the error
 	 */
-	public LocationCapacityExceededException(String errorMessage, Throwable err) {
+	public CapacityExceededException(String errorMessage, Throwable err) {
 	    super(errorMessage, err);
 	}
 }

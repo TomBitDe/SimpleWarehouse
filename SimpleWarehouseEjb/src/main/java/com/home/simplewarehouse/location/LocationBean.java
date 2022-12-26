@@ -188,14 +188,14 @@ public class LocationBean implements LocationLocal {
 
 		Location loc = getById(location.getLocationId());
 		
-		if (loc.getDimension().getCapacity() <= 0) {
+		if (loc.getDimension().getMaxCapacity() <= 0) {
 			LOG.trace("<-- isFull()");
 			return false;
 		}
 		
 		LOG.trace("<-- isFull()");
 		
-		return (loc.getHandlingUnits().size() >= loc.getDimension().getCapacity());
+		return (loc.getHandlingUnits().size() >= loc.getDimension().getMaxCapacity());
 	}
 
 	@Override

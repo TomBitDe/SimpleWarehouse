@@ -29,11 +29,11 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
-import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.DimensionBean;
 import com.home.simplewarehouse.location.DimensionLocal;
 import com.home.simplewarehouse.location.LocationBean;
+import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
@@ -289,7 +289,7 @@ public class FifoAccessPickUseCasesTest {
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", picked, lA);
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
-		catch (LocationIsEmptyException | LocationCapacityExceededException ex) {
+		catch (LocationIsEmptyException | CapacityExceededException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}
@@ -391,7 +391,7 @@ public class FifoAccessPickUseCasesTest {
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
-		catch (LocationIsEmptyException | LocationCapacityExceededException ex) {
+		catch (LocationIsEmptyException | CapacityExceededException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}

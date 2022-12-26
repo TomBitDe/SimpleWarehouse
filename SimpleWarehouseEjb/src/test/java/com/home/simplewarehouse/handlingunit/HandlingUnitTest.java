@@ -28,6 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.location.LocationBean;
+import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
@@ -288,7 +289,7 @@ public class HandlingUnitTest {
 
 			LOG.info(lOA);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 	}
@@ -315,7 +316,7 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 		catch (EJBException ex) {
@@ -345,7 +346,7 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 		catch (EJBException ex) {
@@ -379,7 +380,7 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitLocal.dropTo(lOA, hU1);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 		
@@ -497,7 +498,7 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitLocal.dropTo(lOA, hU1);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 		
@@ -560,7 +561,7 @@ public class HandlingUnitTest {
 		
 			handlingUnitLocal.dropTo(lOA, hU2);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 		
@@ -639,7 +640,7 @@ public class HandlingUnitTest {
 			assertEquals(lOA.getLocationId(), hU2.getLocation().getLocationId());
 			LOG.info(hU2);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 	}
@@ -709,7 +710,7 @@ public class HandlingUnitTest {
 			assertNotNull(hU2.getLocation());
 			assertEquals(lOB.getLocationId(), hU2.getLocation().getLocationId());
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 	}
@@ -738,7 +739,7 @@ public class HandlingUnitTest {
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the capacity to limit
-		lOA.getDimension().setCapacity(2);
+		lOA.getDimension().setMaxCapacity(2);
 
 		try {
 			// Drop to make a relation
@@ -749,7 +750,7 @@ public class HandlingUnitTest {
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Unexpected exception: " +  lcee.getMessage());
 		}
 
@@ -760,7 +761,7 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			assertTrue(true);
 			LOG.info(lcee.getMessage());
 

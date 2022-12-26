@@ -29,7 +29,6 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
-import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -335,7 +334,7 @@ public class LocationBeanTest {
 			LOG.info(hU2);
 			LOG.info(hU5);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);			
 		}
 	}
@@ -400,7 +399,7 @@ public class LocationBeanTest {
 		LOG.info("Sample hU1 has no longer a location");
 		LOG.info(hU8);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);			
 		}
 	}

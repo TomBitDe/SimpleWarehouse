@@ -131,7 +131,7 @@ public class DimensionBeanTest {
 		
 		// Now check the corresponding Dimension
 		assertEquals("A", dimension.getLocationId());
-		assertEquals(0, dimension.getCapacity());
+		assertEquals(0, dimension.getMaxCapacity());
 		assertEquals(EntityBase.USER_DEFAULT, dimension.getUpdateUserId());
 		assertNotNull(dimension.getUpdateTimestamp());
 		

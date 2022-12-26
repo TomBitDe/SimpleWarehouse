@@ -22,7 +22,7 @@ import org.apache.logging.log4j.Logger;
 /**
  * Any dimension.
  * <p>
- * A capacity of 0 means that an undefined number of goods can be stored in the location.<br>
+ * A maxCapacity of 0 means that an undefined number of goods can be stored in the location.<br>
  * A maxWeight of 0 means that the weight is not relevant for storing goods in the location.<br>
  * A maxHeight of 0 means that the height is not relevant for storing goods in the location.<br>
  * A maxLength of 0 means that the length is not relevant for storing goods in the location.<br>
@@ -43,8 +43,8 @@ public class Dimension extends EntityBase implements Serializable {
 	private String locationId;
 	
 	@Basic(optional = false)
-	@Column(name = "CAPACITY", nullable = false)
-	private int capacity;
+	@Column(name = "MAX_CAPACITY", nullable = false)
+	private int maxCapacity;
 		
     @Version
     private int version;
@@ -55,7 +55,7 @@ public class Dimension extends EntityBase implements Serializable {
     private Location location;
     
     private void setDimensionDefaults() {
-    	this.capacity = 0;
+    	this.maxCapacity = CAPACITY_DEFAULT;
     }
  
     /**
@@ -83,20 +83,19 @@ public class Dimension extends EntityBase implements Serializable {
     	setDimensionDefaults();
     }
     
-	public Dimension(String locationId, int capacity, String user) {
+	public Dimension(String locationId, int maxCapacity, String user) {
 		super(user);
 		
 		this.locationId = locationId;
 		
-		if (capacity < 0) {
-			int defaultCapacity = 0;
-			
-			LOG.info("Invalid parameter capacity ({}); set DEFAULT value ({})", capacity
-					, defaultCapacity);
-			this.capacity = defaultCapacity;			
+    	setDimensionDefaults();
+
+    	if (maxCapacity < 0) {
+			LOG.info("Invalid parameter maxCapacity ({}); keep DEFAULT value ({})", maxCapacity
+					, CAPACITY_DEFAULT);
 		}
 		else {
-		    this.capacity = capacity;
+		    this.maxCapacity = maxCapacity;
 		}
 	}
 
@@ -110,12 +109,12 @@ public class Dimension extends EntityBase implements Serializable {
 		LOG.debug(ID_FORMATTER, this.locationId);
 	}
 
-	public int getCapacity() {
-		return this.capacity;
+	public int getMaxCapacity() {
+		return this.maxCapacity;
 	}
 
-	public void setCapacity(int capacity) {
-		this.capacity = capacity;
+	public void setMaxCapacity(int maxCapacity) {
+		this.maxCapacity = maxCapacity;
 	}
 
 	public int getVersion() {
@@ -158,8 +157,8 @@ public class Dimension extends EntityBase implements Serializable {
 		builder.append("Dimension [")
 		    .append("locationId=")
 		    .append(locationId)
-		    .append(", capacity=")
-		    .append(capacity)
+		    .append(", maxCapacity=")
+		    .append(maxCapacity)
 		    .append(", version=")
 		    .append(version)
 		    .append(", ")

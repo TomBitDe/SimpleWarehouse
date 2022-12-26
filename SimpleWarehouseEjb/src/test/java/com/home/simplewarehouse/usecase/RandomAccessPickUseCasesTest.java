@@ -30,11 +30,11 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
-import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.DimensionBean;
 import com.home.simplewarehouse.location.DimensionLocal;
 import com.home.simplewarehouse.location.LocationBean;
+import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
@@ -257,7 +257,7 @@ public class RandomAccessPickUseCasesTest {
 			// Test now
 			unitLocal.pickFrom(lA, hu1);
 		}
-		catch (LocationIsEmptyException | LocationCapacityExceededException | HandlingUnitNotOnLocationException ex) {
+		catch (LocationIsEmptyException | CapacityExceededException | HandlingUnitNotOnLocationException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 
@@ -415,7 +415,7 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu3, lB);
 			LOG.info("Location is in ERROR:\n\t{}", lB.getLocationStatus());
 		}
-		catch (LocationIsEmptyException | LocationCapacityExceededException lec) {
+		catch (LocationIsEmptyException | CapacityExceededException lec) {
 			Assert.fail("Not expected: " + lec);			
 		}
 	}
@@ -499,7 +499,7 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Location is in ERROR:\n\t{}", lA.getLocationStatus());
 			LOG.info("Location is in NONE:\n\t{}", lB.getLocationStatus());
 		}
-		catch (HandlingUnitNotOnLocationException | LocationCapacityExceededException no) {
+		catch (HandlingUnitNotOnLocationException | CapacityExceededException no) {
 			Assert.fail("Not expected: " + no);			
 		}		
 	}
@@ -596,7 +596,7 @@ public class RandomAccessPickUseCasesTest {
 			LOG.info("Location is in ERROR:\n\t{}", lB.getLocationStatus());
 			LOG.info("Expected:\n\t{}\n\tis on\n\t{}", hu1, lA);
 		}
-		catch (LocationIsEmptyException | LocationCapacityExceededException le) {
+		catch (LocationIsEmptyException | CapacityExceededException le) {
 			Assert.fail("Not expected: " + le);			
 		}		
 	}

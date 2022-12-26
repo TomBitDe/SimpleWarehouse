@@ -31,7 +31,6 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
-import com.home.simplewarehouse.handlingunit.LocationCapacityExceededException;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -327,7 +326,7 @@ public class LifoLocationTest {
 			LOG.info(hU2);
 			LOG.info(hU5);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 	}
@@ -393,7 +392,7 @@ public class LifoLocationTest {
 		
 		LOG.info("Sample hU8 has no longer a location {}", hU8);
 		}
-		catch (LocationCapacityExceededException lcee) {
+		catch (CapacityExceededException lcee) {
 			Assert.fail("Not expected: " + lcee);
 		}
 	}
@@ -490,7 +489,7 @@ public class LifoLocationTest {
 			assertEquals(locA, hU1.getLocation());
 			assertEquals(Integer.valueOf(1), hU1.getLocaPos());
 		}
-		catch (LocationIsEmptyException | LocationCapacityExceededException | HandlingUnitNotOnLocationException ex) {
+		catch (LocationIsEmptyException | CapacityExceededException | HandlingUnitNotOnLocationException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}
