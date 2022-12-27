@@ -1,17 +1,17 @@
 package com.home.simplewarehouse.location;
 
 /**
- * Exception thrown when trying to drop a HandlingUnit to a Location when weight limit is reached.  
+ * Exception thrown when trying to drop a HandlingUnit to a Location when width limit is reached.  
  */
-public class WeightExceededException extends DimensionException {
-	private static final long serialVersionUID = 8342809185587103859L;
+public class WidthExceededException extends DimensionException {
+	private static final long serialVersionUID = -3685484191564064330L;
 
 	/**
 	 * Constructor with the error message to use
 	 * 
 	 * @param errorMessage the error message content
 	 */
-	public WeightExceededException(String errorMessage) {
+	public WidthExceededException(String errorMessage) {
 		super(errorMessage);
 	}
 	
@@ -21,7 +21,7 @@ public class WeightExceededException extends DimensionException {
 	 * @param errorMessage the error message content
 	 * @param err the error
 	 */
-	public WeightExceededException(String errorMessage, Throwable err) {
+	public WidthExceededException(String errorMessage, Throwable err) {
 	    super(errorMessage, err);
 	}
 }

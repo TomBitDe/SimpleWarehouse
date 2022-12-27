@@ -29,9 +29,11 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.CapacityExceededException;
+import com.home.simplewarehouse.location.DimensionException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.OverheightException;
 import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -291,7 +293,7 @@ public class HandlingUnitTest {
 
 			LOG.info(lOA);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 	}
@@ -318,7 +320,7 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		catch (EJBException ex) {
@@ -348,7 +350,7 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		catch (EJBException ex) {
@@ -382,7 +384,7 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitLocal.dropTo(lOA, hU1);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		
@@ -500,7 +502,7 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitLocal.dropTo(lOA, hU1);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		
@@ -563,7 +565,7 @@ public class HandlingUnitTest {
 		
 			handlingUnitLocal.dropTo(lOA, hU2);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		
@@ -642,7 +644,7 @@ public class HandlingUnitTest {
 			assertEquals(lOA.getLocationId(), hU2.getLocation().getLocationId());
 			LOG.info(hU2);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 	}
@@ -712,7 +714,7 @@ public class HandlingUnitTest {
 			assertNotNull(hU2.getLocation());
 			assertEquals(lOB.getLocationId(), hU2.getLocation().getLocationId());
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 	}
@@ -752,7 +754,7 @@ public class HandlingUnitTest {
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Unexpected exception: " +  dimex.getMessage());
 		}
 
@@ -775,7 +777,7 @@ public class HandlingUnitTest {
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertEquals(CAPACITY_MAX, lOA.getHandlingUnits().size());
 		}
-		catch (WeightExceededException wex) {
+		catch (WeightExceededException | OverheightException wex) {
 			Assert.fail("Unexpected exception: " +  wex.getMessage());
 		}
 	}
@@ -815,7 +817,7 @@ public class HandlingUnitTest {
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Unexpected exception: " +  dimex.getMessage());
 		}
 
@@ -838,7 +840,7 @@ public class HandlingUnitTest {
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertTrue(locationLocal.overweight(lOA, hU4.getWeight()));
 		}
-		catch (CapacityExceededException capex) {
+		catch (CapacityExceededException | OverheightException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
 		}
 	}

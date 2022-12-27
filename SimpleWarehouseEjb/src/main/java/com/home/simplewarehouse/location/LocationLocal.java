@@ -4,7 +4,10 @@ import java.util.List;
 
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.HeightCategory;
+import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.WidthCategory;
 
 /**
  * Local interface for Location usage.
@@ -82,6 +85,7 @@ public interface LocationLocal {
 	 */
 	public List<Location> getAllWithFreeCapacity();
 	/**
+	 * Check if a Location will be overweighted related to its maximum weight
 	 * 
 	 * @param location the location to check
 	 * @param weight the additional weight
@@ -89,4 +93,31 @@ public interface LocationLocal {
 	 * @return true if the additional weight will exceed the weight limit else false
 	 */
 	public boolean overweight(final Location location, final int weight);
+	/**
+	 * Check if a Location fits related to its maximum height
+	 * 
+	 * @param location the location to check
+	 * @param height the height to drop
+	 * 
+	 * @return true if the height does not fit else false
+	 */
+	public boolean overheight(final Location location, final HeightCategory height);
+	/**
+	 * Check if a Location fits related to its maximum length
+	 * 
+	 * @param location the location to check
+	 * @param length the length to drop
+	 * 
+	 * @return true if the length does not fit else false
+	 */
+	public boolean overlength(final Location location, final LengthCategory length);
+	/**
+	 * Check if a Location fits related to its maximum width
+	 * 
+	 * @param location the location to check
+	 * @param width the width to drop
+	 * 
+	 * @return true if the width does not fit else false
+	 */
+	public boolean overwidth(final Location location, final WidthCategory width);
 }

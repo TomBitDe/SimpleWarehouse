@@ -19,9 +19,12 @@ import org.apache.logging.log4j.Logger;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.HeightCategory;
+import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.LocationStatus;
+import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
@@ -33,6 +36,10 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 @Interceptors(PerformanceAuditor.class)
 public class LocationBean implements LocationLocal {
 	private static final Logger LOG = LogManager.getLogger(LocationBean.class);
+	
+	private static final String HEIGHT_DOES_NOT_FIT = "Location has maximum height {}, heigth {} does not fit";
+	private static final String LENGTH_DOES_NOT_FIT = "Location has maximum length {}, length {} does not fit";
+	private static final String WIDTH_DOES_NOT_FIT = "Location has maximum width {}, width {} does not fit";
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -268,5 +275,121 @@ public class LocationBean implements LocationLocal {
 		LOG.trace("<-- overweight() {}", overweight);
 		
 		return overweight;
+	}
+
+	@Override
+	public boolean overheight(Location location, HeightCategory height) {
+		LOG.trace("--> overheight({}, {})", location.getLocationId(), height);
+
+		Location loc = getById(location.getLocationId());
+		
+		if (loc.getDimension().getMaxHeight().equals(HeightCategory.NOT_RELEVANT)) {
+			LOG.trace("<-- overheight(NOT_RELEVANT)");
+			return false;
+		}
+		
+		boolean overheight;
+		
+		if (height.equals(HeightCategory.TOO_HIGH) || height.equals(HeightCategory.UNKNOWN)) {
+			overheight = true;
+		}
+		else if (loc.getDimension().getMaxHeight().equals(HeightCategory.MIDDLE)
+				&& (height.equals(HeightCategory.HIGH))) {
+			overheight = true;
+		}
+		else if (loc.getDimension().getMaxHeight().equals(HeightCategory.LOW)
+				&& (height.equals(HeightCategory.HIGH) || height.equals(HeightCategory.MIDDLE))) {
+			overheight = true;
+		}
+		else {
+			overheight = false;
+		}
+		
+		if (overheight) {
+			LOG.info(HEIGHT_DOES_NOT_FIT, loc.getDimension().getMaxHeight()
+					, height);
+		}
+		
+		LOG.trace("<-- overheight() {}", overheight);
+		
+		return overheight;
+	}
+
+	@Override
+	public boolean overlength(Location location, LengthCategory length) {
+		LOG.trace("--> overlength({}, {})", location.getLocationId(), length);
+
+		Location loc = getById(location.getLocationId());
+		
+		if (loc.getDimension().getMaxLength().equals(LengthCategory.NOT_RELEVANT)
+				|| loc.getDimension().getMaxCapacity() > 1
+				|| loc.getDimension().getMaxCapacity() == 0) {
+			LOG.trace("<-- overlength(NOT_RELEVANT)");
+			return false;
+		}
+		
+		boolean overlength;
+		
+		if (length.equals(LengthCategory.TOO_LONG) || length.equals(LengthCategory.UNKNOWN)) {
+			overlength = true;
+		}
+		else if (loc.getDimension().getMaxLength().equals(LengthCategory.MIDDLE)
+				&& (length.equals(LengthCategory.LONG))) {
+			overlength = true;
+		}
+		else if (loc.getDimension().getMaxLength().equals(LengthCategory.SHORT)
+				&& (length.equals(LengthCategory.LONG) || length.equals(LengthCategory.MIDDLE))) {
+			overlength = true;
+		}
+		else {
+			overlength = false;
+		}
+		
+		if (overlength) {
+			LOG.info(LENGTH_DOES_NOT_FIT, loc.getDimension().getMaxLength()
+					, length);
+		}
+		
+		LOG.trace("<-- overlength() {}", overlength);
+		
+		return overlength;
+	}
+
+	@Override
+	public boolean overwidth(Location location, WidthCategory width) {
+		LOG.trace("--> overwidth({}, {})", location.getLocationId(), width);
+
+		Location loc = getById(location.getLocationId());
+		
+		if (loc.getDimension().getMaxWidth().equals(WidthCategory.NOT_RELEVANT)) {
+			LOG.trace("<-- overwidth(NOT_RELEVANT)");
+			return false;
+		}
+		
+		boolean overwidth;
+		
+		if (width.equals(WidthCategory.TOO_WIDE) || width.equals(WidthCategory.UNKNOWN)) {
+			overwidth = true;
+		}
+		else if (loc.getDimension().getMaxWidth().equals(WidthCategory.MIDDLE)
+				&& (width.equals(WidthCategory.WIDE))) {
+			overwidth = true;
+		}
+		else if (loc.getDimension().getMaxWidth().equals(WidthCategory.NARROW)
+				&& (width.equals(WidthCategory.WIDE) || width.equals(WidthCategory.MIDDLE))) {
+			overwidth = true;
+		}
+		else {
+			overwidth = false;
+		}
+		
+		if (overwidth) {
+			LOG.info(WIDTH_DOES_NOT_FIT, loc.getDimension().getMaxWidth()
+					, width);
+		}
+		
+		LOG.trace("<-- overwidth() {}", overwidth);
+		
+		return overwidth;
 	}
 }

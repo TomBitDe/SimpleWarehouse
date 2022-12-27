@@ -31,6 +31,7 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.DimensionBean;
+import com.home.simplewarehouse.location.DimensionException;
 import com.home.simplewarehouse.location.DimensionLocal;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.CapacityExceededException;
@@ -290,7 +291,7 @@ public class FifoAccessPickUseCasesTest {
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", picked, lA);
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
-		catch (LocationIsEmptyException | CapacityExceededException | WeightExceededException ex) {
+		catch (LocationIsEmptyException | DimensionException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}
@@ -392,7 +393,7 @@ public class FifoAccessPickUseCasesTest {
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
-		catch (LocationIsEmptyException | CapacityExceededException | WeightExceededException ex) {
+		catch (LocationIsEmptyException | DimensionException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}

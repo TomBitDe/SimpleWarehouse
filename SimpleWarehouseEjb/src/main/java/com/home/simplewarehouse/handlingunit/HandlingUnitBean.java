@@ -16,6 +16,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.location.CapacityExceededException;
+import com.home.simplewarehouse.location.OverheightException;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
@@ -206,7 +207,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 
 	@Override
 	public void dropTo(Location location, HandlingUnit handlingUnit)
-			throws CapacityExceededException, WeightExceededException {
+			throws CapacityExceededException, WeightExceededException, OverheightException {
 		LOG.trace("--> dropTo()");
 
 		if (handlingUnit == null) {
@@ -232,6 +233,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		if (locationLocal.overweight(location, handlingUnit.getWeight())) {
 			throw new WeightExceededException("Location will become overweighted");
+		}
+		
+		if (locationLocal.overheight(location, handlingUnit.getHeight())) {
+			throw new OverheightException("HandlingUnit does not fit in Location");
 		}
 		
 		List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit, location);

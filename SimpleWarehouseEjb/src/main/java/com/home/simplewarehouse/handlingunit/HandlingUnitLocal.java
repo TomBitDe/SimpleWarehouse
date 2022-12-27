@@ -3,6 +3,7 @@ package com.home.simplewarehouse.handlingunit;
 import java.util.List;
 
 import com.home.simplewarehouse.location.CapacityExceededException;
+import com.home.simplewarehouse.location.OverheightException;
 import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -60,8 +61,10 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @throws CapacityExceededException in case the Location capacity will exceed by this drop
 	 * @throws WeightExceededException in case the Location weight will exceed by this drop
+	 * @throws OverHightException in case the HandlingUnit does not fit in the Location by this drop
 	 */
-	public void dropTo(Location location, HandlingUnit handlingUnit) throws CapacityExceededException, WeightExceededException;
+	public void dropTo(Location location, HandlingUnit handlingUnit) 
+			throws CapacityExceededException, WeightExceededException, OverheightException;
 	/**
 	 * Get a list of all HandlingUnit items
 	 * 

@@ -334,7 +334,7 @@ public class LocationBeanTest {
 			LOG.info(hU2);
 			LOG.info(hU5);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);			
 		}
 	}
@@ -399,7 +399,7 @@ public class LocationBeanTest {
 			LOG.info("Sample hU1 has no longer a location");
 			LOG.info(hU8);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);			
 		}
 	}

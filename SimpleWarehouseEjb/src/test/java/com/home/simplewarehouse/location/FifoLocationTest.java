@@ -325,7 +325,7 @@ public class FifoLocationTest {
 			LOG.info(hU2);
 			LOG.info(hU5);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 	}
@@ -391,7 +391,7 @@ public class FifoLocationTest {
 
 			LOG.info("Sample hU8 has no longer a location {}", hU8);
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 	}
@@ -488,7 +488,7 @@ public class FifoLocationTest {
 			assertEquals(locA, hU5.getLocation());
 			assertEquals(Integer.valueOf(1), hU5.getLocaPos());
 		}
-		catch (LocationIsEmptyException | CapacityExceededException | WeightExceededException| HandlingUnitNotOnLocationException ex) {
+		catch (LocationIsEmptyException | DimensionException | HandlingUnitNotOnLocationException ex) {
 			Assert.fail("Not expected: " + ex);
 		}
 	}
