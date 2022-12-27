@@ -39,6 +39,9 @@ public class Dimension extends EntityBase implements Serializable {
     
     public static final int CAPACITY_DEFAULT = 0;
     public static final int WEIGHT_DEFAULT = 0;
+    private static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
+    private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
+    private static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
     
 	@Id
 	private String locationId;
@@ -51,6 +54,18 @@ public class Dimension extends EntityBase implements Serializable {
 	@Column(name = "MAX_WEIGHT", nullable = false)
 	private int maxWeight;
 		
+	@Basic(optional = false)
+    @Column(name = "MAX_HEIGHT", nullable = false)
+    private String maxHeight;
+    
+	@Basic(optional = false)
+    @Column(name = "MAX_LENGTH", nullable = false)
+    private String maxLength;
+
+	@Basic(optional = false)
+    @Column(name = "MAX_WIDTH", nullable = false)
+    private String maxWidth;
+
     @Version
     private int version;
     
@@ -62,6 +77,9 @@ public class Dimension extends EntityBase implements Serializable {
     private void setDimensionDefaults() {
     	this.maxCapacity = CAPACITY_DEFAULT;
     	this.maxWeight = WEIGHT_DEFAULT;
+    	this.maxHeight = HEIGHT_DEFAULT.name();
+    	this.maxLength = LENGTH_DEFAULT.name();
+    	this.maxWidth = WIDTH_DEFAULT.name();
     }
  
     /**
@@ -110,6 +128,47 @@ public class Dimension extends EntityBase implements Serializable {
     	setMaxWeight(maxWeight);
 	}
 
+	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight, String user) {
+		super(user);
+		
+		this.locationId = locationId;
+		
+    	setDimensionDefaults();
+
+    	setMaxCapacity(maxCapacity);
+    	setMaxWeight(maxWeight);
+    	setMaxHeight(maxHeight);
+	}
+
+	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight
+			, LengthCategory maxLength, String user) {
+		super(user);
+		
+		this.locationId = locationId;
+		
+    	setDimensionDefaults();
+
+    	setMaxCapacity(maxCapacity);
+    	setMaxWeight(maxWeight);
+    	setMaxHeight(maxHeight);
+    	setMaxLength(maxLength);
+	}
+
+	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight
+			, LengthCategory maxLength, WidthCategory maxWidth, String user) {
+		super(user);
+		
+		this.locationId = locationId;
+		
+    	setDimensionDefaults();
+
+    	setMaxCapacity(maxCapacity);
+    	setMaxWeight(maxWeight);
+    	setMaxHeight(maxHeight);
+    	setMaxLength(maxLength);
+    	setMaxWidth(maxWidth);
+	}
+
 	public String getLocationId() {
 		LOG.debug(ID_FORMATTER, this.locationId);
 		return this.locationId;
@@ -145,6 +204,48 @@ public class Dimension extends EntityBase implements Serializable {
 		}
 		else {
 		    this.maxWeight = maxWeight;
+		}
+	}
+
+	public HeightCategory getMaxHeight() {
+		return HeightCategory.valueOf(this.maxHeight);
+	}
+
+	public void setMaxHeight(HeightCategory maxHeight) {
+    	if (maxHeight == null) {
+			LOG.info("Invalid parameter maxHeight ({}); keep DEFAULT value ({})", maxHeight
+					, HEIGHT_DEFAULT);
+		}
+		else {
+			this.maxHeight = maxHeight.name();
+		}
+	}
+
+	public LengthCategory getMaxLength() {
+		return LengthCategory.valueOf(this.maxLength);
+	}
+
+	public void setMaxLength(LengthCategory maxLength) {
+    	if (maxLength == null) {
+			LOG.info("Invalid parameter maxLength ({}); keep DEFAULT value ({})", maxLength
+					, LENGTH_DEFAULT);
+		}
+		else {
+			this.maxLength = maxLength.name();
+		}
+	}
+
+	public WidthCategory getMaxWidth() {
+		return WidthCategory.valueOf(this.maxWidth);
+	}
+
+	public void setMaxWidth(WidthCategory maxWidth) {
+    	if (maxWidth == null) {
+			LOG.info("Invalid parameter maxWidth ({}); keep DEFAULT value ({})", maxWidth
+					, WIDTH_DEFAULT);
+		}
+		else {
+			this.maxWidth = maxWidth.name();
 		}
 	}
 
