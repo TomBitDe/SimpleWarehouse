@@ -803,7 +803,7 @@ public class HandlingUnitTest {
 		HandlingUnit hU4 = handlingUnitLocal.getById("4");
 		Location lOA = locationLocal.getById("A");
 		
-		// Now set the capacity to limit
+		// Now set the weight to limit
 		lOA.getDimension().setMaxWeight(WEIGHT_MAX);
 
 		try {
