@@ -47,6 +47,7 @@ public class HandlingUnitTest {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitTest.class);
 
 	private static final int CAPACITY_MAX = 2;
+	private static final int WEIGHT_MAX = 960;
 	
 	@EJB
 	HandlingUnitLocal handlingUnitLocal;
@@ -762,9 +763,9 @@ public class HandlingUnitTest {
 
 			Assert.fail("Exception expected");
 		}
-		catch (CapacityExceededException | WeightExceededException dimex) {
+		catch (CapacityExceededException capex) {
 			assertTrue(true);
-			LOG.info(dimex.getMessage());
+			LOG.info(capex.getMessage());
 
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
@@ -773,6 +774,72 @@ public class HandlingUnitTest {
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertEquals(CAPACITY_MAX, lOA.getHandlingUnits().size());
+		}
+		catch (WeightExceededException wex) {
+			Assert.fail("Unexpected exception: " +  wex.getMessage());
+		}
+	}
+
+	/**
+	 * Test drop to location weight exceeds
+	 */
+	@Test
+	@InSequence(30)
+	public void dropToLocationWeightExceeds() {
+		LOG.info("--- Test dropToLocationWeightExceeds");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		// Prepare handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("2", 500));
+		handlingUnitLocal.create(new HandlingUnit("3", 300));
+		handlingUnitLocal.create(new HandlingUnit("4", 190));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		HandlingUnit hU3 = handlingUnitLocal.getById("3");
+		HandlingUnit hU4 = handlingUnitLocal.getById("4");
+		Location lOA = locationLocal.getById("A");
+		
+		// Now set the capacity to limit
+		lOA.getDimension().setMaxWeight(WEIGHT_MAX);
+
+		try {
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU2);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(lOA, hU3);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+		}
+		catch (CapacityExceededException | WeightExceededException dimex) {
+			Assert.fail("Unexpected exception: " +  dimex.getMessage());
+		}
+
+		try {
+			handlingUnitLocal.dropTo(lOA, hU4);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			Assert.fail("Exception expected");
+		}
+		catch (WeightExceededException wex) {
+			assertTrue(true);
+			LOG.info(wex.getMessage());
+
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(locationLocal.overweight(lOA, hU4.getWeight()));
+		}
+		catch (CapacityExceededException capex) {
+			Assert.fail("Unexpected exception: " +  capex.getMessage());
 		}
 	}
 }

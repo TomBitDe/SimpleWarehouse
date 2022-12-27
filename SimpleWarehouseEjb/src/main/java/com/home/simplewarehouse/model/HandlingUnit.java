@@ -62,6 +62,12 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	setWeight(WEIGHT_DEFAULT);
     }
 
+    public HandlingUnit(String id, int weight) {
+    	super();
+    	this.id = id;
+    	setWeight(weight);
+    }
+
     public HandlingUnit(String id, String user) {
     	super(user);
     	this.id = id;

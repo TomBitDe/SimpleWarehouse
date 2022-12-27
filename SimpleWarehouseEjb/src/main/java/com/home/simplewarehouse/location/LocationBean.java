@@ -189,13 +189,20 @@ public class LocationBean implements LocationLocal {
 		Location loc = getById(location.getLocationId());
 		
 		if (loc.getDimension().getMaxCapacity() <= 0) {
-			LOG.trace("<-- isFull()");
+			LOG.trace("<-- isFull(NOT_RELEVANT)");
 			return false;
 		}
 		
-		LOG.trace("<-- isFull()");
+		boolean full = loc.getHandlingUnits().size() >= loc.getDimension().getMaxCapacity();
 		
-		return (loc.getHandlingUnits().size() >= loc.getDimension().getMaxCapacity());
+		if (full) {
+			LOG.info("Location already contains {}, maxCapacity is {}", loc.getHandlingUnits().size()
+					, loc.getDimension().getMaxCapacity());
+		}
+		
+		LOG.trace("<-- isFull() {}", full);
+		
+		return full;
 	}
 
 	@Override
@@ -247,16 +254,19 @@ public class LocationBean implements LocationLocal {
 			return false;
 		}
 		
+		// Expected total weight
 		int expSum = loc.getHandlingUnits().stream().mapToInt(HandlingUnit::getWeight).sum() + weight;
 		
-		if (expSum >= loc.getDimension().getMaxWeight()) {
-			LOG.trace("<-- overweight(true)");
-
-			return true;
+		boolean overweight = expSum >= loc.getDimension().getMaxWeight();
+		
+		if (overweight) {
+			LOG.info("Location already has weight {} and to add {}, maxWeight is {}"
+					, loc.getHandlingUnits().stream().mapToInt(HandlingUnit::getWeight).sum()
+					, weight, loc.getDimension().getMaxWeight());
 		}
 		
-		LOG.trace("<-- overweight(false)");
+		LOG.trace("<-- overweight() {}", overweight);
 		
-		return false;
+		return overweight;
 	}
 }
