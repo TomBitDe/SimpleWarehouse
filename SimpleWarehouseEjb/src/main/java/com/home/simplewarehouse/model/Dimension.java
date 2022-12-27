@@ -190,6 +190,8 @@ public class Dimension extends EntityBase implements Serializable {
 		    .append(locationId)
 		    .append(", maxCapacity=")
 		    .append(maxCapacity)
+		    .append(", maxWeight=")
+		    .append(maxWeight)
 		    .append(", version=")
 		    .append(version)
 		    .append(", ")
