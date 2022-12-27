@@ -33,10 +33,15 @@ import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.OverheightException;
+import com.home.simplewarehouse.location.OverwidthException;
 import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.HeightCategory;
+import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -49,6 +54,9 @@ public class HandlingUnitTest {
 
 	private static final int CAPACITY_MAX = 2;
 	private static final int WEIGHT_MAX = 960;
+	private static final HeightCategory HEIGHT_MAX = HeightCategory.MIDDLE;
+	private static final WidthCategory WIDTH_MAX = WidthCategory.WIDE;
+	private static final LengthCategory LENGTH_MAX = LengthCategory.SHORT;
 	
 	@EJB
 	HandlingUnitLocal handlingUnitLocal;
@@ -842,5 +850,221 @@ public class HandlingUnitTest {
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
 		}
+	}
+
+	/**
+	 * Test drop to location overheight
+	 */
+	@Test
+	@InSequence(33)
+	public void dropToLocationOverheight() {
+		LOG.info("--- Test dropToLocationOverheight");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		// Prepare handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("1", 0, HeightCategory.MIDDLE));
+		handlingUnitLocal.create(new HandlingUnit("2", 0, HeightCategory.HIGH));
+		handlingUnitLocal.create(new HandlingUnit("3", 0, HeightCategory.LOW));
+		handlingUnitLocal.create(new HandlingUnit("4", 0, HeightCategory.TOO_HIGH));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		HandlingUnit hU3 = handlingUnitLocal.getById("3");
+		HandlingUnit hU4 = handlingUnitLocal.getById("4");
+		Location lOA = locationLocal.getById("A");
+		
+		// Now set the height to limit
+		lOA.getDimension().setMaxHeight(HEIGHT_MAX);
+
+		try {
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU1);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU3);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Unexpected exception: " +  dimex.getMessage());
+		}
+
+		try {
+			handlingUnitLocal.dropTo(lOA, hU2);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			Assert.fail("Exception expected");
+		}
+		catch (OverheightException wex) {
+			assertTrue(true);
+			LOG.info(wex.getMessage());
+
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(locationLocal.overheight(lOA, hU2.getHeight()));
+		}
+		catch (DimensionException capex) {
+			Assert.fail("Unexpected exception: " +  capex.getMessage());
+		}
+
+		try {
+			handlingUnitLocal.dropTo(lOA, hU4);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			Assert.fail("Exception expected");
+		}
+		catch (OverheightException wex) {
+			assertTrue(true);
+			LOG.info(wex.getMessage());
+
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(locationLocal.overheight(lOA, hU4.getHeight()));
+		}
+		catch (DimensionException capex) {
+			Assert.fail("Unexpected exception: " +  capex.getMessage());
+		}
+	}
+
+	/**
+	 * Test drop to location overheight
+	 */
+	@Test
+	@InSequence(36)
+	public void dropToLocationOverwidth() {
+		LOG.info("--- Test dropToLocationOverwidth");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		// Prepare handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("1", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
+		handlingUnitLocal.create(new HandlingUnit("2", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
+		handlingUnitLocal.create(new HandlingUnit("3", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
+		handlingUnitLocal.create(new HandlingUnit("4", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
+		handlingUnitLocal.create(new HandlingUnit("5", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		HandlingUnit hU3 = handlingUnitLocal.getById("3");
+		HandlingUnit hU4 = handlingUnitLocal.getById("4");
+		HandlingUnit hU5 = handlingUnitLocal.getById("5");
+		Location lOA = locationLocal.getById("A");
+		
+		// Now set the height to limit
+		lOA.getDimension().setMaxWidth(WIDTH_MAX);
+
+		try {
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU1);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU2);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(lOA, hU3);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Unexpected exception: " +  dimex.getMessage());
+		}
+
+		try {
+			handlingUnitLocal.dropTo(lOA, hU4);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			Assert.fail("Exception expected");
+		}
+		catch (OverwidthException wex) {
+			assertTrue(true);
+			LOG.info(wex.getMessage());
+
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(locationLocal.overwidth(lOA, hU4.getWidth()));
+		}
+		catch (DimensionException capex) {
+			Assert.fail("Unexpected exception: " +  capex.getMessage());
+		}
+
+		try {
+			handlingUnitLocal.dropTo(lOA, hU5);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			Assert.fail("Exception expected");
+		}
+		catch (OverwidthException wex) {
+			assertTrue(true);
+			LOG.info(wex.getMessage());
+
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(locationLocal.overwidth(lOA, hU5.getWidth()));
+		}
+		catch (DimensionException capex) {
+			Assert.fail("Unexpected exception: " +  capex.getMessage());
+		}
+	}
+
+	/**
+	 * Test drop to location overlength
+	 */
+	@Test
+	@InSequence(39)
+	public void dropToLocationOverlength() {
+		LOG.info("--- Test dropToLocationOverlength");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		// Prepare handling unit and a location
+		handlingUnitLocal.create(new HandlingUnit("1", 0, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
+		handlingUnitLocal.create(new HandlingUnit("2", 0, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
+		handlingUnitLocal.create(new HandlingUnit("3", 0, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
+		handlingUnitLocal.create(new HandlingUnit("4", 0, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
+		handlingUnitLocal.create(new HandlingUnit("5", 0, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
+		
+		locationLocal.create(new Location("A"));
+		
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		HandlingUnit hU3 = handlingUnitLocal.getById("3");
+		HandlingUnit hU4 = handlingUnitLocal.getById("4");
+		HandlingUnit hU5 = handlingUnitLocal.getById("5");
+		Location lOA = locationLocal.getById("A");
+		
+		// Now set the height to limit
+		lOA.getDimension().setMaxLength(LENGTH_MAX);
+		
+		// TODO write the test cases
 	}
 }
