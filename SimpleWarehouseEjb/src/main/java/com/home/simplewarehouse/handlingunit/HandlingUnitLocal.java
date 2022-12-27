@@ -63,7 +63,7 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @throws CapacityExceededException in case the Location capacity will exceed by this drop
 	 * @throws WeightExceededException in case the Location weight will exceed by this drop
-	 * @throws OverhightException in case the HandlingUnit does not fit in the Location by this drop
+	 * @throws OverheightException in case the HandlingUnit does not fit in the Location by this drop
 	 * @throws OverlengthException in case the HandlingUnit does not fit in the Location by this drop
 	 * @throws OverwidthException in case the HandlingUnit does not fit in the Location by this drop
 	 */
