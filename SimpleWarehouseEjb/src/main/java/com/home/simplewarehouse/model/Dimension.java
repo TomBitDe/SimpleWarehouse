@@ -24,9 +24,9 @@ import org.apache.logging.log4j.Logger;
  * <p>
  * A maxCapacity of 0 means that an undefined number of goods can be stored in the location.<br>
  * A maxWeight of 0 means that the weight is not relevant for storing goods in the location.<br>
- * A maxHeight of 0 means that the height is not relevant for storing goods in the location.<br>
- * A maxLength of 0 means that the length is not relevant for storing goods in the location.<br>
- * A maxWidth of 0 means that the width is not relevant for storing goods in the location.<br>
+ * A maxHeight of NOT_RELEVANT means that the height is not relevant for storing goods in the location.<br>
+ * A maxLength of NOT_RELEVANT means that the length is not relevant for storing goods in the location.<br>
+ * A maxWidth of NOT_RELEVANT means that the width is not relevant for storing goods in the location.<br>
  */
 @Entity
 @Table(name="DIMENSION")
