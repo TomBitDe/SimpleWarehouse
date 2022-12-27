@@ -322,8 +322,7 @@ public class LocationBean implements LocationLocal {
 		Location loc = getById(location.getLocationId());
 		
 		if (loc.getDimension().getMaxLength().equals(LengthCategory.NOT_RELEVANT)
-				|| loc.getDimension().getMaxCapacity() > 1
-				|| loc.getDimension().getMaxCapacity() == 0) {
+				|| loc.getDimension().getMaxCapacity() > 1) {
 			LOG.trace("<-- overlength(NOT_RELEVANT)");
 			return false;
 		}

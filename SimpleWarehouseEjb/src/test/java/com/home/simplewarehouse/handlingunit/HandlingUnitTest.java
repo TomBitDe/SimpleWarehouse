@@ -34,6 +34,7 @@ import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
 import com.home.simplewarehouse.location.OverheightException;
+import com.home.simplewarehouse.location.OverlengthException;
 import com.home.simplewarehouse.location.OverwidthException;
 import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
@@ -1065,6 +1066,53 @@ public class HandlingUnitTest {
 		// Now set the height to limit
 		lOA.getDimension().setMaxLength(LENGTH_MAX);
 		
-		// TODO write the test cases
+		try {
+			// Drop to make a relation
+			handlingUnitLocal.dropTo(lOA, hU1);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Unexpected exception: " +  dimex.getMessage());
+		}
+
+		try {
+			handlingUnitLocal.dropTo(lOA, hU2);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+			
+			handlingUnitLocal.dropTo(lOA, hU3);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+			
+			handlingUnitLocal.dropTo(lOA, hU4);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+			
+			handlingUnitLocal.dropTo(lOA, hU5);
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			Assert.fail("Exception expected");
+		}
+		catch (OverlengthException wex) {
+			assertTrue(true);
+			LOG.info(wex.getMessage());
+
+			// MANDATORY reread
+			lOA = locationLocal.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			
+			assertTrue(locationLocal.overlength(lOA, hU2.getLength()));
+			assertTrue(locationLocal.overlength(lOA, hU3.getLength()));
+			assertTrue(locationLocal.overlength(lOA, hU4.getLength()));
+			assertTrue(locationLocal.overlength(lOA, hU5.getLength()));
+		}
+		catch (DimensionException capex) {
+			Assert.fail("Unexpected exception: " +  capex.getMessage());
+		}
 	}
 }
