@@ -27,13 +27,12 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.DimensionException;
+import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusLocal;
-import com.home.simplewarehouse.location.OverheightException;
 import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -777,7 +776,7 @@ public class HandlingUnitTest {
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertEquals(CAPACITY_MAX, lOA.getHandlingUnits().size());
 		}
-		catch (WeightExceededException | OverheightException wex) {
+		catch (DimensionException wex) {
 			Assert.fail("Unexpected exception: " +  wex.getMessage());
 		}
 	}
@@ -840,7 +839,7 @@ public class HandlingUnitTest {
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertTrue(locationLocal.overweight(lOA, hU4.getWeight()));
 		}
-		catch (CapacityExceededException | OverheightException capex) {
+		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
 		}
 	}
