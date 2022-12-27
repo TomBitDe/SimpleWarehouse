@@ -30,8 +30,15 @@ public class HandlingUnit extends EntityBase implements Serializable {
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
     
     private static final int WEIGHT_DEFAULT = 0;
+    private static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
+    private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
+    private static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
+    
     private static final String ID_FORMATTER = "id={0}";
     private static final String ID_WEIGHT_FORMATTER = "id={0} weight={1}";
+    private static final String ID_HEIGHT_FORMATTER = "id={0} height={1}";
+    private static final String ID_LENGTH_FORMATTER = "id={0} length={1}";
+    private static final String ID_WIDTH_FORMATTER = "id={0} width={1}";
 
     @Id
     @Column(name = "ID", nullable = false)
@@ -43,6 +50,15 @@ public class HandlingUnit extends EntityBase implements Serializable {
     @Column(name = "WEIGHT", nullable = false)
     private Integer weight;
     
+    @Column(name = "HEIGHT", nullable = false)
+    private String height;
+    
+    @Column(name = "LENGTH", nullable = false)
+    private String length;
+
+    @Column(name = "WIDTH", nullable = false)
+    private String width;
+
     @Version
     private int version;
     
@@ -54,36 +70,66 @@ public class HandlingUnit extends EntityBase implements Serializable {
     
     public HandlingUnit() {
     	super();
+    	setDefaults();
     }
     
     public HandlingUnit(String id) {
     	super();
     	this.id = id;
-    	setWeight(WEIGHT_DEFAULT);
-    }
-
-    public HandlingUnit(String id, int weight) {
-    	super();
-    	this.id = id;
-    	setWeight(weight);
+    	setDefaults();
     }
 
     public HandlingUnit(String id, String user) {
     	super(user);
     	this.id = id;
-    	setWeight(WEIGHT_DEFAULT);
+    	setDefaults();
     }
     
     public HandlingUnit(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.id = id;
-    	setWeight(WEIGHT_DEFAULT);
+    	setDefaults();
     }
 
-    public HandlingUnit(String id, int weight, String user, Timestamp timestamp) {
-    	super(user, timestamp);
+    public HandlingUnit(String id, int weight) {
+    	super();
     	this.id = id;
+    	setDefaults();
     	setWeight(weight);
+    }
+
+    public HandlingUnit(String id, int weight, HeightCategory height) {
+    	super();
+    	this.id = id;
+    	setDefaults();
+    	setWeight(weight);
+    	setHeight(height);
+    }
+
+    public HandlingUnit(String id, int weight, HeightCategory height, LengthCategory length) {
+    	super();
+    	this.id = id;
+    	setDefaults();
+    	setWeight(weight);
+    	setHeight(height);
+    	setLength(length);
+    }
+
+    public HandlingUnit(String id, int weight, HeightCategory height, LengthCategory length, WidthCategory width) {
+    	super();
+    	this.id = id;
+    	setDefaults();
+    	setWeight(weight);
+    	setHeight(height);
+    	setLength(length);
+    	setWidth(width);
+    }
+
+    private void setDefaults() {
+    	this.weight = WEIGHT_DEFAULT;
+    	this.height = HEIGHT_DEFAULT.name();
+    	this.length = LENGTH_DEFAULT.name();
+    	this.width = WIDTH_DEFAULT.name();
     }
 
     public String getId() {
@@ -109,6 +155,48 @@ public class HandlingUnit extends EntityBase implements Serializable {
             this.weight = weight;
     	}
     	LOG.debug(ID_WEIGHT_FORMATTER, this.id, this.weight);
+    }
+    
+    public HeightCategory getHeight() {
+    	LOG.debug(ID_HEIGHT_FORMATTER, this.id, this.height);
+        return HeightCategory.valueOf(this.height);
+    }
+    
+    public void setHeight(HeightCategory height) {
+		if (height == null) {
+			this.height = HeightCategory.NOT_RELEVANT.name();
+		}
+		else {
+			this.height = height.name();
+		}
+    }
+
+    public LengthCategory getLength() {
+    	LOG.debug(ID_LENGTH_FORMATTER, this.id, this.length);
+        return LengthCategory.valueOf(this.length);
+    }
+    
+    public void setLength(LengthCategory length) {
+		if (length == null) {
+			this.length = LengthCategory.NOT_RELEVANT.name();
+		}
+		else {
+			this.length = length.name();
+		}
+    }
+
+    public WidthCategory getWidth() {
+    	LOG.debug(ID_WIDTH_FORMATTER, this.id, this.width);
+        return WidthCategory.valueOf(this.width);
+    }
+    
+    public void setWidth(WidthCategory width) {
+		if (width == null) {
+			this.width = WidthCategory.NOT_RELEVANT.name();
+		}
+		else {
+			this.width = width.name();
+		}
     }
 
 	public int getVersion() {
@@ -163,6 +251,12 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		    .append(id)
 		    .append(", weight=")
 		    .append(weight)		    
+		    .append(", height=")
+		    .append(height)		    
+		    .append(", length=")
+		    .append(length)		    
+		    .append(", width=")
+		    .append(width)		    
 		    .append(", locaPos=")
 		    .append(locaPos == null ? "null" : locaPos)		    
 		    .append(", version=")
