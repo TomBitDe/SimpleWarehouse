@@ -120,4 +120,19 @@ public interface LocationLocal {
 	 * @return true if the width does not fit else false
 	 */
 	public boolean overwidth(final Location location, final WidthCategory width);
+	/**
+	 * Check if a dimension limit exceeds when dropping a HandlingUnit on a Location
+	 * 
+	 * @param location the location to check
+	 * @param handlingUnit the handlingUnit to drop
+	 * 
+	 * @throws CapacityExceededException in case the Location capacity will exceed by this drop
+	 * @throws WeightExceededException in case the Location weight will exceed by this drop
+	 * @throws OverheightException in case the HandlingUnit does not fit in the Location by this drop
+	 * @throws OverlengthException in case the HandlingUnit does not fit in the Location by this drop
+	 * @throws OverwidthException in case the HandlingUnit does not fit in the Location by this drop
+	 */
+	public void checkDimensionLimitExceeds(final Location location, final HandlingUnit handlingUnit)
+			throws CapacityExceededException, WeightExceededException, OverheightException
+				, OverlengthException, OverwidthException;
 }

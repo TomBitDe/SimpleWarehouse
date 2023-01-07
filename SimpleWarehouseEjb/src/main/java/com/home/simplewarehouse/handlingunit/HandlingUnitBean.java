@@ -231,26 +231,8 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			handlingUnit = em.merge(handlingUnit);
 		}
 		
-		if (locationLocal.isFull(location)) {
-			throw new CapacityExceededException("Location has no more capacity");
-		}
+		locationLocal.checkDimensionLimitExceeds(location, handlingUnit);
 		
-		if (locationLocal.overweight(location, handlingUnit.getWeight())) {
-			throw new WeightExceededException("Location will become overweighted");
-		}
-		
-		if (locationLocal.overheight(location, handlingUnit.getHeight())) {
-			throw new OverheightException("HandlingUnit does not fit in Location (height)");
-		}
-		
-		if (locationLocal.overlength(location, handlingUnit.getLength())) {
-			throw new OverlengthException("HandlingUnit does not fit in Location (length)");
-		}
-
-		if (locationLocal.overwidth(location, handlingUnit.getWidth())) {
-			throw new OverwidthException("HandlingUnit does not fit in Location (width)");
-		}
-
 		List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit, location);
 		
 		for (Location other : locations) {

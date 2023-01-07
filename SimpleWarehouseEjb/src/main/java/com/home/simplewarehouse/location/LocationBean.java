@@ -391,4 +391,33 @@ public class LocationBean implements LocationLocal {
 		
 		return overwidth;
 	}
+
+	@Override
+	public void checkDimensionLimitExceeds(Location location, HandlingUnit handlingUnit)
+			throws CapacityExceededException, WeightExceededException, OverheightException
+			, OverlengthException, OverwidthException {
+		LOG.trace("--> checkDimensionLimitExceeds({}, {})", location.getLocationId(), handlingUnit.getId());
+
+		if (isFull(location)) {
+			throw new CapacityExceededException("Location has no more capacity");
+		}
+		
+		if (overweight(location, handlingUnit.getWeight())) {
+			throw new WeightExceededException("Location will become overweighted");
+		}
+		
+		if (overheight(location, handlingUnit.getHeight())) {
+			throw new OverheightException("HandlingUnit does not fit in Location (height)");
+		}
+		
+		if (overlength(location, handlingUnit.getLength())) {
+			throw new OverlengthException("HandlingUnit does not fit in Location (length)");
+		}
+
+		if (overwidth(location, handlingUnit.getWidth())) {
+			throw new OverwidthException("HandlingUnit does not fit in Location (width)");
+		}
+
+		LOG.trace("<-- checkDimensionLimitExceeds()");
+	}
 }
