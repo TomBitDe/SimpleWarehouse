@@ -15,11 +15,11 @@
  * If the weight is greater than 0 then this is the maximum weight of all handling units dropped on a location.<br>
  * Rule is: <strong>total weight less then maximum weight</strong>.
  * <h4>Height</h4>
- * A height of 0 means that height limitations do not exist.
+ * A height of {@link com.home.simplewarehouse.model.HeightCategory HeightCategory.NOT_RELEVANT} means that height limitations do not exist.
  * <h4>Length</h4>
- * A length of 0 means that length limitations do not exist.
+ * A length of {@link com.home.simplewarehouse.model.LengthCategory LengthCategory.NOT_RELEVANT} means that length limitations do not exist.
  * <h4>Width</h4>
- * A width of 0 means that width limitations do not exist.
+ * A width of {@link com.home.simplewarehouse.model.WidthCategory WidthCategory.NOT_RELEVANT} means that width limitations do not exist.
  * <h3>Location status</h3>
  * Any attributes that define the device access limitations for a location like error, LTOS, lock. 
  * <h4>Error status</h4>
