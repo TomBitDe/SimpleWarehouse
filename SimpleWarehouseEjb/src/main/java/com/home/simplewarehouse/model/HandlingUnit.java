@@ -30,12 +30,14 @@ public class HandlingUnit extends EntityBase implements Serializable {
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
     
     private static final int WEIGHT_DEFAULT = 0;
+    private static final float VOLUME_DEFAULT = 0.0f;
     private static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
     private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
     private static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
     
     private static final String ID_FORMATTER = "id={0}";
     private static final String ID_WEIGHT_FORMATTER = "id={0} weight={1}";
+    private static final String ID_VOLUME_FORMATTER = "id={0} volume={1}";
     private static final String ID_HEIGHT_FORMATTER = "id={0} height={1}";
     private static final String ID_LENGTH_FORMATTER = "id={0} length={1}";
     private static final String ID_WIDTH_FORMATTER = "id={0} width={1}";
@@ -49,6 +51,9 @@ public class HandlingUnit extends EntityBase implements Serializable {
     
     @Column(name = "WEIGHT", nullable = false)
     private Integer weight;
+    
+    @Column(name = "VOLUME", nullable = false)
+    private Float volume;
     
     @Column(name = "HEIGHT", nullable = false)
     private String height;
@@ -98,28 +103,39 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	setWeight(weight);
     }
 
-    public HandlingUnit(String id, int weight, HeightCategory height) {
+    public HandlingUnit(String id, int weight, float volume) {
     	super();
     	this.id = id;
     	setDefaults();
     	setWeight(weight);
+    	setVolume(volume);
+    }
+
+    public HandlingUnit(String id, int weight, float volume, HeightCategory height) {
+    	super();
+    	this.id = id;
+    	setDefaults();
+    	setWeight(weight);
+    	setVolume(volume);
     	setHeight(height);
     }
 
-    public HandlingUnit(String id, int weight, HeightCategory height, LengthCategory length) {
+    public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length) {
     	super();
     	this.id = id;
     	setDefaults();
     	setWeight(weight);
+    	setVolume(volume);
     	setHeight(height);
     	setLength(length);
     }
 
-    public HandlingUnit(String id, int weight, HeightCategory height, LengthCategory length, WidthCategory width) {
+    public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length, WidthCategory width) {
     	super();
     	this.id = id;
     	setDefaults();
     	setWeight(weight);
+    	setVolume(volume);
     	setHeight(height);
     	setLength(length);
     	setWidth(width);
@@ -127,6 +143,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
 
     private void setDefaults() {
     	this.weight = WEIGHT_DEFAULT;
+    	this.volume = VOLUME_DEFAULT;
     	this.height = HEIGHT_DEFAULT.name();
     	this.length = LENGTH_DEFAULT.name();
     	this.width = WIDTH_DEFAULT.name();
@@ -155,6 +172,21 @@ public class HandlingUnit extends EntityBase implements Serializable {
             this.weight = weight;
     	}
     	LOG.debug(ID_WEIGHT_FORMATTER, this.id, this.weight);
+    }
+    
+    public float getVolume() {
+    	LOG.debug(ID_VOLUME_FORMATTER, this.id, this.volume);
+        return this.volume;
+    }
+    
+    public void setVolume(float volume) {
+    	if (volume < 0.0) {
+    		this.volume = VOLUME_DEFAULT;
+    	}
+    	else {
+    		this.volume = volume;
+    	}
+    	LOG.debug(ID_VOLUME_FORMATTER, this.id, this.volume);
     }
     
     public HeightCategory getHeight() {
@@ -251,6 +283,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		    .append(id)
 		    .append(", weight=")
 		    .append(weight)		    
+		    .append(", volume=")
+		    .append(volume)		    
 		    .append(", height=")
 		    .append(height)		    
 		    .append(", length=")

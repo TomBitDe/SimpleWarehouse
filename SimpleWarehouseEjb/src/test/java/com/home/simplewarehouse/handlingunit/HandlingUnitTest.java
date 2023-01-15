@@ -865,10 +865,10 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1", 0, HeightCategory.MIDDLE));
-		handlingUnitLocal.create(new HandlingUnit("2", 0, HeightCategory.HIGH));
-		handlingUnitLocal.create(new HandlingUnit("3", 0, HeightCategory.LOW));
-		handlingUnitLocal.create(new HandlingUnit("4", 0, HeightCategory.TOO_HIGH));
+		handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.MIDDLE));
+		handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.HIGH));
+		handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.LOW));
+		handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.TOO_HIGH));
 		
 		locationLocal.create(new Location("A"));
 		
@@ -954,11 +954,11 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
-		handlingUnitLocal.create(new HandlingUnit("2", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
-		handlingUnitLocal.create(new HandlingUnit("3", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
-		handlingUnitLocal.create(new HandlingUnit("4", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
-		handlingUnitLocal.create(new HandlingUnit("5", 0, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
+		handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
+		handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
+		handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
+		handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
+		handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
 		
 		locationLocal.create(new Location("A"));
 		
@@ -1048,11 +1048,11 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1", 0, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
-		handlingUnitLocal.create(new HandlingUnit("2", 0, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
-		handlingUnitLocal.create(new HandlingUnit("3", 0, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
-		handlingUnitLocal.create(new HandlingUnit("4", 0, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
-		handlingUnitLocal.create(new HandlingUnit("5", 0, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
+		handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
+		handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
+		handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
+		handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
+		handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
 		
 		locationLocal.create(new Location("A"));
 		
