@@ -74,6 +74,9 @@ public class Dimension extends EntityBase implements Serializable {
     @JoinColumn(name = "LOCATION_ID")
     private Location location;
     
+    /**
+     * Sets all dimension default values
+     */
     private void setDimensionDefaults() {
     	this.maxCapacity = CAPACITY_DEFAULT;
     	this.maxWeight = WEIGHT_DEFAULT;
@@ -83,7 +86,7 @@ public class Dimension extends EntityBase implements Serializable {
     }
  
     /**
-     * Set the defaults for the dimension in default constructor
+     * Sets the defaults for the dimension in default constructor
      */
     public Dimension() {
     	super();
@@ -169,20 +172,41 @@ public class Dimension extends EntityBase implements Serializable {
     	setMaxWidth(maxWidth);
 	}
 
+	/**
+	 * Gets the location id
+	 * 
+	 * @return the location id
+	 */
 	public String getLocationId() {
 		LOG.debug(ID_FORMATTER, this.locationId);
 		return this.locationId;
 	}
 
+	/**
+	 * Sets the location id
+	 * 
+	 * @param locationId the location id
+	 */
 	public void setLocationId(String locationId) {
 		this.locationId = locationId;
 		LOG.debug(ID_FORMATTER, this.locationId);
 	}
 
+	/**
+	 * Gets the maximum capacity
+	 * 
+	 * @return the maximum capacity
+	 */
 	public int getMaxCapacity() {
 		return this.maxCapacity;
 	}
 
+	/**
+	 * Sets the maximum capacity
+	 * 
+	 * @param maxCapacity the maximum capacity. A value less than zero is not allowed and sets
+	 * maxCapacity to {@value CAPACITY_DEFAULT}
+	 */
 	public void setMaxCapacity(int maxCapacity) {
     	if (maxCapacity < 0) {
 			LOG.info("Invalid parameter maxCapacity ({}); keep DEFAULT value ({})", maxCapacity
@@ -193,10 +217,21 @@ public class Dimension extends EntityBase implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the maximum weight
+	 * 
+	 * @return the maximum weight
+	 */
 	public int getMaxWeight() {
 		return this.maxWeight;
 	}
 
+	/**
+	 * Sets the maximum weight
+	 * 
+	 * @param maxWeight the maximum weight. A value less than zero is not allowed and sets
+	 * maxWeight to {@value WEIGHT_DEFAULT}
+	 */
 	public void setMaxWeight(int maxWeight) {
     	if (maxWeight < 0) {
 			LOG.info("Invalid parameter maxWeight ({}); keep DEFAULT value ({})", maxWeight
@@ -207,10 +242,21 @@ public class Dimension extends EntityBase implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the maximum height
+	 * 
+	 * @return the maximum height
+	 */
 	public HeightCategory getMaxHeight() {
 		return HeightCategory.valueOf(this.maxHeight);
 	}
 
+	/**
+	 * Sets the maximum height
+	 * 
+	 * @param maxHeight the maximum height. A value of {@code null} is not allowed and sets
+	 * maxHeight to {@link HEIGHT_DEFAULT}
+	 */
 	public void setMaxHeight(HeightCategory maxHeight) {
     	if (maxHeight == null) {
 			LOG.info("Invalid parameter maxHeight ({}); keep DEFAULT value ({})", maxHeight
@@ -221,10 +267,21 @@ public class Dimension extends EntityBase implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the maximum length
+	 * 
+	 * @return the maximum length
+	 */
 	public LengthCategory getMaxLength() {
 		return LengthCategory.valueOf(this.maxLength);
 	}
 
+	/**
+	 * Sets the maximum length
+	 * 
+	 * @param maxLength the maximum length. A value of {@code null} is not allowed and sets
+	 * maxLength to {@link LENGTH_DEFAULT}
+	 */
 	public void setMaxLength(LengthCategory maxLength) {
     	if (maxLength == null) {
 			LOG.info("Invalid parameter maxLength ({}); keep DEFAULT value ({})", maxLength
@@ -235,10 +292,21 @@ public class Dimension extends EntityBase implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the maximum width
+	 * 
+	 * @return the maximum width
+	 */
 	public WidthCategory getMaxWidth() {
 		return WidthCategory.valueOf(this.maxWidth);
 	}
 
+	/**
+	 * Sets the maximum width
+	 * 
+	 * @param maxWidth the maximum width. A value of {@code null} is not allowed and sets
+	 * maxWidth to {@link WIDTH_DEFAULT}
+	 */
 	public void setMaxWidth(WidthCategory maxWidth) {
     	if (maxWidth == null) {
 			LOG.info("Invalid parameter maxWidth ({}); keep DEFAULT value ({})", maxWidth
@@ -249,6 +317,11 @@ public class Dimension extends EntityBase implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the entity version number
+	 * 
+	 * @return the version value
+	 */
 	public int getVersion() {
 		return version;
 	}
@@ -257,10 +330,20 @@ public class Dimension extends EntityBase implements Serializable {
 		this.version = version;
 	}
 
+	/**
+	 * Gets the related location
+	 * 
+	 * @return the location
+	 */
 	public Location getLocation() {
 		return location;
 	}
 
+	/**
+	 * Sets the related location
+	 * 
+	 * @param location the location entity
+	 */
 	public void setLocation(Location location) {
 		this.location = location;
 	}

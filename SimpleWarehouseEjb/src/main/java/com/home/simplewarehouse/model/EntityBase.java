@@ -16,6 +16,9 @@ import org.apache.logging.log4j.Logger;
 public class EntityBase {
 	private static final Logger LOG = LogManager.getLogger(EntityBase.class);
 	
+	/**
+	 * The user default value
+	 */
 	public static final String USER_DEFAULT = "System";
 	
     /**
