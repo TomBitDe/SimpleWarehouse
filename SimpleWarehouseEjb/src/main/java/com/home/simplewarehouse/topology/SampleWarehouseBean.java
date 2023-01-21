@@ -43,26 +43,34 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 		LOG.trace("<-- SampleWarehouseBean()");
 	}
 	
+	/**
+	 * Create sample Locations (Random, FiFo, LiFo) and HandlingUnits 
+	 */
 	public void initialize() {
 		LOG.trace("--> initialize()");
 		
+		// Locations
 		List<Location> locationList = new ArrayList<>();
 		locationList.clear();
 		
+		// Random
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
 			locationList.add(new Location("" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		
+		// FiFo
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
 			locationList.add(new FifoLocation("FIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		
+		// LiFo
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
 			locationList.add(new LifoLocation("LIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		
 		locationList.forEach(l -> locationLocal.create(l));
 		
+		// HandlingUnits
 		List<HandlingUnit> handlingUnitList = new ArrayList<>();
 		handlingUnitList.clear();
 
@@ -74,6 +82,9 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 		LOG.trace("<-- initialize()");
 	}
 	
+	/**
+	 * Delete all Locations and HandlingUnits
+	 */
 	public void cleanup() {
 		LOG.trace("--> cleanup()");
 		
