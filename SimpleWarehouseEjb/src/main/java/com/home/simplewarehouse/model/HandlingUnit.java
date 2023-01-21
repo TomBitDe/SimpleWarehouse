@@ -313,7 +313,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     /**
      * Sets HandlingUnits height
      * 
-     * @param height the given height, if <code>null</code> set to NOT_RELEVANT
+     * @param height the given height, if <code>null</code> set to {@link HeightCategory HeightCategory.NOT_RELEVANT}
      */
     public void setHeight(HeightCategory height) {
 		if (height == null) {
@@ -337,7 +337,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     /**
      * Sets HandlingUnits length
      * 
-     * @param length the given length, if <code>null</code> set to NOT_RELEVANT
+     * @param length the given length, if <code>null</code> set to {@link LengthCategory LengthCategory.NOT_RELEVANT}
      */
     public void setLength(LengthCategory length) {
 		if (length == null) {
@@ -361,7 +361,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     /**
      * Sets HandlingUnits width
      * 
-     * @param width the given width, if <code>null</code> set to NOT_RELEVANT
+     * @param width the given width, if <code>null</code> set to {@link WidthCategory WidthCategory.NOT_RELEVANT}
      */
     public void setWidth(WidthCategory width) {
 		if (width == null) {

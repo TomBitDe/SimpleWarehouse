@@ -1,7 +1,7 @@
 /**
  * Location related classes.
  * 
- * <h3>Concepts</h3>
+ * <h2>Concepts</h2>
  * The location covers dimension, status and access control. Details are in the following.
  * 
  * <h3>Location dimension</h3>
