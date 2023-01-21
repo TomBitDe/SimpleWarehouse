@@ -260,6 +260,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
         return this.weight;
     }
 
+    /**
+     * Sets HandlingUnits weight
+     * 
+     * @param weight the given weight, if <code>null</code> set to WEIGHT_DEFAULT
+     */
     public void setWeight(int weight) {
     	if (weight < 0) {
     		this.weight = WEIGHT_DEFAULT;
@@ -280,6 +285,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
         return this.volume;
     }
     
+    /**
+     * Sets HandlingUnits volume
+     * 
+     * @param volume the given volume, if <code>null</code> set to VOLUME_DEFAULT
+     */
     public void setVolume(float volume) {
     	if (volume < 0.0) {
     		this.volume = VOLUME_DEFAULT;
@@ -300,6 +310,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
         return HeightCategory.valueOf(this.height);
     }
     
+    /**
+     * Sets HandlingUnits height
+     * 
+     * @param height the given height, if <code>null</code> set to NOT_RELEVANT
+     */
     public void setHeight(HeightCategory height) {
 		if (height == null) {
 			this.height = HeightCategory.NOT_RELEVANT.name();
@@ -319,6 +334,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
         return LengthCategory.valueOf(this.length);
     }
     
+    /**
+     * Sets HandlingUnits length
+     * 
+     * @param length the given length, if <code>null</code> set to NOT_RELEVANT
+     */
     public void setLength(LengthCategory length) {
 		if (length == null) {
 			this.length = LengthCategory.NOT_RELEVANT.name();
@@ -338,6 +358,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
         return WidthCategory.valueOf(this.width);
     }
     
+    /**
+     * Sets HandlingUnits width
+     * 
+     * @param width the given width, if <code>null</code> set to NOT_RELEVANT
+     */
     public void setWidth(WidthCategory width) {
 		if (width == null) {
 			this.width = WidthCategory.NOT_RELEVANT.name();
@@ -360,18 +385,38 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		this.version = version;
 	}
 
+    /**
+     * Gets the HandlingUnits associated Location
+     * 
+     * @return the Location
+     */	
 	public Location getLocation() {
 		return location;
 	}
 
+	/**
+	 * Sets the HandlingUnits associated Location
+	 * 
+	 * @param location the Location
+	 */
 	public void setLocation(Location location) {
 		this.location = location;
 	}
 	
+    /**
+     * Gets the HandlingUnits location position
+     * 
+     * @return the location position
+     */	
 	public Integer getLocaPos() {
 		return locaPos;
 	}
 
+    /**
+     * Sets the HandlingUnits location position
+     * 
+     * @param locaPos the location position
+     */	
 	public void setLocaPos(Integer locaPos) {
 		this.locaPos = locaPos;
 	}
