@@ -42,11 +42,22 @@ public class EntityBase {
     	this.updateTimestamp = new Timestamp(System.currentTimeMillis());
     }
     
+    /**
+     * Entity base with user
+     * 
+     * @param user the given user
+     */
     public EntityBase(String user) {
     	setUpdateUserId(user);
     	this.updateTimestamp = new Timestamp(System.currentTimeMillis());
     }
     
+    /**
+     * Entity base with user and timestamp
+     * 
+     * @param user the given user
+     * @param timestamp the given timestamp
+     */
     public EntityBase(String user, Timestamp timestamp) {
     	setUpdateUserId(user);
     	setUpdateTimestamp(timestamp);
@@ -60,6 +71,7 @@ public class EntityBase {
 	public Timestamp getUpdateTimestamp() {
 		return updateTimestamp;
 	}
+	
 	/**
 	 * Set the time stamp of the last update
 	 * 

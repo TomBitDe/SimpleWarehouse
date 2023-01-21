@@ -22,18 +22,39 @@ public class FifoLocation extends Location implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(FifoLocation.class);
     
+    /**
+     * Default Fifo Location
+     */
     public FifoLocation() {
     	super();
     }
 
+    /**
+     * Fifo Location with id
+     * 
+     * @param id the given id
+     */
     public FifoLocation(String id) {
     	super(id);
     }
     
+    /**
+     * Fifo Location with id and user
+     * 
+     * @param id the given id
+     * @param user the given user
+     */
     public FifoLocation(String id, String user) {
     	super(id, user);
     }
     
+    /**
+     * Fifo Location with id, user and timestamp
+     * 
+     * @param id the given id
+     * @param user the given user
+     * @param timestamp the given timestamp
+     */
     public FifoLocation(String id, String user, Timestamp timestamp) {
     	super(id, user, timestamp);
     }

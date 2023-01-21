@@ -41,6 +41,9 @@ import com.home.simplewarehouse.utils.configurator.pluggable.ConfigurationProvid
 @Singleton
 @Path("configuration")
 @javax.ws.rs.Produces({MediaType.TEXT_PLAIN})
+/**
+ * The configurator.
+ */
 public class Configurator implements ConfiguratorMXBean {
 	private static final Logger LOG = LogManager.getLogger(Configurator.class);
 

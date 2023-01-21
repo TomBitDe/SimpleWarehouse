@@ -31,6 +31,9 @@ public class ConfigCacheBean implements ConfigCache {
 	@EJB
 	private CacheDataProvider cacheDataProvider;
 
+	/**
+	 * Create the Configuration Cache Bean
+	 */
 	public ConfigCacheBean() {
 		super();
 		LOG.trace("--> ConfigCacheBean");

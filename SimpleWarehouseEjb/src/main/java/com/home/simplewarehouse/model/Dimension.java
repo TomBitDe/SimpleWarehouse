@@ -37,7 +37,13 @@ public class Dimension extends EntityBase implements Serializable {
     
     private static final String ID_FORMATTER = "locationId={0}";
     
+    /**
+     * Default capacity value
+     */
     public static final int CAPACITY_DEFAULT = 0;
+    /**
+     * Default weight value
+     */
     public static final int WEIGHT_DEFAULT = 0;
     private static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
     private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;

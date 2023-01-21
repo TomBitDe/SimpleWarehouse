@@ -37,6 +37,9 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 	@EJB
 	HandlingUnitLocal handlingUnitLocal;
 	
+	/**
+	 * Create the Sample Warehouse Bean
+	 */
 	public SampleWarehouseBean() {
 		super();
 		LOG.trace("--> SampleWarehouseBean()");

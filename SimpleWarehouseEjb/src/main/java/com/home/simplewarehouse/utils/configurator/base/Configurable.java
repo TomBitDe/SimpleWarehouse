@@ -7,6 +7,14 @@ import java.lang.annotation.Target;
 
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)
+/**
+ * Defines what is configurable.
+ */
 public @interface Configurable {
+	/**
+	 * Configurable String value
+	 * 
+	 * @return the value
+	 */
 	public String value();
 }

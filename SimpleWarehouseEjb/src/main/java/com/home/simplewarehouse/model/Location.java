@@ -66,20 +66,41 @@ public class Location extends EntityBase implements Serializable {
     		, fetch = FetchType.EAGER )
 	protected Set<HandlingUnit> handlingUnits = new HashSet<>();
 
+    /**
+     * Default Random Location
+     */
     public Location() {
     	super();
     }
     
+    /**
+     * Random Location with id
+     * 
+     * @param id the given id
+     */
     public Location(String id) {
     	super();
     	this.locationId = id;
     }
     
+    /**
+     * Random Location with id and user
+     * 
+     * @param id the given id
+     * @param user the given user
+     */
     public Location(String id, String user) {
     	super(user);
     	this.locationId = id;
     }
     
+    /**
+     * Random Location with id, user and timestamp
+     * 
+     * @param id the given id
+     * @param user the given user
+     * @param timestamp the given timestamp
+     */
     public Location(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.locationId = id;
@@ -103,22 +124,47 @@ public class Location extends EntityBase implements Serializable {
 		this.version = version;
 	}
 
+	/**
+	 * Gets the Location status of this Location
+	 * 
+	 * @return the Location status
+	 */
 	public LocationStatus getLocationStatus() {
 		return locationStatus;
 	}
 
+	/**
+	 * Sets the Location status for this location
+	 * 
+	 * @param locationStatus the Location status
+	 */
 	public void setLocationStatus(LocationStatus locationStatus) {
 		this.locationStatus = locationStatus;
 	}
 
+	/**
+	 * Gets the Dimension assigned to this Location
+	 * 
+	 * @return the assigned Dimension
+	 */
 	public Dimension getDimension() {
 		return dimension;
 	}
 
+	/**
+	 * Assigns the Dimension to this Location
+	 * 
+	 * @param dimension the Dimension to assign
+	 */
 	public void setDimension(Dimension dimension) {
 		this.dimension = dimension;
 	}
 
+	/**
+	 * Gets all HandlingUnits located on this Location
+	 * 
+	 * @return the List of HandlingUnits
+	 */
 	public List<HandlingUnit> getHandlingUnits() {
 		LOG.trace("--> getHandlingUnits()");
 
@@ -131,6 +177,13 @@ public class Location extends EntityBase implements Serializable {
 		return ret;
 	}
 
+	/**
+	 * Add this HandlingUnit to the Location
+	 * 
+	 * @param handlingUnit the HandlingUnit
+	 * 
+	 * @return true if add succeeded, else false
+	 */
 	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> addHandlingUnit()");
 
@@ -142,6 +195,13 @@ public class Location extends EntityBase implements Serializable {
 		return this.handlingUnits.add(handlingUnit);
 	}
 	
+	/**
+	 * Remove this HandlingUnit from the Location
+	 * 
+	 * @param handlingUnit the HandlingUnit
+	 * 
+	 * @return true if add succeeded, else false
+	 */
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
 		
@@ -157,6 +217,11 @@ public class Location extends EntityBase implements Serializable {
 		return b;
 	}
 	
+	/**
+	 * Gets all the HandlingUnits possible to Pick from the Location
+	 * 
+	 * @return the List of HandlingUnits
+	 */
 	public List<HandlingUnit> getAvailablePicks() {
 		LOG.trace("--> getAvailablePicks()");
 

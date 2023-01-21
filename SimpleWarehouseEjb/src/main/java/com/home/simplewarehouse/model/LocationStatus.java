@@ -62,14 +62,23 @@ public class LocationStatus extends EntityBase implements Serializable {
 	@Column(name = "LOCK_STATUS")
 	private String lockStatus;
 	
+	/**
+	 * Version number for optimistic locking
+	 */
     @Version
     private int version;
     
+    /**
+     * The associated location
+     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "LOCATION_ID")
     private Location location;
     
+    /**
+     * Sets the default values for all statuses
+     */
     private void setStatusesDefaults() {
     	this.errorStatus = ERROR_STATUS_DEFAULT.name();
     	this.ltosStatus = LTOS_STATUS_DEFAULT.name();
