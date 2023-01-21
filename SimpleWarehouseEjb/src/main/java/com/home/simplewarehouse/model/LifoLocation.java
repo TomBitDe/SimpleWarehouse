@@ -21,18 +21,39 @@ public class LifoLocation extends Location implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(LifoLocation.class);
     
+    /**
+     * Default constructor
+     */
     public LifoLocation() {
     	super();
     }
     
+    /**
+     * Create this LifoLocation
+     * 
+     * @param id the given id
+     */
     public LifoLocation(String id) {
     	super(id);
     }
     
+    /**
+     * Create this LifoLocation
+     * 
+     * @param id the given id
+     * @param user the given user name
+     */
     public LifoLocation(String id, String user) {
     	super(id, user);
     }
     
+    /**
+     * Create this LifoLocation
+     * 
+     * @param id the given id
+     * @param user the given user name
+     * @param timestamp the given timestamp
+     */
     public LifoLocation(String id, String user, Timestamp timestamp) {
     	super(id, user, timestamp);
     }

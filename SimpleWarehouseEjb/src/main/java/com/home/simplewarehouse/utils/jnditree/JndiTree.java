@@ -23,17 +23,24 @@ import javax.ws.rs.core.MediaType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Fetch the JNDI tree information.
+ */
 @Singleton
 @Startup
 @LocalBean
 @Path("/JndiTree")
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
-/**
- * Fetch the JNDI tree information.
- */
 public class JndiTree {
 	private static final Logger LOG = LogManager.getLogger(JndiTree.class);
 
+	/**
+	 * Create this JndiTree
+	 */
+	public JndiTree() {
+		super();
+	}
+	
 	/**
 	 * Fetch all JNDI tree context as a text string (little bit formatted)
 	 *

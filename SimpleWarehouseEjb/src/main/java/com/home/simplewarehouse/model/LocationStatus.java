@@ -34,34 +34,42 @@ public class LocationStatus extends EntityBase implements Serializable {
     
     private static final String ID_FORMATTER = "locationId={0}";
     
+    /**
+     * The default ErrorStatus
+     */
     public static final ErrorStatus ERROR_STATUS_DEFAULT = ErrorStatus.NONE;
+    /**
+     * The default LtosStatus
+     */
     public static final LtosStatus LTOS_STATUS_DEFAULT = LtosStatus.NO;
+    /**
+     * The default LockStatus
+     */
     public static final LockStatus LOCK_STATUS_DEFAULT = LockStatus.UNLOCKED;
     
+    /**
+     * The id of the associated Location
+     */
 	@Id
 	private String locationId;
-	
 	/**
 	 * Location error status
 	 */
 	@Basic(optional = false)
     @Column(name = "ERROR_STATUS")
 	private String errorStatus;
-	
 	/**
 	 * Location ltosStatus status (long time out of service)
 	 */
 	@Basic(optional = false)
 	@Column(name = "LTOS_STATUS")
 	private String ltosStatus;
-	
 	/**
 	 * Lock status of the location
 	 */
 	@Basic(optional = false)
 	@Column(name = "LOCK_STATUS")
 	private String lockStatus;
-	
 	/**
 	 * Version number for optimistic locking
 	 */
@@ -92,8 +100,13 @@ public class LocationStatus extends EntityBase implements Serializable {
     	super();
     	
     	setStatusesDefaults();
-   }
+    }
     
+    /**
+     * Create this LocationStatus
+     * 
+     * @param locationId the given location id
+     */
     public LocationStatus(String locationId) {
     	super();
     	
@@ -102,6 +115,12 @@ public class LocationStatus extends EntityBase implements Serializable {
     	setStatusesDefaults();
     }
     
+    /**
+     * Create this LocationStatus
+     * 
+     * @param locationId the given location id
+     * @param user the given user name
+     */
     public LocationStatus(String locationId, String user) {
     	super(user);
     	
@@ -110,6 +129,15 @@ public class LocationStatus extends EntityBase implements Serializable {
     	setStatusesDefaults();
     }
     
+    /**
+     * Create this LocationStatus
+     * 
+     * @param locationId the given location id
+     * @param errorStatus the given error status
+     * @param ltosStatus the given ltos status
+     * @param lockStatus the given lock status
+     * @param user the given user name
+     */
 	public LocationStatus(String locationId, ErrorStatus errorStatus, LtosStatus ltosStatus, LockStatus lockStatus, String user) {
 		super(user);
 		
@@ -149,20 +177,40 @@ public class LocationStatus extends EntityBase implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the Location id
+	 * 
+	 * @return the id
+	 */
 	public String getLocationId() {
 		LOG.debug(ID_FORMATTER, this.locationId);
 		return this.locationId;
 	}
 
+	/**
+	 * Sets the Location id
+	 * 
+	 * @param locationId the id
+	 */
 	public void setLocationId(String locationId) {
 		this.locationId = locationId;
 		LOG.debug(ID_FORMATTER, this.locationId);
 	}
 
+	/**
+	 * Gets the ErrorStatus
+	 * 
+	 * @return the ErrorStatus
+	 */
 	public ErrorStatus getErrorStatus() {
 		return ErrorStatus.valueOf(this.errorStatus);
 	}
 
+	/**
+	 * Sets the ErrorStatus
+	 * 
+	 * @param errorStatus the given ErrorStatus, if <code>null</code> then ERROR
+	 */
 	public void setErrorStatus(ErrorStatus errorStatus) {
 		if (errorStatus == null) {
 			this.errorStatus = ErrorStatus.ERROR.name();
@@ -172,10 +220,20 @@ public class LocationStatus extends EntityBase implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the LtosStatus
+	 * 
+	 * @return the LtosStatus
+	 */
 	public LtosStatus getLtosStatus() {
 		return LtosStatus.valueOf(this.ltosStatus);
 	}
 
+	/**
+	 * Sets the LtosStatus
+	 * 
+	 * @param ltosStatus the given LtosStatus, if <code>null</code> then YES
+	 */
 	public void setLtosStatus(LtosStatus ltosStatus) {
 		if (ltosStatus == null) {
 			this.ltosStatus = LtosStatus.YES.name();
@@ -185,10 +243,20 @@ public class LocationStatus extends EntityBase implements Serializable {
 		}
 	}
 	
+	/**
+	 * Gets the LockStatus
+	 * 
+	 * @return the LockStatus
+	 */
 	public LockStatus getLockStatus() {
 		return LockStatus.valueOf(lockStatus);
 	}
 
+	/**
+	 * Sets the LockStatus
+	 * 
+	 * @param lockStatus the given LockStatus, if <code>null</code> then LOCKED
+	 */
 	public void setLockStatus(LockStatus lockStatus) {
 		if (lockStatus == null) {
 			this.lockStatus = LockStatus.LOCKED.name();
@@ -198,6 +266,11 @@ public class LocationStatus extends EntityBase implements Serializable {
 		}
 	}
 
+	/**
+	 * Gets the version
+	 * 
+	 * @return the version number
+	 */
 	public int getVersion() {
 		return version;
 	}
@@ -206,10 +279,20 @@ public class LocationStatus extends EntityBase implements Serializable {
 		this.version = version;
 	}
 
+	/**
+	 * Gets the Location
+	 * 
+	 * @return the Location
+	 */
 	public Location getLocation() {
 		return location;
 	}
 
+	/**
+	 * Sets the Location
+	 * 
+	 * @param location the given Location
+	 */
 	public void setLocation(Location location) {
 		this.location = location;
 	}

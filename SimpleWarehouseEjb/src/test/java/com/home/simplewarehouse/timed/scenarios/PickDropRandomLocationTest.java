@@ -110,6 +110,9 @@ public class PickDropRandomLocationTest {
 		LOG.trace("<-- afterTest()");		
 	}
 
+	/**
+	 * Call a scenario
+	 */
 	@Test
 	@InSequence(0)
 	public void processScenario1() {
@@ -121,6 +124,9 @@ public class PickDropRandomLocationTest {
 		assertNotNull(locationLocal.getAll());
 	}
 
+	/**
+	 * Call a scenario
+	 */
 	@Test
 	@InSequence(0)
 	public void processScenario2() {

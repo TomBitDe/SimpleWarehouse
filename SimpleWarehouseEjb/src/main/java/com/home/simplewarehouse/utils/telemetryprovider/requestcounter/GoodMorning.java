@@ -15,6 +15,16 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 @Interceptors(PerformanceAuditor.class)
 public class GoodMorning {
 	private static final Logger LOG = LogManager.getLogger(GoodMorning.class);
+	
+	/**
+	 * Create this GoodMorning
+	 */
+	public GoodMorning() {
+		super();
+    	LOG.trace("--> GoodMorning()");
+    	LOG.trace("<-- GoodMorning()");
+	}
+	
 	/**
 	 * Method say should have a duration of 200
 	 */

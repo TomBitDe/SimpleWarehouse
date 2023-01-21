@@ -42,60 +42,107 @@ public class HandlingUnit extends EntityBase implements Serializable {
     private static final String ID_LENGTH_FORMATTER = "id={0} length={1}";
     private static final String ID_WIDTH_FORMATTER = "id={0} width={1}";
 
+    /**
+     * The HandlingUnit id
+     */
     @Id
     @Column(name = "ID", nullable = false)
     private String id;
-
+    /**
+     * The position of the HandlingUnit in a Location
+     */
     @Column(name = "LOCAPOS", nullable = true)
     private Integer locaPos = null;
-    
+    /**
+     * The HandlingUnits weight
+     */
     @Column(name = "WEIGHT", nullable = false)
     private Integer weight;
-    
+    /**
+     * The HandlingUnits volume
+     */
     @Column(name = "VOLUME", nullable = false)
     private Float volume;
-    
+    /**
+     * The HandlingUnits height
+     */
     @Column(name = "HEIGHT", nullable = false)
     private String height;
-    
+    /**
+     * The HandlingUnits length
+     */
     @Column(name = "LENGTH", nullable = false)
     private String length;
-
+    /**
+     * The HandlingUnits width
+     */
     @Column(name = "WIDTH", nullable = false)
     private String width;
-
+    /**
+     * The version number for optimistic locking
+     */
     @Version
     private int version;
     
+    /**
+     * The associated Location
+     */
     @ManyToOne(targetEntity = Location.class
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.LAZY) // LAZY for better performance)
 	@JoinColumn(name = "LOCATION_ID", nullable = true)
     private Location location;
     
+    /**
+     * Default constructor
+     */
     public HandlingUnit() {
     	super();
     	setDefaults();
     }
     
+    /**
+     * Create this HandlingUnit
+     * 
+     * @param id the given id 
+     */
     public HandlingUnit(String id) {
     	super();
     	this.id = id;
     	setDefaults();
     }
 
+    /**
+     * Create this HandlingUnit
+     * 
+     * @param id the given id
+     * @param user the given user name
+     */
     public HandlingUnit(String id, String user) {
     	super(user);
     	this.id = id;
     	setDefaults();
     }
-    
+
+    /**
+     * Create this HandlingUnit
+     * 
+     * @param id the given id
+     * @param user the given user name
+     * @param timestamp the given timestamp
+     */
     public HandlingUnit(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.id = id;
     	setDefaults();
     }
 
+    /**
+     * Create this HandlingUnit
+     * 
+     * @param id the given id
+     * @param weight the given weight
+     */
     public HandlingUnit(String id, int weight) {
     	super();
     	this.id = id;
@@ -103,6 +150,13 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	setWeight(weight);
     }
 
+    /**
+     * Create this HandlingUnit
+     * 
+     * @param id the given id
+     * @param weight the given weight
+     * @param volume the given volume
+     */
     public HandlingUnit(String id, int weight, float volume) {
     	super();
     	this.id = id;
@@ -111,6 +165,14 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	setVolume(volume);
     }
 
+    /**
+     * Create this HandlingUnit
+     * 
+     * @param id the given id
+     * @param weight the given weight
+     * @param volume the given volume
+     * @param height the given height
+     */
     public HandlingUnit(String id, int weight, float volume, HeightCategory height) {
     	super();
     	this.id = id;
@@ -120,6 +182,15 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	setHeight(height);
     }
 
+    /**
+     * Create this HandlingUnit
+     * 
+     * @param id the given id
+     * @param weight the given weight
+     * @param volume the given volume
+     * @param height the given height
+     * @param length the given length
+     */
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length) {
     	super();
     	this.id = id;
@@ -130,6 +201,16 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	setLength(length);
     }
 
+    /**
+     * Create this HandlingUnit
+     * 
+     * @param id the given id
+     * @param weight the given weight
+     * @param volume the given volume
+     * @param height the given height
+     * @param length the given length
+     * @param width the given width
+     */
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length, WidthCategory width) {
     	super();
     	this.id = id;
@@ -149,16 +230,31 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	this.width = WIDTH_DEFAULT.name();
     }
 
+    /**
+     * Gets the HandlingUnits id
+     * 
+     * @return the id
+     */
     public String getId() {
     	LOG.debug(ID_FORMATTER, this.id);
         return this.id;
     }
 
+    /**
+     * Sets the HandlingUnits id
+     * 
+     * @param id the given id
+     */
     public void setId(String id) {
         this.id = id;
     	LOG.debug(ID_FORMATTER, this.id);
     }
 
+    /**
+     * Gets the HandlingUnits weight
+     * 
+     * @return the weight
+     */
     public int getWeight() {
     	LOG.debug(ID_WEIGHT_FORMATTER, this.id, this.weight);
         return this.weight;
@@ -174,6 +270,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	LOG.debug(ID_WEIGHT_FORMATTER, this.id, this.weight);
     }
     
+    /**
+     * Gets the HandlingUnits volume
+     * 
+     * @return the volume
+     */
     public float getVolume() {
     	LOG.debug(ID_VOLUME_FORMATTER, this.id, this.volume);
         return this.volume;
@@ -188,7 +289,12 @@ public class HandlingUnit extends EntityBase implements Serializable {
     	}
     	LOG.debug(ID_VOLUME_FORMATTER, this.id, this.volume);
     }
-    
+
+    /**
+     * Gets the HandlingUnits height
+     * 
+     * @return the height
+     */
     public HeightCategory getHeight() {
     	LOG.debug(ID_HEIGHT_FORMATTER, this.id, this.height);
         return HeightCategory.valueOf(this.height);
@@ -203,6 +309,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		}
     }
 
+    /**
+     * Gets the HandlingUnits length
+     * 
+     * @return the length
+     */
     public LengthCategory getLength() {
     	LOG.debug(ID_LENGTH_FORMATTER, this.id, this.length);
         return LengthCategory.valueOf(this.length);
@@ -217,6 +328,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		}
     }
 
+    /**
+     * Gets the HandlingUnits width
+     * 
+     * @return the width
+     */
     public WidthCategory getWidth() {
     	LOG.debug(ID_WIDTH_FORMATTER, this.id, this.width);
         return WidthCategory.valueOf(this.width);
@@ -231,6 +347,11 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		}
     }
 
+    /**
+     * Gets the version
+     * 
+     * @return the version number
+     */
 	public int getVersion() {
 		return version;
 	}

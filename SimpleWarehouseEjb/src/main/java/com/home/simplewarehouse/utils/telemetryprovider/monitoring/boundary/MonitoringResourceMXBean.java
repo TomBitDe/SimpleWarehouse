@@ -5,6 +5,9 @@ import java.util.Map;
 
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invocation;
 
+/**
+ * Definitions for the Monitoring Resource MXBean
+ */
 public interface MonitoringResourceMXBean {
 	/**
 	 * Gets a list of the slowest methods

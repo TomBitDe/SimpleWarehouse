@@ -13,6 +13,9 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Diagno
 
 import org.apache.logging.log4j.Logger;
 
+/**
+ * The Index as Model.
+ */
 @Model
 public class Index {
 	private static AtomicLong requestCounter = new AtomicLong(0);
@@ -22,7 +25,17 @@ public class Index {
 
 	@Inject
 	GoodMorning gm;
+	
+	/**
+	 * Create this Index
+	 */
+	public Index() {
+		super();
+	}
 
+	/**
+	 * Handle a new request
+	 */
 	@PostConstruct
 	public void onNewRequest() {
 		final Diagnostics requests = Diagnostics.with("request", requestCounter.incrementAndGet());
@@ -37,11 +50,21 @@ public class Index {
         }
 	}
 
+	/**
+	 * Just for test call say
+	 * 
+	 * @return <code>null</code> in any case
+	 */
 	public Object ok() {
 		gm.say();
 		return null;
 	}
 
+	/**
+	 * Just for test call tooEarly
+	 * 
+	 * @return <code>null</code> in any case
+	 */
 	public Object tooEarly() {
 		gm.tooEarly();
 		return null;

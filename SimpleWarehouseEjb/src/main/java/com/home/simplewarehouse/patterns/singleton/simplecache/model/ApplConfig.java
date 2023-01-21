@@ -20,13 +20,20 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class ApplConfig implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * The Configuration entries id (key)
+	 */
 	@Id
 	@Column(name = "KEY_VAL", nullable = false)
 	private String keyVal;
-
+	/**
+	 * The Configuration entries value
+	 */
 	@Column(name = "PARAM_VAL", nullable = false)
 	private String paramVal;
-
+	/**
+	 * The version number for optimistic locking
+	 */
 	@Version
 	private int version;
 
@@ -85,7 +92,7 @@ public class ApplConfig implements Serializable {
 	}
 
 	/**
-	 * The entity version
+	 * Gets the entity version
 	 * 
 	 * @return the version value
 	 */

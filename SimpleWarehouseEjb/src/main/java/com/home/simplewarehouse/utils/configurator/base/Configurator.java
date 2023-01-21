@@ -37,13 +37,13 @@ import org.apache.logging.log4j.Logger;
 import com.home.simplewarehouse.utils.configurator.jmxrestview.ConfiguratorMXBean;
 import com.home.simplewarehouse.utils.configurator.pluggable.ConfigurationProvider;
 
+/**
+ * The Configurator class.
+ */
 @LocalBean
 @Singleton
 @Path("configuration")
 @javax.ws.rs.Produces({MediaType.TEXT_PLAIN})
-/**
- * The configurator.
- */
 public class Configurator implements ConfiguratorMXBean {
 	private static final Logger LOG = LogManager.getLogger(Configurator.class);
 
@@ -59,7 +59,17 @@ public class Configurator implements ConfiguratorMXBean {
 
 	@Resource
 	SessionContext sc;
+	
+	/**
+	 * Create this Configurator
+	 */
+	public Configurator() {
+		super();
+	}
 
+	/**
+	 * Fetch the Configuration items, merge with a custom configuration and register in JMX
+	 */
 	@PostConstruct
 	public void fetchConfiguration() {
 		this.configuration = new HashMap<String, String>() {
@@ -92,12 +102,24 @@ public class Configurator implements ConfiguratorMXBean {
 		return this.configuration;
 	}
 
+	/**
+	 * Gets the Configuration
+	 * 
+	 * @return the Configuration as String
+	 */
 	@GET
     @PermitAll
 	public String getConfiguration() {
 		return this.configuration.toString();
 	}
 
+	/**
+	 * Gets the Configuation entry for the given key
+	 * 
+	 * @param key the key value
+	 * 
+	 * @return the entry as String
+	 */
 	@GET
     @PermitAll
 	@Path("{key}")
@@ -106,6 +128,15 @@ public class Configurator implements ConfiguratorMXBean {
 		return configuration.get(key);
 	}
 
+	/**
+	 * Add this entry to the Configuration
+	 * 
+	 * @param key the key value for this entry
+	 * @param value the entries value
+	 * @param uriInfo the Uri info
+	 * 
+	 * @return the response
+	 */
 	@PUT
     @PermitAll
 	@Path("{key}")
@@ -124,6 +155,13 @@ public class Configurator implements ConfiguratorMXBean {
 		return response;
 	}
 
+	/**
+	 * Delete the configuration entry for the given key
+	 * 
+	 * @param key the key value
+	 * 
+	 * @return the response
+	 */
 	@DELETE
     @PermitAll
 	@Path("{key}")
@@ -133,6 +171,9 @@ public class Configurator implements ConfiguratorMXBean {
 		return Response.noContent().build();
 	}
 
+	/**
+	 * Register this Configurator in JMX
+	 */
 	void registerInJMX() {
 	    try {
 	        objectName = new ObjectName("Configurator:type=" + this.getClass().getName());
@@ -145,6 +186,9 @@ public class Configurator implements ConfiguratorMXBean {
 	    }
 	}
 
+	/**
+	 * Unregister this Configurator from JMX
+	 */
 	@PreDestroy
 	public void unregisterFromJMX() {
 		try {
@@ -171,6 +215,15 @@ public class Configurator implements ConfiguratorMXBean {
 		}
 	}
 
+	/**
+	 * Gets a configuration entry value as String
+	 * 
+	 * @param ip the injection point
+	 * 
+	 * @return the value
+	 * 
+	 * @throws NotConfiguredException in case there is no configuration entry
+	 */
 	@javax.enterprise.inject.Produces
 	public String getString(InjectionPoint ip) throws NotConfiguredException {
 		String fieldName = obtainConfigurableName(ip);
@@ -178,6 +231,15 @@ public class Configurator implements ConfiguratorMXBean {
 		return getValueForKey(fieldName);
 	}
 
+	/**
+	 * Gets a configuration entry value as Integer
+	 * 
+	 * @param ip the injection point
+	 * 
+	 * @return the value
+	 * 
+	 * @throws NotConfiguredException in case there is no configuration entry
+	 */
 	@javax.enterprise.inject.Produces
 	public int getInteger(InjectionPoint ip) throws NotConfiguredException {
 		String stringValue = getString(ip);

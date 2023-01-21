@@ -7,11 +7,30 @@ import javax.interceptor.InvocationContext;
 
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
+/**
+ * The Performance Auditor
+ */
 public class PerformanceAuditor {
 
     @Inject
     MonitoringResource monitoring;
+    
+    /**
+     * Default constructor
+     */
+    public PerformanceAuditor() {
+    	super();
+    }
 
+    /**
+     * Measures the performance of an invocation
+     * 
+     * @param context the invocation context
+     * 
+     * @return the Object
+     * 
+     * @throws Exception on invocation exception
+     */
     @AroundTimeout
     @AroundInvoke
     public Object measurePerformance(InvocationContext context) throws Exception {

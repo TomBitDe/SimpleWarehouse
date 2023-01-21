@@ -46,21 +46,32 @@ public class Location extends EntityBase implements Serializable {
     
     private static final String ID_FORMATTER = "locationId={0}";
 
+    /**
+     * The Location id
+     */
     @Id
     @Column(name = "LOCATION_ID", nullable = false)
     private String locationId;
-    
+	/**
+	 * Version number for optimistic locking
+	 */
     @Version
     private int version;
-    
+    /**
+     * The associated LocationStatus
+     */
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private LocationStatus locationStatus;
-    
+    /**
+     * The associated Dimension
+     */
     @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private Dimension dimension;
-    
+    /**
+     * The associated HandlingUnits
+     */
     @OneToMany( mappedBy="location"
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.EAGER )
@@ -106,16 +117,31 @@ public class Location extends EntityBase implements Serializable {
     	this.locationId = id;
     }
     
+    /**
+     * Gets the Location id
+     * 
+     * @return the id
+     */
     public String getLocationId() {
     	LOG.debug(ID_FORMATTER, this.locationId);
         return this.locationId;
     }
 
+    /**
+     * Sets the Location id
+     * 
+     * @param id the given id
+     */
     public void setLocationId(final String id) {
         this.locationId = id;
         LOG.debug(ID_FORMATTER, this.locationId);
     }
 
+    /**
+     * Gets the version
+     * 
+     * @return the version number
+     */
 	public int getVersion() {
 		return version;
 	}

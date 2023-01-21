@@ -49,32 +49,56 @@ public class Dimension extends EntityBase implements Serializable {
     private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
     private static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
     
+    /**
+     * The location id
+     */
 	@Id
 	private String locationId;
 	
+	/**
+	 * The maximum capacity
+	 */
 	@Basic(optional = false)
 	@Column(name = "MAX_CAPACITY", nullable = false)
 	private int maxCapacity;
 		
+	/**
+	 * The maximum weight
+	 */
 	@Basic(optional = false)
 	@Column(name = "MAX_WEIGHT", nullable = false)
 	private int maxWeight;
 		
+	/**
+	 * The maximum height
+	 */
 	@Basic(optional = false)
     @Column(name = "MAX_HEIGHT", nullable = false)
     private String maxHeight;
     
+	/**
+	 * The maximum length
+	 */
 	@Basic(optional = false)
     @Column(name = "MAX_LENGTH", nullable = false)
     private String maxLength;
 
+	/**
+	 * The maximum width
+	 */
 	@Basic(optional = false)
     @Column(name = "MAX_WIDTH", nullable = false)
     private String maxWidth;
 
+	/**
+	 * The version number for optimistic locking
+	 */
     @Version
     private int version;
     
+    /**
+     * The associated location
+     */
     @OneToOne
     @MapsId
     @JoinColumn(name = "LOCATION_ID")
@@ -100,6 +124,11 @@ public class Dimension extends EntityBase implements Serializable {
     	setDimensionDefaults();
     }
     
+    /**
+     * Create this Dimension
+     * 
+     * @param locationId the given Location id
+     */
     public Dimension(String locationId) {
     	super();
     	
@@ -108,6 +137,12 @@ public class Dimension extends EntityBase implements Serializable {
     	setDimensionDefaults();
     }
     
+    /**
+     * Create this Dimension
+     * 
+     * @param locationId the given Location id
+     * @param user the given user
+     */
     public Dimension(String locationId, String user) {
     	super(user);
     	
@@ -116,6 +151,13 @@ public class Dimension extends EntityBase implements Serializable {
     	setDimensionDefaults();
     }
     
+    /**
+     * Create this Dimension
+     * 
+     * @param locationId the given Location id
+     * @param maxCapacity the given maximum capacity
+     * @param user the given user
+     */
 	public Dimension(String locationId, int maxCapacity, String user) {
 		super(user);
 		
@@ -126,6 +168,14 @@ public class Dimension extends EntityBase implements Serializable {
     	setMaxCapacity(maxCapacity);
     }
 
+    /**
+     * Create this Dimension
+     * 
+     * @param locationId the given Location id
+     * @param maxCapacity the given maximum capacity
+     * @param maxWeight the given maximum weight
+     * @param user the given user
+     */
 	public Dimension(String locationId, int maxCapacity, int maxWeight, String user) {
 		super(user);
 		
@@ -137,6 +187,15 @@ public class Dimension extends EntityBase implements Serializable {
     	setMaxWeight(maxWeight);
 	}
 
+    /**
+     * Create this Dimension
+     * 
+     * @param locationId the given Location id
+     * @param maxCapacity the given maximum capacity
+     * @param maxWeight the given maximum weight
+     * @param maxHeight the given maximum height
+     * @param user the given user
+     */
 	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight, String user) {
 		super(user);
 		
@@ -149,6 +208,16 @@ public class Dimension extends EntityBase implements Serializable {
     	setMaxHeight(maxHeight);
 	}
 
+    /**
+     * Create this Dimension
+     * 
+     * @param locationId the given Location id
+     * @param maxCapacity the given maximum capacity
+     * @param maxWeight the given maximum weight
+     * @param maxHeight the given maximum height
+     * @param maxLength the given maximum length
+     * @param user the given user
+     */
 	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight
 			, LengthCategory maxLength, String user) {
 		super(user);
@@ -163,6 +232,17 @@ public class Dimension extends EntityBase implements Serializable {
     	setMaxLength(maxLength);
 	}
 
+    /**
+     * Create this Dimension
+     * 
+     * @param locationId the given Location id
+     * @param maxCapacity the given maximum capacity
+     * @param maxWeight the given maximum weight
+     * @param maxHeight the given maximum height
+     * @param maxLength the given maximum length
+     * @param maxWidth the given maximum width
+     * @param user the given user
+     */
 	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight
 			, LengthCategory maxLength, WidthCategory maxWidth, String user) {
 		super(user);

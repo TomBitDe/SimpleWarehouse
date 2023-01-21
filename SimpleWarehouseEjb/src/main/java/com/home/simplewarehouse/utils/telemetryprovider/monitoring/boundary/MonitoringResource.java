@@ -42,6 +42,9 @@ import javax.ws.rs.core.MediaType;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Diagnostics;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invocation;
 
+/**
+ * The Monitoring Resource 
+ */
 @Singleton
 @Startup
 @LocalBean
@@ -60,7 +63,21 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 
     @Resource
     private SessionContext sc;
+    
+    /**
+     * Create this Monitoring Resource
+     */
+    public MonitoringResource() {
+    	super();
+    }
 
+    /**
+     * Gets the slowest methods
+     * 
+     * @param maxResult maximum items in the List
+     * 
+     * @return a List of slowest methods
+     */
     @GET
     @Path("slowestMethods/{max}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -95,6 +112,11 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return diagnostics;
 	}
 
+	/**
+	 * Gets the Diagnostics as String
+	 * 
+	 * @return the Diagnostics
+	 */
 	@GET
 	@Path("diagnostics")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -117,6 +139,11 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return message.toString();
 	}
 
+	/**
+	 * Gets the Exception Statistics as String
+	 * 
+	 * @return the Exception Statistics
+	 */
 	@GET
 	@Path("exceptionStatistics")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -145,6 +172,13 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return statistics;
 	}
 
+	/**
+	 * Gets the Diagnostics for the given key
+	 * 
+	 * @param key the key to search for
+	 * 
+	 * @return the Diagnostics as String
+	 */
 	@GET
 	@Path("diagnostics/{key}")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -152,6 +186,11 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return getDiagnostics().get(key);
 	}
 
+	/**
+	 * Add an invocation
+	 * 
+	 * @param invocation the invocation
+	 */
 	public void add(Invocation invocation) {
 		String methodName = invocation.getMethodName();
 
@@ -165,12 +204,24 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		methods.put(methodName, invocation);
 	}
 
+	/**
+	 * Adds an Invocation to this Monitor Resource
+	 * 
+	 * @param methodName the method name
+	 * @param performance the methods performance
+	 */
 	public void add(String methodName, long performance) {
 		Invocation invocation = new Invocation(methodName, performance);
 
 		this.add(invocation);
 	}
 
+	/**
+	 * Process an exception
+	 * 
+	 * @param methodName the method that throws the exception
+	 * @param e the exception
+	 */
 	public void exceptionOccurred(String methodName, Exception e) {
 		exceptionCount.incrementAndGet();
 		final String exception = e.toString();
@@ -184,6 +235,9 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		}
 	}
 
+    /**
+     * Register the Monitoring Resource in JMX
+     */
     @PostConstruct
     public void registerInJMX() {
         this.exceptionCount = new AtomicLong();
@@ -198,6 +252,11 @@ public class MonitoringResource implements MonitoringResourceMXBean {
         }
     }
 
+    /**
+     * Listen on a new Diagnostics and do the needed
+     * 
+     * @param diagnostics the Diagnostics 
+     */
     public void onNewDiagnostics(@Observes Diagnostics diagnostics) {
         Map<String, String> map = diagnostics.asMap();
 
@@ -217,6 +276,9 @@ public class MonitoringResource implements MonitoringResourceMXBean {
         diagnostics.clear();
     }
 
+    /**
+     * Unregister the Monitoring Resource from JMX
+     */
     @PreDestroy
     public void unregisterFromJMX() {
         try {
