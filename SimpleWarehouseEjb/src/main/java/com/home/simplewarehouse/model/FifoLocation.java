@@ -89,7 +89,9 @@ public class FifoLocation extends Location implements Serializable {
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
 		
-		boolean b = getHandlingUnits().remove( handlingUnit );
+		List<HandlingUnit> list = getHandlingUnits();
+		boolean b = list.remove( handlingUnit );
+		setHandlingUnits(list);
 	    
 		if ( b ) {
 			handlingUnit.setLocation(null);

@@ -245,8 +245,10 @@ public class Location extends EntityBase implements Serializable {
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
 		
-		boolean b = handlingUnits.remove( handlingUnit );
-	    
+		List<HandlingUnit> list = getHandlingUnits();
+		boolean b = list.remove( handlingUnit );
+		setHandlingUnits(list);
+
 		if ( b ) {
 			handlingUnit.setLocation(null);
 			handlingUnit.setLocaPos(null);
