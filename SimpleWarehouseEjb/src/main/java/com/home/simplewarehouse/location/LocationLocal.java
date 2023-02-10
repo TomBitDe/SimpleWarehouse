@@ -1,7 +1,6 @@
 package com.home.simplewarehouse.location;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;

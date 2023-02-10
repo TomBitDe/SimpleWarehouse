@@ -209,9 +209,8 @@ public class Configurator implements ConfiguratorMXBean {
 	 	else {
 			String clazzName = ip.getMember().getDeclaringClass().getName();
 			String memberName = ip.getMember().getName();
-			String fqn = clazzName + "." + memberName;
 
-			return fqn;
+			return clazzName + "." + memberName;
 		}
 	}
 

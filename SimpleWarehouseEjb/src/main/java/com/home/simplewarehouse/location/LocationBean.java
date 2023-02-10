@@ -35,6 +35,9 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 public class LocationBean implements LocationLocal {
 	private static final Logger LOG = LogManager.getLogger(LocationBean.class);
 	
+	private static final String LOCATION_IS_NULL = "location is null";
+	private static final String LOCATION_ID_IS_NULL = "locationId is null";
+	
 	private static final String HEIGHT_DOES_NOT_FIT = "Location has maximum height {}, heigth {} does not fit";
 	private static final String LENGTH_DOES_NOT_FIT = "Location has maximum length {}, length {} does not fit";
 	private static final String WIDTH_DOES_NOT_FIT = "Location has maximum width {}, width {} does not fit";
@@ -419,11 +422,11 @@ public class LocationBean implements LocationLocal {
 	@Override
 	public List<HandlingUnit> getHandlingUnits(final Location location) {
 		if (location == null) {
-			throw new IllegalArgumentException("location is null");
+			throw new IllegalArgumentException(LOCATION_IS_NULL);
 		}
 
 		if (location.getLocationId() == null) {
-			throw new IllegalArgumentException("locationId is null");
+			throw new IllegalArgumentException(LOCATION_ID_IS_NULL);
 		}
 		
 		return getById(location.getLocationId()).getHandlingUnits();
@@ -432,11 +435,11 @@ public class LocationBean implements LocationLocal {
 	@Override
 	public void setHandlingUnits(Location location, List<HandlingUnit> handlingUnits) {
 		if (location == null) {
-			throw new IllegalArgumentException("location is null");
+			throw new IllegalArgumentException(LOCATION_IS_NULL);
 		}
 
 		if (location.getLocationId() == null) {
-			throw new IllegalArgumentException("locationId is null");
+			throw new IllegalArgumentException(LOCATION_ID_IS_NULL);
 		}
 		
 		if (handlingUnits == null) {
@@ -449,11 +452,11 @@ public class LocationBean implements LocationLocal {
 	@Override
 	public boolean addHandlingUnit(Location location, HandlingUnit handlingUnit) {
 		if (location == null) {
-			throw new IllegalArgumentException("location is null");
+			throw new IllegalArgumentException(LOCATION_IS_NULL);
 		}
 
 		if (location.getLocationId() == null) {
-			throw new IllegalArgumentException("locationId is null");
+			throw new IllegalArgumentException(LOCATION_ID_IS_NULL);
 		}
 		
 		if (handlingUnit == null || handlingUnit.getId() == null) {
@@ -466,11 +469,11 @@ public class LocationBean implements LocationLocal {
 	@Override
 	public boolean removeHandlingUnit(Location location, HandlingUnit handlingUnit) {
 		if (location == null) {
-			throw new IllegalArgumentException("location is null");
+			throw new IllegalArgumentException(LOCATION_IS_NULL);
 		}
 
 		if (location.getLocationId() == null) {
-			throw new IllegalArgumentException("locationId is null");
+			throw new IllegalArgumentException(LOCATION_ID_IS_NULL);
 		}
 		
 		if (handlingUnit == null || handlingUnit.getId() == null) {

@@ -80,9 +80,7 @@ public class FifoLocation extends Location implements Serializable {
 		
 		List <HandlingUnit> list = getHandlingUnits();
 		
-		boolean ret = list.add(handlingUnit);
-		
-		return ret;
+		return list.add(handlingUnit);
 	}
 	
 	@Override
