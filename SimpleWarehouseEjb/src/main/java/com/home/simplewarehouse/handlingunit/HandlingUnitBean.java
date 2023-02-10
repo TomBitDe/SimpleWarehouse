@@ -249,10 +249,8 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 
 		handlingUnit.setLocation(location);
-		List<HandlingUnit> list = locationLocal.getHandlingUnits(location);
-		list.add(handlingUnit);
-		locationLocal.setHandlingUnits(location, list);
-
+		locationLocal.addHandlingUnit(location, handlingUnit);
+		
 		LOG.trace("<-- dropTo()");
 
 		em.flush();

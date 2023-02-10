@@ -67,9 +67,13 @@ public class LifoLocation extends Location implements Serializable {
 		handlingUnit.setLocation(this);		
 		handlingUnit.setLocaPos(1);
 		
+		List <HandlingUnit> list = getHandlingUnits();
+		boolean ret = list.add(handlingUnit);
+		setHandlingUnits(list);
+		
 		LOG.trace("<-- addHandlingUnit()");
 		
-		return getHandlingUnits().add(handlingUnit);
+		return ret;
 	}
 	
 	@Override

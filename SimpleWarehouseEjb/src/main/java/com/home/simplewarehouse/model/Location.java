@@ -226,9 +226,13 @@ public class Location extends EntityBase implements Serializable {
 		handlingUnit.setLocation(this);
 		handlingUnit.setLocaPos(null);
 		
+		List<HandlingUnit> list = getHandlingUnits();
+		boolean ret = list.add(handlingUnit);
+		setHandlingUnits(list);
+		
 		LOG.trace("<-- addHandlingUnit()");
 		
-		return getHandlingUnits().add(handlingUnit);
+		return ret;
 	}
 	
 	/**

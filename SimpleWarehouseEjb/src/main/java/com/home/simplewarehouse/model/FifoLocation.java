@@ -76,11 +76,13 @@ public class FifoLocation extends Location implements Serializable {
 			handlingUnit.setLocaPos(max.getLocaPos() + 1);
 		}
 		
+		List <HandlingUnit> list = getHandlingUnits();
+		boolean ret = list.add(handlingUnit);
+		setHandlingUnits(list);
+		
 		LOG.trace("<-- addHandlingUnit()");
 		
-		List <HandlingUnit> list = getHandlingUnits();
-		
-		return list.add(handlingUnit);
+		return ret;
 	}
 	
 	@Override
