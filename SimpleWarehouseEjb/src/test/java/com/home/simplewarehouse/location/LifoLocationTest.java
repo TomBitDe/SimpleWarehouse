@@ -361,42 +361,42 @@ public class LifoLocationTest {
 		HandlingUnit hU8 = new HandlingUnit("8", "Test");
 
 		try {
-		handlingUnitLocal.dropTo(locA, hU8);
-		
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		assertNotNull(locA);	
-		assertFalse(locA.getHandlingUnits().isEmpty());
-		assertEquals(1, locA.getHandlingUnits().size());
+			handlingUnitLocal.dropTo(locA, hU8);
 
-		// Test the special toString also
-		assertTrue(locA.toString().contains("HandlingUnits LIFO=[\"8 Pos 1\"]"));
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			assertNotNull(locA);
+			assertFalse(locA.getHandlingUnits().isEmpty());
+			assertEquals(1, locA.getHandlingUnits().size());
 
-		assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
-		
-		LOG.info("1 HandlingUnit dropped on " + locA.getLocationId() + locA);
+			// Test the special toString also
+			assertTrue(locA.toString().contains("HandlingUnits LIFO=[\"8 Pos 1\"]"));
 
-	    // MANDATORY reread
-		hU8 = handlingUnitLocal.getById("8");
-		assertNotNull(hU8.getLocation());
-		assertNotNull(hU8.getLocaPos());
-		LOG.info("Sample hU8 {}", hU8);
-		
-		// Now delete the location
-	    // MANDATORY reread
-		locA = locationLocal.getById("A");
-		locationLocal.delete(locA);
-		LOG.info("Lifo Location deleted: " + locA.getLocationId());
-		
-	    // MANDATORY reread
-		hU8 = handlingUnitLocal.getById("8");
-		
-		assertNotNull(hU8);
-		
-		assertNull(hU8.getLocation());
-		assertNull(hU8.getLocaPos());
-		
-		LOG.info("Sample hU8 has no longer a location {}", hU8);
+			assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
+
+			LOG.info("1 HandlingUnit dropped on " + locA.getLocationId() + locA);
+
+			// MANDATORY reread
+			hU8 = handlingUnitLocal.getById("8");
+			assertNotNull(hU8.getLocation());
+			assertNotNull(hU8.getLocaPos());
+			LOG.info("Sample hU8 {}", hU8);
+
+			// Now delete the location
+			// MANDATORY reread
+			locA = locationLocal.getById("A");
+			locationLocal.delete(locA);
+			LOG.info("Lifo Location deleted: " + locA.getLocationId());
+
+			// MANDATORY reread
+			hU8 = handlingUnitLocal.getById("8");
+
+			assertNotNull(hU8);
+
+			assertNull(hU8.getLocation());
+			assertNull(hU8.getLocaPos());
+
+			LOG.info("Sample hU8 has no longer a location {}", hU8);
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
