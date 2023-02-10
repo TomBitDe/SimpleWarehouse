@@ -44,7 +44,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	
 	@EJB
 	private LocationLocal locationLocal;
-
+	
 	/**
 	 * Default constructor is mandatory
 	 */
@@ -248,7 +248,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			}				
 		}
 
-		location.addHandlingUnit(handlingUnit);
+		handlingUnit.setLocation(location);
+		List<HandlingUnit> list = locationLocal.getHandlingUnits(location);
+		list.add(handlingUnit);
+		locationLocal.setHandlingUnits(location, list);
 
 		LOG.trace("<-- dropTo()");
 

@@ -65,7 +65,7 @@ public class FifoLocation extends Location implements Serializable {
 
 		handlingUnit.setLocation(this);
 
-		HandlingUnit max = handlingUnits.stream()
+		HandlingUnit max = getHandlingUnits().stream()
 				.max(Comparator.comparing(HandlingUnit::getLocaPos))
 				.orElse(null);
 
@@ -78,20 +78,24 @@ public class FifoLocation extends Location implements Serializable {
 		
 		LOG.trace("<-- addHandlingUnit()");
 		
-		return handlingUnits.add(handlingUnit);
+		List <HandlingUnit> list = getHandlingUnits();
+		
+		boolean ret = list.add(handlingUnit);
+		
+		return ret;
 	}
 	
 	@Override
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
 		
-		boolean b = handlingUnits.remove( handlingUnit );
+		boolean b = getHandlingUnits().remove( handlingUnit );
 	    
 		if ( b ) {
 			handlingUnit.setLocation(null);
 			handlingUnit.setLocaPos(null);
 			
-			handlingUnits.forEach(h -> h.setLocaPos(h.getLocaPos() - 1));
+			getHandlingUnits().forEach(h -> h.setLocaPos(h.getLocaPos() - 1));
 		}
 
 		LOG.trace("<-- removeHandlingUnit()");
@@ -105,8 +109,8 @@ public class FifoLocation extends Location implements Serializable {
 
 		List<HandlingUnit> ret = new ArrayList<>();
 		
-		if (! handlingUnits.isEmpty()) {
-			ret = handlingUnits.stream().filter(hu -> hu.getLocaPos() == 1)
+		if (! getHandlingUnits().isEmpty()) {
+			ret = getHandlingUnits().stream().filter(hu -> hu.getLocaPos() == 1)
 					.collect(Collectors.toList());
 		}
 		

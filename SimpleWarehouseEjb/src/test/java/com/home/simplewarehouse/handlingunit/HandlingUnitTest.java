@@ -273,7 +273,6 @@ public class HandlingUnitTest {
 		
 		// Prepare a handling unit and a location
 		handlingUnitLocal.create(new HandlingUnit("1"));
-		
 		locationLocal.create(new Location("A"));
 		
 	    // MANDATORY reread

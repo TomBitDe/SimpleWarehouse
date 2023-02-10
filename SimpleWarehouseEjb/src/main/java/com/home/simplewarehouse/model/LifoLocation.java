@@ -62,27 +62,27 @@ public class LifoLocation extends Location implements Serializable {
 	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> addHandlingUnit()");
 		
-		handlingUnits.forEach(h -> h.setLocaPos(h.getLocaPos() + 1));
+		getHandlingUnits().forEach(h -> h.setLocaPos(h.getLocaPos() + 1));
 		
 		handlingUnit.setLocation(this);		
 		handlingUnit.setLocaPos(1);
 		
 		LOG.trace("<-- addHandlingUnit()");
 		
-		return handlingUnits.add(handlingUnit);
+		return getHandlingUnits().add(handlingUnit);
 	}
 	
 	@Override
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
 		
-		boolean b = handlingUnits.remove( handlingUnit );
+		boolean b = getHandlingUnits().remove( handlingUnit );
 	    
 		if ( b ) {
 			handlingUnit.setLocation(null);
 			handlingUnit.setLocaPos(null);
 			
-			handlingUnits.forEach(h -> h.setLocaPos(h.getLocaPos() - 1));
+			getHandlingUnits().forEach(h -> h.setLocaPos(h.getLocaPos() - 1));
 		}
 	    
 		LOG.trace("<-- removeHandlingUnit()");
@@ -96,8 +96,8 @@ public class LifoLocation extends Location implements Serializable {
 
 		List<HandlingUnit> ret = new ArrayList<>();
 		
-		if (! handlingUnits.isEmpty()) {
-			ret = handlingUnits.stream().filter(hu -> hu.getLocaPos() == 1)
+		if (! getHandlingUnits().isEmpty()) {
+			ret = getHandlingUnits().stream().filter(hu -> hu.getLocaPos() == 1)
 					.collect(Collectors.toList());
 		}
 		

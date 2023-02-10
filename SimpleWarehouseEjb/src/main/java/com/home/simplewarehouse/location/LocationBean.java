@@ -3,7 +3,6 @@ package com.home.simplewarehouse.location;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.EJB;
 import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -16,13 +15,12 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -43,9 +41,6 @@ public class LocationBean implements LocationLocal {
 	
 	@PersistenceContext
 	private EntityManager em;
-	
-	@EJB
-	private HandlingUnitLocal handlingUnitLocal;
 	
 	/**
 	 * Default constructor is mandatory
@@ -419,5 +414,80 @@ public class LocationBean implements LocationLocal {
 		}
 
 		LOG.trace("<-- checkDimensionLimitExceeds()");
+	}
+
+	@Override
+	public List<HandlingUnit> getHandlingUnits(final Location location) {
+		if (location == null) {
+			throw new IllegalArgumentException("location is null");
+		}
+
+		if (location.getLocationId() == null) {
+			throw new IllegalArgumentException("locationId is null");
+		}
+		
+		return getById(location.getLocationId()).getHandlingUnits();
+	}
+
+	@Override
+	public void setHandlingUnits(Location location, List<HandlingUnit> handlingUnits) {
+		if (location == null) {
+			throw new IllegalArgumentException("location is null");
+		}
+
+		if (location.getLocationId() == null) {
+			throw new IllegalArgumentException("locationId is null");
+		}
+		
+		if (handlingUnits == null) {
+			handlingUnits = new ArrayList<>();
+		}
+		
+		location.setHandlingUnits(handlingUnits);
+	}
+
+	@Override
+	public boolean addHandlingUnit(Location location, HandlingUnit handlingUnit) {
+		if (location == null) {
+			throw new IllegalArgumentException("location is null");
+		}
+
+		if (location.getLocationId() == null) {
+			throw new IllegalArgumentException("locationId is null");
+		}
+		
+		if (handlingUnit == null || handlingUnit.getId() == null) {
+			return false;
+		}
+		
+		return location.addHandlingUnit(handlingUnit);
+	}
+
+	@Override
+	public boolean removeHandlingUnit(Location location, HandlingUnit handlingUnit) {
+		if (location == null) {
+			throw new IllegalArgumentException("location is null");
+		}
+
+		if (location.getLocationId() == null) {
+			throw new IllegalArgumentException("locationId is null");
+		}
+		
+		if (handlingUnit == null || handlingUnit.getId() == null) {
+			return false;
+		}
+		
+		return getById(location.getLocationId()).removeHandlingUnit(handlingUnit);
+	}
+
+	@Override
+	public List<HandlingUnit> getAvailablePicks(Location location) {
+		LOG.trace("--> getAvailablePicks()");
+		
+		List<HandlingUnit> ret = location.getAvailablePicks();
+		
+		LOG.trace("<-- getAvailablePicks()");
+
+		return ret;
 	}
 }

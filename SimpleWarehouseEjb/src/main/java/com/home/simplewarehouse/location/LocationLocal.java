@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.location;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -39,6 +40,21 @@ public interface LocationLocal {
 	 * @return the Location list
 	 */
 	public List<Location> getAll();
+	/**
+	 * Gets a list of all HandlingUnits on a location
+	 * 
+	 * @param location the given location
+	 * 
+	 * @return a list of HandlingUnits
+	 */
+	public List<HandlingUnit> getHandlingUnits(Location location);
+	
+	public void setHandlingUnits(Location location, List<HandlingUnit> handlingUnits);
+	
+	public boolean addHandlingUnit(Location location, HandlingUnit handlingUnit);
+	
+	public boolean removeHandlingUnit(Location location, HandlingUnit handlingUnit);
+
 	/**
 	 * Get a list of all Location items containing the given HandlingUnit
 	 * 
@@ -135,4 +151,11 @@ public interface LocationLocal {
 	public void checkDimensionLimitExceeds(final Location location, final HandlingUnit handlingUnit)
 			throws CapacityExceededException, WeightExceededException, OverheightException
 				, OverlengthException, OverwidthException;
+	/**
+	 * Gets all the HandlingUnits possible to Pick from the Location
+	 * 
+	 * @return the List of HandlingUnits
+	 */
+	public List<HandlingUnit> getAvailablePicks(Location location);
+
 }

@@ -75,7 +75,7 @@ public class Location extends EntityBase implements Serializable {
     @OneToMany( mappedBy="location"
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.EAGER )
-	protected Set<HandlingUnit> handlingUnits = new HashSet<>();
+	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
     /**
      * Default Random Location
@@ -202,6 +202,16 @@ public class Location extends EntityBase implements Serializable {
 
 		return ret;
 	}
+	
+	public void setHandlingUnits(List<HandlingUnit> handlingUnits) {
+		LOG.trace("--> setHandlingUnits()");
+
+		this.handlingUnits.clear();
+		
+		handlingUnits.forEach(this.handlingUnits::add);
+		
+		LOG.trace("<-- setHandlingUnits()");
+	}
 
 	/**
 	 * Add this HandlingUnit to the Location
@@ -218,7 +228,7 @@ public class Location extends EntityBase implements Serializable {
 		
 		LOG.trace("<-- addHandlingUnit()");
 		
-		return this.handlingUnits.add(handlingUnit);
+		return getHandlingUnits().add(handlingUnit);
 	}
 	
 	/**
