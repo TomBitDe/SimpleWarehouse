@@ -433,23 +433,6 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public void setHandlingUnits(Location location, List<HandlingUnit> handlingUnits) {
-		if (location == null) {
-			throw new IllegalArgumentException(LOCATION_IS_NULL);
-		}
-
-		if (location.getLocationId() == null) {
-			throw new IllegalArgumentException(LOCATION_ID_IS_NULL);
-		}
-		
-		if (handlingUnits == null) {
-			handlingUnits = new ArrayList<>();
-		}
-		
-		location.setHandlingUnits(handlingUnits);
-	}
-
-	@Override
 	public boolean addHandlingUnit(Location location, HandlingUnit handlingUnit) {
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL);
@@ -464,23 +447,6 @@ public class LocationBean implements LocationLocal {
 		}
 		
 		return location.addHandlingUnit(handlingUnit);
-	}
-
-	@Override
-	public boolean removeHandlingUnit(Location location, HandlingUnit handlingUnit) {
-		if (location == null) {
-			throw new IllegalArgumentException(LOCATION_IS_NULL);
-		}
-
-		if (location.getLocationId() == null) {
-			throw new IllegalArgumentException(LOCATION_ID_IS_NULL);
-		}
-		
-		if (handlingUnit == null || handlingUnit.getId() == null) {
-			return false;
-		}
-		
-		return getById(location.getLocationId()).removeHandlingUnit(handlingUnit);
 	}
 
 	@Override

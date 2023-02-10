@@ -47,13 +47,15 @@ public interface LocationLocal {
 	 * @return a list of HandlingUnits
 	 */
 	public List<HandlingUnit> getHandlingUnits(Location location);
-	
-	public void setHandlingUnits(Location location, List<HandlingUnit> handlingUnits);
-	
+	/**
+	 * Adds a HandlingUnit to the list of HandlingUnits of this Location
+	 * 
+	 * @param location the location having the List 
+	 * @param handlingUnit the handlingUnit to add
+	 * 
+	 * @return true if adding has been done, else false
+	 */
 	public boolean addHandlingUnit(Location location, HandlingUnit handlingUnit);
-	
-	public boolean removeHandlingUnit(Location location, HandlingUnit handlingUnit);
-
 	/**
 	 * Get a list of all Location items containing the given HandlingUnit
 	 * 
