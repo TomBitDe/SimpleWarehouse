@@ -155,6 +155,8 @@ public interface LocationLocal {
 	/**
 	 * Gets all the HandlingUnits possible to Pick from the Location
 	 * 
+	 * @param location the location to fetch the Picks for
+	 * 
 	 * @return the List of HandlingUnits
 	 */
 	public List<HandlingUnit> getAvailablePicks(Location location);
