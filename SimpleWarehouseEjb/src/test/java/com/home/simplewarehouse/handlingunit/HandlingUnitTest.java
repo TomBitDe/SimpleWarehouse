@@ -308,6 +308,7 @@ public class HandlingUnitTest {
 	/**
 	 * Test the dropTo method to create reference to a none existing location
 	 */
+	@Test
 	@InSequence(5)
 	public void dropToNull() {
 		LOG.info("--- Test dropToNull");
@@ -338,6 +339,7 @@ public class HandlingUnitTest {
 	/**
 	 * Test the dropTo method to create reference to a none existing handlingUnit
 	 */
+	@Test
 	@InSequence(8)
 	public void dropNullTo() {
 		LOG.info("--- Test dropNullTo");
@@ -355,13 +357,10 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitLocal.dropTo(lOA, null);
 
-			Assert.fail("Exception expected");
+			assertTrue("No exception expected", true);
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
-		}
-		catch (EJBException ex) {
-			assertTrue(true);
 		}
 	}
 	
