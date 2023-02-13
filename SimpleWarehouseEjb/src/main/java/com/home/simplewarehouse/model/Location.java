@@ -203,6 +203,11 @@ public class Location extends EntityBase implements Serializable {
 		return ret;
 	}
 	
+	/**
+	 * Sets the list of HandlingUnits for this Location
+	 * 
+	 * @param handlingUnits
+	 */
 	public void setHandlingUnits(List<HandlingUnit> handlingUnits) {
 		LOG.trace("--> setHandlingUnits()");
 
