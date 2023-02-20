@@ -453,6 +453,14 @@ public class LocationBean implements LocationLocal {
 	public List<HandlingUnit> getAvailablePicks(Location location) {
 		LOG.trace("--> getAvailablePicks()");
 		
+		if (location == null) {
+			throw new IllegalArgumentException(LOCATION_IS_NULL);
+		}
+
+		if (location.getLocationId() == null) {
+			throw new IllegalArgumentException(LOCATION_ID_IS_NULL);
+		}
+		
 		List<HandlingUnit> ret = location.getAvailablePicks();
 		
 		LOG.trace("<-- getAvailablePicks()");

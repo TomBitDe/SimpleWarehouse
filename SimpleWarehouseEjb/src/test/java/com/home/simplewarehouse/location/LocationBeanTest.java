@@ -409,4 +409,163 @@ public class LocationBeanTest {
 			Assert.fail("Not expected: " + dimex);			
 		}
 	}
+	
+	/**
+	 * Test get all locations with free capacity
+	 */
+	@Test
+	@InSequence(8)
+	public void getAllWithFreeCapacity() {
+		LOG.info("--- Test getAllWithFreeCapacity");
+		
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		locationLocal.create(new Location("A"));
+		locationLocal.create(new Location("B"));
+		locationLocal.create(new Location("C"));
+		locationLocal.create(new Location("D"));
+		
+
+		LOG.info("Locations created: " + locationLocal.getAll().size());
+		
+		List<Location> freeCapacityLocations = locationLocal.getAllWithFreeCapacity();
+		
+		assertEquals(4, freeCapacityLocations.size());
+
+		Location expLocation = locationLocal.getById("C");
+		assertTrue(freeCapacityLocations.contains(expLocation));
+	}
+
+	/**
+	 * Test get handling units on a location
+	 */
+	@Test
+	@InSequence(8)
+	public void getHandlingUnits() {
+		LOG.info("--- Test getHandlingUnits");
+		
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		locationLocal.create(new Location("A"));
+
+		LOG.info("Locations created: " + locationLocal.getAll().size());
+		Location locA = locationLocal.getById("A");
+		
+		// Drop to make a relation
+		handlingUnitLocal.create(new HandlingUnit("1", "Test"));
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		
+		try {
+			handlingUnitLocal.dropTo(locA, hU1);
+
+			handlingUnitLocal.create(new HandlingUnit("2", "Test"));
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU2);
+
+			handlingUnitLocal.create(new HandlingUnit("3", "Test"));
+			HandlingUnit hU3 = handlingUnitLocal.getById("3");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU3);
+
+			handlingUnitLocal.create(new HandlingUnit("4", "Test"));
+			HandlingUnit hU4 = handlingUnitLocal.getById("4");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU4);
+
+			handlingUnitLocal.create(new HandlingUnit("5", "Test"));
+			HandlingUnit hU5 = handlingUnitLocal.getById("5");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU5);
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);			
+		}
+
+		// MANDATORY reread
+		locA = locationLocal.getById("A");
+		assertNotNull(locA);
+		assertFalse(locationLocal.getHandlingUnits(locA).isEmpty());
+		assertEquals(5, locationLocal.getHandlingUnits(locA).size());
+	}
+
+	/**
+	 * Test get available picks on a location
+	 */
+	@Test
+	@InSequence(11)
+	public void getAvailablePicks() {
+		LOG.info("--- Test getAvailablePicks");
+		
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		locationLocal.create(new Location("A"));
+
+		LOG.info("Locations created: " + locationLocal.getAll().size());
+		Location locA = locationLocal.getById("A");
+		
+		// Drop to make a relation
+		handlingUnitLocal.create(new HandlingUnit("1", "Test"));
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		
+		try {
+			handlingUnitLocal.dropTo(locA, hU1);
+
+			handlingUnitLocal.create(new HandlingUnit("2", "Test"));
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU2);
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);			
+		}
+		
+		// MANDATORY reread
+		locA = locationLocal.getById("A");
+		assertNotNull(locA);
+		assertFalse(locationLocal.getAvailablePicks(locA).isEmpty());
+		assertEquals(2, locationLocal.getAvailablePicks(locA).size());
+	}
+
+	/**
+	 * Test get all full locations
+	 */
+	@Test
+	@InSequence(14)
+	public void getAllFull() {
+		LOG.info("--- Test getAllFull");
+		
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		locationLocal.create(new Location("A"));
+
+		LOG.info("Locations created: " + locationLocal.getAll().size());
+		Location locA = locationLocal.getById("A");
+		
+		assertTrue(locationLocal.getAllFull().isEmpty());
+		
+		locA.getDimension().setMaxCapacity(2);
+		
+		// Drop to make a relation
+		handlingUnitLocal.create(new HandlingUnit("1", "Test"));
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		
+		try {
+			handlingUnitLocal.dropTo(locA, hU1);
+
+			handlingUnitLocal.create(new HandlingUnit("2", "Test"));
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			locA = locationLocal.getById("A");
+			handlingUnitLocal.dropTo(locA, hU2);
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);			
+		}
+
+		// MANDATORY reread
+		locA = locationLocal.getById("A");
+		assertNotNull(locA);
+		assertFalse(locationLocal.getAllFull().isEmpty());
+		assertEquals(1, locationLocal.getAllFull().size());
+	}
 }
