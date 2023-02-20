@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 import java.util.List;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -487,6 +488,31 @@ public class LocationBeanTest {
 		assertNotNull(locA);
 		assertFalse(locationLocal.getHandlingUnits(locA).isEmpty());
 		assertEquals(5, locationLocal.getHandlingUnits(locA).size());
+		
+		try {
+			locationLocal.getHandlingUnits(null).isEmpty();
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException iaex) {
+			LOG.info("Expected exception: " + iaex.getMessage());
+		}
+		catch (Exception ex) {
+			Assert.fail("Not expected: " + ex);						
+		}
+		
+		try {
+			locA.setLocationId(null);
+			locationLocal.getHandlingUnits(locA).isEmpty();
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException iaex) {
+			LOG.info("Expected exception: " + iaex.getMessage());
+		}
+		catch (Exception ex) {
+			Assert.fail("Not expected: " + ex);						
+		}
 	}
 
 	/**
@@ -525,6 +551,31 @@ public class LocationBeanTest {
 		assertNotNull(locA);
 		assertFalse(locationLocal.getAvailablePicks(locA).isEmpty());
 		assertEquals(2, locationLocal.getAvailablePicks(locA).size());
+		
+		try {
+			locationLocal.getAvailablePicks(null).isEmpty();
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException iaex) {
+			LOG.info("Expected exception: " + iaex.getMessage());
+		}
+		catch (Exception ex) {
+			Assert.fail("Not expected: " + ex);						
+		}
+		
+		try {
+			locA.setLocationId(null);
+			locationLocal.getAvailablePicks(locA).isEmpty();
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException iaex) {
+			LOG.info("Expected exception: " + iaex.getMessage());
+		}
+		catch (Exception ex) {
+			Assert.fail("Not expected: " + ex);						
+		}
 	}
 
 	/**
@@ -567,5 +618,55 @@ public class LocationBeanTest {
 		assertNotNull(locA);
 		assertFalse(locationLocal.getAllFull().isEmpty());
 		assertEquals(1, locationLocal.getAllFull().size());
+	}
+
+	/**
+	 * Test add handling unit only exceptional cases
+	 */
+	@Test
+	@InSequence(17)
+	public void addHandlingUnit() {
+		LOG.info("--- Test addHandlingUnit");
+		
+		assertTrue(locationLocal.getAll().isEmpty());
+
+		locationLocal.create(new Location("A"));
+
+		LOG.info("Locations created: " + locationLocal.getAll().size());
+		Location locA = locationLocal.getById("A");
+		
+		assertTrue(locationLocal.getAllFull().isEmpty());
+		
+		// Drop to make a relation
+		handlingUnitLocal.create(new HandlingUnit("1", "Test"));
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		
+		boolean ret = locationLocal.addHandlingUnit(locA, null);
+		assertFalse(ret);
+		
+		try {
+			locationLocal.addHandlingUnit(null, hU1);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException iaex) {
+			LOG.info("Expected exception: " + iaex.getMessage());
+		}
+		catch (Exception ex) {
+			Assert.fail("Not expected: " + ex);						
+		}
+
+		try {
+			locA.setLocationId(null);
+			locationLocal.addHandlingUnit(locA, hU1);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException iaex) {
+			LOG.info("Expected exception: " + iaex.getMessage());
+		}
+		catch (Exception ex) {
+			Assert.fail("Not expected: " + ex);						
+		}
 	}
 }
