@@ -18,8 +18,10 @@ public interface HandlingUnitLocal {
 	 * Create a HandlingUnit and persist
 	 * 
 	 * @param handlingUnit the given HandlingUnit
+	 * 
+	 * @return the created HnadlingUnit
 	 */
-	public void create(final HandlingUnit handlingUnit);
+	public HandlingUnit create(final HandlingUnit handlingUnit);
 	/**
 	 * Delete a HandlingUnit and remove
 	 * 

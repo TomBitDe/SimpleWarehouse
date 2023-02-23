@@ -148,16 +148,14 @@ public class HandlingUnitTest {
 
 		HandlingUnit expHandlingUnit = new HandlingUnit("1");
 
-		handlingUnitLocal.create(expHandlingUnit);
-		HandlingUnit handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		HandlingUnit handlingUnit = handlingUnitLocal.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		
 		LOG.info(handlingUnit);
 		
 		expHandlingUnit = new HandlingUnit("2", null);
 
-		handlingUnitLocal.create(expHandlingUnit);
-		handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertNotNull(handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -166,8 +164,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("3", null, null);
 
-		handlingUnitLocal.create(expHandlingUnit);
-		handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertNotNull(handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -176,8 +173,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("4", "Scott Tiger");
 
-		handlingUnitLocal.create(expHandlingUnit);
-		handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertEquals(expHandlingUnit.getUpdateUserId(), handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -186,8 +182,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("5", "Willi", new Timestamp(System.currentTimeMillis()));
 
-		handlingUnitLocal.create(expHandlingUnit);
-		handlingUnit = handlingUnitLocal.getById(expHandlingUnit.getId());
+		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertEquals(expHandlingUnit.getUpdateUserId(), handlingUnit.getUpdateUserId());
 		assertEquals(expHandlingUnit.getUpdateTimestamp(), handlingUnit.getUpdateTimestamp());
@@ -205,9 +200,7 @@ public class HandlingUnitTest {
 
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
-		handlingUnitLocal.create(new HandlingUnit("1"));
-
-	    HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
+	    HandlingUnit handlingUnit = handlingUnitLocal.create(new HandlingUnit("1"));
 	    
 	    // MANDATORY reread
 		assertEquals("1", handlingUnit.getId());
@@ -225,8 +218,7 @@ public class HandlingUnitTest {
 		handlingUnitLocal.delete(handlingUnit);
 		assertTrue(true);
 		
-		handlingUnitLocal.create(new HandlingUnit("1"));
-		handlingUnit = handlingUnitLocal.getById("1");
+		handlingUnit = handlingUnitLocal.create(new HandlingUnit("1"));
 		assertNotNull(handlingUnit);
 		handlingUnit.setId(null);
 		handlingUnitLocal.delete(handlingUnit);
@@ -272,11 +264,10 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 		
 		// Prepare a handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
 		locationLocal.create(new Location("A"));
 		
 	    // MANDATORY reread
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = locationLocal.getById("A");
 		
 		try {
@@ -316,12 +307,9 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-		// Prepare a handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1"));
+		// Prepare a handling unit
+		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
 		
-	    // MANDATORY reread
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
-
 		// Check invalid drop to location null
 		try {
 			handlingUnitLocal.dropTo(null, hU1);
@@ -347,7 +335,7 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-		// Prepare a handling unit and a location
+		// Prepare a location
 		locationLocal.create(new Location("A"));
 		
 	    // MANDATORY reread
@@ -379,11 +367,10 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 		
 		// Prepare a handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
 		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		Location lOA = locationLocal.getById("A");
 		
 		// To prepare the pick do a drop before
@@ -459,9 +446,8 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 				
 		// Prepare a handling unit
-		handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit handlingUnit = handlingUnitLocal.create(new HandlingUnit("1"));
 		
-		HandlingUnit handlingUnit = handlingUnitLocal.getById("1");
 		LOG.info("Prepared: {}", handlingUnit);
 		
 		// Prepare a location
@@ -498,11 +484,10 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 				
 		// Prepare handling units and a location
-		handlingUnitLocal.create(new HandlingUnit("1"));
-		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
+		
 		Location lOA = locationLocal.getById("A");
 		
 		try {
@@ -516,10 +501,8 @@ public class HandlingUnitTest {
 		hU1 = handlingUnitLocal.getById("1");
 		lOA = locationLocal.getById("A");
 
-		handlingUnitLocal.create(new HandlingUnit("2"));
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
 
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
-		
 		LOG.info(hU2);
 		
 		// Pick now
@@ -553,13 +536,10 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1"));
-		handlingUnitLocal.create(new HandlingUnit("2"));
-		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
+		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
 		Location lOA = locationLocal.getById("A");
 		
 		// Drop to make a relation
@@ -611,11 +591,10 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("2"));
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
 		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		Location lOA = locationLocal.getById("A");
 		
 		try {
@@ -667,12 +646,11 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("2"));
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
 		
 		locationLocal.create(new Location("A"));
 		locationLocal.create(new Location("B"));
 		
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
 		Location lOA = locationLocal.getById("A");
 		Location lOB = locationLocal.getById("B");
 
@@ -737,15 +715,11 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("2"));
-		handlingUnitLocal.create(new HandlingUnit("3"));
-		handlingUnitLocal.create(new HandlingUnit("4"));
-		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
-		HandlingUnit hU3 = handlingUnitLocal.getById("3");
-		HandlingUnit hU4 = handlingUnitLocal.getById("4");
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
+		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3"));
+		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4"));
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the capacity to limit
@@ -800,15 +774,12 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("2", 500));
-		handlingUnitLocal.create(new HandlingUnit("3", 300));
-		handlingUnitLocal.create(new HandlingUnit("4", 190));
-		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
-		HandlingUnit hU3 = handlingUnitLocal.getById("3");
-		HandlingUnit hU4 = handlingUnitLocal.getById("4");
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 500));
+		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 300));
+		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 190));
+		
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the weight to limit
@@ -863,17 +834,12 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.MIDDLE));
-		handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.HIGH));
-		handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.LOW));
-		handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.TOO_HIGH));
-		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
-		HandlingUnit hU3 = handlingUnitLocal.getById("3");
-		HandlingUnit hU4 = handlingUnitLocal.getById("4");
+		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.MIDDLE));
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.HIGH));
+		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.LOW));
+		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.TOO_HIGH));
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the height to limit
@@ -952,19 +918,14 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
-		handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
-		handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
-		handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
-		handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
-		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
-		HandlingUnit hU3 = handlingUnitLocal.getById("3");
-		HandlingUnit hU4 = handlingUnitLocal.getById("4");
-		HandlingUnit hU5 = handlingUnitLocal.getById("5");
+		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
+		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
+		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
+		HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
+		
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the height to limit
@@ -1046,19 +1007,14 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
-		handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
-		handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
-		handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
-		handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
-		
 		locationLocal.create(new Location("A"));
 		
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
-		HandlingUnit hU2 = handlingUnitLocal.getById("2");
-		HandlingUnit hU3 = handlingUnitLocal.getById("3");
-		HandlingUnit hU4 = handlingUnitLocal.getById("4");
-		HandlingUnit hU5 = handlingUnitLocal.getById("5");
+		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
+		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
+		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
+		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
+		HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
+		
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the height to limit

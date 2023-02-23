@@ -266,27 +266,22 @@ public class FifoLocationTest {
 		
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.create(new HandlingUnit("1", "Test"));
-			HandlingUnit hU1 = handlingUnitLocal.getById("1");
+			HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", "Test"));
 			handlingUnitLocal.dropTo(locA, hU1);
 
-			handlingUnitLocal.create(new HandlingUnit("2", "Test"));
-			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", "Test"));
 			locA = locationLocal.getById("A");
 			handlingUnitLocal.dropTo(locA, hU2);
 
-			handlingUnitLocal.create(new HandlingUnit("3", "Test"));
-			HandlingUnit hU3 = handlingUnitLocal.getById("3");
+			HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", "Test"));
 			locA = locationLocal.getById("A");
 			handlingUnitLocal.dropTo(locA, hU3);
 
-			handlingUnitLocal.create(new HandlingUnit("4", "Test"));
-			HandlingUnit hU4 = handlingUnitLocal.getById("4");
+			HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", "Test"));
 			locA = locationLocal.getById("A");
 			handlingUnitLocal.dropTo(locA, hU4);
 
-			handlingUnitLocal.create(new HandlingUnit("5", "Test"));
-			HandlingUnit hU5 = handlingUnitLocal.getById("5");
+			HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", "Test"));
 			locA = locationLocal.getById("A");
 			handlingUnitLocal.dropTo(locA, hU5);
 
@@ -356,8 +351,7 @@ public class FifoLocationTest {
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		// Drop to make a relation
-		handlingUnitLocal.create(new HandlingUnit("8", "Test"));
-		HandlingUnit hU8 = handlingUnitLocal.getById("8");
+		HandlingUnit hU8 = handlingUnitLocal.create(new HandlingUnit("8", "Test"));
 		
 		try {
 			handlingUnitLocal.dropTo(locA, hU8);

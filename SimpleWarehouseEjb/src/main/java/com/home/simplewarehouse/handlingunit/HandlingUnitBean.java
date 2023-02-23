@@ -55,13 +55,15 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public void create(final HandlingUnit handlingUnit) {
+	public HandlingUnit create(final HandlingUnit handlingUnit) {
 		LOG.trace("--> create");
 
 		em.persist(handlingUnit);
 		em.flush();
 
 		LOG.trace("<-- create");
+		
+		return getById(handlingUnit.getId());
 	}
 
 	@Override
