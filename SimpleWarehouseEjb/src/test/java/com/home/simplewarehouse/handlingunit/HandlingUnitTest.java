@@ -300,12 +300,11 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-		// Prepare a handling unit
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit hu1 = new HandlingUnit("1");
 		
 		// Check invalid drop to location null
 		try {
-			handlingUnitLocal.dropTo(null, hU1);
+			handlingUnitLocal.dropTo(null, hu1);
 
 			Assert.fail("Exception expected");
 		}
@@ -328,15 +327,9 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-		// Prepare a location
-		locationLocal.create(new Location("A"));
-		
-	    // MANDATORY reread
-		Location lOA = locationLocal.getById("A");
-
 		// Check invalid drop to handlingUnit null
 		try {
-			handlingUnitLocal.dropTo(lOA, null);
+			handlingUnitLocal.dropTo(new Location("A"), null);
 
 			assertTrue("No exception expected", true);
 		}
@@ -359,24 +352,17 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-		// Prepare a handling unit and a location
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
-		
-		locationLocal.create(new Location("A"));
-		
-		Location lOA = locationLocal.getById("A");
-		
 		// To prepare the pick do a drop before
 		try {
-			handlingUnitLocal.dropTo(lOA, hU1);
+			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("1"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		
 	    // MANDATORY reread
-		hU1 = handlingUnitLocal.getById("1");
-		lOA = locationLocal.getById("A");
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
+		Location lOA = locationLocal.getById("A");
 
 		// Handling Unit is on location now
 		assertEquals(lOA, hU1.getLocation());
@@ -438,21 +424,10 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 				
-		// Prepare a handling unit
-		HandlingUnit handlingUnit = handlingUnitLocal.create(new HandlingUnit("1"));
-		
-		LOG.info("Prepared: {}", handlingUnit);
-		
-		// Prepare a location
-		locationLocal.create(new Location("A"));
-		
-		Location location = locationLocal.getById("A");
-		LOG.info("Prepared: {}", location);
-		
 		// Pick now
 		try {
 			LOG.info("Pick now");
-		    handlingUnitLocal.pickFrom(location, handlingUnit);
+		    handlingUnitLocal.pickFrom(new Location("A"), new HandlingUnit("1"));
 		    
 		    Assert.fail("Expected an LocationIsEmptyException to be thrown");
 		}
@@ -476,32 +451,20 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 				
-		// Prepare handling units and a location
-		locationLocal.create(new Location("A"));
-		
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
-		
-		Location lOA = locationLocal.getById("A");
-		
 		try {
-			handlingUnitLocal.dropTo(lOA, hU1);
+			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("1"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		
 	    // MANDATORY reread
-		hU1 = handlingUnitLocal.getById("1");
-		lOA = locationLocal.getById("A");
+		Location lOA = locationLocal.getById("A");
 
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
-
-		LOG.info(hU2);
-		
 		// Pick now
 		try {
 			LOG.info("Pick now");
-			handlingUnitLocal.pickFrom(lOA, hU2);
+			handlingUnitLocal.pickFrom(lOA, new HandlingUnit("2"));
 		}
 		catch(HandlingUnitNotOnLocationException isNotOnLocation) {
 			// Location contains hU1 but not hU2
@@ -528,48 +491,44 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 
-		// Prepare handling unit and a location
-		locationLocal.create(new Location("A"));
-		
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
-		Location lOA = locationLocal.getById("A");
+		Location lOA;
 		
 		// Drop to make a relation
 		try {
-			handlingUnitLocal.dropTo(lOA, hU1);
+			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("1"));
 		
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 		
-			handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("2"));
+
+			// MANDATORY reread
+			HandlingUnit hU1 = handlingUnitLocal.getById("1");
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			
+			// Now delete a handling unit that is related to a location
+			LOG.info("Delete: " + hU1);
+			handlingUnitLocal.delete(hU1);
+			
+		    // MANDATORY reread
+			hU1 = handlingUnitLocal.getById("1");
+			
+			assertNull(hU1);
+			
+		    // MANDATORY reread
+			lOA = locationLocal.getById("A");
+			
+			// Check the location
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(lOA.getHandlingUnits().contains(hU2));
+			assertEquals(1, lOA.getHandlingUnits().size());
+			
+			LOG.info(lOA);
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
-		
-	    // MANDATORY reread
-		hU1 = handlingUnitLocal.getById("1");
-		
-		// Now delete a handling unit that is related to a location
-		LOG.info("Delete: " + hU1);
-		handlingUnitLocal.delete(hU1);
-		
-	    // MANDATORY reread
-		hU1 = handlingUnitLocal.getById("1");
-		
-		assertNull(hU1);
-		
-	    // MANDATORY reread
-		lOA = locationLocal.getById("A");
-		
-		// Check the location
-		assertNotNull(lOA);
-		assertFalse(lOA.getHandlingUnits().isEmpty());
-		assertTrue(lOA.getHandlingUnits().contains(hU2));
-		assertEquals(1, lOA.getHandlingUnits().size());
-		
-		LOG.info(lOA);
 	}
 	
 	/**
@@ -583,20 +542,13 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 
-		// Prepare handling unit and a location
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
-		
-		locationLocal.create(new Location("A"));
-		
-		Location lOA = locationLocal.getById("A");
-		
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("2"));
 
 			// MANDATORY reread
-			hU2 = handlingUnitLocal.getById("2");
-			lOA = locationLocal.getById("A");
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			Location lOA = locationLocal.getById("A");
 			LOG.info("First drop: " + hU2);
 			LOG.info("First drop: " + lOA);
 
@@ -638,34 +590,23 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 
-		// Prepare handling unit and a location
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
-		
-		locationLocal.create(new Location("A"));
-		locationLocal.create(new Location("B"));
-		
-		Location lOA = locationLocal.getById("A");
-		Location lOB = locationLocal.getById("B");
-
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("2"));
 
 			// MANDATORY reread
-			hU2 = handlingUnitLocal.getById("2");
-			lOA = locationLocal.getById("A");
-			lOB = locationLocal.getById("B");
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			Location lOA = locationLocal.getById("A");
 			LOG.info("First drop: " + hU2);
 			LOG.info("First drop: " + lOA);
-			LOG.info("First drop: " + lOB);
 
 			// Now drop again to other location
-			handlingUnitLocal.dropTo(lOB, hU2);
+			handlingUnitLocal.dropTo(new Location("B"), hU2);
 
 			// MANDATORY reread
 			hU2 = handlingUnitLocal.getById("2");
 			lOA = locationLocal.getById("A");
-			lOB = locationLocal.getById("B");
+			Location lOB = locationLocal.getById("B");
 			LOG.info("Second drop: " + hU2);
 			LOG.info("Second drop: " + lOA);
 			LOG.info("Second drop: " + lOB);
@@ -707,12 +648,8 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 
-		// Prepare handling unit and a location
-		locationLocal.create(new Location("A"));
-		
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2"));
-		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3"));
-		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4"));
+		// Prepare a location
+		locationLocal.create(new Location("A"));		
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the capacity to limit
@@ -720,10 +657,10 @@ public class HandlingUnitTest {
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("2"));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(lOA, hU3);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("3"));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 		}
@@ -732,7 +669,7 @@ public class HandlingUnitTest {
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, hU4);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("4"));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 
@@ -768,11 +705,6 @@ public class HandlingUnitTest {
 
 		// Prepare handling unit and a location
 		locationLocal.create(new Location("A"));
-		
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 500));
-		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 300));
-		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 190));
-		
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the weight to limit
@@ -780,10 +712,10 @@ public class HandlingUnitTest {
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("2", 500));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(lOA, hU3);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("3", 300));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 		}
@@ -792,7 +724,7 @@ public class HandlingUnitTest {
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, hU4);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("4", 190));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 
@@ -808,7 +740,7 @@ public class HandlingUnitTest {
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertTrue(locationLocal.overweight(lOA, hU4.getWeight()));
+			assertTrue(locationLocal.overweight(lOA, handlingUnitLocal.getById("4").getWeight()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
@@ -826,13 +758,8 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 
-		// Prepare handling unit and a location
+		// Prepare a location
 		locationLocal.create(new Location("A"));
-		
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.MIDDLE));
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.HIGH));
-		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.LOW));
-		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.TOO_HIGH));
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the height to limit
@@ -840,11 +767,11 @@ public class HandlingUnitTest {
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU1);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("1", 0, 0.0f, HeightCategory.MIDDLE));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU3);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("3", 0, 0.0f, HeightCategory.LOW));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 		}
@@ -853,7 +780,7 @@ public class HandlingUnitTest {
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("2", 0, 0.0f, HeightCategory.HIGH));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 
@@ -869,14 +796,14 @@ public class HandlingUnitTest {
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertTrue(locationLocal.overheight(lOA, hU2.getHeight()));
+			assertTrue(locationLocal.overheight(lOA, handlingUnitLocal.getById("2").getHeight()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, hU4);
+			handlingUnitLocal.dropTo(lOA, new HandlingUnit("4", 0, 0.0f, HeightCategory.TOO_HIGH));
 			// MANDATORY reread
 			lOA = locationLocal.getById("A");
 
@@ -892,7 +819,7 @@ public class HandlingUnitTest {
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertTrue(locationLocal.overheight(lOA, hU4.getHeight()));
+			assertTrue(locationLocal.overheight(lOA, handlingUnitLocal.getById("4").getHeight()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
@@ -900,7 +827,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to location overheight
+	 * Test drop to location overwidth
 	 */
 	@Test
 	@InSequence(36)
@@ -911,14 +838,13 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		locationLocal.create(new Location("A"));
-		
 		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
 		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
 		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
 		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
 		HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
 		
+		locationLocal.create(new Location("A"));
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the height to limit
@@ -1000,14 +926,13 @@ public class HandlingUnitTest {
 		assertTrue(locationLocal.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		locationLocal.create(new Location("A"));
-		
 		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
 		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
 		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
 		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
 		HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
 		
+		locationLocal.create(new Location("A"));
 		Location lOA = locationLocal.getById("A");
 		
 		// Now set the height to limit
