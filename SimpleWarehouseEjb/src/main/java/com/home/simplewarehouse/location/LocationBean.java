@@ -55,26 +55,29 @@ public class LocationBean implements LocationLocal {
 	}
 	
 	@Override
-	public void create(final Location location) {
+	public Location create(final Location location) {
 		LOG.trace("--> create");
 
-		LocationStatus locationStatus = new LocationStatus(location.getLocationId());
-		locationStatus.setLocation(location);
-				
-		location.setLocationStatus(locationStatus);
+		if (location.getLocationStatus() == null) {
+			LocationStatus locationStatus = new LocationStatus(location.getLocationId());
+			locationStatus.setLocation(location);
+			location.setLocationStatus(locationStatus);
+		}
 		
-		Dimension dimension = new Dimension(location.getLocationId());
-		dimension.setLocation(location);
-		
-		location.setDimension(dimension);
+		if (location.getDimension() == null) {
+			Dimension dimension = new Dimension(location.getLocationId());
+			dimension.setLocation(location);
+			location.setDimension(dimension);
+		}
 		
 		// No need to    em.persist(locationStatus)  because it is done by  cascade = CascadeType.ALL
 		// Same for      dimension
-		em.persist(location);
-		
+		em.persist(location);	
 		em.flush();
 
 		LOG.trace("<-- create");
+		
+		return getById(location.getLocationId());
 	}
 
 	@Override

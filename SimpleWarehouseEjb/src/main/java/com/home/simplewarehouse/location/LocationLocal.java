@@ -17,8 +17,10 @@ public interface LocationLocal {
 	 * Create a Location and persist
 	 * 
 	 * @param location the given Location
+	 * 
+	 * @return the Location created
 	 */
-	public void create(final Location location);
+	public Location create(final Location location);
 	/**
 	 * Delete a Location and remove
 	 * 

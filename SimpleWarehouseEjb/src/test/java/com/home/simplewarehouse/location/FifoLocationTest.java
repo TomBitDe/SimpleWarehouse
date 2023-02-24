@@ -154,11 +154,8 @@ public class FifoLocationTest {
 
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-	    locationLocal.create(new FifoLocation("A"));
-
-	    // MANDATORY reread
-	    Location location = locationLocal.getById("A");
-		LOG.info("Fifo Location getById: " + location);
+	    Location location = locationLocal.create(new FifoLocation("A"));
+		LOG.info("Fifo Location create: " + location);
 		
 		assertEquals("A", location.getLocationId());
 		
@@ -168,10 +165,7 @@ public class FifoLocationTest {
 		assertEquals("A", location.getLocationId());
 		LOG.info("Fifo Location deleted: " + location.getLocationId());
 		
-		locationLocal.create(new FifoLocation("A", "Test"));
-
-		// MANDATORY reread
-		location = locationLocal.getById("A");				
+		location = locationLocal.create(new FifoLocation("A", "Test"));				
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
@@ -183,10 +177,7 @@ public class FifoLocationTest {
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		locationLocal.create(new FifoLocation("A", "Test", ts));
-
-	    // MANDATORY reread
-		location = locationLocal.getById("A");
+		location = locationLocal.create(new FifoLocation("A", "Test", ts));
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
@@ -203,9 +194,7 @@ public class FifoLocationTest {
 
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-	    locationLocal.create(new FifoLocation("A"));
-
-	    Location location = locationLocal.getById("A");
+	    Location location = locationLocal.create(new FifoLocation("A"));
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		
@@ -260,8 +249,7 @@ public class FifoLocationTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		
 		// Prepare a location
-		locationLocal.create(new FifoLocation("A", "Test"));
-		Location locA = locationLocal.getById("A");
+		Location locA = locationLocal.create(new FifoLocation("A", "Test"));
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		try {
@@ -337,8 +325,7 @@ public class FifoLocationTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		
 		// Prepare a location
-		locationLocal.create(new FifoLocation("A", "Test"));
-		Location locA = locationLocal.getById("A");
+		Location locA = locationLocal.create(new FifoLocation("A", "Test"));
 		
 		// Test the special toString also
 		assumeTrue(locA.toString().contains("HandlingUnits FIFO=[]"));
@@ -401,8 +388,7 @@ public class FifoLocationTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		
 		// Prepare a location
-		locationLocal.create(new FifoLocation("A", "Test"));
-		Location locA = locationLocal.getById("A");
+		Location locA = locationLocal.create(new FifoLocation("A", "Test"));
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		// Drop to make a relation
