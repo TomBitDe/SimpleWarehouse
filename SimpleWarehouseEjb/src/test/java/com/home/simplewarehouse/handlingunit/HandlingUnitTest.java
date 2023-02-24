@@ -263,20 +263,13 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 		assertTrue(locationLocal.getAll().isEmpty());
 		
-		// Prepare a handling unit and a location
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1"));
-		locationLocal.create(new Location("A"));
-		
-	    // MANDATORY reread
-		Location lOA = locationLocal.getById("A");
-		
 		try {
 			// Now drop
-			handlingUnitLocal.dropTo(lOA, hU1);
+			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("1"));
 
 			// MANDATORY reread
-			hU1 = handlingUnitLocal.getById("1");
-			lOA = locationLocal.getById("A");
+			HandlingUnit hU1 = handlingUnitLocal.getById("1");
+			Location lOA = locationLocal.getById("A");
 
 			LOG.info(hU1);
 

@@ -479,7 +479,7 @@ public class LocationBeanTest {
 		assertEquals(5, locationLocal.getHandlingUnits(locA).size());
 		
 		try {
-			locationLocal.getHandlingUnits(null).isEmpty();
+			locationLocal.getHandlingUnits(null);
 			
 			Assert.fail("Exception expected");
 		}
@@ -490,9 +490,9 @@ public class LocationBeanTest {
 			Assert.fail("Not expected: " + ex);						
 		}
 		
+		locA.setLocationId(null);
 		try {
-			locA.setLocationId(null);
-			locationLocal.getHandlingUnits(locA).isEmpty();
+			locationLocal.getHandlingUnits(locA);
 			
 			Assert.fail("Exception expected");
 		}
@@ -540,7 +540,7 @@ public class LocationBeanTest {
 		assertEquals(2, locationLocal.getAvailablePicks(locA).size());
 		
 		try {
-			locationLocal.getAvailablePicks(null).isEmpty();
+			locationLocal.getAvailablePicks(null);
 			
 			Assert.fail("Exception expected");
 		}
@@ -551,9 +551,9 @@ public class LocationBeanTest {
 			Assert.fail("Not expected: " + ex);						
 		}
 		
+		locA.setLocationId(null);
 		try {
-			locA.setLocationId(null);
-			locationLocal.getAvailablePicks(locA).isEmpty();
+			locationLocal.getAvailablePicks(locA);
 			
 			Assert.fail("Exception expected");
 		}
@@ -640,8 +640,8 @@ public class LocationBeanTest {
 			Assert.fail("Not expected: " + ex);						
 		}
 
+		locA.setLocationId(null);
 		try {
-			locA.setLocationId(null);
 			locationLocal.addHandlingUnit(locA, hU1);
 			
 			Assert.fail("Exception expected");
