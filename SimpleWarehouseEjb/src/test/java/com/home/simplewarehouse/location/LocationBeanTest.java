@@ -276,26 +276,20 @@ public class LocationBeanTest {
 		LOG.info("Location prepared: " + locA);
 		
 		// Drop to make a relation
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", "Test"));
-		
 		try {
-			handlingUnitLocal.dropTo(locA, hU1);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("1", "Test"));
 
-			HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU2);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
 
-			HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU3);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("3", "Test"));
 
-			HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU4);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("4", "Test"));
 
-			HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU5);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("5", "Test"));
 
 			// MANDATORY reread
 			locA = locationLocal.getById("A");
@@ -309,10 +303,10 @@ public class LocationBeanTest {
 
 			LOG.info("Sample hU2 and hU5");
 			// MANDATORY reread
-			hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
 			LOG.info(hU2);
 			// MANDATORY reread
-			hU5 = handlingUnitLocal.getById("5");
+			HandlingUnit hU5 = handlingUnitLocal.getById("5");
 			LOG.info(hU5);
 
 			// Now delete the location
@@ -361,10 +355,8 @@ public class LocationBeanTest {
 		LOG.info("Location prepared: " + locA);
 		
 		// Drop to make a relation
-		HandlingUnit hU8 = handlingUnitLocal.create(new HandlingUnit("8", "Test"));
-		
 		try {
-			handlingUnitLocal.dropTo(locA, hU8);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("8", "Test"));
 		
 			// MANDATORY reread
 			locA = locationLocal.getById("A");
@@ -381,7 +373,7 @@ public class LocationBeanTest {
 
 			LOG.info("Sample hU8");
 			// MANDATORY reread
-			hU8 = handlingUnitLocal.getById("8");
+			HandlingUnit hU8 = handlingUnitLocal.getById("8");
 			LOG.info(hU8);
 		
 			// Now delete the location
@@ -447,26 +439,20 @@ public class LocationBeanTest {
 		Location locA = locationLocal.getById("A");
 		
 		// Drop to make a relation
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", "Test"));
-		
 		try {
-			handlingUnitLocal.dropTo(locA, hU1);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("1", "Test"));
 
-			HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU2);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
 
-			HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU3);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("3", "Test"));
 
-			HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU4);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("4", "Test"));
 
-			HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU5);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("5", "Test"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);			
@@ -520,14 +506,11 @@ public class LocationBeanTest {
 		Location locA = locationLocal.getById("A");
 		
 		// Drop to make a relation
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", "Test"));
-		
 		try {
-			handlingUnitLocal.dropTo(locA, hU1);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("1", "Test"));
 
-			HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU2);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);			
@@ -585,14 +568,11 @@ public class LocationBeanTest {
 		locA.getDimension().setMaxCapacity(2);
 		
 		// Drop to make a relation
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", "Test"));
-		
 		try {
-			handlingUnitLocal.dropTo(locA, hU1);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("1", "Test"));
 
-			HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU2);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);			
@@ -622,14 +602,12 @@ public class LocationBeanTest {
 		
 		assertTrue(locationLocal.getAllFull().isEmpty());
 		
-		// Drop to make a relation
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", "Test"));
-		
 		boolean ret = locationLocal.addHandlingUnit(locA, null);
 		assertFalse(ret);
 		
+		// Drop to make a relation
 		try {
-			locationLocal.addHandlingUnit(null, hU1);
+			locationLocal.addHandlingUnit(null, new HandlingUnit("1", "Test"));
 			
 			Assert.fail("Exception expected");
 		}
@@ -640,6 +618,7 @@ public class LocationBeanTest {
 			Assert.fail("Not expected: " + ex);						
 		}
 
+		HandlingUnit hU1 = handlingUnitLocal.getById("1");
 		locA.setLocationId(null);
 		try {
 			locationLocal.addHandlingUnit(locA, hU1);
