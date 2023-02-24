@@ -266,24 +266,19 @@ public class FifoLocationTest {
 		
 		try {
 			// Drop to make a relation
-			HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", "Test"));
-			handlingUnitLocal.dropTo(locA, hU1);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("1", "Test"));
 
-			HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU2);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
 
-			HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU3);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("3", "Test"));
 
-			HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU4);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("4", "Test"));
 
-			HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", "Test"));
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU5);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("5", "Test"));
 
 			// MANDATORY reread
 			locA = locationLocal.getById("A");
@@ -297,10 +292,10 @@ public class FifoLocationTest {
 
 			LOG.info("Sample hU2 and hU5");
 			// MANDATORY reread
-			hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
 			LOG.info(hU2);
 			// MANDATORY reread
-			hU5 = handlingUnitLocal.getById("5");
+			HandlingUnit hU5 = handlingUnitLocal.getById("5");
 			LOG.info(hU5);
 
 			// Now delete the location
@@ -351,10 +346,8 @@ public class FifoLocationTest {
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		// Drop to make a relation
-		HandlingUnit hU8 = handlingUnitLocal.create(new HandlingUnit("8", "Test"));
-		
 		try {
-			handlingUnitLocal.dropTo(locA, hU8);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("8", "Test"));
 
 			// MANDATORY reread
 			locA = (FifoLocation) locationLocal.getById("A");
@@ -370,7 +363,7 @@ public class FifoLocationTest {
 			LOG.info("1 HandlingUnit dropped on " + locA.getLocationId() + locA);
 
 			// MANDATORY reread
-			hU8 = handlingUnitLocal.getById("8");
+			HandlingUnit hU8 = handlingUnitLocal.getById("8");
 			assertNotNull(hU8.getLocation());
 			assertNotNull(hU8.getLocaPos());
 			LOG.info("Sample hU8 {}", hU8);
@@ -413,26 +406,20 @@ public class FifoLocationTest {
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		// Drop to make a relation
-		HandlingUnit hU1 = new HandlingUnit("1", "Test");
-		
 		try {
-			handlingUnitLocal.dropTo(locA, hU1);
+			handlingUnitLocal.dropTo(locA,  new HandlingUnit("1", "Test"));
 
-			HandlingUnit hU2 = new HandlingUnit("2", "Test");
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU2);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
 
-			HandlingUnit hU3 = new HandlingUnit("3", "Test");
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU3);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("3", "Test"));
 
-			HandlingUnit hU4 = new HandlingUnit("4", "Test");
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU4);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("4", "Test"));
 
-			HandlingUnit hU5 = new HandlingUnit("5", "Test");
 			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, hU5);
+			handlingUnitLocal.dropTo(locA, new HandlingUnit("5", "Test"));
 
 			// MANDATORY reread
 			locA = locationLocal.getById("A");
@@ -443,13 +430,13 @@ public class FifoLocationTest {
 			LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
 
 			// MANDATORY reread
-			hU5 = handlingUnitLocal.getById("5");
+			HandlingUnit hU5 = handlingUnitLocal.getById("5");
 			assertEquals(locA, hU5.getLocation());
 			assertEquals(Integer.valueOf(5), hU5.getLocaPos());
 			LOG.info("Sample hU5 locaPos check: {}", hU5);
 
 			// MANDATORY reread
-			hU1 = handlingUnitLocal.getById("1");
+			HandlingUnit hU1 = handlingUnitLocal.getById("1");
 			assertEquals(locA, hU1.getLocation());
 			assertEquals(Integer.valueOf(1), hU1.getLocaPos());
 			LOG.info("Sample hU1 locaPos check: {}", hU1);
@@ -464,7 +451,7 @@ public class FifoLocationTest {
 			assertNull(hU1.getLocation());
 			assertNull(hU1.getLocaPos());
 						
-			hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU2 = handlingUnitLocal.getById("2");
 			assertNotNull(hU2);
 			assertEquals(locA, hU2.getLocation());
 			assertEquals(Integer.valueOf(1), hU2.getLocaPos());
@@ -472,11 +459,11 @@ public class FifoLocationTest {
 			handlingUnitLocal.pickFrom(locA, hU2);
 			
 			locA = locationLocal.getById("A");
-			hU3 = handlingUnitLocal.getById("3");
+			HandlingUnit hU3 = handlingUnitLocal.getById("3");
 			handlingUnitLocal.pickFrom(locA, hU3);
 			
 			locA = locationLocal.getById("A");
-			hU4 = handlingUnitLocal.getById("4");
+			HandlingUnit hU4 = handlingUnitLocal.getById("4");
 			handlingUnitLocal.pickFrom(locA, hU4);			
 
 			locA = locationLocal.getById("A");
