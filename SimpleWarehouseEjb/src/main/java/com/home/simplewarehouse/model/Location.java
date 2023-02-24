@@ -77,11 +77,30 @@ public class Location extends EntityBase implements Serializable {
     		, fetch = FetchType.EAGER )
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
+    private void initAssociated() {
+    	Dimension dim = new Dimension();
+    	dim.setLocation(this);
+    	this.setDimension(dim);
+    	LocationStatus ls = new LocationStatus();
+    	ls.setLocation(this);
+    	this.setLocationStatus(ls);
+    }
+
+    private void initAssociated(String id) {
+    	Dimension dim = new Dimension(id);
+    	dim.setLocation(this);
+    	this.setDimension(dim);
+    	LocationStatus ls = new LocationStatus(id);
+    	ls.setLocation(this);
+    	this.setLocationStatus(ls);
+    }
+
     /**
      * Default Random Location
      */
     public Location() {
     	super();
+    	initAssociated();
     }
     
     /**
@@ -92,6 +111,7 @@ public class Location extends EntityBase implements Serializable {
     public Location(String id) {
     	super();
     	this.locationId = id;
+    	initAssociated(id);
     }
     
     /**
@@ -103,6 +123,7 @@ public class Location extends EntityBase implements Serializable {
     public Location(String id, String user) {
     	super(user);
     	this.locationId = id;
+    	initAssociated(id);
     }
     
     /**
@@ -115,6 +136,7 @@ public class Location extends EntityBase implements Serializable {
     public Location(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.locationId = id;
+    	initAssociated(id);
     }
     
     /**
