@@ -41,11 +41,14 @@ public class InnerClasses {
 				try {
 					new Inner1();
 				}
-				catch (Throwable e) {
+				catch (Exception e) {
 					LOG.fatal(e.getMessage());
 				}
 			}
 		};
+		
+		r.run();
+		
 	   	LOG.trace("<-- do1()");
 	}
 }
