@@ -215,7 +215,7 @@ public class ApplConfigRestService {
     public Response refresh() {
         applConfigService.refresh();
 
-        return Response.ok("Refresh").build();
+        return Response.ok("Refreshed").build();
     }
 
     /**
