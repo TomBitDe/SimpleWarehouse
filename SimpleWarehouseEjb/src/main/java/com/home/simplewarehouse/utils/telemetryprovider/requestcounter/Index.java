@@ -69,4 +69,14 @@ public class Index {
 		gm.tooEarly();
 		return null;
 	}
+
+	/**
+	 * Just for test call innerBoom
+	 * 
+	 * @return <code>null</code> in any case
+	 */
+    public Object innerBoom() {
+        new InnerClasses().do1();
+        return null;
+    }
 }

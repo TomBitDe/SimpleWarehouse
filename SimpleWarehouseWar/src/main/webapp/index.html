@@ -3,6 +3,21 @@
     <head>
         <title>Tools Page</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.3/jquery.min.js"></script>
+        <script>
+			$(document).ready(function(){
+  				$("button").click(function(){
+  					$.ajax({
+  					    type: "DELETE",
+  					    url: "http://localhost:8080/war/resources/monitoring/clear",
+  					    data: "",
+  					    success: function(msg){
+  					        alert("Clear telemetry data done!");
+  					    }
+  					});
+ 				 });
+			});
+		</script>  
     </head>
     <body>
         <h1>Tools</h1>
@@ -17,7 +32,26 @@
         - Number of configuration entries <a href="http://localhost:8080/war/resources/ApplConfigRestService/Count">Count</a>
         </p>
         <p>
-        - Show <a href="http://localhost:8080/war/resources/ApplConfigRestService/Content">Content</a>
+        - Show configuration <a href="http://localhost:8080/war/resources/ApplConfigRestService/Content">Content</a>
+        </p>
+        <p>
+        - <a href="http://localhost:8080/war/resources/ApplConfigRestService/Refresh">Refresh</a>
+        </p>
+        <h2>Telemetry</h2>
+        <p>
+        - <a href="http://localhost:8080/war/resources/monitoring/exceptionCount">Number of exceptions </a>
+        </p>
+        <p>
+        - Show exception <a href="http://localhost:8080/war/resources/monitoring/exceptionStatistics">statistics</a>
+        </p>
+        <p>
+        - Show a list of <a href="http://localhost:8080/war/resources/monitoring/exceptions">exceptions</a>
+        </p>
+        <p>
+        - Show a list (50) of slowest <a href="http://localhost:8080/war/resources/monitoring/slowestMethods/{50}">methods</a>
+        </p>
+        <p>
+        - <button>Clear</button>
         </p>
     </body>
 </html>

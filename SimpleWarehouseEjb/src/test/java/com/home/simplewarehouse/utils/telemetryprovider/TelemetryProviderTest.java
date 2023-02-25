@@ -21,6 +21,7 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 import com.home.simplewarehouse.utils.telemetryprovider.requestcounter.GoodMorning;
+import com.home.simplewarehouse.utils.telemetryprovider.requestcounter.InnerClasses;
 
 /**
  * Test the GoodMorning in TelemetryProvider.
@@ -44,6 +45,7 @@ public class TelemetryProviderTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
 						GoodMorning.class,
+						InnerClasses.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -88,5 +90,19 @@ public class TelemetryProviderTest {
 		goodMorning.tooEarly();
 
 		LOG.info("<-- testGoodMorningTooEarly()");
+	}
+
+	/**
+	 * Call method tooEarly of GoodMorming to throw an exception
+	 */
+	@Test
+	public void testInnerClassesInnerBoom() {
+		LOG.info("--> testInnerClassesInnerBoom()");
+
+		new InnerClasses().do1();
+		
+		assertTrue(true);
+
+		LOG.info("<-- testInnerClassesInnerBoom()");
 	}
 }
