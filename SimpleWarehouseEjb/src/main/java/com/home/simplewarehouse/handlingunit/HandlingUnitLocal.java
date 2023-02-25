@@ -19,7 +19,7 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @param handlingUnit the given HandlingUnit
 	 * 
-	 * @return the created HnadlingUnit
+	 * @return the created HandlingUnit
 	 */
 	public HandlingUnit create(final HandlingUnit handlingUnit);
 	/**
