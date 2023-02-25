@@ -9,16 +9,25 @@ import org.apache.logging.log4j.Logger;
 public class InnerClasses {
 	private static final Logger LOG = LogManager.getLogger(InnerClasses.class);
 	
+	/**
+	 * Cuonstructor
+	 */
 	public InnerClasses() {
 		super();
     	LOG.trace("--> InnerClasses()");
     	LOG.trace("<-- InnerClasses()");
 	}
 	
+	/**
+	 * The inner class
+	 */
 	class Inner1 {
 	    private int x = 5;
 	}
 
+	/**
+	 * Just to call Inner
+	 */
 	public void do1() {
     	LOG.trace("--> do1()");
  
