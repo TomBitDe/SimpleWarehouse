@@ -67,19 +67,24 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public void delete(HandlingUnit handlingUnit) {
+	public void delete(final HandlingUnit handlingUnit) {
 		LOG.trace("--> delete({})", handlingUnit);
 
 		if (handlingUnit != null && handlingUnit.getId() != null) {
+			HandlingUnit hu;
+			
 			if (!em.contains(handlingUnit)) {
-				handlingUnit = em.merge(handlingUnit);
+				hu = em.merge(handlingUnit);
+			}
+			else {
+				hu = handlingUnit;
 			}
 			
-			if (handlingUnit.getLocation() != null) {
-			    handlingUnit.getLocation().removeHandlingUnit(handlingUnit);
+			if (hu.getLocation() != null) {
+			    hu.getLocation().removeHandlingUnit(hu);
 			}
 			
-			em.remove(handlingUnit);
+			em.remove(hu);
 			em.flush();
 
 		}

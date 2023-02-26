@@ -27,7 +27,7 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @param handlingUnit the given HandlingUnit
 	 */
-	public void delete(HandlingUnit handlingUnit);
+	public void delete(final HandlingUnit handlingUnit);
 	/**
 	 * Get a HandlingUnit by its id
 	 * 
