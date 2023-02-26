@@ -104,7 +104,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.LAZY) // LAZY for better performance)
 	@JoinColumn(name = "BASE")
-    private HandlingUnit base;
+    private HandlingUnit base = null;
     
     /**
      * The 
@@ -174,6 +174,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight) {
     	super();
     	this.id = id;
+    	this.base = this;
     	setDefaults();
     	setWeight(weight);
     }
