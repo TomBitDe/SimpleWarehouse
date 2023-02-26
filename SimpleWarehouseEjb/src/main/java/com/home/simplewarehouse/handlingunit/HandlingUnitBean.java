@@ -87,7 +87,12 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			em.remove(hu);
 			em.flush();
 
+			LOG.debug("deleted: {}", hu);
 		}
+		else {
+			LOG.debug("HandlingUnit == null or Id == null");
+		}
+
 		LOG.trace("<-- delete()");
 	}
 

@@ -81,15 +81,20 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public void delete(Location location) {
+	public void delete(final Location location) {
 		LOG.trace("--> delete({})", location);
 
 		if (location != null && location.getLocationId() != null) {
+			Location lo;
+			
 			if (!em.contains(location)) {
-				location = em.merge(location);
+				lo = em.merge(location);
+			}
+			else {
+				lo = location;
 			}
 			
-			for (HandlingUnit handlingUnit : location.getHandlingUnits()) {
+			for (HandlingUnit handlingUnit : lo.getHandlingUnits()) {
 				handlingUnit.setLocation(null);
 				handlingUnit.setLocaPos(null);		
 				em.flush();
@@ -97,10 +102,10 @@ public class LocationBean implements LocationLocal {
 			
 			// No need to    em.remove(locationStatus)  because it is done by  cascade = CascadeType.ALL
 			// Same for      dimension
-			em.remove(location);
+			em.remove(lo);
 			em.flush();
 
-			LOG.debug("deleted: {}", location);
+			LOG.debug("deleted: {}", lo);
 		} 
 		else {
 			LOG.debug("Location == null or Id == null");
@@ -252,7 +257,7 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public boolean overweight(Location location, int weight) {
+	public boolean overweight(final Location location, final int weight) {
 		LOG.trace("--> overweight({}, {})", location.getLocationId(), weight);
 
 		Location loc = getById(location.getLocationId());
@@ -279,7 +284,7 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public boolean overheight(Location location, HeightCategory height) {
+	public boolean overheight(final Location location, final HeightCategory height) {
 		LOG.trace("--> overheight({}, {})", location.getLocationId(), height);
 
 		Location loc = getById(location.getLocationId());
@@ -317,7 +322,7 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public boolean overlength(Location location, LengthCategory length) {
+	public boolean overlength(final Location location, final LengthCategory length) {
 		LOG.trace("--> overlength({}, {})", location.getLocationId(), length);
 
 		Location loc = getById(location.getLocationId());
@@ -356,7 +361,7 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public boolean overwidth(Location location, WidthCategory width) {
+	public boolean overwidth(final Location location, final WidthCategory width) {
 		LOG.trace("--> overwidth({}, {})", location.getLocationId(), width);
 
 		Location loc = getById(location.getLocationId());
@@ -394,7 +399,7 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public void checkDimensionLimitExceeds(Location location, HandlingUnit handlingUnit)
+	public void checkDimensionLimitExceeds(final Location location, final HandlingUnit handlingUnit)
 			throws CapacityExceededException, WeightExceededException, OverheightException
 			, OverlengthException, OverwidthException {
 		LOG.trace("--> checkDimensionLimitExceeds({}, {})", location.getLocationId(), handlingUnit.getId());
@@ -436,7 +441,7 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public boolean addHandlingUnit(Location location, HandlingUnit handlingUnit) {
+	public boolean addHandlingUnit(final Location location, final HandlingUnit handlingUnit) {
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL);
 		}
@@ -453,7 +458,7 @@ public class LocationBean implements LocationLocal {
 	}
 
 	@Override
-	public List<HandlingUnit> getAvailablePicks(Location location) {
+	public List<HandlingUnit> getAvailablePicks(final Location location) {
 		LOG.trace("--> getAvailablePicks()");
 		
 		if (location == null) {

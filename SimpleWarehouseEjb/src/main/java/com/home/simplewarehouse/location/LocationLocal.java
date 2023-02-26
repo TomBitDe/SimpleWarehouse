@@ -26,7 +26,7 @@ public interface LocationLocal {
 	 * 
 	 * @param location the given Location
 	 */
-	public void delete(Location location);
+	public void delete(final Location location);
 	/**
 	 * Get a Location by its id
 	 * 
@@ -48,7 +48,7 @@ public interface LocationLocal {
 	 * 
 	 * @return a list of HandlingUnits
 	 */
-	public List<HandlingUnit> getHandlingUnits(Location location);
+	public List<HandlingUnit> getHandlingUnits(final Location location);
 	/**
 	 * Adds a HandlingUnit to the list of HandlingUnits of this Location
 	 * 
@@ -57,7 +57,7 @@ public interface LocationLocal {
 	 * 
 	 * @return true if adding has been done, else false
 	 */
-	public boolean addHandlingUnit(Location location, HandlingUnit handlingUnit);
+	public boolean addHandlingUnit(final Location location, final HandlingUnit handlingUnit);
 	/**
 	 * Get a list of all Location items containing the given HandlingUnit
 	 * 
@@ -161,6 +161,6 @@ public interface LocationLocal {
 	 * 
 	 * @return the List of HandlingUnits
 	 */
-	public List<HandlingUnit> getAvailablePicks(Location location);
+	public List<HandlingUnit> getAvailablePicks(final Location location);
 
 }
