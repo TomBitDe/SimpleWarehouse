@@ -2,7 +2,9 @@ package com.home.simplewarehouse.model;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -10,8 +12,10 @@ import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import static javax.persistence.LockModeType.NONE;
@@ -26,7 +30,7 @@ import org.apache.logging.log4j.Logger;
 @Table(name="HANDLING_UNIT")
 @NamedQuery(name = "findAllHandlingUnits", query = "select h from HandlingUnit h", lockMode = NONE)
 public class HandlingUnit extends EntityBase implements Serializable {
-    private static final long serialVersionUID = 1L;
+	private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
     
     private static final int WEIGHT_DEFAULT = 0;
@@ -94,6 +98,27 @@ public class HandlingUnit extends EntityBase implements Serializable {
     private Location location;
     
     /**
+     * The base HandlingUnit of the HandlingUnit
+     */
+    @ManyToOne(targetEntity = HandlingUnit.class
+    		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
+    		, fetch = FetchType.LAZY) // LAZY for better performance)
+	@JoinColumn(name = "BASE")
+    private HandlingUnit base;
+    
+    /**
+     * The 
+     */
+    @OneToMany
+    @JoinTable
+    (
+        name="HU_CONTAINS",
+        joinColumns={ @JoinColumn(name="ID", referencedColumnName="BASE") },
+        inverseJoinColumns={ @JoinColumn(name="CONTAINS", referencedColumnName="ID", unique=true) }
+    )
+    private Set<HandlingUnit> contains = new HashSet<>();
+    
+    /**
      * Default constructor
      */
     public HandlingUnit() {
@@ -109,6 +134,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id) {
     	super();
     	this.id = id;
+    	this.base = this;
     	setDefaults();
     }
 
@@ -121,6 +147,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, String user) {
     	super(user);
     	this.id = id;
+    	this.base = this;
     	setDefaults();
     }
 
@@ -134,6 +161,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.id = id;
+    	this.base = this;
     	setDefaults();
     }
 
@@ -160,6 +188,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume) {
     	super();
     	this.id = id;
+    	this.base = this;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -176,6 +205,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height) {
     	super();
     	this.id = id;
+    	this.base = this;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -194,6 +224,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length) {
     	super();
     	this.id = id;
+    	this.base = this;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -214,6 +245,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length, WidthCategory width) {
     	super();
     	this.id = id;
+    	this.base = this;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -421,6 +453,34 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		this.locaPos = locaPos;
 	}
 
+    /**
+	 * @return the base
+	 */
+	public HandlingUnit getBase() {
+		return base;
+	}
+
+	/**
+	 * @param base the base to set
+	 */
+	public void setBase(HandlingUnit base) {
+		this.base = base;
+	}
+
+	/**
+	 * @return the contains
+	 */
+	public Set<HandlingUnit> getContains() {
+		return contains;
+	}
+
+	/**
+	 * @param contains the contains to set
+	 */
+	public void setContains(Set<HandlingUnit> contains) {
+		this.contains = contains;
+	}
+
 	@Override
 	public int hashCode() {
 		// Only id; this is a must. Otherwise stack overflow
@@ -459,10 +519,15 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		    .append(width)		    
 		    .append(", locaPos=")
 		    .append(locaPos == null ? "null" : locaPos)		    
+		    .append(", base=")
+		    .append(base == null ? "null" : base.getId())
 		    .append(", version=")
 		    .append(version)
 		    .append(", ")
 		    .append(location == null ? "Location=null" : location)
+			.append(", " + System.lineSeparator() + '\t' + '\t')
+			.append("contains=")
+			.append(getContains())
 		    .append(", " + System.lineSeparator() + '\t')
 			.append(super.toString())			
 			.append("]");

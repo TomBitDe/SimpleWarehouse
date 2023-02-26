@@ -21,6 +21,9 @@
             <property name="eclipselink.logging.level" value="FINE" />
             <property name="eclipselink.logging.level.cache" value="FINE" />
             <property name="eclipselink.logging.parameters" value="true" />
+            <property name="javax.persistence.schema-generation.create-database-schemas" value="true"></property>
+            <property name="javax.persistence.schema-generation.scripts.create-target" value="aaaaaa.sql"></property>
+            <property name="javax.persistence.schema-generation.scripts.drop-target" value="bbbbbb.sql"></property>
 		</properties>
 	</persistence-unit>
 </persistence>
