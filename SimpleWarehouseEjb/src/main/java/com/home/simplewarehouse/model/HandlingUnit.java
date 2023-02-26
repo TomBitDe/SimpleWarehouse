@@ -107,7 +107,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     private HandlingUnit base = null;
     
     /**
-     * The 
+     * The container for other HnadlingUnits
      */
     @OneToMany
     @JoinTable
@@ -455,6 +455,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	}
 
     /**
+     * Gets the base for this HnadlingUnit
+     * 
 	 * @return the base
 	 */
 	public HandlingUnit getBase() {
@@ -462,6 +464,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	}
 
 	/**
+     * Sets the base for this HnadlingUnit
+	 *
 	 * @param base the base to set
 	 */
 	public void setBase(HandlingUnit base) {
@@ -469,14 +473,18 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	}
 
 	/**
-	 * @return the contains
+	 * Gets the HandlingUnits this one contains
+	 * 
+	 * @return the containing HandlingUnits
 	 */
 	public Set<HandlingUnit> getContains() {
 		return contains;
 	}
 
 	/**
-	 * @param contains the contains to set
+	 * Sets the HandlingUnits this one contains
+	 * 
+	 * @param contains the containing HandlingUnits to set
 	 */
 	public void setContains(Set<HandlingUnit> contains) {
 		this.contains = contains;
@@ -535,6 +543,4 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		
 		return builder.toString();
 	}
-	
-	
 }
