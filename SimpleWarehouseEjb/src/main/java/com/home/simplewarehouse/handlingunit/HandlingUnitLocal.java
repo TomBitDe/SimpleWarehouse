@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.handlingunit;
 
 import java.util.List;
+import java.util.Set;
 
 import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.OverheightException;
@@ -45,7 +46,7 @@ public interface HandlingUnitLocal {
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
 	 */
-	public void pickFrom(Location location, HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException;
+	public void pickFrom(final Location location, final HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException;
 	/**
 	 * Pick from a FIFO / LIFO Location<br>
 	 * Because of FIFO / LIFO the HandlingUnit is not a parameter.
@@ -56,7 +57,7 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 */
-	public HandlingUnit pickFrom(Location location) throws LocationIsEmptyException;
+	public HandlingUnit pickFrom(final Location location) throws LocationIsEmptyException;
 	/**
 	 * Drop a HandlingUnit on a Location
 	 * 
@@ -78,4 +79,30 @@ public interface HandlingUnitLocal {
 	 * @return the HandlingUnit list
 	 */
 	public List<HandlingUnit> getAll();
+	/**
+	 * Remove a HandlingUnit to this base HandlingUnit
+	 * 
+	 * @param handlingUnit the HandlingUnit to assign
+	 * @param base the base HandlingUnit
+	 * 
+	 * @return the base HandlingUnit
+	 */
+	public HandlingUnit assign(final HandlingUnit handlingUnit, final HandlingUnit base);
+	/**
+	 * Remove a HandlingUnit from this base HandlingUnit
+	 * 
+	 * @param handlingUnit the HandlingUnit to remove
+	 * @param base the base HandlingUnit
+	 * 
+	 * @return the base HandlingUnit
+	 */
+	public HandlingUnit remove(final HandlingUnit handlingUnit, final HandlingUnit base);
+	/**
+	 * Remove all HandlingUnits from this base HandlingUnit
+	 * 
+	 * @param base the base HandlingUnit
+	 * 
+	 * @return a Set of all removed HandlingUnits (can be an empty Set)
+	 */
+	public Set<HandlingUnit> free(final HandlingUnit base);
 }

@@ -113,7 +113,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     @JoinTable
     (
         name="HU_CONTAINS",
-        joinColumns={ @JoinColumn(name="ID", referencedColumnName="BASE") },
+        joinColumns={ @JoinColumn(name="ID", referencedColumnName="ID") },
         inverseJoinColumns={ @JoinColumn(name="CONTAINS", referencedColumnName="ID", unique=true) }
     )
     private Set<HandlingUnit> contains = new HashSet<>();
@@ -134,7 +134,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id) {
     	super();
     	this.id = id;
-    	this.base = this;
+    	this.base = null;
     	setDefaults();
     }
 
@@ -147,7 +147,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, String user) {
     	super(user);
     	this.id = id;
-    	this.base = this;
+    	this.base = null;
     	setDefaults();
     }
 
@@ -161,7 +161,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.id = id;
-    	this.base = this;
+    	this.base = null;
     	setDefaults();
     }
 
@@ -174,7 +174,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight) {
     	super();
     	this.id = id;
-    	this.base = this;
+    	this.base = null;
     	setDefaults();
     	setWeight(weight);
     }
@@ -189,7 +189,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume) {
     	super();
     	this.id = id;
-    	this.base = this;
+    	this.base = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -206,7 +206,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height) {
     	super();
     	this.id = id;
-    	this.base = this;
+    	this.base = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -225,7 +225,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length) {
     	super();
     	this.id = id;
-    	this.base = this;
+    	this.base = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -246,7 +246,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length, WidthCategory width) {
     	super();
     	this.id = id;
-    	this.base = this;
+    	this.base = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);

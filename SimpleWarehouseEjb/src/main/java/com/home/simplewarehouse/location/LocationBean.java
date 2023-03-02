@@ -118,6 +118,10 @@ public class LocationBean implements LocationLocal {
 	public Location getById(final String id) {
 		LOG.trace("--> getById({})", id);
 
+		if (id == null) {
+			throw new IllegalArgumentException();
+		}
+
 		Location location = em.find(Location.class, id);
 
 		LOG.trace("<-- getById");

@@ -1,6 +1,8 @@
 package com.home.simplewarehouse.handlingunit;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -36,8 +38,10 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 public class HandlingUnitBean implements HandlingUnitLocal {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitBean.class);
 	
-	private static final String HU_IS_HERE_FORMATTER = "Handling unit {} is here: {}";
+	private static final String HU_IS_HERE_FORMATTER = "HandlingUnit {} is here: {}";
 	private static final String LOCATION_IS_NULL_MSG = "Location is null";
+	private static final String HU_IS_NULL_MSG = "HandlingUnit is null";
+	private static final String BASE_IS_NULL_MSG = "Base is null";
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -73,16 +77,13 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		if (handlingUnit != null && handlingUnit.getId() != null) {
 			HandlingUnit hu;
 			
-			if (!em.contains(handlingUnit)) {
-				hu = em.merge(handlingUnit);
-			}
-			else {
-				hu = handlingUnit;
-			}
+			hu = getById(handlingUnit.getId());
 			
 			if (hu.getLocation() != null) {
 			    hu.getLocation().removeHandlingUnit(hu);
 			}
+			
+			free(hu);
 			
 			em.remove(hu);
 			em.flush();
@@ -99,6 +100,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	@Override
 	public HandlingUnit getById(final String id) {
 		LOG.trace("--> getById({})", id);
+		
+		if (id == null) {
+			throw new IllegalArgumentException();
+		}
 
 		HandlingUnit handlingUnit = em.find(HandlingUnit.class, id);
 
@@ -120,33 +125,40 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 	
 	@Override
-	public void pickFrom(Location location, HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+	public void pickFrom(final Location location, final HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.trace("--> pickFrom()");
 
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
 		}
 		
+		Location lo = locationLocal.getById(location.getLocationId());
+		if (lo == null) {
+			lo = locationLocal.create(location);
+		}
+		else {
+			lo = em.merge(location);
+		}
+		
 		if (handlingUnit == null) {
-			throw new IllegalArgumentException("HandlingUnit is null");
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
 		}
 		
-		if (!em.contains(location)) {
-			location = em.merge(location);
+		HandlingUnit hu = getById(handlingUnit.getId());
+		if (hu == null) {
+			hu = create(handlingUnit);
+		}
+		else {
+			hu = em.merge(handlingUnit);
 		}
 		
-		if (!em.contains(handlingUnit)) {
-			handlingUnit = em.merge(handlingUnit);
-		}
-		
-		if ((location.getHandlingUnits()).isEmpty()) {
+		if ((lo.getHandlingUnits()).isEmpty()) {
 			// Check handlingUnit is already stored elsewhere
-			List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit
-					, location);
+			List<Location> locations = locationLocal.getAllContainingExceptLocation(hu, lo);
 			
 			for (Location other : locations) {
 				// HandlingUnit is already stored elsewhere
-				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
+				LOG.warn(HU_IS_HERE_FORMATTER, hu.getId(), other);
 
 				other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 			}
@@ -154,35 +166,34 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			
 			// ATTENTION: Location error status does not need to be changed because the location was EMPTY!
 			//            NO manual adjustment is needed in this case!
-			throw new LocationIsEmptyException("Location [" + location.getLocationId() + "] is EMPTY");
+			throw new LocationIsEmptyException("Location [" + lo.getLocationId() + "] is EMPTY");
 		}
 		else {
-			if (location.getHandlingUnits().contains(handlingUnit)) {
+			if (lo.getHandlingUnits().contains(hu)) {
 				// Pick it now
-				handlingUnit.setLocation(null);
-				handlingUnit.setLocaPos(null);
+				hu.setLocation(null);
+				hu.setLocaPos(null);
 				
-				location.removeHandlingUnit(handlingUnit);
+				lo.removeHandlingUnit(hu);
 				
 				em.flush();
 			}
 			else {
 				// Check handlingUnit is already stored elsewhere
-				List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit
-						, location);
+				List<Location> locations = locationLocal.getAllContainingExceptLocation(hu, lo);
 				
 				for (Location other : locations) {					
 					// HandlingUnit is already stored elsewhere
-					LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
+					LOG.warn(HU_IS_HERE_FORMATTER, hu.getId(), other);
 
 					other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 				}
 				
-				location.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+				lo.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 				
 				em.flush();
 								
-				throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + location.getLocationId() + ']');
+				throw new HandlingUnitNotOnLocationException("Handling unit not on Location [" + lo.getLocationId() + ']');
 			}
 		}
 
@@ -190,27 +201,31 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public HandlingUnit pickFrom(Location location) throws LocationIsEmptyException {
+	public HandlingUnit pickFrom(final Location location) throws LocationIsEmptyException {
 		LOG.trace("--> pickFrom()");
 
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
 		}
 		
-		if (!em.contains(location)) {
-			location = em.merge(location);
+		Location lo = locationLocal.getById(location.getLocationId());
+		if (lo == null) {
+			lo = locationLocal.create(location);
+		}
+		else {
+			lo = em.merge(location);
 		}
 		
-		List<HandlingUnit> picksAvailable = location.getAvailablePicks();
+		List<HandlingUnit> picksAvailable = lo.getAvailablePicks();
 		
 		if (picksAvailable.isEmpty()) {
 			// ATTENTION: Location error status does not need to be changed because the location was EMPTY!
 			//            NO manual adjustment is needed in this case!
-			throw new LocationIsEmptyException("Location [" + location.getLocationId() + "] is EMPTY");
+			throw new LocationIsEmptyException("Location [" + lo.getLocationId() + "] is EMPTY");
 		}
 		
 		// Pick it now
-		location.removeHandlingUnit(picksAvailable.get(0));
+		lo.removeHandlingUnit(picksAvailable.get(0));
 		
 		em.flush();
 		
@@ -220,7 +235,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 
 	@Override
-	public void dropTo(Location location, HandlingUnit handlingUnit)
+	public void dropTo(final Location location, final HandlingUnit handlingUnit)
 			throws CapacityExceededException, WeightExceededException, OverheightException
 			, OverlengthException, OverwidthException
 	{
@@ -230,28 +245,36 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			LOG.warn("HandlingUnit is null; this is valid but nothing will happen!");
 			return;
 		}
-		
+				
+		HandlingUnit hu = getById(handlingUnit.getId());
+		if (hu == null) {
+			hu = create(handlingUnit);
+		}
+		else {
+			hu = em.merge(handlingUnit);
+		}
+
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
 		}
 		
-		if (!em.contains(location)) {
-			location = em.merge(location);
+		Location lo = locationLocal.getById(location.getLocationId());
+		if (lo == null) {
+			lo = locationLocal.create(location);
+		}
+		else {
+			lo = em.merge(location);
 		}
 		
-		if (!em.contains(handlingUnit)) {
-			handlingUnit = em.merge(handlingUnit);
-		}
+		locationLocal.checkDimensionLimitExceeds(lo, hu);
 		
-		locationLocal.checkDimensionLimitExceeds(location, handlingUnit);
-		
-		List<Location> locations = locationLocal.getAllContainingExceptLocation(handlingUnit, location);
+		List<Location> locations = locationLocal.getAllContainingExceptLocation(hu, lo);
 		
 		for (Location other : locations) {
 			// HandlingUnit is already stored elsewhere
 			try {
-				LOG.warn(HU_IS_HERE_FORMATTER, handlingUnit.getId(), other);
-				pickFrom(other, handlingUnit);
+				LOG.warn(HU_IS_HERE_FORMATTER, hu.getId(), other);
+				pickFrom(other, hu);
 					
 				other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 			}
@@ -260,11 +283,128 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			}				
 		}
 
-		handlingUnit.setLocation(location);
-		locationLocal.addHandlingUnit(location, handlingUnit);
+		hu.setLocation(lo);
+		locationLocal.addHandlingUnit(lo, hu);
 		
 		LOG.trace("<-- dropTo()");
 
 		em.flush();
+	}
+
+	@Override
+	public HandlingUnit assign(final HandlingUnit handlingUnit, final HandlingUnit base) {
+		LOG.trace("--> assign() hu={} base={}", handlingUnit, base);
+		
+		if (handlingUnit == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+		}
+
+		HandlingUnit hu = getById(handlingUnit.getId());
+		if (hu == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+		}
+		
+		if (base == null) {
+			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+		}
+		
+		HandlingUnit ba = getById(base.getId());
+		if (ba == null) {
+			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+		}
+				
+		hu.setBase(ba);
+		boolean ret = ba.getContains().add(hu);
+		LOG.info("assign result is: {}", ret);
+		
+		ba.setContains(ba.getContains());
+		
+		LOG.trace("<-- assign() {}", ba);
+		
+		em.flush();
+		
+		return ba;
+	}
+
+	@Override
+	public HandlingUnit remove(final HandlingUnit handlingUnit, final HandlingUnit base) {
+		LOG.trace("--> remove() hu={} base={}", handlingUnit, base);
+		
+		if (handlingUnit == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+		}
+
+		HandlingUnit hu = getById(handlingUnit.getId());
+		if (hu == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+		}
+		else {
+			hu = em.merge(handlingUnit);
+		}
+		
+		if (base == null) {
+			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+		}
+		
+		HandlingUnit ba = getById(base.getId());
+		if (ba == null) {
+			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+		}
+		else {
+			ba = em.merge(base);
+		}
+		
+		hu.setBase(hu);
+		boolean ret = ba.getContains().remove(hu);
+		LOG.info("remove result is: {}", ret);
+		
+		ba.setContains(ba.getContains());
+		
+		LOG.trace("<-- remove() {}", ba);
+		
+		em.flush();
+		
+		return ba;
+	}
+
+	@Override
+	public Set<HandlingUnit> free(final HandlingUnit base) {
+		LOG.trace("--> free() base={}", base);
+		
+		if (base == null) {
+			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+		}
+		
+		HandlingUnit ba = getById(base.getId());
+		if (ba == null) {
+			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+		}
+		else {
+			ba = em.merge(base);
+		}
+		
+		Set<HandlingUnit> ret;			
+		Set<HandlingUnit> huList = new HashSet<>(); 
+		huList.addAll(ba.getContains());
+		
+		if (ba.getContains().removeAll(huList)) {
+			ret = huList;
+			for (HandlingUnit hu : ret) {
+				hu.setBase(null);
+			}
+		}
+		else {
+			ret = new HashSet<>();			
+		}
+		
+		ba.setContains(ba.getContains());
+		
+		LOG.info("free result is: {}", base);
+		
+		LOG.trace("<-- free() {}", ret);
+		
+		em.flush();
+				
+		return ret;
 	}
 }

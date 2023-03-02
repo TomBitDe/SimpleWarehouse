@@ -566,6 +566,7 @@ public class LocationBeanTest {
 		assertTrue(locationLocal.getAllFull().isEmpty());
 		
 		locA.getDimension().setMaxCapacity(2);
+		locA.setDimension(locA.getDimension());
 		
 		// Drop to make a relation
 		try {
