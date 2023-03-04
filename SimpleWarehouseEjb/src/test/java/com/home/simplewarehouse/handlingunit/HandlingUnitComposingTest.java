@@ -134,9 +134,8 @@ public class HandlingUnitComposingTest {
 		assertTrue(hu2.getContains().isEmpty());
 		LOG.info(hu2);
 		
-		handlingUnitLocal.assign(hu2, base);
+		base = handlingUnitLocal.assign(hu2, base);
 		
-		base = handlingUnitLocal.getById("1");
 		assertEquals(1, base.getContains().size());
 		assertTrue(base.getContains().contains(hu2));
 		LOG.info(base);
@@ -145,5 +144,30 @@ public class HandlingUnitComposingTest {
 		assertTrue(hu2.getContains().isEmpty());
 		assertEquals(base, hu2.getBase());
 		LOG.info(hu2);
+	}
+	
+	/**
+	 * Simple handling unit assign four on base
+	 */
+	@Test
+	@InSequence(3)
+	public void assignFourOnBase() {
+		LOG.info("--- Test assignFourOnBase");
+
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+
+		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit hu2 =  handlingUnitLocal.create(new HandlingUnit("2"));
+		HandlingUnit hu3 =  handlingUnitLocal.create(new HandlingUnit("3"));
+		HandlingUnit hu4 =  handlingUnitLocal.create(new HandlingUnit("4"));
+		HandlingUnit hu5 =  handlingUnitLocal.create(new HandlingUnit("5"));
+
+		base = handlingUnitLocal.assign(hu2, base);
+		base = handlingUnitLocal.assign(hu3, base);
+		base = handlingUnitLocal.assign(hu4, base);
+		base = handlingUnitLocal.assign(hu5, base);
+
+		LOG.info(base);
+		assertEquals(4, base.getContains().size());
 	}
 }

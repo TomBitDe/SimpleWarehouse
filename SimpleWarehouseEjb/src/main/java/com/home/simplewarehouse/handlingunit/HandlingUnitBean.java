@@ -301,7 +301,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+			hu = create(handlingUnit);
+		}
+		else {
+			hu = em.merge(handlingUnit);
 		}
 		
 		if (base == null) {
@@ -310,7 +313,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		HandlingUnit ba = getById(base.getId());
 		if (ba == null) {
-			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+			ba = create(base);
+		}
+		else {
+			ba = em.merge(base);
 		}
 				
 		hu.setBase(ba);
@@ -336,7 +342,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+			hu = create(handlingUnit);
 		}
 		else {
 			hu = em.merge(handlingUnit);
@@ -348,7 +354,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		HandlingUnit ba = getById(base.getId());
 		if (ba == null) {
-			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+			ba = create(base);
 		}
 		else {
 			ba = em.merge(base);
@@ -377,7 +383,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		HandlingUnit ba = getById(base.getId());
 		if (ba == null) {
-			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+			ba = create(base);
 		}
 		else {
 			ba = em.merge(base);
@@ -398,6 +404,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 		
 		ba.setContains(ba.getContains());
+		
+		if (ba.getBase() != null) {
+		    ba.getBase().getContains().remove(ba);
+		}
 		
 		LOG.info("free result is: {}", base);
 		
