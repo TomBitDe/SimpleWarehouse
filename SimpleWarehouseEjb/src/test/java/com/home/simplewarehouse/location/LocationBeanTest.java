@@ -125,13 +125,35 @@ public class LocationBeanTest {
 
 		assertTrue(locationLocal.getAll().isEmpty());
 		
+		Location location = null;
+		
+		try {
+			location = locationLocal.create(null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info(ejbex.getMessage());
+		}
+
+		try {
+			location = locationLocal.create(new Location(null));
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info(ejbex.getMessage());
+		}
+		
+		assertNull(location);
+		
 		Location expLocation = new Location("A");
 
 		locationLocal.create(expLocation);
 		LOG.info("Location created: " + expLocation);
 
 		// MANDATORY reread
-		Location location = locationLocal.getById(expLocation.getLocationId());		
+		location = locationLocal.getById(expLocation.getLocationId());		
 		LOG.info("Location getById: " + location);
 		
 		assertEquals(expLocation, location);

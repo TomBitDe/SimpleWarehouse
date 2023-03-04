@@ -137,10 +137,43 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Simple handling unit with no reference to a location
+	 * Simple handling unit null or with id null
 	 */
 	@Test
 	@InSequence(0)
+	public void createNullOrWithIdNull() {
+		LOG.info("--- Test createNullOrWithIdNull");
+
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+
+		HandlingUnit handlingUnit = null;
+		
+		try {
+			handlingUnit = handlingUnitLocal.create(null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info(ejbex.getMessage());
+		}
+
+		try {
+			handlingUnit = handlingUnitLocal.create(new HandlingUnit(null));
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info(ejbex.getMessage());
+		}
+		
+		assertNull(handlingUnit);
+	}
+
+	/**
+	 * Simple handling unit with no reference to a location
+	 */
+	@Test
+	@InSequence(1)
 	public void createAndGetById() {
 		LOG.info("--- Test createAndGetById");
 

@@ -170,4 +170,39 @@ public class HandlingUnitComposingTest {
 		LOG.info(base);
 		assertEquals(4, base.getContains().size());
 	}
+	
+	/**
+	 * Simple handling unit assign stacks of handlingUnits
+	 */
+	@Test
+	@InSequence(6)
+	public void assignStacksOnBase() {
+		LOG.info("--- Test assignStacksOnBase");
+
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+
+		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit hu2 =  handlingUnitLocal.create(new HandlingUnit("2"));
+		HandlingUnit hu3 =  handlingUnitLocal.create(new HandlingUnit("3"));
+		HandlingUnit hu4 =  handlingUnitLocal.create(new HandlingUnit("4"));
+		HandlingUnit hu5 =  handlingUnitLocal.create(new HandlingUnit("5"));
+		HandlingUnit hu6 =  handlingUnitLocal.create(new HandlingUnit("6"));
+		HandlingUnit hu7 =  handlingUnitLocal.create(new HandlingUnit("7"));
+
+		base = handlingUnitLocal.assign(hu2, base);
+		hu3 = handlingUnitLocal.assign(hu4, hu3);
+		hu3 = handlingUnitLocal.assign(hu5, hu3);
+		base = handlingUnitLocal.assign(hu3, base);
+		hu6 = handlingUnitLocal.assign(hu7, hu6);
+		base = handlingUnitLocal.assign(hu6, base);
+		
+		LOG.info(base);
+		assertEquals(3, base.getContains().size());
+		LOG.info(hu3);
+		assertEquals(2, hu3.getContains().size());
+		LOG.info(hu6);
+		assertEquals(1, hu6.getContains().size());
+		LOG.info(hu2);
+		assertEquals(0, hu2.getContains().size());
+	}
 }
