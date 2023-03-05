@@ -360,11 +360,15 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			ba = em.merge(base);
 		}
 		
-		hu.setBase(hu);
+		hu.setBase(null);
 		boolean ret = ba.getContains().remove(hu);
 		LOG.info("remove result is: {}", ret);
 		
 		ba.setContains(ba.getContains());
+		
+		if (ba.getBase() != null) {
+		    ba.getBase().getContains().remove(ba);
+		}
 		
 		LOG.trace("<-- remove() {}", ba);
 		

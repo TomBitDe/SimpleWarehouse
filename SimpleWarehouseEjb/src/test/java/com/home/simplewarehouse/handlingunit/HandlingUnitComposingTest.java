@@ -5,6 +5,7 @@ import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 
@@ -204,5 +205,97 @@ public class HandlingUnitComposingTest {
 		assertEquals(1, hu6.getContains().size());
 		LOG.info(hu2);
 		assertEquals(0, hu2.getContains().size());
+	}
+	
+	/**
+	 * Simple handling unit remove from base
+	 */
+	@Test
+	@InSequence(9)
+	public void removeFromBase() {
+		LOG.info("--- Test removeFromBase");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+
+		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+
+		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
+		base = handlingUnitLocal.assign(new HandlingUnit("3"), base);
+		base = handlingUnitLocal.assign(new HandlingUnit("4"), base);
+		base = handlingUnitLocal.assign(new HandlingUnit("5"), base);
+		
+		Set<HandlingUnit> baseContains = base.getContains();
+		for (HandlingUnit item : baseContains) {
+			item = handlingUnitLocal.getById(item.getId());
+			base = handlingUnitLocal.remove(item, base);
+		}
+		
+		assertTrue(base.getContains().isEmpty());
+	}
+	
+	/**
+	 * Simple handling unit remove from stack
+	 */
+	@Test
+	@InSequence(12)
+	public void removeFromStack() {
+		LOG.info("--- Test removeFromStack");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+
+		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit hu3 =  handlingUnitLocal.create(new HandlingUnit("3"));
+		HandlingUnit hu6 =  handlingUnitLocal.create(new HandlingUnit("6"));
+
+		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
+		hu3 = handlingUnitLocal.assign(new HandlingUnit("4"), hu3);
+		hu3 = handlingUnitLocal.assign(new HandlingUnit("5"), hu3);
+		base = handlingUnitLocal.assign(hu3, base);
+		hu6 = handlingUnitLocal.assign(new HandlingUnit("7"), hu6);
+		base = handlingUnitLocal.assign(hu6, base);
+		
+		hu3 = handlingUnitLocal.getById("3");
+		Set<HandlingUnit> hu3Contains = hu3.getContains();
+		for (HandlingUnit item : hu3Contains) {
+			item = handlingUnitLocal.getById(item.getId());
+			hu3 = handlingUnitLocal.remove(item, hu3);
+		}	
+		assertTrue(hu3.getContains().isEmpty());
+		
+		base = handlingUnitLocal.getById(base.getId());
+		hu6 = handlingUnitLocal.getById("6");
+		base = handlingUnitLocal.remove(hu6, base);
+		assertEquals(1, base.getContains().size());
+		
+		base = handlingUnitLocal.getById(base.getId());
+		HandlingUnit hu2 = handlingUnitLocal.getById("2");
+		base = handlingUnitLocal.remove(hu2, base);
+		assertEquals(0, base.getContains().size());
+	}
+
+	/**
+	 * Simple handling unit empty from stack
+	 */
+	@Test
+	@InSequence(15)
+	public void emptyFromStack() {
+		LOG.info("--- Test emptyFromStack");
+
+		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit hu3 =  handlingUnitLocal.create(new HandlingUnit("3"));
+		HandlingUnit hu6 =  handlingUnitLocal.create(new HandlingUnit("6"));
+
+		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
+		hu3 = handlingUnitLocal.assign(new HandlingUnit("4"), hu3);
+		hu3 = handlingUnitLocal.assign(new HandlingUnit("5"), hu3);
+		base = handlingUnitLocal.assign(hu3, base);
+		hu6 = handlingUnitLocal.assign(new HandlingUnit("7"), hu6);
+		base = handlingUnitLocal.assign(hu6, base);
+		
+		Set<HandlingUnit> freed = handlingUnitLocal.free(base);
+		// Reread base is a must
+		base = handlingUnitLocal.getById("1");
+		assertEquals(0, base.getContains().size());
+		assertEquals(3, freed.size());
 	}
 }
