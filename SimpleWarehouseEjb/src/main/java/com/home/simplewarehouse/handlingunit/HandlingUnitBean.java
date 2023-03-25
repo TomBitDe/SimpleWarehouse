@@ -376,6 +376,47 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		return ba;
 	}
+	
+	@Override
+	public HandlingUnit move(final HandlingUnit handlingUnit, final HandlingUnit destHandlingUnit) {
+		LOG.trace("--> move() hu={} destHu={}", handlingUnit, destHandlingUnit);
+		
+		if (handlingUnit == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+		}
+
+		HandlingUnit hu = getById(handlingUnit.getId());
+		if (hu == null) {
+			hu = create(handlingUnit);
+		}
+		else {
+			hu = em.merge(handlingUnit);
+		}
+		
+		if (destHandlingUnit == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+		}
+
+		HandlingUnit dest = getById(destHandlingUnit.getId());
+		if (dest == null) {
+			dest = create(destHandlingUnit);
+		}
+		else {
+			dest = em.merge(destHandlingUnit);
+		}
+		
+		if (hu.getBase() != null) {
+			remove(hu, hu.getBase());
+		}
+		hu = getById(hu.getId());
+		hu = assign(hu, dest);
+		
+		LOG.trace("<-- move() {}", hu);
+		
+		em.flush();
+		
+		return hu;
+	}
 
 	@Override
 	public Set<HandlingUnit> free(final HandlingUnit base) {

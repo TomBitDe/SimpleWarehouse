@@ -98,6 +98,15 @@ public interface HandlingUnitLocal {
 	 */
 	public HandlingUnit remove(final HandlingUnit handlingUnit, final HandlingUnit base);
 	/**
+	 * Move a HandlingUnit to another destination HandlingUnit
+	 * 
+	 * @param handlingUnit the HandlingUnit to move
+	 * @param destHandlingUnit the destination HandlingUnit
+	 * 
+	 * @return the moved HandlingUnit
+	 */
+	public HandlingUnit move(final HandlingUnit handlingUnit, final HandlingUnit destHandlingUnit);
+	/**
 	 * Remove all HandlingUnits from this base HandlingUnit
 	 * 
 	 * @param base the base HandlingUnit
