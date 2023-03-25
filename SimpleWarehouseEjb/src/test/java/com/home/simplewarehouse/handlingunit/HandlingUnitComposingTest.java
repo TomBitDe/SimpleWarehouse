@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.handlingunit;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -226,6 +227,7 @@ public class HandlingUnitComposingTest {
 		
 		Set<HandlingUnit> baseContains = base.getContains();
 		for (HandlingUnit item : baseContains) {
+			// Reread is mandatory
 			item = handlingUnitLocal.getById(item.getId());
 			base = handlingUnitLocal.remove(item, base);
 		}
@@ -257,6 +259,7 @@ public class HandlingUnitComposingTest {
 		hu3 = handlingUnitLocal.getById("3");
 		Set<HandlingUnit> hu3Contains = hu3.getContains();
 		for (HandlingUnit item : hu3Contains) {
+			// Reread is mandatory
 			item = handlingUnitLocal.getById(item.getId());
 			hu3 = handlingUnitLocal.remove(item, hu3);
 		}	
@@ -274,10 +277,52 @@ public class HandlingUnitComposingTest {
 	}
 
 	/**
-	 * Simple handling unit empty from stack
+	 * Move handling unit remove to other handling unit
 	 */
 	@Test
 	@InSequence(15)
+	public void moveToOtherHandlingUnit() {
+		LOG.info("--- Test moveToOtherHandlingUnit");
+		
+		assertTrue(handlingUnitLocal.getAll().isEmpty());
+
+		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+
+		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
+		base = handlingUnitLocal.assign(new HandlingUnit("3"), base);
+		base = handlingUnitLocal.assign(new HandlingUnit("4"), base);
+		base = handlingUnitLocal.assign(new HandlingUnit("5"), base);
+		
+		HandlingUnit other = handlingUnitLocal.create(new HandlingUnit("6"));
+		
+		other = handlingUnitLocal.assign(new HandlingUnit("7"), other);
+
+		HandlingUnit hu4 = handlingUnitLocal.getById("4");
+		assertTrue(hu4.getContains().isEmpty());
+		
+		hu4 = handlingUnitLocal.move(hu4, other);
+		
+		assertEquals(handlingUnitLocal.getById("4"), hu4);
+		
+		base = handlingUnitLocal.getById("1");
+		assertFalse(base.getContains().isEmpty());
+		assertFalse(base.getContains().contains(hu4));
+		
+		other = handlingUnitLocal.getById("6");
+		assertFalse(other.getContains().isEmpty());
+		
+		assertTrue(other.getContains().contains(handlingUnitLocal.getById("7")));
+		
+		assertTrue(other.getContains().contains(hu4));
+		
+		assertEquals(other, hu4.getBase());
+	}
+
+	/**
+	 * Simple handling unit empty from stack
+	 */
+	@Test
+	@InSequence(18)
 	public void emptyFromStack() {
 		LOG.info("--- Test emptyFromStack");
 

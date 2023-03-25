@@ -406,16 +406,18 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 		
 		if (hu.getBase() != null) {
-			remove(hu, hu.getBase());
+			LOG.info("Remove {} from base {}", hu.getId(), hu);
+			HandlingUnit base = remove(hu, hu.getBase());
+			LOG.info("Base now {}", base);
 		}
-		hu = getById(hu.getId());
-		hu = assign(hu, dest);
+		LOG.info("Assign {} to destination {}", hu.getId(), dest);
+		dest = assign(getById(hu.getId()), dest);
 		
-		LOG.trace("<-- move() {}", hu);
+		LOG.trace("<-- moved() hu={} destHu={}", hu, dest);
 		
 		em.flush();
 		
-		return hu;
+		return getById(hu.getId());
 	}
 
 	@Override
