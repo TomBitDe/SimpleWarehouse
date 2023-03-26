@@ -23,7 +23,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 @Local(DropPickRandomLocationLocal2.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(PerformanceAuditor.class)
-public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal1 {
+public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal2 {
 	private static final Logger LOG = LogManager.getLogger(DropPickRandomLocationBean2.class);
 	
 	@EJB
@@ -50,34 +50,49 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal1
 
 		// Initialize only if no sample data exist
 		if (handlingUnitLocal.getAll().isEmpty() && locationLocal.getAll().isEmpty()) {
-			sampleWarehouseLocal.initialize();			
+			sampleWarehouseLocal.initialize();
 		}
 
 		Location lA = locationLocal.getById("A");
 		LOG.info(lA);
-		
+
 		// Now pick from location randomly
 		try {
 			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("4"));
-			lA = locationLocal.getById("A");
-			LOG.info(locationLocal.getById("A"));
-
-			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("1"));
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("3"));
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("2"));
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
 		}
 		catch (Exception e) {
 			LOG.error(e.getMessage());
 		}
+		lA = locationLocal.getById("A");
+		LOG.info(locationLocal.getById("A"));
 
-		LOG.trace("<-- processScenario()");		
+		try {
+			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("1"));
+		}
+		catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
+		lA = locationLocal.getById("A");
+		LOG.info(lA);
+
+		try {
+			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("3"));
+		}
+		catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
+		lA = locationLocal.getById("A");
+		LOG.info(lA);
+
+		try {
+			handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById("2"));
+		}
+		catch (Exception e) {
+			LOG.error(e.getMessage());
+		}
+		lA = locationLocal.getById("A");
+		LOG.info(lA);
+
+		LOG.trace("<-- processScenario()");
 	}
 }
