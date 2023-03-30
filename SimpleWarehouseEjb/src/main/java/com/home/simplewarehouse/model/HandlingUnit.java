@@ -107,14 +107,14 @@ public class HandlingUnit extends EntityBase implements Serializable {
     private HandlingUnit base = null;
     
     /**
-     * The container for other HnadlingUnits
+     * The container for other HandlingUnits
      */
     @OneToMany
     @JoinTable
     (
         name="HU_CONTAINS",
         joinColumns={ @JoinColumn(name="ID", referencedColumnName="ID") },
-        inverseJoinColumns={ @JoinColumn(name="CONTAINS", referencedColumnName="ID", unique=true) }
+        inverseJoinColumns={ @JoinColumn(name="CONTAINS", referencedColumnName="ID"/*, unique=true*/) }
     )
     private Set<HandlingUnit> contains = new HashSet<>();
     
