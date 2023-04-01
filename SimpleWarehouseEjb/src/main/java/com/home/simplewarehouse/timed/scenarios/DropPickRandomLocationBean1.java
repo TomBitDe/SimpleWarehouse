@@ -46,37 +46,53 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		LOG.trace("<-- DropPickRandomLocationBean1()");
 	}
 
+	private void cleanup() {
+		LOG.trace("--> cleanup()");
+		
+		for (Location loc : locationLocal.getAll()) {
+			locationLocal.delete(loc);
+		}
+
+		for (HandlingUnit hu : handlingUnitLocal.getAll()) {
+			handlingUnitLocal.delete(hu);
+		}
+
+		LOG.trace("<-- cleanup()");		
+	}
+
 	@Override
 	public void processScenario() {
 		LOG.trace("--> processScenario()");
+		
+		cleanup();
 
-		// Initialize only if no sample data exist
-		if (handlingUnitLocal.getAll().isEmpty() && locationLocal.getAll().isEmpty()) {
-			sampleWarehouseLocal.initialize();			
-		}
+		HandlingUnit h1 = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit h2 = handlingUnitLocal.create(new HandlingUnit("2"));
+		HandlingUnit h3 = handlingUnitLocal.create(new HandlingUnit("3"));
+		HandlingUnit h4 = handlingUnitLocal.create(new HandlingUnit("4"));
 
-		HandlingUnit h1 = handlingUnitLocal.getById("1");
-		HandlingUnit h2 = handlingUnitLocal.getById("2");
-		HandlingUnit h3 = handlingUnitLocal.getById("3");
-		HandlingUnit h4 = handlingUnitLocal.getById("4");
-
-		Location lA = locationLocal.getById("A");
-		LOG.info(lA);
+		Location lA = locationLocal.create(new Location("A"));
+		LOG.debug(lA);
 		
 		try {
 			// Drop to location in random order
 			handlingUnitLocal.dropTo(lA, h1);
+			lA = locationLocal.getById("A");
 			handlingUnitLocal.dropTo(lA, h4);
+			lA = locationLocal.getById("A");
 			handlingUnitLocal.dropTo(lA, h2);
+			lA = locationLocal.getById("A");
 			handlingUnitLocal.dropTo(lA, h3);
 		
-			lA = locationLocal.getById("A");
-			LOG.info(lA);
-
-			LOG.trace("<-- processScenario()");
+			LOG.debug(locationLocal.getById("A"));
 		}
 		catch (DimensionException dimex) {
-			LOG.fatal("Unexpected exception : {}", dimex.getMessage());
+			LOG.error("Unexpected exception : {}", dimex.getMessage());
 		}
+		catch (Exception ex) {
+			LOG.error("Unexpected exception : {}", ex.getMessage());
+		}
+		
+		LOG.trace("<-- processScenario()");
 	}
 }

@@ -29,7 +29,7 @@ public class TimerJpaSessionsBean1 {
 
 	@Resource
 	private TimerService timerService;
-
+	
 	@EJB
 	private DropPickRandomLocationLocal1 dropPickRandomLocation1;
 	
@@ -54,7 +54,7 @@ public class TimerJpaSessionsBean1 {
 	/**
 	 * Call all the session beans to run them in the application server periodically
 	 */
-	@Schedule(minute="*/1", hour="*", second="*/1", persistent = false)
+	@Schedule(hour="*", minute="*", second="*/5", persistent = false)
 	public void automaticTimeout() {
 		LOG.trace("--> automaticTimeout()");
 

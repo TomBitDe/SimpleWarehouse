@@ -54,7 +54,7 @@ public class TimerJpaSessionsBean2 {
 	/**
 	 * Call all the session beans to run them in the application server periodically
 	 */
-	@Schedule(minute="*/1", hour="*", second="*/1", persistent = false)
+	@Schedule(hour="*", minute="*", second="*/8", persistent = false)
 	public void automaticTimeout() {
 		LOG.trace("--> automaticTimeout()");
 
