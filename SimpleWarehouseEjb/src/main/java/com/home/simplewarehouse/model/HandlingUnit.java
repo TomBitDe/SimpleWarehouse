@@ -103,8 +103,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
     @ManyToOne(targetEntity = HandlingUnit.class
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.LAZY) // LAZY for better performance)
-	@JoinColumn(name = "BASE")
-    private HandlingUnit base = null;
+	@JoinColumn(name = "BASE_HU")
+    private HandlingUnit baseHU = null;
     
     /**
      * The container for other HandlingUnits
@@ -134,7 +134,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id) {
     	super();
     	this.id = id;
-    	this.base = null;
+    	this.baseHU = null;
     	setDefaults();
     }
 
@@ -147,7 +147,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, String user) {
     	super(user);
     	this.id = id;
-    	this.base = null;
+    	this.baseHU = null;
     	setDefaults();
     }
 
@@ -161,7 +161,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.id = id;
-    	this.base = null;
+    	this.baseHU = null;
     	setDefaults();
     }
 
@@ -174,7 +174,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight) {
     	super();
     	this.id = id;
-    	this.base = null;
+    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     }
@@ -189,7 +189,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume) {
     	super();
     	this.id = id;
-    	this.base = null;
+    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -206,7 +206,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height) {
     	super();
     	this.id = id;
-    	this.base = null;
+    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -225,7 +225,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length) {
     	super();
     	this.id = id;
-    	this.base = null;
+    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -246,7 +246,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length, WidthCategory width) {
     	super();
     	this.id = id;
-    	this.base = null;
+    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -455,21 +455,21 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	}
 
     /**
-     * Gets the base for this HnadlingUnit
+     * Gets the baseHU for this HandlingUnit
      * 
-	 * @return the base
+	 * @return the baseHU
 	 */
-	public HandlingUnit getBase() {
-		return base;
+	public HandlingUnit getBaseHU() {
+		return baseHU;
 	}
 
 	/**
-     * Sets the base for this HnadlingUnit
+     * Sets the baseHU for this HandlingUnit
 	 *
-	 * @param base the base to set
+	 * @param baseHU the baseHU to set
 	 */
-	public void setBase(HandlingUnit base) {
-		this.base = base;
+	public void setBaseHU(HandlingUnit baseHU) {
+		this.baseHU = baseHU;
 	}
 
 	/**
@@ -528,8 +528,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		    .append(width)		    
 		    .append(", locaPos=")
 		    .append(locaPos == null ? "null" : locaPos)		    
-		    .append(", base=")
-		    .append(base == null ? "null" : base.getId())
+		    .append(", baseHU=")
+		    .append(baseHU == null ? "null" : baseHU.getId())
 		    .append(", version=")
 		    .append(version)
 		    .append(", ")

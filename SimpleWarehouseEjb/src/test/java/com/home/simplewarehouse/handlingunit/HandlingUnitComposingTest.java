@@ -127,12 +127,12 @@ public class HandlingUnitComposingTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
 		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
-		assertEquals(null, base.getBase());
+		assertEquals(null, base.getBaseHU());
 		assertTrue(base.getContains().isEmpty());
 		LOG.info(base);
 		
 		HandlingUnit hu2 =  handlingUnitLocal.create(new HandlingUnit("2"));
-		assertEquals(null, hu2.getBase());
+		assertEquals(null, hu2.getBaseHU());
 		assertTrue(hu2.getContains().isEmpty());
 		LOG.info(hu2);
 		
@@ -144,7 +144,7 @@ public class HandlingUnitComposingTest {
 		
 		hu2 = handlingUnitLocal.getById("2");
 		assertTrue(hu2.getContains().isEmpty());
-		assertEquals(base, hu2.getBase());
+		assertEquals(base, hu2.getBaseHU());
 		LOG.info(hu2);
 	}
 	
@@ -315,7 +315,7 @@ public class HandlingUnitComposingTest {
 		
 		assertTrue(other.getContains().contains(hu4));
 		
-		assertEquals(other, hu4.getBase());
+		assertEquals(other, hu4.getBaseHU());
 	}
 
 	/**

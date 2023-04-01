@@ -319,7 +319,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			ba = em.merge(base);
 		}
 				
-		hu.setBase(ba);
+		hu.setBaseHU(ba);
 		boolean ret = ba.getContains().add(hu);
 		LOG.info("assign result is: {}", ret);
 		
@@ -360,14 +360,14 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			ba = em.merge(base);
 		}
 		
-		hu.setBase(null);
+		hu.setBaseHU(null);
 		boolean ret = ba.getContains().remove(hu);
 		LOG.info("remove result is: {}", ret);
 		
 		ba.setContains(ba.getContains());
 		
-		if (ba.getBase() != null) {
-		    ba.getBase().getContains().remove(ba);
+		if (ba.getBaseHU() != null) {
+		    ba.getBaseHU().getContains().remove(ba);
 		}
 		
 		LOG.trace("<-- remove() {}", ba);
@@ -405,9 +405,9 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			dest = em.merge(destHandlingUnit);
 		}
 		
-		if (hu.getBase() != null) {
+		if (hu.getBaseHU() != null) {
 			LOG.info("Remove {} from base {}", hu.getId(), hu);
-			HandlingUnit base = remove(hu, hu.getBase());
+			HandlingUnit base = remove(hu, hu.getBaseHU());
 			LOG.info("Base now {}", base);
 		}
 		LOG.info("Assign {} to destination {}", hu.getId(), dest);
@@ -443,7 +443,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		if (ba.getContains().removeAll(huList)) {
 			ret = huList;
 			for (HandlingUnit hu : ret) {
-				hu.setBase(null);
+				hu.setBaseHU(null);
 			}
 		}
 		else {
@@ -452,8 +452,8 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		ba.setContains(ba.getContains());
 		
-		if (ba.getBase() != null) {
-		    ba.getBase().getContains().remove(ba);
+		if (ba.getBaseHU() != null) {
+		    ba.getBaseHU().getContains().remove(ba);
 		}
 		
 		LOG.info("free result is: {}", base);
