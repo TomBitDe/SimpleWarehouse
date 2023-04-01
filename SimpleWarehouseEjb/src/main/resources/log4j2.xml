@@ -28,7 +28,7 @@
 			<AppenderRef ref="FilePart" />
 		</Logger>
 
-		<Logger name="com.home.simplewarehouse.timed" level="info" additivity="true">
+		<Logger name="com.home.simplewarehouse.timed" level="debug" additivity="true">
 			<AppenderRef ref="FileTimed" />
 		</Logger>
 
