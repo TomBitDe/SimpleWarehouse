@@ -111,7 +111,7 @@ public class PickDropRandomLocationTest {
 	}
 
 	/**
-	 * Call a scenario
+	 * Call a scenario (only this is tested)
 	 */
 	@Test
 	@InSequence(0)
@@ -125,7 +125,7 @@ public class PickDropRandomLocationTest {
 	}
 
 	/**
-	 * Call a scenario
+	 * Call a scenario (only this is tested)
 	 */
 	@Test
 	@InSequence(0)
