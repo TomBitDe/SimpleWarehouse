@@ -56,7 +56,7 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal2
 			// Now pick from location
 			for (String huId : huIds) {
 			    try {
-				    handlingUnitLocal.pickFrom(lA, handlingUnitLocal.getById(huId));
+				    handlingUnitLocal.pickFrom(locationLocal.getById("A"), handlingUnitLocal.getById(huId));
 
 				    lA = locationLocal.getById("A");
 				    LOG.info(lA);
