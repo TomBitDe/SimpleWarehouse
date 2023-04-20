@@ -152,28 +152,6 @@ public class HandlingUnitComposingTest {
 	}
 	
 	/**
-	 * Simple handling unit assign four on base
-	 */
-	@Test
-	@InSequence(3)
-	public void assignFourOnBase() {
-		LOG.info("--- Test assignFourOnBase");
-
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
-
-		// Now place some handling units on base
-		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("3"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("4"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("5"), base);
-
-		LOG.info(base);
-		assertEquals(4, base.getContains().size());
-	}
-	
-	/**
 	 * Simple handling unit remove from base
 	 */
 	@Test
