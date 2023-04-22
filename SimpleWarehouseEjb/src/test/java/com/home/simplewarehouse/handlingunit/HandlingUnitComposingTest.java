@@ -261,7 +261,7 @@ public class HandlingUnitComposingTest {
 		base = handlingUnitLocal.getById("1");
 		
 		// Base has no handling units any longer
-		assertEquals(0, base.getContains().size());
+		assertTrue(base.getContains().isEmpty());
 		// The amount of handling units freed from base
 		assertEquals(3, freed.size());
 	}
