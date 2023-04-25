@@ -95,26 +95,26 @@ public class HandlingUnit extends EntityBase implements Serializable {
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.LAZY) // LAZY for better performance)
 	@JoinColumn(name = "LOCATION_ID", nullable = true)
-    private Location location;
+    private Location location = null;
     
     /**
      * The base HandlingUnit of the HandlingUnit
      */
     @ManyToOne(targetEntity = HandlingUnit.class
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
-    		, fetch = FetchType.LAZY) // LAZY for better performance)
-	@JoinColumn(name = "BASE_HU")
+    		, fetch = FetchType.EAGER) // LAZY for better performance
+	@JoinColumn(name = "BASE_HU", nullable = true)
     private HandlingUnit baseHU = null;
     
     /**
      * The container for other HandlingUnits
      */
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER) // LAZY for better performance
     @JoinTable
     (
-        name="HU_CONTAINS",
-        joinColumns={ @JoinColumn(name="ID", referencedColumnName="ID") },
-        inverseJoinColumns={ @JoinColumn(name="CONTAINS", referencedColumnName="ID"/*, unique=true*/) }
+        name="HU_CONTAINS"
+        , joinColumns={ @JoinColumn(name="ID", referencedColumnName="ID") }
+        , inverseJoinColumns={ @JoinColumn(name="CONTAINS", referencedColumnName="ID"/*, unique=true*/) }
     )
     private Set<HandlingUnit> contains = new HashSet<>();
     
@@ -134,7 +134,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id) {
     	super();
     	this.id = id;
-    	this.baseHU = null;
     	setDefaults();
     }
 
@@ -147,7 +146,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, String user) {
     	super(user);
     	this.id = id;
-    	this.baseHU = null;
     	setDefaults();
     }
 
@@ -161,7 +159,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, String user, Timestamp timestamp) {
     	super(user, timestamp);
     	this.id = id;
-    	this.baseHU = null;
     	setDefaults();
     }
 
@@ -174,7 +171,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight) {
     	super();
     	this.id = id;
-    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     }
@@ -189,7 +185,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume) {
     	super();
     	this.id = id;
-    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -206,7 +201,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height) {
     	super();
     	this.id = id;
-    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -225,7 +219,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length) {
     	super();
     	this.id = id;
-    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
@@ -246,7 +239,6 @@ public class HandlingUnit extends EntityBase implements Serializable {
     public HandlingUnit(String id, int weight, float volume, HeightCategory height, LengthCategory length, WidthCategory width) {
     	super();
     	this.id = id;
-    	this.baseHU = null;
     	setDefaults();
     	setWeight(weight);
     	setVolume(volume);
