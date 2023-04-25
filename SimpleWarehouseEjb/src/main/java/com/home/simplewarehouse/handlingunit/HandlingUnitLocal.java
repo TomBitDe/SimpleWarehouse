@@ -114,4 +114,24 @@ public interface HandlingUnitLocal {
 	 * @return a Set of all removed HandlingUnits (can be an empty Set)
 	 */
 	public Set<HandlingUnit> free(final HandlingUnit base);
+	/**
+	 * Return a Set of HandlingUnits places on base from a flat point of view
+	 * 
+	 * @param base the base HandlingUnit
+	 * 
+	 * @return the Set of HandlingUnits
+	 */
+	public Set<HandlingUnit> flatContains(final HandlingUnit base);
+	/**
+	 * Log the HandlingUnits that base contains directly
+	 * 
+	 * @param base the base HandlingUnit
+	 */
+	public void logContains(HandlingUnit base);
+	/**
+	 * Log all the HandlingUnits that base over all items contains 
+	 * 
+	 * @param base the base HandlingUnit
+	 */
+	public void logFlatContains(HandlingUnit base);
 }
