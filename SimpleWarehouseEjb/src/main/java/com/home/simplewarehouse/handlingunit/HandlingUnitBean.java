@@ -367,10 +367,6 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		ba.setContains(ba.getContains());
 		
-		if (ba.getBaseHU() != null) {
-		    ba.getBaseHU().getContains().remove(ba);
-		}
-		
 		LOG.trace("<-- remove() {}", ba);
 		
 		em.flush();
