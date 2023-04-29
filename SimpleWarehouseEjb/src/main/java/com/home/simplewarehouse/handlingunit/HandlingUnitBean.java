@@ -3,6 +3,7 @@ package com.home.simplewarehouse.handlingunit;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.ejb.Local;
@@ -299,16 +300,16 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalArgumentException(HU_IS_NULL_MSG);
 		}
 
+		if (base == null) {
+			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+		}
+		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
 			hu = create(handlingUnit);
 		}
 		else {
 			hu = em.merge(handlingUnit);
-		}
-		
-		if (base == null) {
-			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
 		}
 		
 		HandlingUnit ba = getById(base.getId());
@@ -340,16 +341,16 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalArgumentException(HU_IS_NULL_MSG);
 		}
 
+		if (base == null) {
+			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
+		}
+		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
 			hu = create(handlingUnit);
 		}
 		else {
 			hu = em.merge(handlingUnit);
-		}
-		
-		if (base == null) {
-			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
 		}
 		
 		HandlingUnit ba = getById(base.getId());
@@ -366,10 +367,6 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		
 		ba.setContains(ba.getContains());
 		
-		if (ba.getBaseHU() != null) {
-		    ba.getBaseHU().getContains().remove(ba);
-		}
-		
 		LOG.trace("<-- remove() {}", ba);
 		
 		em.flush();
@@ -385,6 +382,10 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalArgumentException(HU_IS_NULL_MSG);
 		}
 
+		if (destHandlingUnit == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+		}
+
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
 			hu = create(handlingUnit);
@@ -393,10 +394,6 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			hu = em.merge(handlingUnit);
 		}
 		
-		if (destHandlingUnit == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
-		}
-
 		HandlingUnit dest = getById(destHandlingUnit.getId());
 		if (dest == null) {
 			dest = create(destHandlingUnit);
@@ -463,5 +460,32 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		em.flush();
 				
 		return ret;
+	}
+
+	@Override
+	public Set<HandlingUnit> flatContains(HandlingUnit base) {
+		final Set<HandlingUnit> onBase = new HashSet<>(base.getContains());
+		final Set<HandlingUnit> dummy = new HashSet<>();
+		
+		for (HandlingUnit item : onBase) {
+			dummy.addAll(flatContains(item));
+		}
+		onBase.addAll(dummy);
+		
+ 		return onBase;
+	}
+	
+	@Override
+	public void logContains(HandlingUnit base) {
+		LOG.info("BASE {} contains {}", base.getId(),
+				base.getContains().stream().map(h -> h.getId()).collect(Collectors.toList())
+				);
+	}
+	
+	@Override
+	public void logFlatContains(HandlingUnit base) {
+		LOG.info("BASE {} flat contains {}", base.getId(),
+				flatContains(base).stream().map(h -> h.getId()).collect(Collectors.toList())
+				);
 	}
 }
