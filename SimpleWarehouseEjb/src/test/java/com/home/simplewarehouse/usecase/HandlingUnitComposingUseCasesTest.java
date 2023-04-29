@@ -24,8 +24,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
+import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.LocationStatusBean;
@@ -124,19 +124,19 @@ public class HandlingUnitComposingUseCasesTest {
 	 * <br>
      * <pre>{@code
      * 
-     *      +-------------------- base -------------------+
+     *      +-------------------- base hu1 ---------------+
      *
      *      +-- hu2 --+
-     *      +-------------------- base -------------------+
+     *      +-------------------- base hu1 ---------------+
      *
      *      +-- hu2 --+ +-- hu3 --+
-     *      +-------------------- base -------------------+
+     *      +-------------------- base hu1 ---------------+
      *
      *      +-- hu2 --+ +-- hu3 --+ +-- hu4 --+
-     *      +-------------------- base -------------------+
+     *      +-------------------- base hu1 ---------------+
      *
      *      +-- hu2 --+ +-- hu3 --+ +-- hu4 --+ +-- hu5 --+
-     *      +-------------------- base -------------------+
+     *      +-------------------- base hu1 ---------------+
      *
      * }</pre>
 	 */
@@ -171,6 +171,8 @@ public class HandlingUnitComposingUseCasesTest {
 		for (HandlingUnit item : base.getContains()) {
 			// All other handling units are on base
 			assertEquals(base, item.getBaseHU());
+			// All other handling units contain nothing
+			assertTrue(item.getContains().isEmpty());
 		}
 	}
 	
@@ -222,46 +224,76 @@ public class HandlingUnitComposingUseCasesTest {
 		hu7 = handlingUnitLocal.assign(new HandlingUnit("8"), hu7);
 		base = handlingUnitLocal.assign(hu6, base);
 		
-		LOG.info(base);
-		assertEquals(7, base.getContains().size());
-		LOG.info(hu3);
+		handlingUnitLocal.logContains(base);
+		handlingUnitLocal.logFlatContains(base);
+		assertEquals(3, base.getContains().size());
+		assertEquals(7, handlingUnitLocal.flatContains(base).size());
+
+		handlingUnitLocal.logContains(handlingUnitLocal.getById("2"));
+		handlingUnitLocal.logFlatContains(handlingUnitLocal.getById("2"));
+		assertTrue(handlingUnitLocal.getById("2").getContains().isEmpty());
+		assertTrue(handlingUnitLocal.flatContains(handlingUnitLocal.getById("2")).isEmpty());
+		
+		handlingUnitLocal.logContains(hu3);
+		handlingUnitLocal.logFlatContains(hu3);
 		assertEquals(2, hu3.getContains().size());
-		LOG.info(hu6);
-		assertEquals(2, hu6.getContains().size());
-		
-		LOG.info(handlingUnitLocal.getById("2"));
-		assertEquals(0, handlingUnitLocal.getById("2").getContains().size());
-	}
-	
-	/**
-	 * Simple handling unit remove from base
-	 */
-	@Test
-	@InSequence(9)
-	public void removeFromBase() {
-		LOG.info("--- Test removeFromBase");
-		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
-
-		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("3"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("4"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("5"), base);
+		HandlingUnit hu4 = handlingUnitLocal.getById("4");
+		handlingUnitLocal.logContains(hu4);
+		handlingUnitLocal.logFlatContains(hu4);
+		assertTrue(hu4.getContains().isEmpty());
 		
-		Set<HandlingUnit> baseContains = base.getContains();
-		for (HandlingUnit item : baseContains) {
-			// Reread is mandatory
-			item = handlingUnitLocal.getById(item.getId());
-			base = handlingUnitLocal.remove(item, base);
-		}
+		HandlingUnit hu5 = handlingUnitLocal.getById("5");
+		handlingUnitLocal.logContains(hu5);
+		handlingUnitLocal.logFlatContains(hu5);
+		assertTrue(hu5.getContains().isEmpty());
 		
-		assertTrue(base.getContains().isEmpty());
+		assertEquals(2, handlingUnitLocal.flatContains(hu3).size());
+		
+		hu6 = handlingUnitLocal.getById("6");
+		handlingUnitLocal.logContains(hu6);
+		handlingUnitLocal.logFlatContains(hu6);
+		assertEquals(1, hu6.getContains().size());
+		assertTrue(hu6.getContains().contains(hu7));
+		
+		hu7 = handlingUnitLocal.getById("7");
+		handlingUnitLocal.logContains(hu7);
+		handlingUnitLocal.logFlatContains(hu7);
+		assertEquals(1, hu7.getContains().size());
+		assertTrue(hu7.getContains().contains(handlingUnitLocal.getById("8")));
+		
+		assertTrue(handlingUnitLocal.getById("8").getContains().isEmpty());
+		
+		assertEquals(2, handlingUnitLocal.flatContains(hu6).size());
 	}
 	
 	/**
 	 * Simple handling unit remove from stack
+	 * <br>
+     * <pre>{@code
+     * 
+     *                  +-- hu4 --+ +-- hu5 --+ +-- hu7 --+
+     *      +-- hu2 --+ +------- hu3 ---------+ +-- hu6 --+
+     *      +-------------------- base hu1 ---------------+
+     *
+     * remove(hu4, base)
+     * remove(hu5, base)
+     * 
+     *                                          +-- hu7 --+
+     *      +-- hu2 --+ +------- hu3 ---------+ +-- hu6 --+
+     *      +-------------------- base hu1 ---------------+
+     *
+     * remove(hu6, base)
+     * 
+     *      +-- hu2 --+ +------- hu3 ---------+
+     *      +-------------------- base hu1 ---------------+
+     *
+     * remove(hu2, base)
+     * 
+     *                  +------- hu3 ---------+
+     *      +-------------------- base hu1 ---------------+
+     *
+     * }</pre>
 	 */
 	@Test
 	@InSequence(12)
@@ -270,39 +302,66 @@ public class HandlingUnitComposingUseCasesTest {
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
-		HandlingUnit hu3 =  handlingUnitLocal.create(new HandlingUnit("3"));
-		HandlingUnit hu6 =  handlingUnitLocal.create(new HandlingUnit("6"));
-
-		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
-		hu3 = handlingUnitLocal.assign(new HandlingUnit("4"), hu3);
+		HandlingUnit base = handlingUnitLocal.assign(new HandlingUnit("2"), new HandlingUnit("1"));
+		HandlingUnit hu3 = handlingUnitLocal.assign(new HandlingUnit("4"), new HandlingUnit("3"));
 		hu3 = handlingUnitLocal.assign(new HandlingUnit("5"), hu3);
 		base = handlingUnitLocal.assign(hu3, base);
-		hu6 = handlingUnitLocal.assign(new HandlingUnit("7"), hu6);
+		HandlingUnit hu6 = handlingUnitLocal.assign(new HandlingUnit("7"), new HandlingUnit("6"));
 		base = handlingUnitLocal.assign(hu6, base);
 		
+		handlingUnitLocal.logContains(base);
+		handlingUnitLocal.logFlatContains(base);
+
 		hu3 = handlingUnitLocal.getById("3");
 		Set<HandlingUnit> hu3Contains = hu3.getContains();
 		for (HandlingUnit item : hu3Contains) {
 			// Reread is mandatory
-			item = handlingUnitLocal.getById(item.getId());
-			hu3 = handlingUnitLocal.remove(item, hu3);
+			hu3 = handlingUnitLocal.remove(handlingUnitLocal.getById(item.getId()), hu3);
 		}	
 		assertTrue(hu3.getContains().isEmpty());
 		
 		base = handlingUnitLocal.getById(base.getId());
-		hu6 = handlingUnitLocal.getById("6");
-		base = handlingUnitLocal.remove(hu6, base);
-		assertEquals(1, base.getContains().size());
+		handlingUnitLocal.logContains(base);
+		handlingUnitLocal.logFlatContains(base);		
 		
 		base = handlingUnitLocal.getById(base.getId());
-		HandlingUnit hu2 = handlingUnitLocal.getById("2");
-		base = handlingUnitLocal.remove(hu2, base);
-		assertEquals(0, base.getContains().size());
+		base = handlingUnitLocal.remove(handlingUnitLocal.getById("6"), base);
+		
+		handlingUnitLocal.logContains(base);
+		handlingUnitLocal.logFlatContains(base);		
+		assertEquals(2, base.getContains().size());
+		
+		base = handlingUnitLocal.getById(base.getId());
+		base = handlingUnitLocal.remove(handlingUnitLocal.getById("2"), base);
+		
+		handlingUnitLocal.logContains(base);
+		handlingUnitLocal.logFlatContains(base);		
+		assertEquals(1, base.getContains().size());
+		assertTrue(base.getContains().contains(handlingUnitLocal.getById("3")));
+		assertEquals(base, handlingUnitLocal.getById("3").getBaseHU());
+		assertNull(base.getBaseHU());
 	}
 
 	/**
-	 * Move handling unit remove to other handling unit
+	 * Move handling unit to other handling unit
+	 * <br>
+     * <pre>{@code
+     * 
+     *      +-- hu2 --+ +-- hu3 --+ +-- hu4 --+ +-- hu5 --+
+     *      +-------------------- base hu1 ---------------+
+     *
+     *      +-- hu7 --+
+     *      +------------------- other hu6 ---------------+
+     *
+     * move(hu4, other)
+     * 
+     *      +-- hu7 --+ +-- hu4 --+
+     *      +------------------- other hu6 ---------------+
+     *      
+     *      +-- hu2 --+ +-- hu3 --+             +-- hu5 --+
+     *      +-------------------- base hu1 ---------------+
+     *
+     * }</pre>
 	 */
 	@Test
 	@InSequence(15)
@@ -311,20 +370,17 @@ public class HandlingUnitComposingUseCasesTest {
 		
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
-
-		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
+		HandlingUnit base = handlingUnitLocal.assign(new HandlingUnit("2"), new HandlingUnit("1"));
 		base = handlingUnitLocal.assign(new HandlingUnit("3"), base);
 		base = handlingUnitLocal.assign(new HandlingUnit("4"), base);
 		base = handlingUnitLocal.assign(new HandlingUnit("5"), base);
 		
-		HandlingUnit other = handlingUnitLocal.create(new HandlingUnit("6"));
-		
-		other = handlingUnitLocal.assign(new HandlingUnit("7"), other);
+		HandlingUnit other = handlingUnitLocal.assign(new HandlingUnit("7"), new HandlingUnit("6"));
 
 		HandlingUnit hu4 = handlingUnitLocal.getById("4");
 		assertTrue(hu4.getContains().isEmpty());
 		
+		// Move handling unit to other
 		hu4 = handlingUnitLocal.move(hu4, other);
 		
 		assertEquals(handlingUnitLocal.getById("4"), hu4);
@@ -332,40 +388,13 @@ public class HandlingUnitComposingUseCasesTest {
 		base = handlingUnitLocal.getById("1");
 		assertFalse(base.getContains().isEmpty());
 		assertFalse(base.getContains().contains(hu4));
+		assertEquals(3, base.getContains().size());
 		
 		other = handlingUnitLocal.getById("6");
 		assertFalse(other.getContains().isEmpty());
-		
-		assertTrue(other.getContains().contains(handlingUnitLocal.getById("7")));
-		
-		assertTrue(other.getContains().contains(hu4));
-		
+		assertTrue(other.getContains().contains(handlingUnitLocal.getById("7")));		
+		assertTrue(other.getContains().contains(handlingUnitLocal.getById("4")));
+		assertEquals(2, other.getContains().size());
 		assertEquals(other, hu4.getBaseHU());
-	}
-
-	/**
-	 * Simple handling unit empty from stack
-	 */
-	@Test
-	@InSequence(18)
-	public void emptyFromStack() {
-		LOG.info("--- Test emptyFromStack");
-
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
-		HandlingUnit hu3 =  handlingUnitLocal.create(new HandlingUnit("3"));
-		HandlingUnit hu6 =  handlingUnitLocal.create(new HandlingUnit("6"));
-
-		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
-		hu3 = handlingUnitLocal.assign(new HandlingUnit("4"), hu3);
-		hu3 = handlingUnitLocal.assign(new HandlingUnit("5"), hu3);
-		base = handlingUnitLocal.assign(hu3, base);
-		hu6 = handlingUnitLocal.assign(new HandlingUnit("7"), hu6);
-		base = handlingUnitLocal.assign(hu6, base);
-		
-		Set<HandlingUnit> freed = handlingUnitLocal.free(base);
-		// Reread base is a must
-		base = handlingUnitLocal.getById("1");
-		assertEquals(0, base.getContains().size());
-		assertEquals(3, freed.size());
 	}
 }
