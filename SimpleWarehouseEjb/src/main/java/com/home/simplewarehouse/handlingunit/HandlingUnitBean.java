@@ -476,14 +476,14 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	}
 	
 	@Override
-	public void logContains(HandlingUnit base) {
+	public void logContains(final HandlingUnit base) {
 		LOG.info("BASE {} contains {}", base.getId(),
 				base.getContains().stream().map(h -> h.getId()).collect(Collectors.toList())
 				);
 	}
 	
 	@Override
-	public void logFlatContains(HandlingUnit base) {
+	public void logFlatContains(final HandlingUnit base) {
 		LOG.info("BASE {} flat contains {}", base.getId(),
 				flatContains(base).stream().map(h -> h.getId()).collect(Collectors.toList())
 				);

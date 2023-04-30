@@ -70,7 +70,7 @@ public interface HandlingUnitLocal {
 	 * @throws OverlengthException in case the HandlingUnit does not fit in the Location by this drop
 	 * @throws OverwidthException in case the HandlingUnit does not fit in the Location by this drop
 	 */
-	public void dropTo(Location location, HandlingUnit handlingUnit) 
+	public void dropTo(final Location location, final HandlingUnit handlingUnit) 
 			throws CapacityExceededException, WeightExceededException, OverheightException
 			, OverlengthException, OverwidthException;
 	/**
@@ -127,11 +127,11 @@ public interface HandlingUnitLocal {
 	 * 
 	 * @param base the base HandlingUnit
 	 */
-	public void logContains(HandlingUnit base);
+	public void logContains(final HandlingUnit base);
 	/**
 	 * Log all the HandlingUnits that base over all items contains 
 	 * 
 	 * @param base the base HandlingUnit
 	 */
-	public void logFlatContains(HandlingUnit base);
+	public void logFlatContains(final HandlingUnit base);
 }
