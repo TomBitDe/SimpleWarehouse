@@ -1,0 +1,2 @@
+mvn -B test --file pom.xml
+mvn -B test --file pom.xml 1>errlist 2>&1
