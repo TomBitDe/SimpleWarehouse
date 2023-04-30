@@ -40,7 +40,7 @@ public class DimensionBean implements DimensionLocal {
 	}
 
 	@Override
-	public Dimension getById(String id) {
+	public Dimension getById(final String id) {
 		LOG.trace("--> getById({})", id);
 
 		Dimension dimension = em.find(Dimension.class, id);
