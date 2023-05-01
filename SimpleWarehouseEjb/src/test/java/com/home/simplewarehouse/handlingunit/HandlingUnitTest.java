@@ -180,6 +180,9 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitLocal.getAll().isEmpty());
 
 		HandlingUnit expHandlingUnit = new HandlingUnit("1");
+		
+		assertEquals(false, expHandlingUnit.equals(null));
+		assertEquals(false, expHandlingUnit.equals(new Location("A")));
 
 		HandlingUnit handlingUnit = handlingUnitLocal.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
@@ -221,6 +224,25 @@ public class HandlingUnitTest {
 		assertEquals(expHandlingUnit.getUpdateTimestamp(), handlingUnit.getUpdateTimestamp());
 		
 		LOG.info(handlingUnit);
+
+		expHandlingUnit = new HandlingUnit("6", -10, -20.0f);
+
+		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		assertEquals(HandlingUnit.WEIGHT_DEFAULT, handlingUnit.getWeight());
+		assertEquals(HandlingUnit.VOLUME_DEFAULT, handlingUnit.getVolume(), 0.0f);
+
+		LOG.info(handlingUnit);	
+
+		expHandlingUnit = new HandlingUnit("7");
+		expHandlingUnit.setHeight(null);
+		expHandlingUnit.setLength(null);
+		expHandlingUnit.setWidth(null);
+		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		assertEquals(HeightCategory.NOT_RELEVANT, handlingUnit.getHeight());
+		assertEquals(LengthCategory.NOT_RELEVANT, handlingUnit.getLength());
+		assertEquals(WidthCategory.NOT_RELEVANT, handlingUnit.getWidth());
+				
+		LOG.info(handlingUnit);	
 	}
 
 	/**
