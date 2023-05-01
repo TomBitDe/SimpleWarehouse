@@ -12,7 +12,7 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 
 /**
- * Local interface for HandlingUnit usage.
+ * Service interface for HandlingUnit usage.
  */
 public interface HandlingUnitService {
 	/**

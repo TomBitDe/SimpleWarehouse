@@ -6,7 +6,7 @@ import java.util.List;
 import com.home.simplewarehouse.model.LocationStatus;
 
 /**
- * Local interface for Location Status usage.
+ * Service interface for Location Status usage.
  */
 public interface LocationStatusService extends Remote {
 	/**

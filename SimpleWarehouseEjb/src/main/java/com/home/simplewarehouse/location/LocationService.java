@@ -10,7 +10,7 @@ import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.WidthCategory;
 
 /**
- * Local interface for Location usage.
+ * Service interface for Location usage.
  */
 public interface LocationService {
 	/**

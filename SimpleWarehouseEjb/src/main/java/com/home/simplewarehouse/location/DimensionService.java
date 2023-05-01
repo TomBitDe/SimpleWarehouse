@@ -6,7 +6,7 @@ import java.util.List;
 import com.home.simplewarehouse.model.Dimension;
 
 /**
- * Local interface for Dimension usage.
+ * Service interface for Dimension usage.
  */
 public interface DimensionService extends Remote {
 	/**
