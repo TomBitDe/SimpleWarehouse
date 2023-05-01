@@ -6,7 +6,6 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -19,10 +18,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.location.CapacityExceededException;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.location.OverheightException;
 import com.home.simplewarehouse.location.OverlengthException;
 import com.home.simplewarehouse.location.OverwidthException;
-import com.home.simplewarehouse.location.LocationLocal;
 import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -33,10 +32,9 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
  * Bean class for HandlingUnit usage. 
  */
 @Stateless
-@Local(HandlingUnitLocal.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(PerformanceAuditor.class)
-public class HandlingUnitBean implements HandlingUnitLocal {
+public class HandlingUnitBean implements HandlingUnitService {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitBean.class);
 	
 	private static final String HU_IS_HERE_FORMATTER = "HandlingUnit {} is here: {}";
@@ -48,7 +46,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 	private EntityManager em;
 	
 	@EJB
-	private LocationLocal locationLocal;
+	private LocationService locationService;
 	
 	/**
 	 * Default constructor is mandatory
@@ -133,9 +131,9 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
 		}
 		
-		Location lo = locationLocal.getById(location.getLocationId());
+		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
-			lo = locationLocal.create(location);
+			lo = locationService.create(location);
 		}
 		else {
 			lo = em.merge(location);
@@ -154,8 +152,8 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 		
 		if ((lo.getHandlingUnits()).isEmpty()) {
-			// Check handlingUnit is already stored elsewhere
-			List<Location> locations = locationLocal.getAllContainingExceptLocation(hu, lo);
+			// Check handlingUnitService is already stored elsewhere
+			List<Location> locations = locationService.getAllContainingExceptLocation(hu, lo);
 			
 			for (Location other : locations) {
 				// HandlingUnit is already stored elsewhere
@@ -165,7 +163,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			}
 			em.flush();
 			
-			// ATTENTION: Location error status does not need to be changed because the location was EMPTY!
+			// ATTENTION: Location error status does not need to be changed because the locationService was EMPTY!
 			//            NO manual adjustment is needed in this case!
 			throw new LocationIsEmptyException("Location [" + lo.getLocationId() + "] is EMPTY");
 		}
@@ -180,8 +178,8 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 				em.flush();
 			}
 			else {
-				// Check handlingUnit is already stored elsewhere
-				List<Location> locations = locationLocal.getAllContainingExceptLocation(hu, lo);
+				// Check handlingUnitService is already stored elsewhere
+				List<Location> locations = locationService.getAllContainingExceptLocation(hu, lo);
 				
 				for (Location other : locations) {					
 					// HandlingUnit is already stored elsewhere
@@ -209,9 +207,9 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
 		}
 		
-		Location lo = locationLocal.getById(location.getLocationId());
+		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
-			lo = locationLocal.create(location);
+			lo = locationService.create(location);
 		}
 		else {
 			lo = em.merge(location);
@@ -220,7 +218,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		List<HandlingUnit> picksAvailable = lo.getAvailablePicks();
 		
 		if (picksAvailable.isEmpty()) {
-			// ATTENTION: Location error status does not need to be changed because the location was EMPTY!
+			// ATTENTION: Location error status does not need to be changed because the locationService was EMPTY!
 			//            NO manual adjustment is needed in this case!
 			throw new LocationIsEmptyException("Location [" + lo.getLocationId() + "] is EMPTY");
 		}
@@ -259,17 +257,17 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
 		}
 		
-		Location lo = locationLocal.getById(location.getLocationId());
+		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
-			lo = locationLocal.create(location);
+			lo = locationService.create(location);
 		}
 		else {
 			lo = em.merge(location);
 		}
 		
-		locationLocal.checkDimensionLimitExceeds(lo, hu);
+		locationService.checkDimensionLimitExceeds(lo, hu);
 		
-		List<Location> locations = locationLocal.getAllContainingExceptLocation(hu, lo);
+		List<Location> locations = locationService.getAllContainingExceptLocation(hu, lo);
 		
 		for (Location other : locations) {
 			// HandlingUnit is already stored elsewhere
@@ -285,7 +283,7 @@ public class HandlingUnitBean implements HandlingUnitLocal {
 		}
 
 		hu.setLocation(lo);
-		locationLocal.addHandlingUnit(lo, hu);
+		locationService.addHandlingUnit(lo, hu);
 		
 		LOG.trace("<-- dropTo()");
 

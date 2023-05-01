@@ -182,7 +182,7 @@ public class Location extends EntityBase implements Serializable {
 	}
 
 	/**
-	 * Sets the Location status for this location
+	 * Sets the Location status for this locationService
 	 * 
 	 * @param locationStatus the Location status
 	 */

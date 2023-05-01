@@ -29,7 +29,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.model.EntityBase;
@@ -62,8 +62,8 @@ public class LifoLocationTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						LocationLocal.class, LocationBean.class,
-						HandlingUnitLocal.class, HandlingUnitBean.class,
+						LocationService.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -75,10 +75,10 @@ public class LifoLocationTest {
 	}
 
 	@EJB
-	LocationLocal locationLocal;
+	LocationService locationService;
 	
 	@EJB
-	HandlingUnitLocal handlingUnitLocal;
+	HandlingUnitService handlingUnitService;
 	
 	/**
 	 * Mandatory default constructor
@@ -106,35 +106,35 @@ public class LifoLocationTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
-		List<Location> locations = locationLocal.getAll();
+		List<Location> locations = locationService.getAll();
 		
-		locations.stream().forEach(l -> locationLocal.delete(l));
+		locations.stream().forEach(l -> locationService.delete(l));
 		
 		// Cleanup handling units
-		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
+		List<HandlingUnit> handlingUnits = handlingUnitService.getAll();
 		
-		handlingUnits.stream().forEach(h -> handlingUnitLocal.delete(h));		
+		handlingUnits.stream().forEach(h -> handlingUnitService.delete(h));		
 
 		LOG.trace("<-- afterTest()");
 	}
 
 	/**
-	 * Simple location with no reference to handling units
+	 * Simple locationService with no reference to handling units
 	 */
 	@Test
 	@InSequence(0)
 	public void create_getById() {
 		LOG.info("--- Test create_getById");
 
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
 		LifoLocation expLocation = new LifoLocation("A");
 
-		locationLocal.create(expLocation);
+		locationService.create(expLocation);
 		LOG.info("Lifo Location created: " + expLocation);
 
 		// MANDATORY reread
-		Location location = locationLocal.getById(expLocation.getLocationId());		
+		Location location = locationService.getById(expLocation.getLocationId());		
 		LOG.info("LifoLocation getById: " + location);
 		
 		assertEquals(expLocation, location);
@@ -142,7 +142,7 @@ public class LifoLocationTest {
 		assertNotNull(location.getUpdateTimestamp());
 		
 	    // Should be null because never created
-		assertNull(locationLocal.getById("B"));
+		assertNull(locationService.getById("B"));
 	}
 	
 	/**
@@ -153,41 +153,41 @@ public class LifoLocationTest {
 	public void delete_getById_create() {
 		LOG.info("--- Test delete_getById_create");
 
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationLocal.create(new LifoLocation("A"));
+	    locationService.create(new LifoLocation("A"));
 
 	    // MANDATORY reread
-	    Location location = locationLocal.getById("A");
+	    Location location = locationService.getById("A");
 		LOG.info("Lifo Location getById: " + location);
 		
 		assertEquals("A", location.getLocationId());
 		
-		// Delete the location
-		locationLocal.delete(location);
+		// Delete the locationService
+		locationService.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
-		locationLocal.create(new LifoLocation("A", "Test"));
+		locationService.create(new LifoLocation("A", "Test"));
 
 		// MANDATORY reread
-		location = locationLocal.getById("A");				
+		location = locationService.getById("A");				
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
 		LOG.info("Lifo Location created: " + location);
 
-		// Delete the location
-		locationLocal.delete(location);
+		// Delete the locationService
+		locationService.delete(location);
 		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		locationLocal.create(new LifoLocation("A", "Test", ts));
+		locationService.create(new LifoLocation("A", "Test", ts));
 
 	    // MANDATORY reread
-		location = locationLocal.getById("A");
+		location = locationService.getById("A");
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
@@ -195,32 +195,32 @@ public class LifoLocationTest {
 	}
 
 	/**
-	 * Test the delete by location
+	 * Test the delete by locationService
 	 */
 	@Test
 	@InSequence(2)
 	public void deleteByLocation() {
 		LOG.info("--- Test deleteByLocation");
 
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationLocal.create(new LifoLocation("A"));
+	    locationService.create(new LifoLocation("A"));
 
-	    Location location = locationLocal.getById("A");
+	    Location location = locationService.getById("A");
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		
-		// Delete the location
-		locationLocal.delete(location);
+		// Delete the locationService
+		locationService.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 
 		// MANDATORY reread
-		assertNull(locationLocal.getById("A"));
+		assertNull(locationService.getById("A"));
 		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
 	    // MANDATORY reread
-		location = locationLocal.getById("A");
+		location = locationService.getById("A");
 		assertNull(location);
 	}
 	
@@ -232,17 +232,17 @@ public class LifoLocationTest {
 	public void getAll() {
 		LOG.info("--- Test getAll");
 		
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
 		// Prepare some locations; 5 locations
-		locationLocal.create(new LifoLocation("A", "Test"));
-		locationLocal.create(new LifoLocation("B", "Test"));
-		locationLocal.create(new LifoLocation("C", "Test"));
-		locationLocal.create(new LifoLocation("D", "Test"));
-		locationLocal.create(new LifoLocation("E", "Test"));
+		locationService.create(new LifoLocation("A", "Test"));
+		locationService.create(new LifoLocation("B", "Test"));
+		locationService.create(new LifoLocation("C", "Test"));
+		locationService.create(new LifoLocation("D", "Test"));
+		locationService.create(new LifoLocation("E", "Test"));
 
 		// Get them all and check
-		List<Location> locations = locationLocal.getAll();
+		List<Location> locations = locationService.getAll();
 
 		assertNotNull(locations);
 		assertFalse(locations.isEmpty());
@@ -250,39 +250,39 @@ public class LifoLocationTest {
 	}
 	
 	/**
-	 * Test delete a location with handling units on it
+	 * Test delete a locationService with handling units on it
 	 */
 	@Test
 	@InSequence(4)
 	public void deleteLocationWithHandlingUnits() {
 		LOG.info("--- Test deleteLocationWithHandlingUnits");
 		
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 		
-		// Prepare a location
-		locationLocal.create(new LifoLocation("A", "Test"));
-		Location locA = locationLocal.getById("A");
+		// Prepare a locationService
+		locationService.create(new LifoLocation("A", "Test"));
+		Location locA = locationService.getById("A");
 		LOG.info("Lifo Location prepared: " + locA);
 		
 		// Drop to make a relation
 		try {
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("1", "Test"));
+			handlingUnitService.dropTo(locA, new HandlingUnit("1", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("2", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("3", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("3", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("4", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("4", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("5", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("5", "Test"));
 
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertNotNull(locA);
 			assertFalse(locA.getHandlingUnits().isEmpty());
 			assertEquals(5, locA.getHandlingUnits().size());
@@ -293,26 +293,26 @@ public class LifoLocationTest {
 
 			LOG.info("Sample hU2 and hU5");
 			// MANDATORY reread
-			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU2 = handlingUnitService.getById("2");
 			LOG.info(hU2);
 			// MANDATORY reread
-			HandlingUnit hU5 = handlingUnitLocal.getById("5");
+			HandlingUnit hU5 = handlingUnitService.getById("5");
 			LOG.info(hU5);
 
-			// Now delete the location
+			// Now delete the locationService
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
-			locationLocal.delete(locA);
+			locA = locationService.getById("A");
+			locationService.delete(locA);
 			LOG.info("Lifo Location deleted: " + locA.getLocationId());
 
 			// MANDATORY reread
-			hU2 = handlingUnitLocal.getById("2");
-			hU5 = handlingUnitLocal.getById("5");
+			hU2 = handlingUnitService.getById("2");
+			hU5 = handlingUnitService.getById("5");
 
 			assertNotNull(hU2);
 			assertNotNull(hU5);
 
-			LOG.info("Sample hU2 and hU5 have no longer a location and locaPos");
+			LOG.info("Sample hU2 and hU5 have no longer a locationService and locaPos");
 			assertNull(hU2.getLocation());
 			assertNull(hU2.getLocaPos());
 			assertNull(hU5.getLocation());
@@ -327,19 +327,19 @@ public class LifoLocationTest {
 	}
 
 	/**
-	 * Test delete a location with one single handling unit on it
+	 * Test delete a locationService with one single handling unit on it
 	 */
 	@Test
 	@InSequence(5)
 	public void deleteLocationWithOneHandlingUnit() {
 		LOG.info("--- Test deleteLocationWithOneHandlingUnit");
 		
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 		
-		// Prepare a location
-		locationLocal.create(new LifoLocation("A", "Test"));
-		Location locA = locationLocal.getById("A");
+		// Prepare a locationService
+		locationService.create(new LifoLocation("A", "Test"));
+		Location locA = locationService.getById("A");
 		
 		// Test the special toString also
 		assumeTrue(locA.toString().contains("HandlingUnits LIFO=[]"));
@@ -348,10 +348,10 @@ public class LifoLocationTest {
 		
 		// Drop to make a relation
 		try {
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("8", "Test"));
+			handlingUnitService.dropTo(locA, new HandlingUnit("8", "Test"));
 
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertNotNull(locA);
 			assertFalse(locA.getHandlingUnits().isEmpty());
 			assertEquals(1, locA.getHandlingUnits().size());
@@ -364,26 +364,26 @@ public class LifoLocationTest {
 			LOG.info("1 HandlingUnit dropped on " + locA.getLocationId() + locA);
 
 			// MANDATORY reread
-			HandlingUnit hU8 = handlingUnitLocal.getById("8");
+			HandlingUnit hU8 = handlingUnitService.getById("8");
 			assertNotNull(hU8.getLocation());
 			assertNotNull(hU8.getLocaPos());
 			LOG.info("Sample hU8 {}", hU8);
 
-			// Now delete the location
+			// Now delete the locationService
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
-			locationLocal.delete(locA);
+			locA = locationService.getById("A");
+			locationService.delete(locA);
 			LOG.info("Lifo Location deleted: " + locA.getLocationId());
 
 			// MANDATORY reread
-			hU8 = handlingUnitLocal.getById("8");
+			hU8 = handlingUnitService.getById("8");
 
 			assertNotNull(hU8);
 
 			assertNull(hU8.getLocation());
 			assertNull(hU8.getLocaPos());
 
-			LOG.info("Sample hU8 has no longer a location {}", hU8);
+			LOG.info("Sample hU8 has no longer a locationService {}", hU8);
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
@@ -398,32 +398,32 @@ public class LifoLocationTest {
 	public void checkLifoSequence() {
 		LOG.info("--- Test checkLifoSequence");
 		
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 		
-		// Prepare a location
-		locationLocal.create(new LifoLocation("A", "Test"));
-		Location locA = locationLocal.getById("A");
+		// Prepare a locationService
+		locationService.create(new LifoLocation("A", "Test"));
+		Location locA = locationService.getById("A");
 		LOG.info("Lifo Location prepared: " + locA);
 		
 		// Drop to make a relation
 		try {
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("1", "Test"));
+			handlingUnitService.dropTo(locA, new HandlingUnit("1", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("2", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("3", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("3", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("4", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("4", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("5", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("5", "Test"));
 
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertNotNull(locA);
 			assertFalse(locA.getHandlingUnits().isEmpty());
 			assertEquals(5, locA.getHandlingUnits().size());
@@ -431,47 +431,47 @@ public class LifoLocationTest {
 			LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
 
 			// MANDATORY reread
-			HandlingUnit hU5 = handlingUnitLocal.getById("5");
+			HandlingUnit hU5 = handlingUnitService.getById("5");
 			assertEquals(locA, hU5.getLocation());
 			assertEquals(Integer.valueOf(1), hU5.getLocaPos());
 			LOG.info("Sample hU5 locaPos check: {}", hU5);
 
 			// MANDATORY reread
-			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU2 = handlingUnitService.getById("2");
 			assertEquals(locA, hU2.getLocation());
 			assertEquals(Integer.valueOf(4), hU2.getLocaPos());
 			LOG.info("Sample hU2 locaPos check: {}", hU2);
 
-			handlingUnitLocal.pickFrom(locA, hU5);
+			handlingUnitService.pickFrom(locA, hU5);
 
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertEquals(4, locA.getHandlingUnits().size());
 			LOG.info("After FIRST PICK {}", locA);
 
-			hU5 = handlingUnitLocal.getById("5");
+			hU5 = handlingUnitService.getById("5");
 			assertNull(hU5.getLocation());
 			assertNull(hU5.getLocaPos());
 
-			HandlingUnit hU4 = handlingUnitLocal.getById("4");
+			HandlingUnit hU4 = handlingUnitService.getById("4");
 			assertNotNull(hU4);
 			assertEquals(locA, hU4.getLocation());
 			assertEquals(Integer.valueOf(1), hU4.getLocaPos());
 
-			handlingUnitLocal.pickFrom(locA, hU4);
+			handlingUnitService.pickFrom(locA, hU4);
 
-			locA = locationLocal.getById("A");
-			HandlingUnit hU3 = handlingUnitLocal.getById("3");
-			handlingUnitLocal.pickFrom(locA, hU3);
+			locA = locationService.getById("A");
+			HandlingUnit hU3 = handlingUnitService.getById("3");
+			handlingUnitService.pickFrom(locA, hU3);
 
-			locA = locationLocal.getById("A");
-			hU2 = handlingUnitLocal.getById("2");
-			handlingUnitLocal.pickFrom(locA, hU2);
+			locA = locationService.getById("A");
+			hU2 = handlingUnitService.getById("2");
+			handlingUnitService.pickFrom(locA, hU2);
 
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertEquals(1, locA.getHandlingUnits().size());
 			LOG.info("After FOURTH PICK {}", locA);
 
-			HandlingUnit hU1 = handlingUnitLocal.getById("1");
+			HandlingUnit hU1 = handlingUnitService.getById("1");
 			assertNotNull(hU1);
 			assertEquals(locA, hU1.getLocation());
 			assertEquals(Integer.valueOf(1), hU1.getLocaPos());
@@ -490,7 +490,7 @@ public class LifoLocationTest {
 		LOG.info("--- Test checkExceptionalCases");
 		
 		try {
-			handlingUnitLocal.pickFrom(null);
+			handlingUnitService.pickFrom(null);
 
 			Assert.fail("Exception expected");
 		}

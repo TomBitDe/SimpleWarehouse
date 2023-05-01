@@ -13,8 +13,8 @@ import javax.interceptor.Interceptors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
-import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -29,10 +29,10 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal2
 	private static final Logger LOG = LogManager.getLogger(DropPickRandomLocationBean2.class);
 	
 	@EJB
-	private LocationLocal locationLocal;
+	private LocationService locationService;
 
 	@EJB
-	private HandlingUnitLocal handlingUnitLocal;
+	private HandlingUnitService handlingUnitService;
 
 	/**
 	 * Default constructor
@@ -47,18 +47,18 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal2
 	public void processScenario() {
 		LOG.trace("--> processScenario()");
 
-		Location lA = locationLocal.getById("A");
+		Location lA = locationService.getById("A");
 		LOG.info("Location lA={}", lA);
 		
 		if (lA != null) {
 			List<String> huIds = Arrays.asList("4", "1", "3", "2");
 			
-			// Now pick from location
+			// Now pick from locationService
 			for (String huId : huIds) {
 			    try {
-				    handlingUnitLocal.pickFrom(locationLocal.getById("A"), handlingUnitLocal.getById(huId));
+				    handlingUnitService.pickFrom(locationService.getById("A"), handlingUnitService.getById(huId));
 
-				    lA = locationLocal.getById("A");
+				    lA = locationService.getById("A");
 				    LOG.info(lA);
 			    }
 			    catch (Exception e) {

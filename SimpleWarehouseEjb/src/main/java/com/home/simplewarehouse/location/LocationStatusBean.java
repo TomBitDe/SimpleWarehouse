@@ -2,7 +2,6 @@ package com.home.simplewarehouse.location;
 
 import java.util.List;
 
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -21,10 +20,9 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
  * Bean class for LocationStatus usage. 
  */
 @Stateless
-@Local(LocationStatusLocal.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(PerformanceAuditor.class)
-public class LocationStatusBean implements LocationStatusLocal {
+public class LocationStatusBean implements LocationStatusService {
 	private static final Logger LOG = LogManager.getLogger(LocationStatusBean.class);
 	
 	@PersistenceContext

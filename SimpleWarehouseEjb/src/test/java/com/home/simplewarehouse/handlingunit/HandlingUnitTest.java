@@ -30,9 +30,9 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.DimensionException;
 import com.home.simplewarehouse.location.LocationBean;
-import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.location.LocationStatusBean;
-import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.location.OverheightException;
 import com.home.simplewarehouse.location.OverlengthException;
 import com.home.simplewarehouse.location.OverwidthException;
@@ -60,10 +60,10 @@ public class HandlingUnitTest {
 	private static final LengthCategory LENGTH_MAX = LengthCategory.SHORT;
 	
 	@EJB
-	HandlingUnitLocal handlingUnitLocal;
+	HandlingUnitService handlingUnitService;
 	
 	@EJB
-	LocationLocal locationLocal;
+	LocationService locationService;
 	
 	/**
 	 * Configure the deployment.<br>
@@ -82,9 +82,9 @@ public class HandlingUnitTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						HandlingUnitLocal.class, HandlingUnitBean.class,
-						LocationLocal.class, LocationBean.class,
-						LocationStatusLocal.class, LocationStatusBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
+						LocationService.class, LocationBean.class,
+						LocationStatusService.class, LocationStatusBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -124,14 +124,14 @@ public class HandlingUnitTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
-		List<Location> locations = locationLocal.getAll();
+		List<Location> locations = locationService.getAll();
 		
-		locations.stream().forEach(l -> locationLocal.delete(l));
+		locations.stream().forEach(l -> locationService.delete(l));
 		
 		// Cleanup handling units
-		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
+		List<HandlingUnit> handlingUnits = handlingUnitService.getAll();
 		
-		handlingUnits.stream().forEach(h -> handlingUnitLocal.delete(h));		
+		handlingUnits.stream().forEach(h -> handlingUnitService.delete(h));		
 
 		LOG.trace("<-- afterTest()");		
 	}
@@ -144,12 +144,12 @@ public class HandlingUnitTest {
 	public void createNullOrWithIdNull() {
 		LOG.info("--- Test createNullOrWithIdNull");
 
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 
 		HandlingUnit handlingUnit = null;
 		
 		try {
-			handlingUnit = handlingUnitLocal.create(null);
+			handlingUnit = handlingUnitService.create(null);
 
 			Assert.fail("Exception expected");
 		}
@@ -158,7 +158,7 @@ public class HandlingUnitTest {
 		}
 
 		try {
-			handlingUnit = handlingUnitLocal.create(new HandlingUnit(null));
+			handlingUnit = handlingUnitService.create(new HandlingUnit(null));
 
 			Assert.fail("Exception expected");
 		}
@@ -170,25 +170,25 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Simple handling unit with no reference to a location
+	 * Simple handling unit with no reference to a locationService
 	 */
 	@Test
 	@InSequence(1)
 	public void createAndGetById() {
 		LOG.info("--- Test createAndGetById");
 
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 
 		HandlingUnit expHandlingUnit = new HandlingUnit("1");
 
-		HandlingUnit handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		HandlingUnit handlingUnit = handlingUnitService.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		
 		LOG.info(handlingUnit);
 		
 		expHandlingUnit = new HandlingUnit("2", null);
 
-		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertNotNull(handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -197,7 +197,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("3", null, null);
 
-		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertNotNull(handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -206,7 +206,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("4", "Scott Tiger");
 
-		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertEquals(expHandlingUnit.getUpdateUserId(), handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -215,7 +215,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("5", "Willi", new Timestamp(System.currentTimeMillis()));
 
-		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.create(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertEquals(expHandlingUnit.getUpdateUserId(), handlingUnit.getUpdateUserId());
 		assertEquals(expHandlingUnit.getUpdateTimestamp(), handlingUnit.getUpdateTimestamp());
@@ -224,22 +224,22 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test delete of a simple handling unit with no reference to a location
+	 * Test delete of a simple handling unit with no reference to a locationService
 	 */
 	@Test
 	@InSequence(2)
 	public void deleteByHandlingUnit() {
 		LOG.info("--- Test deleteByHandlingUnit");
 
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 
-	    HandlingUnit handlingUnit = handlingUnitLocal.create(new HandlingUnit("1"));
+	    HandlingUnit handlingUnit = handlingUnitService.create(new HandlingUnit("1"));
 	    
 	    // MANDATORY reread
 		assertEquals("1", handlingUnit.getId());
 		
-		// Delete the handlingUnit
-		handlingUnitLocal.delete(handlingUnit);
+		// Delete the handlingUnitService
+		handlingUnitService.delete(handlingUnit);
 		assertNotNull(handlingUnit);
 
 	    // MANDATORY reread
@@ -248,14 +248,14 @@ public class HandlingUnitTest {
 		
 		// Delete null
 		handlingUnit = null;
-		handlingUnitLocal.delete(handlingUnit);
+		handlingUnitService.delete(handlingUnit);
 		assertTrue(true);
 		
-		handlingUnit = handlingUnitLocal.create(new HandlingUnit("1"));
+		handlingUnit = handlingUnitService.create(new HandlingUnit("1"));
 		assertNotNull(handlingUnit);
 		handlingUnit.setId(null);
-		handlingUnitLocal.delete(handlingUnit);
-		handlingUnit = handlingUnitLocal.getById("1");
+		handlingUnitService.delete(handlingUnit);
+		handlingUnit = handlingUnitService.getById("1");
 		assertNotNull(handlingUnit);
 	}
 	
@@ -267,17 +267,17 @@ public class HandlingUnitTest {
 	public void getAll() {
 		LOG.info("--- Test getAll");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare some handling units
-		handlingUnitLocal.create(new HandlingUnit("1"));
-		handlingUnitLocal.create(new HandlingUnit("2"));
-		handlingUnitLocal.create(new HandlingUnit("3"));
-		handlingUnitLocal.create(new HandlingUnit("4"));
-		handlingUnitLocal.create(new HandlingUnit("5"));
+		handlingUnitService.create(new HandlingUnit("1"));
+		handlingUnitService.create(new HandlingUnit("2"));
+		handlingUnitService.create(new HandlingUnit("3"));
+		handlingUnitService.create(new HandlingUnit("4"));
+		handlingUnitService.create(new HandlingUnit("5"));
 
 		// Another test
-		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
+		List<HandlingUnit> handlingUnits = handlingUnitService.getAll();
 
 		assertFalse(handlingUnits.isEmpty());
 		assertEquals(5, handlingUnits.size());
@@ -286,27 +286,27 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the dropTo method to create reference to a location
+	 * Test the dropTo method to create reference to a locationService
 	 */
 	@Test
 	@InSequence(4)
 	public void dropTo() {
 		LOG.info("--- Test dropTo");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
 		try {
 			// Now drop
-			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("1"));
+			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("1"));
 
 			// MANDATORY reread
-			HandlingUnit hU1 = handlingUnitLocal.getById("1");
-			Location lOA = locationLocal.getById("A");
+			HandlingUnit hU1 = handlingUnitService.getById("1");
+			Location lOA = locationService.getById("A");
 
 			LOG.info(hU1);
 
-			// Handling Unit is on location now
+			// Handling Unit is on locationService now
 			assertEquals(lOA, hU1.getLocation());
 
 			assertFalse(lOA.getHandlingUnits().isEmpty());
@@ -323,21 +323,21 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the dropTo method to create reference to a none existing location
+	 * Test the dropTo method to create reference to a none existing locationService
 	 */
 	@Test
 	@InSequence(5)
 	public void dropToNull() {
 		LOG.info("--- Test dropToNull");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
 		HandlingUnit hu1 = new HandlingUnit("1");
 		
-		// Check invalid drop to location null
+		// Check invalid drop to locationService null
 		try {
-			handlingUnitLocal.dropTo(null, hu1);
+			handlingUnitService.dropTo(null, hu1);
 
 			Assert.fail("Exception expected");
 		}
@@ -350,19 +350,19 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the dropTo method to create reference to a none existing handlingUnit
+	 * Test the dropTo method to create reference to a none existing handlingUnitService
 	 */
 	@Test
 	@InSequence(8)
 	public void dropNullTo() {
 		LOG.info("--- Test dropNullTo");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
-		// Check invalid drop to handlingUnit null
+		// Check invalid drop to handlingUnitService null
 		try {
-			handlingUnitLocal.dropTo(new Location("A"), null);
+			handlingUnitService.dropTo(new Location("A"), null);
 
 			assertTrue("No exception expected", true);
 		}
@@ -372,7 +372,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the pickFrom method to remove the reference to a location
+	 * Test the pickFrom method to remove the reference to a locationService
 	 * 
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
@@ -382,22 +382,22 @@ public class HandlingUnitTest {
 	public void pickFrom() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.info("--- Test pickFrom");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
 		// To prepare the pick do a drop before
 		try {
-			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("1"));
+			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("1"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		
 	    // MANDATORY reread
-		HandlingUnit hU1 = handlingUnitLocal.getById("1");
-		Location lOA = locationLocal.getById("A");
+		HandlingUnit hU1 = handlingUnitService.getById("1");
+		Location lOA = locationService.getById("A");
 
-		// Handling Unit is on location now
+		// Handling Unit is on locationService now
 		assertEquals(lOA, hU1.getLocation());
 		
 		assertFalse(lOA.getHandlingUnits().isEmpty());
@@ -410,11 +410,11 @@ public class HandlingUnitTest {
 		LOG.info(lOA);
 
 		// Now do the pick
-		handlingUnitLocal.pickFrom(lOA, hU1);
+		handlingUnitService.pickFrom(lOA, hU1);
 
 	    // MANDATORY reread
-		hU1 = handlingUnitLocal.getById("1");
-		lOA = locationLocal.getById("A");
+		hU1 = handlingUnitService.getById("1");
+		lOA = locationService.getById("A");
 		
 		assertNull(hU1.getLocation());
 		assertFalse(lOA.getHandlingUnits().contains(hU1));
@@ -423,7 +423,7 @@ public class HandlingUnitTest {
 		
 		// Some exceptional cases
 		try {
-			handlingUnitLocal.pickFrom(null, hU1);
+			handlingUnitService.pickFrom(null, hU1);
 			
 			Assert.fail("Expected an Exception to be thrown");
 		}
@@ -433,7 +433,7 @@ public class HandlingUnitTest {
 		}
 
 		try {
-			handlingUnitLocal.pickFrom(lOA, null);
+			handlingUnitService.pickFrom(lOA, null);
 			
 			Assert.fail("Expected an Exception to be thrown");
 		}
@@ -444,7 +444,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the pickFrom method to remove the reference to an EMPTY location
+	 * Test the pickFrom method to remove the reference to an EMPTY locationService
 	 * 
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
@@ -454,13 +454,13 @@ public class HandlingUnitTest {
 	public void pickFromEmptyLocation() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.info("--- Test pickFromEmptyLocation");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 				
 		// Pick now
 		try {
 			LOG.info("Pick now");
-		    handlingUnitLocal.pickFrom(new Location("A"), new HandlingUnit("1"));
+		    handlingUnitService.pickFrom(new Location("A"), new HandlingUnit("1"));
 		    
 		    Assert.fail("Expected an LocationIsEmptyException to be thrown");
 		}
@@ -473,85 +473,85 @@ public class HandlingUnitTest {
 	/**
 	 * Test pickFrom a Location that does not contain the handling unit
 	 * 
-	 * @throws LocationIsEmptyException in case the location is EMPTY
-	 * @throws HandlingUnitNotOnLocationException in case the handling unit is not on that location
+	 * @throws LocationIsEmptyException in case the locationService is EMPTY
+	 * @throws HandlingUnitNotOnLocationException in case the handling unit is not on that locationService
 	 */
 	@Test
 	@InSequence(18)
 	public void pickFromLocationNotContaining() throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.info("--- Test pickFromLocationNotContaining");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 				
 		try {
-			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("1"));
+			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("1"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
 		
 	    // MANDATORY reread
-		Location lOA = locationLocal.getById("A");
+		Location lOA = locationService.getById("A");
 
 		// Pick now
 		try {
 			LOG.info("Pick now");
-			handlingUnitLocal.pickFrom(lOA, new HandlingUnit("2"));
+			handlingUnitService.pickFrom(lOA, new HandlingUnit("2"));
 		}
 		catch(HandlingUnitNotOnLocationException isNotOnLocation) {
 			// Location contains hU1 but not hU2
 			LOG.info("Exception: " + isNotOnLocation.getMessage());
 		}
 		
-		// Check location is set to ERROR for manual adjustment (Inventur)
+		// Check locationService is set to ERROR for manual adjustment (Inventur)
 	    // MANDATORY reread
-		lOA = locationLocal.getById("A");
+		lOA = locationService.getById("A");
 		assertEquals(ErrorStatus.ERROR,lOA.getLocationStatus().getErrorStatus());
 		
 		LOG.info("Locations in ERROR");
-		locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
+		locationService.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
 	}
 	
 	/**
-	 * Test delete a handling unit with reference to a location
+	 * Test delete a handling unit with reference to a locationService
 	 */
 	@Test
 	@InSequence(20)
 	public void deleteHandlingUnitOnLocation() {
 		LOG.info("--- Test deleteHandlingUnitOnLocation");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 
 		Location lOA;
 		
 		// Drop to make a relation
 		try {
-			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("1"));
+			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("1"));
 		
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 		
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("2"));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("2"));
 
 			// MANDATORY reread
-			HandlingUnit hU1 = handlingUnitLocal.getById("1");
-			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU1 = handlingUnitService.getById("1");
+			HandlingUnit hU2 = handlingUnitService.getById("2");
 			
-			// Now delete a handling unit that is related to a location
+			// Now delete a handling unit that is related to a locationService
 			LOG.info("Delete: " + hU1);
-			handlingUnitLocal.delete(hU1);
+			handlingUnitService.delete(hU1);
 			
 		    // MANDATORY reread
-			hU1 = handlingUnitLocal.getById("1");
+			hU1 = handlingUnitService.getById("1");
 			
 			assertNull(hU1);
 			
 		    // MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 			
-			// Check the location
+			// Check the locationService
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertTrue(lOA.getHandlingUnits().contains(hU2));
@@ -565,36 +565,36 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test a double drop to the same location
+	 * Test a double drop to the same locationService
 	 */
 	@Test
 	@InSequence(23)
 	public void doubleDropSameLocation() {
 		LOG.info("--- Test doubleDropSameLocation");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("2"));
+			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("2"));
 
 			// MANDATORY reread
-			HandlingUnit hU2 = handlingUnitLocal.getById("2");
-			Location lOA = locationLocal.getById("A");
+			HandlingUnit hU2 = handlingUnitService.getById("2");
+			Location lOA = locationService.getById("A");
 			LOG.info("First drop: " + hU2);
 			LOG.info("First drop: " + lOA);
 
-			// Now drop again to same location
-			handlingUnitLocal.dropTo(lOA, hU2);
+			// Now drop again to same locationService
+			handlingUnitService.dropTo(lOA, hU2);
 
 			// MANDATORY reread
-			hU2 = handlingUnitLocal.getById("2");
-			lOA = locationLocal.getById("A");
+			hU2 = handlingUnitService.getById("2");
+			lOA = locationService.getById("A");
 			LOG.info("Second drop: " + hU2);
 			LOG.info("Second drop: " + lOA);
 
-			// Check the location
+			// Check the locationService
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertTrue(lOA.getHandlingUnits().contains(hU2));
@@ -613,33 +613,33 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test double drop to other location
+	 * Test double drop to other locationService
 	 */
 	@Test
 	@InSequence(25)
 	public void doubleDropOtherLocation() {
 		LOG.info("--- Test doubleDropOtherLocation");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(new Location("A"), new HandlingUnit("2"));
+			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("2"));
 
 			// MANDATORY reread
-			HandlingUnit hU2 = handlingUnitLocal.getById("2");
-			Location lOA = locationLocal.getById("A");
+			HandlingUnit hU2 = handlingUnitService.getById("2");
+			Location lOA = locationService.getById("A");
 			LOG.info("First drop: " + hU2);
 			LOG.info("First drop: " + lOA);
 
-			// Now drop again to other location
-			handlingUnitLocal.dropTo(new Location("B"), hU2);
+			// Now drop again to other locationService
+			handlingUnitService.dropTo(new Location("B"), hU2);
 
 			// MANDATORY reread
-			hU2 = handlingUnitLocal.getById("2");
-			lOA = locationLocal.getById("A");
-			Location lOB = locationLocal.getById("B");
+			hU2 = handlingUnitService.getById("2");
+			lOA = locationService.getById("A");
+			Location lOB = locationService.getById("B");
 			LOG.info("Second drop: " + hU2);
 			LOG.info("Second drop: " + lOA);
 			LOG.info("Second drop: " + lOB);
@@ -656,9 +656,9 @@ public class HandlingUnitTest {
 			assertEquals(ErrorStatus.NONE, lOB.getLocationStatus().getErrorStatus());
 
 			LOG.info("Locations in ERROR");
-			locationLocal.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
+			locationService.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
 			LOG.info("Locations NOT in ERROR");
-			locationLocal.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
+			locationService.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
 
 			// Check the handling unit
 			assertNotNull(hU2);
@@ -671,40 +671,40 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to location capacity exceeds
+	 * Test drop to locationService capacity exceeds
 	 */
 	@Test
 	@InSequence(28)
 	public void dropToLocationCapacityExceeds() {
 		LOG.info("--- Test dropToLocationCapacityExceeds");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare a location
-		locationLocal.create(new Location("A"));		
-		Location lOA = locationLocal.getById("A");
+		// Prepare a locationService
+		locationService.create(new Location("A"));		
+		Location lOA = locationService.getById("A");
 		
 		// Now set the capacity to limit
 		lOA.getDimension().setMaxCapacity(2);
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("2"));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("2"));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("3"));
+			lOA = locationService.getById("A");
+			handlingUnitService.dropTo(lOA, new HandlingUnit("3"));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Unexpected exception: " +  dimex.getMessage());
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("4"));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("4"));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -713,7 +713,7 @@ public class HandlingUnitTest {
 			LOG.info(capex.getMessage());
 
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			// Check the locations
 			assertNotNull(lOA);
@@ -726,40 +726,40 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to location weight exceeds
+	 * Test drop to locationService weight exceeds
 	 */
 	@Test
 	@InSequence(30)
 	public void dropToLocationWeightExceeds() {
 		LOG.info("--- Test dropToLocationWeightExceeds");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare handling unit and a location
-		locationLocal.create(new Location("A"));
-		Location lOA = locationLocal.getById("A");
+		// Prepare handling unit and a locationService
+		locationService.create(new Location("A"));
+		Location lOA = locationService.getById("A");
 		
 		// Now set the weight to limit
 		lOA.getDimension().setMaxWeight(WEIGHT_MAX);
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("2", 500));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("2", 500));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("3", 300));
+			lOA = locationService.getById("A");
+			handlingUnitService.dropTo(lOA, new HandlingUnit("3", 300));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Unexpected exception: " +  dimex.getMessage());
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("4", 190));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("4", 190));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -768,12 +768,12 @@ public class HandlingUnitTest {
 			LOG.info(wex.getMessage());
 
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertTrue(locationLocal.overweight(lOA, handlingUnitLocal.getById("4").getWeight()));
+			assertTrue(locationService.overweight(lOA, handlingUnitService.getById("4").getWeight()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
@@ -781,41 +781,41 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to location overheight
+	 * Test drop to locationService overheight
 	 */
 	@Test
 	@InSequence(33)
 	public void dropToLocationOverheight() {
 		LOG.info("--- Test dropToLocationOverheight");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare a location
-		locationLocal.create(new Location("A"));
-		Location lOA = locationLocal.getById("A");
+		// Prepare a locationService
+		locationService.create(new Location("A"));
+		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
 		lOA.getDimension().setMaxHeight(HEIGHT_MAX);
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("1", 0, 0.0f, HeightCategory.MIDDLE));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("1", 0, 0.0f, HeightCategory.MIDDLE));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("3", 0, 0.0f, HeightCategory.LOW));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("3", 0, 0.0f, HeightCategory.LOW));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Unexpected exception: " +  dimex.getMessage());
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("2", 0, 0.0f, HeightCategory.HIGH));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("2", 0, 0.0f, HeightCategory.HIGH));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -824,21 +824,21 @@ public class HandlingUnitTest {
 			LOG.info(wex.getMessage());
 
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertTrue(locationLocal.overheight(lOA, handlingUnitLocal.getById("2").getHeight()));
+			assertTrue(locationService.overheight(lOA, handlingUnitService.getById("2").getHeight()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, new HandlingUnit("4", 0, 0.0f, HeightCategory.TOO_HIGH));
+			handlingUnitService.dropTo(lOA, new HandlingUnit("4", 0, 0.0f, HeightCategory.TOO_HIGH));
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -847,12 +847,12 @@ public class HandlingUnitTest {
 			LOG.info(wex.getMessage());
 
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertTrue(locationLocal.overheight(lOA, handlingUnitLocal.getById("4").getHeight()));
+			assertTrue(locationService.overheight(lOA, handlingUnitService.getById("4").getHeight()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
@@ -860,50 +860,50 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to location overwidth
+	 * Test drop to locationService overwidth
 	 */
 	@Test
 	@InSequence(36)
 	public void dropToLocationOverwidth() {
 		LOG.info("--- Test dropToLocationOverwidth");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare handling unit and a location
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
-		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
-		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
-		HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
+		// Prepare handling unit and a locationService
+		HandlingUnit hU1 = handlingUnitService.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
+		HandlingUnit hU2 = handlingUnitService.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
+		HandlingUnit hU3 = handlingUnitService.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
+		HandlingUnit hU4 = handlingUnitService.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
+		HandlingUnit hU5 = handlingUnitService.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
 		
-		locationLocal.create(new Location("A"));
-		Location lOA = locationLocal.getById("A");
+		locationService.create(new Location("A"));
+		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
 		lOA.getDimension().setMaxWidth(WIDTH_MAX);
 
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU1);
+			handlingUnitService.dropTo(lOA, hU1);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitService.dropTo(lOA, hU2);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(lOA, hU3);
+			lOA = locationService.getById("A");
+			handlingUnitService.dropTo(lOA, hU3);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Unexpected exception: " +  dimex.getMessage());
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, hU4);
+			handlingUnitService.dropTo(lOA, hU4);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -912,21 +912,21 @@ public class HandlingUnitTest {
 			LOG.info(wex.getMessage());
 
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertTrue(locationLocal.overwidth(lOA, hU4.getWidth()));
+			assertTrue(locationService.overwidth(lOA, hU4.getWidth()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, hU5);
+			handlingUnitService.dropTo(lOA, hU5);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -935,12 +935,12 @@ public class HandlingUnitTest {
 			LOG.info(wex.getMessage());
 
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertTrue(locationLocal.overwidth(lOA, hU5.getWidth()));
+			assertTrue(locationService.overwidth(lOA, hU5.getWidth()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
@@ -948,55 +948,55 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to location overlength
+	 * Test drop to locationService overlength
 	 */
 	@Test
 	@InSequence(39)
 	public void dropToLocationOverlength() {
 		LOG.info("--- Test dropToLocationOverlength");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare handling unit and a location
-		HandlingUnit hU1 = handlingUnitLocal.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
-		HandlingUnit hU2 = handlingUnitLocal.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
-		HandlingUnit hU3 = handlingUnitLocal.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
-		HandlingUnit hU4 = handlingUnitLocal.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
-		HandlingUnit hU5 = handlingUnitLocal.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
+		// Prepare handling unit and a locationService
+		HandlingUnit hU1 = handlingUnitService.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
+		HandlingUnit hU2 = handlingUnitService.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
+		HandlingUnit hU3 = handlingUnitService.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
+		HandlingUnit hU4 = handlingUnitService.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
+		HandlingUnit hU5 = handlingUnitService.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
 		
-		locationLocal.create(new Location("A"));
-		Location lOA = locationLocal.getById("A");
+		locationService.create(new Location("A"));
+		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
 		lOA.getDimension().setMaxLength(LENGTH_MAX);
 		
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(lOA, hU1);
+			handlingUnitService.dropTo(lOA, hU1);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Unexpected exception: " +  dimex.getMessage());
 		}
 
 		try {
-			handlingUnitLocal.dropTo(lOA, hU2);
+			handlingUnitService.dropTo(lOA, hU2);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 			
-			handlingUnitLocal.dropTo(lOA, hU3);
+			handlingUnitService.dropTo(lOA, hU3);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 			
-			handlingUnitLocal.dropTo(lOA, hU4);
+			handlingUnitService.dropTo(lOA, hU4);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 			
-			handlingUnitLocal.dropTo(lOA, hU5);
+			handlingUnitService.dropTo(lOA, hU5);
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -1005,16 +1005,16 @@ public class HandlingUnitTest {
 			LOG.info(wex.getMessage());
 
 			// MANDATORY reread
-			lOA = locationLocal.getById("A");
+			lOA = locationService.getById("A");
 
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			
-			assertTrue(locationLocal.overlength(lOA, hU2.getLength()));
-			assertTrue(locationLocal.overlength(lOA, hU3.getLength()));
-			assertTrue(locationLocal.overlength(lOA, hU4.getLength()));
-			assertTrue(locationLocal.overlength(lOA, hU5.getLength()));
+			assertTrue(locationService.overlength(lOA, hU2.getLength()));
+			assertTrue(locationService.overlength(lOA, hU3.getLength()));
+			assertTrue(locationService.overlength(lOA, hU4.getLength()));
+			assertTrue(locationService.overlength(lOA, hU5.getLength()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());

@@ -7,9 +7,9 @@
  *      | HandlingUnit |                         | Location                 |
  *      |              |                         |                          |
  *      |  id          |                         |  locationId              |<--------------+---------------------+
- *      |  location    | <-- 0:1 ------- 0:N --> |  handlingUnits           |               |                     |
- *      |  locaPos     |                         |  locationStatus          |               |                     |
- *      |  ...         |                         |  dimension               |               |                     |
+ *      |  locationService    | <-- 0:1 ------- 0:N --> |  handlingUnits           |               |                     |
+ *      |  locaPos     |                         |  locationStatusService          |               |                     |
+ *      |  ...         |                         |  dimensionService               |               |                     |
  *      |  base        |<--0:1-+                 |  ...                     |               |                     |
  *      |  contains    |       |                 |                          |               |                     |
  *      |  ...         |       |                 +--------------------------+               |                     |

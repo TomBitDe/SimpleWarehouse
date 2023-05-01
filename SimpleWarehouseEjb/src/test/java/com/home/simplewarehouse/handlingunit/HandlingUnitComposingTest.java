@@ -25,9 +25,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.location.LocationBean;
-import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.location.LocationStatusBean;
-import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -41,10 +41,10 @@ public class HandlingUnitComposingTest {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitComposingTest.class);
 
 	@EJB
-	HandlingUnitLocal handlingUnitLocal;
+	HandlingUnitService handlingUnitService;
 	
 	@EJB
-	LocationLocal locationLocal;
+	LocationService locationService;
 	
 	/**
 	 * Configure the deployment.<br>
@@ -63,9 +63,9 @@ public class HandlingUnitComposingTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						HandlingUnitLocal.class, HandlingUnitBean.class,
-						LocationLocal.class, LocationBean.class,
-						LocationStatusLocal.class, LocationStatusBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
+						LocationService.class, LocationBean.class,
+						LocationStatusService.class, LocationStatusBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -105,14 +105,14 @@ public class HandlingUnitComposingTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
-		List<Location> locations = locationLocal.getAll();
+		List<Location> locations = locationService.getAll();
 		
-		locations.stream().forEach(l -> locationLocal.delete(l));
+		locations.stream().forEach(l -> locationService.delete(l));
 		
 		// Cleanup handling units
-		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
+		List<HandlingUnit> handlingUnits = handlingUnitService.getAll();
 		
-		handlingUnits.stream().forEach(h -> handlingUnitLocal.delete(h));		
+		handlingUnits.stream().forEach(h -> handlingUnitService.delete(h));		
 
 		LOG.trace("<-- afterTest()");		
 	}
@@ -125,27 +125,27 @@ public class HandlingUnitComposingTest {
 	public void assignOneOnBase() {
 		LOG.info("--- Test assignOneOnBase");
 
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
 		assertEquals(null, base.getBaseHU());
 		assertTrue(base.getContains().isEmpty());
 		LOG.info(base);
 		
-		HandlingUnit hu2 =  handlingUnitLocal.create(new HandlingUnit("2"));
+		HandlingUnit hu2 =  handlingUnitService.create(new HandlingUnit("2"));
 		assertEquals(null, hu2.getBaseHU());
 		assertTrue(hu2.getContains().isEmpty());
 		LOG.info(hu2);
 		
 		// Now place a single handling unit on base
-		base = handlingUnitLocal.assign(hu2, base);
+		base = handlingUnitService.assign(hu2, base);
 		
 		assertEquals(1, base.getContains().size());
 		assertTrue(base.getContains().contains(hu2));
 		assertNull(base.getBaseHU());
 		LOG.info(base);
 		
-		hu2 = handlingUnitLocal.getById("2");
+		hu2 = handlingUnitService.getById("2");
 		assertTrue(hu2.getContains().isEmpty());
 		assertEquals(base, hu2.getBaseHU());
 		LOG.info(hu2);
@@ -159,23 +159,23 @@ public class HandlingUnitComposingTest {
 	public void removeFromBase() {
 		LOG.info("--- Test removeFromBase");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
 
 		// Now place some handling units on base
-		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("3"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("4"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("5"), base);
+		base = handlingUnitService.assign(new HandlingUnit("2"), base);
+		base = handlingUnitService.assign(new HandlingUnit("3"), base);
+		base = handlingUnitService.assign(new HandlingUnit("4"), base);
+		base = handlingUnitService.assign(new HandlingUnit("5"), base);
 		
 		// Get the set of all handling units on base
 		Set<HandlingUnit> baseContains = base.getContains();
 		for (HandlingUnit item : baseContains) {
 			// Reread is mandatory
-			item = handlingUnitLocal.getById(item.getId());
+			item = handlingUnitService.getById(item.getId());
 			// Remove the handling unit from base
-			base = handlingUnitLocal.remove(item, base);
+			base = handlingUnitService.remove(item, base);
 		}
 		
 		assertTrue(base.getContains().isEmpty());
@@ -189,34 +189,34 @@ public class HandlingUnitComposingTest {
 	public void moveToOtherHandlingUnit() {
 		LOG.info("--- Test moveToOtherHandlingUnit");
 		
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
 
 		// Now place some handling units on base
-		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("3"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("4"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("5"), base);
+		base = handlingUnitService.assign(new HandlingUnit("2"), base);
+		base = handlingUnitService.assign(new HandlingUnit("3"), base);
+		base = handlingUnitService.assign(new HandlingUnit("4"), base);
+		base = handlingUnitService.assign(new HandlingUnit("5"), base);
 		
 		// Now create an other handling unit as another base
-		HandlingUnit other = handlingUnitLocal.create(new HandlingUnit("6"));
+		HandlingUnit other = handlingUnitService.create(new HandlingUnit("6"));
 		
 		// Now place a handling unit on the other base
-		other = handlingUnitLocal.assign(new HandlingUnit("7"), other);
+		other = handlingUnitService.assign(new HandlingUnit("7"), other);
 
 		// Check a handling unit placed on base
-		HandlingUnit hu4 = handlingUnitLocal.getById("4");
+		HandlingUnit hu4 = handlingUnitService.getById("4");
 		assertTrue(hu4.getContains().isEmpty());
 		assertEquals(base, hu4.getBaseHU());
 		
 		// Now move the handling unit from base to other
-		hu4 = handlingUnitLocal.move(hu4, other);
+		hu4 = handlingUnitService.move(hu4, other);
 		
-		assertEquals(handlingUnitLocal.getById("4"), hu4);
+		assertEquals(handlingUnitService.getById("4"), hu4);
 		
 		// Reread base
-		base = handlingUnitLocal.getById("1");
+		base = handlingUnitService.getById("1");
 		
 		// Base still contains handling units
 		assertFalse(base.getContains().isEmpty());
@@ -224,13 +224,13 @@ public class HandlingUnitComposingTest {
 		assertFalse(base.getContains().contains(hu4));
 		
 		// Reread other
-		other = handlingUnitLocal.getById("6");
+		other = handlingUnitService.getById("6");
 		
 		// Other contains handling units
 		assertFalse(other.getContains().isEmpty());
 		
 		// The one assigned first
-		assertTrue(other.getContains().contains(handlingUnitLocal.getById("7")));
+		assertTrue(other.getContains().contains(handlingUnitService.getById("7")));
 		
 		// And the moved one
 		assertTrue(other.getContains().contains(hu4));
@@ -247,18 +247,18 @@ public class HandlingUnitComposingTest {
 	public void emptyTheBase() {
 		LOG.info("--- Test emptyTheBase");
 
-		HandlingUnit base = handlingUnitLocal.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
 
 		// Now place some handling units on base
-		base = handlingUnitLocal.assign(new HandlingUnit("2"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("3"), base);
-		base = handlingUnitLocal.assign(new HandlingUnit("6"), base);
+		base = handlingUnitService.assign(new HandlingUnit("2"), base);
+		base = handlingUnitService.assign(new HandlingUnit("3"), base);
+		base = handlingUnitService.assign(new HandlingUnit("6"), base);
 		
 		// Now free base
-		Set<HandlingUnit> freed = handlingUnitLocal.free(base);
+		Set<HandlingUnit> freed = handlingUnitService.free(base);
 		
 		// Reread base is a must
-		base = handlingUnitLocal.getById("1");
+		base = handlingUnitService.getById("1");
 		
 		// Base has no handling units any longer
 		assertTrue(base.getContains().isEmpty());

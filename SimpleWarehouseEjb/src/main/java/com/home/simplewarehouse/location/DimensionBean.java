@@ -2,7 +2,6 @@ package com.home.simplewarehouse.location;
 
 import java.util.List;
 
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -21,10 +20,9 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
  * Bean class for Dimension usage. 
  */
 @Stateless
-@Local(DimensionLocal.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(PerformanceAuditor.class)
-public class DimensionBean implements DimensionLocal {
+public class DimensionBean implements DimensionService {
 	private static final Logger LOG = LogManager.getLogger(DimensionBean.class);
 	
 	@PersistenceContext

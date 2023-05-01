@@ -28,15 +28,15 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.DimensionBean;
 import com.home.simplewarehouse.location.DimensionException;
-import com.home.simplewarehouse.location.DimensionLocal;
+import com.home.simplewarehouse.location.DimensionService;
 import com.home.simplewarehouse.location.LocationBean;
-import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.location.LocationStatusBean;
-import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -46,7 +46,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test pick use cases for a LIFO access location.
+ * Test pick use cases for a LIFO access locationService.
  */
 @RunWith(Arquillian.class)
 public class LifoAccessPickUseCasesTest {
@@ -56,16 +56,16 @@ public class LifoAccessPickUseCasesTest {
 	private SampleWarehouseLocal sampleWarehouseLocal;
 	
 	@EJB
-	private LocationStatusLocal locationStatusLocal;
+	private LocationStatusService locationStatusService;
 	
 	@EJB
-	private DimensionLocal dimensionLocal;
+	private DimensionService dimensionService;
 	
 	@EJB
-	private HandlingUnitLocal unitLocal;
+	private HandlingUnitService unitLocal;
 	
 	@EJB
-	private LocationLocal locationLocal;
+	private LocationService locationService;
 	
 	/**
 	 * Configure the deployment.<br>
@@ -84,10 +84,10 @@ public class LifoAccessPickUseCasesTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
 						SampleWarehouseLocal.class, SampleWarehouseBean.class,
-						DimensionLocal.class, DimensionBean.class,
-						LocationStatusLocal.class, LocationStatusBean.class,
-						LocationLocal.class, LocationBean.class,
-						HandlingUnitLocal.class, HandlingUnitBean.class,
+						DimensionService.class, DimensionBean.class,
+						LocationStatusService.class, LocationStatusBean.class,
+						LocationService.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -138,7 +138,7 @@ public class LifoAccessPickUseCasesTest {
 				
 		// Have locations and units ?
 		assertFalse(unitLocal.getAll().isEmpty());
-		assertFalse(locationLocal.getAll().isEmpty());
+		assertFalse(locationService.getAll().isEmpty());
 
 		LOG.trace("<-- beforeTest()");		
 	}
@@ -174,7 +174,7 @@ public class LifoAccessPickUseCasesTest {
 	private Location prepareLocationAndCheck(final String locationId) {
 		LOG.trace("--> prepareLocationAndCheck()");
 
-		Location loc = locationLocal.getById(locationId);
+		Location loc = locationService.getById(locationId);
 		// Check loc exists
 		assertNotNull(loc);
 		// Check loc is empty
@@ -195,7 +195,7 @@ public class LifoAccessPickUseCasesTest {
 		
 		LOG.trace("<-- reRead({})", loc);
 		
-		return locationLocal.getById(loc.getLocationId());
+		return locationService.getById(loc.getLocationId());
 	}
 	
 	private HandlingUnit reRead(final HandlingUnit hu) {
@@ -230,15 +230,15 @@ public class LifoAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * All preconditions are fulfilled:<br>
-	 * - location is filled with related handlingUnit<br>
-	 * - location is in "normal" state<br>
+	 * - locationService is filled with related handlingUnitService<br>
+	 * - locationService is in "normal" state<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - no exception is raised<br>
 	 * - last in first out<br>
-	 * - the handlingUnit is not connected to the location<br>
-	 * - the location no longer contains the handlingUnit<br> 
-	 * - the location is not in ERROR<br>
+	 * - the handlingUnitService is not connected to the locationService<br>
+	 * - the locationService no longer contains the handlingUnitService<br> 
+	 * - the locationService is not in ERROR<br>
 	 */
 	@Test
 	@InSequence(1)
@@ -283,7 +283,7 @@ public class LifoAccessPickUseCasesTest {
 			assertNull(picked.getLocation());
 			assertNull(picked.getLocaPos());
 
-			// Check if location is in ERROR
+			// Check if locationService is in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", picked, lA);
@@ -313,15 +313,15 @@ public class LifoAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * All preconditions are fulfilled:<br>
-	 * - location is filled with related handlingUnit<br>
-	 * - location is in "normal" state<br>
+	 * - locationService is filled with related handlingUnitService<br>
+	 * - locationService is in "normal" state<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - no exception is raised<br>
 	 * - last in first out<br>
-	 * - the handlingUnit is not connected to the location<br>
-	 * - the location no longer contains the handlingUnit<br> 
-	 * - the location is not in ERROR<br>
+	 * - the handlingUnitService is not connected to the locationService<br>
+	 * - the locationService no longer contains the handlingUnitService<br> 
+	 * - the locationService is not in ERROR<br>
 	 */
 	@Test
 	@InSequence(3)
@@ -368,7 +368,7 @@ public class LifoAccessPickUseCasesTest {
 			assertNull(picked.getLocation());
 			assertNull(picked.getLocaPos());
 
-			// Check if location is in ERROR
+			// Check if locationService is in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 
 			picked = unitLocal.pickFrom(lA);
@@ -387,7 +387,7 @@ public class LifoAccessPickUseCasesTest {
 			lA = reRead(lA);
 			assertEquals("2", picked.getId());
 			
-			// Check if location is in ERROR
+			// Check if locationService is in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
@@ -415,12 +415,12 @@ public class LifoAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * Preconditions not fulfilled:<br>
-	 * - LIFO is NOT filled with any handlingUnit<br>
+	 * - LIFO is NOT filled with any handlingUnitService<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - a LocationIsEmptyException is raised<br>
-	 * - the location does not contain any handlingUnit<br> 
-	 * - the location is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
+	 * - the locationService does not contain any handlingUnitService<br> 
+	 * - the locationService is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
      * <br>
 	 */
 	@Test
@@ -443,7 +443,7 @@ public class LifoAccessPickUseCasesTest {
 			// Check picked is null
 			assertNull(picked);
 
-			// Check if location is not in ERROR
+			// Check if locationService is not in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", picked, lA);

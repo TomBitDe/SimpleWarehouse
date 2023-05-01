@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Dimension;
@@ -54,10 +54,10 @@ public class DimensionBeanTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						DimensionLocal.class, DimensionBean.class,
-						LocationStatusLocal.class, LocationStatusBean.class,
-						LocationLocal.class, LocationBean.class,
-						HandlingUnitLocal.class, HandlingUnitBean.class,
+						DimensionService.class, DimensionBean.class,
+						LocationStatusService.class, LocationStatusBean.class,
+						LocationService.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -69,10 +69,10 @@ public class DimensionBeanTest {
 	}
 
 	@EJB
-	DimensionLocal dimensionLocal;
+	DimensionService dimensionService;
 	
 	@EJB
-	LocationLocal locationLocal;
+	LocationService locationService;
 	
 	/**
 	 * Mandatory default constructor
@@ -100,33 +100,33 @@ public class DimensionBeanTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
-		List<Location> locations = locationLocal.getAll();
+		List<Location> locations = locationService.getAll();
 		
-		locations.stream().forEach(l -> locationLocal.delete(l));
+		locations.stream().forEach(l -> locationService.delete(l));
 		
-		// No need to cleanup dimension because its done by cleanup locations (1:1 relation)
+		// No need to cleanup dimensionService because its done by cleanup locations (1:1 relation)
 
 		LOG.trace("<-- afterTest()");
 	}
 
 	/**
-	 * Dimension is linked to location
+	 * Dimension is linked to locationService
 	 */
 	@Test
 	@InSequence(0)
 	public void create_getById() {
 		LOG.info("--- Test create_getById");
 
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(dimensionLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(dimensionService.getAll().isEmpty());
 		
 		Location expLocation = new Location("A");
 		
-		locationLocal.create(expLocation);
-		assertEquals(expLocation, locationLocal.getById("A"));
+		locationService.create(expLocation);
+		assertEquals(expLocation, locationService.getById("A"));
 		
 	    // MANDATORY reread
-		Dimension dimension = dimensionLocal.getById(expLocation.getLocationId());		
+		Dimension dimension = dimensionService.getById(expLocation.getLocationId());		
 		LOG.info("Dimension getById: " + dimension);
 		
 		// Now check the corresponding Dimension
@@ -136,7 +136,7 @@ public class DimensionBeanTest {
 		assertNotNull(dimension.getUpdateTimestamp());
 		
 		// This one has not been created
-		assertNull(dimensionLocal.getById("B"));
+		assertNull(dimensionService.getById("B"));
 	}
 
 	/**
@@ -147,24 +147,24 @@ public class DimensionBeanTest {
 	public void delete_getById_create() {
 		LOG.info("--- Test delete_getById_create");
 
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(dimensionLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(dimensionService.getAll().isEmpty());
 		
 		Location expLocation = new Location("A");
 		
-		locationLocal.create(expLocation);
+		locationService.create(expLocation);
 	    // MANDATORY reread
-		assertEquals(expLocation, locationLocal.getById("A"));
+		assertEquals(expLocation, locationService.getById("A"));
 		
 		LOG.info("Location prepared: " + expLocation);
 		LOG.info("Dimension implicite prepared: "+ expLocation.getDimension());
 		
-		// Delete the location
-		locationLocal.delete(expLocation);
+		// Delete the locationService
+		locationService.delete(expLocation);
 		
-		// Now check the location
+		// Now check the locationService
 	    // MANDATORY reread
-		assertNull(locationLocal.getById("A"));
-		assertNull(dimensionLocal.getById("A"));
+		assertNull(locationService.getById("A"));
+		assertNull(dimensionService.getById("A"));
 	}
 }

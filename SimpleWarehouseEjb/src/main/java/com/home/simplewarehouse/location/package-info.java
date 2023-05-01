@@ -2,20 +2,20 @@
  * Location related classes.
  * 
  * <h2>Concepts</h2>
- * The location covers dimension, status and access control. Details are in the following.
+ * The locationService covers dimensionService, status and access control. Details are in the following.
  * 
- * <h3>Location dimension</h3>
- * Any attributes that define the dimension limitations for a location like capacity, height, weight.
+ * <h3>Location dimensionService</h3>
+ * Any attributes that define the dimensionService limitations for a locationService like capacity, height, weight.
  * 
  * <h4>Capacity</h4>
  * A capacity of 0 means that there is no limitation concerning the number of handling units that can
- * be dropped on a location.<br>
- * If the capacity is greater than 0 then this is the maximum capacity for the location.
+ * be dropped on a locationService.<br>
+ * If the capacity is greater than 0 then this is the maximum capacity for the locationService.
  * 
  * <h4>Weight</h4>
  * A weight of 0 means that there is no limitation concerning the total weight of handling units that can
- * be dropped on a location.<br>
- * If the weight is greater than 0 then this is the maximum weight of all handling units dropped on a location.<br>
+ * be dropped on a locationService.<br>
+ * If the weight is greater than 0 then this is the maximum weight of all handling units dropped on a locationService.<br>
  * Rule is: <strong>total weight less then maximum weight</strong>.
  * 
  * <h4>Height</h4>
@@ -28,7 +28,7 @@
  * A width of {@link com.home.simplewarehouse.model.WidthCategory WidthCategory.NOT_RELEVANT} means that width limitations do not exist.
  * 
  * <h3>Location status</h3>
- * Any attributes that define the device access limitations for a location like error, LTOS, lock. 
+ * Any attributes that define the device access limitations for a locationService like error, LTOS, lock. 
  * 
  * <h4>Error status</h4>
  * This is a status automatically set/reset.
@@ -42,8 +42,8 @@
  * The lock status is manually set/reset.
  * The following status values exist {@link com.home.simplewarehouse.model.LockStatus LockStatus} 
  * 
- * <h3>Storage location access FIFO, LIFO, RANDOM</h3>
- * A storage location can contain zero, one or more handling units. If a location contains
+ * <h3>Storage locationService access FIFO, LIFO, RANDOM</h3>
+ * A storage locationService can contain zero, one or more handling units. If a locationService contains
  * more than one handling unit then access to the handling units can be limited. For that
  * reason different kinds of locations exist. In the following examples hu1, hu2, hu3, ... 
  * are different handling units.

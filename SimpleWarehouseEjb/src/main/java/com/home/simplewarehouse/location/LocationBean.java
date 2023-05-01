@@ -3,7 +3,6 @@ package com.home.simplewarehouse.location;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.ejb.Local;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -29,13 +28,12 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
  * Bean class for Location usage. 
  */
 @Stateless
-@Local(LocationLocal.class)
 @TransactionAttribute(TransactionAttributeType.REQUIRED)
 @Interceptors(PerformanceAuditor.class)
-public class LocationBean implements LocationLocal {
+public class LocationBean implements LocationService {
 	private static final Logger LOG = LogManager.getLogger(LocationBean.class);
 	
-	private static final String LOCATION_IS_NULL = "location is null";
+	private static final String LOCATION_IS_NULL = "locationService is null";
 	private static final String LOCATION_ID_IS_NULL = "locationId is null";
 	
 	private static final String HEIGHT_DOES_NOT_FIT = "Location has maximum height {}, heigth {} does not fit";
@@ -70,8 +68,8 @@ public class LocationBean implements LocationLocal {
 			location.setDimension(dimension);
 		}
 		
-		// No need to    em.persist(locationStatus)  because it is done by  cascade = CascadeType.ALL
-		// Same for      dimension
+		// No need to    em.persist(locationStatusService)  because it is done by  cascade = CascadeType.ALL
+		// Same for      dimensionService
 		em.persist(location);	
 		em.flush();
 
@@ -100,8 +98,8 @@ public class LocationBean implements LocationLocal {
 				em.flush();
 			}
 			
-			// No need to    em.remove(locationStatus)  because it is done by  cascade = CascadeType.ALL
-			// Same for      dimension
+			// No need to    em.remove(locationStatusService)  because it is done by  cascade = CascadeType.ALL
+			// Same for      dimensionService
 			em.remove(lo);
 			em.flush();
 

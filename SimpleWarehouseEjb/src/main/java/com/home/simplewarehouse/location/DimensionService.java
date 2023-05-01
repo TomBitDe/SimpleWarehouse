@@ -1,5 +1,6 @@
 package com.home.simplewarehouse.location;
 
+import java.rmi.Remote;
 import java.util.List;
 
 import com.home.simplewarehouse.model.Dimension;
@@ -7,7 +8,7 @@ import com.home.simplewarehouse.model.Dimension;
 /**
  * Local interface for Dimension usage.
  */
-public interface DimensionLocal {
+public interface DimensionService extends Remote {
 	/**
 	 * Get a Dimension by its id
 	 * 

@@ -24,7 +24,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
@@ -54,9 +54,9 @@ public class LocationStatusBeanTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						LocationStatusLocal.class, LocationStatusBean.class,
-						LocationLocal.class, LocationBean.class,
-						HandlingUnitLocal.class, HandlingUnitBean.class,
+						LocationStatusService.class, LocationStatusBean.class,
+						LocationService.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -68,10 +68,10 @@ public class LocationStatusBeanTest {
 	}
 
 	@EJB
-	LocationStatusLocal locationStatusLocal;
+	LocationStatusService locationStatusService;
 	
 	@EJB
-	LocationLocal locationLocal;
+	LocationService locationService;
 	
 	/**
 	 * Mandatory default constructor
@@ -99,33 +99,33 @@ public class LocationStatusBeanTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
-		List<Location> locations = locationLocal.getAll();
+		List<Location> locations = locationService.getAll();
 		
-		locations.stream().forEach(l -> locationLocal.delete(l));
+		locations.stream().forEach(l -> locationService.delete(l));
 		
-		// No need to cleanup location statuses because its done by cleanup locations (1:1 relation)
+		// No need to cleanup locationService statuses because its done by cleanup locations (1:1 relation)
 
 		LOG.trace("<-- afterTest()");
 	}
 
 	/**
-	 * Location status is always linked to location
+	 * Location status is always linked to locationService
 	 */
 	@Test
 	@InSequence(0)
 	public void create_getById() {
 		LOG.info("--- Test create_getById");
 
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(locationStatusLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(locationStatusService.getAll().isEmpty());
 		
 		Location expLocation = new Location("A");
 		
-		locationLocal.create(expLocation);
-		assertEquals(expLocation, locationLocal.getById("A"));
+		locationService.create(expLocation);
+		assertEquals(expLocation, locationService.getById("A"));
 		
 	    // MANDATORY reread
-		LocationStatus locationStatus = locationStatusLocal.getById(expLocation.getLocationId());		
+		LocationStatus locationStatus = locationStatusService.getById(expLocation.getLocationId());		
 		LOG.info("LocationStatus getById: " + locationStatus);
 		
 		// Now check the corresponding LocationStatus
@@ -138,7 +138,7 @@ public class LocationStatusBeanTest {
 		
 		// This one has not been created
 	    // MANDATORY reread
-		assertNull(locationStatusLocal.getById("B"));
+		assertNull(locationStatusService.getById("B"));
 	}
 	
 	/**
@@ -149,23 +149,23 @@ public class LocationStatusBeanTest {
 	public void delete_getById_create() {
 		LOG.info("--- Test delete_getById_create");
 
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(locationStatusLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(locationStatusService.getAll().isEmpty());
 		
 		Location expLocation = new Location("A");
 		
-		locationLocal.create(expLocation);
-		assertEquals(expLocation, locationLocal.getById("A"));
+		locationService.create(expLocation);
+		assertEquals(expLocation, locationService.getById("A"));
 		
 		LOG.info("Location prepared: " + expLocation);
 		LOG.info("LocationStatus implicite prepared: "+ expLocation.getLocationStatus());
 		
-		// Delete the location
-		locationLocal.delete(expLocation);
+		// Delete the locationService
+		locationService.delete(expLocation);
 		
-		// Now check the location
+		// Now check the locationService
 	    // MANDATORY reread
-		assertNull(locationLocal.getById("A"));
-		assertNull(locationStatusLocal.getById("A"));
+		assertNull(locationService.getById("A"));
+		assertNull(locationStatusService.getById("A"));
 	}
 }

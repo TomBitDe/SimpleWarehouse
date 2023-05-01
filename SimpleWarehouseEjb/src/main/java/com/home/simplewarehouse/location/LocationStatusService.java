@@ -1,5 +1,6 @@
 package com.home.simplewarehouse.location;
 
+import java.rmi.Remote;
 import java.util.List;
 
 import com.home.simplewarehouse.model.LocationStatus;
@@ -7,7 +8,7 @@ import com.home.simplewarehouse.model.LocationStatus;
 /**
  * Local interface for Location Status usage.
  */
-public interface LocationStatusLocal {
+public interface LocationStatusService extends Remote {
 	/**
 	 * Get a LocationStatus by its id
 	 * 

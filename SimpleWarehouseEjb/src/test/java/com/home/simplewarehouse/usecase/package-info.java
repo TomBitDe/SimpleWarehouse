@@ -3,10 +3,10 @@
  * <p>
  * Only complex use cases are tested:<br>
  * <ul>
- * <li>Pick a handlingUnit from a RANDOM access location</li>
- * <li>Drop a handlingUnit on a RANDOM access location</li>
- * <li>Pick a handlingUnit from a FIFO access location</li>
- * <li>Pick a handlingUnit from a LIFO access location</li>
+ * <li>Pick a handlingUnitService from a RANDOM access locationService</li>
+ * <li>Drop a handlingUnitService on a RANDOM access locationService</li>
+ * <li>Pick a handlingUnitService from a FIFO access locationService</li>
+ * <li>Pick a handlingUnitService from a LIFO access locationService</li>
  * <li>Compose handlingUnits</li>
  * </ul>
  */

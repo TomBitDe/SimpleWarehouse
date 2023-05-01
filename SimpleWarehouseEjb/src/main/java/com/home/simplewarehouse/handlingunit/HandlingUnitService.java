@@ -14,7 +14,7 @@ import com.home.simplewarehouse.model.Location;
 /**
  * Local interface for HandlingUnit usage.
  */
-public interface HandlingUnitLocal {
+public interface HandlingUnitService {
 	/**
 	 * Create a HandlingUnit and persist
 	 * 

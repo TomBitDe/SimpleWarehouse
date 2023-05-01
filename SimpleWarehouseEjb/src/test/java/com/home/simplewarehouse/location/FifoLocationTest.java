@@ -28,7 +28,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.model.EntityBase;
@@ -61,8 +61,8 @@ public class FifoLocationTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						LocationLocal.class, LocationBean.class,
-						HandlingUnitLocal.class, HandlingUnitBean.class,
+						LocationService.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -74,10 +74,10 @@ public class FifoLocationTest {
 	}
 
 	@EJB
-	LocationLocal locationLocal;
+	LocationService locationService;
 	
 	@EJB
-	HandlingUnitLocal handlingUnitLocal;
+	HandlingUnitService handlingUnitService;
 	
 	/**
 	 * Mandatory default constructor
@@ -105,35 +105,35 @@ public class FifoLocationTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
-		List<Location> locations = locationLocal.getAll();
+		List<Location> locations = locationService.getAll();
 		
-		locations.stream().forEach(l -> locationLocal.delete(l));
+		locations.stream().forEach(l -> locationService.delete(l));
 		
 		// Cleanup handling units
-		List<HandlingUnit> handlingUnits = handlingUnitLocal.getAll();
+		List<HandlingUnit> handlingUnits = handlingUnitService.getAll();
 		
-		handlingUnits.stream().forEach(h -> handlingUnitLocal.delete(h));		
+		handlingUnits.stream().forEach(h -> handlingUnitService.delete(h));		
 
 		LOG.trace("<-- afterTest()");
 	}
 
 	/**
-	 * Simple location with no reference to handling units
+	 * Simple locationService with no reference to handling units
 	 */
 	@Test
 	@InSequence(0)
 	public void create_getById() {
 		LOG.info("--- Test create_getById");
 
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
 		FifoLocation expLocation = new FifoLocation("A");
 
-		locationLocal.create(expLocation);
+		locationService.create(expLocation);
 		LOG.info("Fifo Location created: " + expLocation);
 
 		// MANDATORY reread
-		Location location = locationLocal.getById(expLocation.getLocationId());		
+		Location location = locationService.getById(expLocation.getLocationId());		
 		LOG.info("FifoLocation getById: " + location);
 		
 		assertEquals(expLocation, location);
@@ -141,7 +141,7 @@ public class FifoLocationTest {
 		assertNotNull(location.getUpdateTimestamp());
 		
 	    // Should be null because never created
-		assertNull(locationLocal.getById("B"));
+		assertNull(locationService.getById("B"));
 	}
 	
 	/**
@@ -152,32 +152,32 @@ public class FifoLocationTest {
 	public void delete_getById_create() {
 		LOG.info("--- Test delete_getById_create");
 
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
-	    Location location = locationLocal.create(new FifoLocation("A"));
+	    Location location = locationService.create(new FifoLocation("A"));
 		LOG.info("Fifo Location create: " + location);
 		
 		assertEquals("A", location.getLocationId());
 		
-		// Delete the location
-		locationLocal.delete(location);
+		// Delete the locationService
+		locationService.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		LOG.info("Fifo Location deleted: " + location.getLocationId());
 		
-		location = locationLocal.create(new FifoLocation("A", "Test"));				
+		location = locationService.create(new FifoLocation("A", "Test"));				
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
 		LOG.info("Fifo Location created: " + location);
 
-		// Delete the location
-		locationLocal.delete(location);
+		// Delete the locationService
+		locationService.delete(location);
 		LOG.info("Fifo Location deleted: " + location.getLocationId());
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		location = locationLocal.create(new FifoLocation("A", "Test", ts));
+		location = locationService.create(new FifoLocation("A", "Test", ts));
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
@@ -185,30 +185,30 @@ public class FifoLocationTest {
 	}
 
 	/**
-	 * Test the delete by location
+	 * Test the delete by locationService
 	 */
 	@Test
 	@InSequence(2)
 	public void deleteByLocation() {
 		LOG.info("--- Test deleteByLocation");
 
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
-	    Location location = locationLocal.create(new FifoLocation("A"));
+	    Location location = locationService.create(new FifoLocation("A"));
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		
-		// Delete the location
-		locationLocal.delete(location);
+		// Delete the locationService
+		locationService.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 
 		// MANDATORY reread
-		assertNull(locationLocal.getById("A"));
+		assertNull(locationService.getById("A"));
 		LOG.info("Fifo Location deleted: " + location.getLocationId());
 		
 	    // MANDATORY reread
-		location = (FifoLocation) locationLocal.getById("A");
+		location = (FifoLocation) locationService.getById("A");
 		assertNull(location);
 	}
 	
@@ -220,17 +220,17 @@ public class FifoLocationTest {
 	public void getAll() {
 		LOG.info("--- Test getAll");
 		
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
 		
 		// Prepare some locations; 5 locations
-		locationLocal.create(new FifoLocation("A", "Test"));
-		locationLocal.create(new FifoLocation("B", "Test"));
-		locationLocal.create(new FifoLocation("C", "Test"));
-		locationLocal.create(new FifoLocation("D", "Test"));
-		locationLocal.create(new FifoLocation("E", "Test"));
+		locationService.create(new FifoLocation("A", "Test"));
+		locationService.create(new FifoLocation("B", "Test"));
+		locationService.create(new FifoLocation("C", "Test"));
+		locationService.create(new FifoLocation("D", "Test"));
+		locationService.create(new FifoLocation("E", "Test"));
 
 		// Get them all and output
-		List<Location> locations = locationLocal.getAll();
+		List<Location> locations = locationService.getAll();
 		// locations.stream().forEach( l -> LOG.info(l.toString()) );
 
 		assertFalse(locations.isEmpty());
@@ -238,38 +238,38 @@ public class FifoLocationTest {
 	}
 	
 	/**
-	 * Test delete a location with handling units on it
+	 * Test delete a locationService with handling units on it
 	 */
 	@Test
 	@InSequence(4)
 	public void deleteLocationWithHandlingUnits() {
 		LOG.info("--- Test deleteLocationWithHandlingUnits");
 		
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 		
-		// Prepare a location
-		Location locA = locationLocal.create(new FifoLocation("A", "Test"));
+		// Prepare a locationService
+		Location locA = locationService.create(new FifoLocation("A", "Test"));
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		try {
 			// Drop to make a relation
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("1", "Test"));
+			handlingUnitService.dropTo(locA, new HandlingUnit("1", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("2", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("3", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("3", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("4", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("4", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("5", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("5", "Test"));
 
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertNotNull(locA);
 			assertFalse(locA.getHandlingUnits().isEmpty());
 			assertEquals(5, locA.getHandlingUnits().size());
@@ -280,26 +280,26 @@ public class FifoLocationTest {
 
 			LOG.info("Sample hU2 and hU5");
 			// MANDATORY reread
-			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU2 = handlingUnitService.getById("2");
 			LOG.info(hU2);
 			// MANDATORY reread
-			HandlingUnit hU5 = handlingUnitLocal.getById("5");
+			HandlingUnit hU5 = handlingUnitService.getById("5");
 			LOG.info(hU5);
 
-			// Now delete the location
+			// Now delete the locationService
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
-			locationLocal.delete(locA);
+			locA = locationService.getById("A");
+			locationService.delete(locA);
 			LOG.info("Fifo Location deleted: " + locA.getLocationId());
 
 			// MANDATORY reread
-			hU2 = handlingUnitLocal.getById("2");
-			hU5 = handlingUnitLocal.getById("5");
+			hU2 = handlingUnitService.getById("2");
+			hU5 = handlingUnitService.getById("5");
 
 			assertNotNull(hU2);
 			assertNotNull(hU5);
 
-			LOG.info("Sample hU2 and hU5 have no longer a location and locaPos");
+			LOG.info("Sample hU2 and hU5 have no longer a locationService and locaPos");
 			assertNull(hU2.getLocation());
 			assertNull(hU2.getLocaPos());
 			assertNull(hU5.getLocation());
@@ -314,18 +314,18 @@ public class FifoLocationTest {
 	}
 
 	/**
-	 * Test delete a location with one single handling unit on it
+	 * Test delete a locationService with one single handling unit on it
 	 */
 	@Test
 	@InSequence(5)
 	public void deleteLocationWithOneHandlingUnit() {
 		LOG.info("--- Test deleteLocationWithOneHandlingUnit");
 		
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 		
-		// Prepare a location
-		Location locA = locationLocal.create(new FifoLocation("A", "Test"));
+		// Prepare a locationService
+		Location locA = locationService.create(new FifoLocation("A", "Test"));
 		
 		// Test the special toString also
 		assumeTrue(locA.toString().contains("HandlingUnits FIFO=[]"));
@@ -334,10 +334,10 @@ public class FifoLocationTest {
 		
 		// Drop to make a relation
 		try {
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("8", "Test"));
+			handlingUnitService.dropTo(locA, new HandlingUnit("8", "Test"));
 
 			// MANDATORY reread
-			locA = (FifoLocation) locationLocal.getById("A");
+			locA = (FifoLocation) locationService.getById("A");
 			assertNotNull(locA);
 			assertFalse(locA.getHandlingUnits().isEmpty());
 			assertEquals(1, locA.getHandlingUnits().size());
@@ -350,26 +350,26 @@ public class FifoLocationTest {
 			LOG.info("1 HandlingUnit dropped on " + locA.getLocationId() + locA);
 
 			// MANDATORY reread
-			HandlingUnit hU8 = handlingUnitLocal.getById("8");
+			HandlingUnit hU8 = handlingUnitService.getById("8");
 			assertNotNull(hU8.getLocation());
 			assertNotNull(hU8.getLocaPos());
 			LOG.info("Sample hU8 {}", hU8);
 
-			// Now delete the location
+			// Now delete the locationService
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
-			locationLocal.delete(locA);
+			locA = locationService.getById("A");
+			locationService.delete(locA);
 			LOG.info("Fifo Location deleted: " + locA.getLocationId());
 
 			// MANDATORY reread
-			hU8 = handlingUnitLocal.getById("8");
+			hU8 = handlingUnitService.getById("8");
 
 			assertNotNull(hU8);
 
 			assertNull(hU8.getLocation());
 			assertNull(hU8.getLocaPos());
 
-			LOG.info("Sample hU8 has no longer a location {}", hU8);
+			LOG.info("Sample hU8 has no longer a locationService {}", hU8);
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
@@ -384,31 +384,31 @@ public class FifoLocationTest {
 	public void checkFifoSequence() {
 		LOG.info("--- Test checkFifoSequence");
 		
-		assertTrue(locationLocal.getAll().isEmpty());
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 		
-		// Prepare a location
-		Location locA = locationLocal.create(new FifoLocation("A", "Test"));
+		// Prepare a locationService
+		Location locA = locationService.create(new FifoLocation("A", "Test"));
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		// Drop to make a relation
 		try {
-			handlingUnitLocal.dropTo(locA,  new HandlingUnit("1", "Test"));
+			handlingUnitService.dropTo(locA,  new HandlingUnit("1", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("2", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("2", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("3", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("3", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("4", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("4", "Test"));
 
-			locA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(locA, new HandlingUnit("5", "Test"));
+			locA = locationService.getById("A");
+			handlingUnitService.dropTo(locA, new HandlingUnit("5", "Test"));
 
 			// MANDATORY reread
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertNotNull(locA);
 			assertFalse(locA.getHandlingUnits().isEmpty());
 			assertEquals(5, locA.getHandlingUnits().size());
@@ -416,47 +416,47 @@ public class FifoLocationTest {
 			LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
 
 			// MANDATORY reread
-			HandlingUnit hU5 = handlingUnitLocal.getById("5");
+			HandlingUnit hU5 = handlingUnitService.getById("5");
 			assertEquals(locA, hU5.getLocation());
 			assertEquals(Integer.valueOf(5), hU5.getLocaPos());
 			LOG.info("Sample hU5 locaPos check: {}", hU5);
 
 			// MANDATORY reread
-			HandlingUnit hU1 = handlingUnitLocal.getById("1");
+			HandlingUnit hU1 = handlingUnitService.getById("1");
 			assertEquals(locA, hU1.getLocation());
 			assertEquals(Integer.valueOf(1), hU1.getLocaPos());
 			LOG.info("Sample hU1 locaPos check: {}", hU1);
 		
-			handlingUnitLocal.pickFrom(locA, hU1);
+			handlingUnitService.pickFrom(locA, hU1);
 			
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertEquals(4, locA.getHandlingUnits().size());
 			LOG.info("After FIRST PICK {}", locA);
 
-			hU1 = handlingUnitLocal.getById("1");
+			hU1 = handlingUnitService.getById("1");
 			assertNull(hU1.getLocation());
 			assertNull(hU1.getLocaPos());
 						
-			HandlingUnit hU2 = handlingUnitLocal.getById("2");
+			HandlingUnit hU2 = handlingUnitService.getById("2");
 			assertNotNull(hU2);
 			assertEquals(locA, hU2.getLocation());
 			assertEquals(Integer.valueOf(1), hU2.getLocaPos());
 			
-			handlingUnitLocal.pickFrom(locA, hU2);
+			handlingUnitService.pickFrom(locA, hU2);
 			
-			locA = locationLocal.getById("A");
-			HandlingUnit hU3 = handlingUnitLocal.getById("3");
-			handlingUnitLocal.pickFrom(locA, hU3);
+			locA = locationService.getById("A");
+			HandlingUnit hU3 = handlingUnitService.getById("3");
+			handlingUnitService.pickFrom(locA, hU3);
 			
-			locA = locationLocal.getById("A");
-			HandlingUnit hU4 = handlingUnitLocal.getById("4");
-			handlingUnitLocal.pickFrom(locA, hU4);			
+			locA = locationService.getById("A");
+			HandlingUnit hU4 = handlingUnitService.getById("4");
+			handlingUnitService.pickFrom(locA, hU4);			
 
-			locA = locationLocal.getById("A");
+			locA = locationService.getById("A");
 			assertEquals(1, locA.getHandlingUnits().size());
 			LOG.info("After FOURTH PICK {}", locA);
 
-			hU5 = handlingUnitLocal.getById("5");
+			hU5 = handlingUnitService.getById("5");
 			assertNotNull(hU5);
 			assertEquals(locA, hU5.getLocation());
 			assertEquals(Integer.valueOf(1), hU5.getLocaPos());

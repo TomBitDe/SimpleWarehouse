@@ -12,7 +12,7 @@ import com.home.simplewarehouse.model.WidthCategory;
 /**
  * Local interface for Location usage.
  */
-public interface LocationLocal {
+public interface LocationService {
 	/**
 	 * Create a Location and persist
 	 * 
@@ -42,9 +42,9 @@ public interface LocationLocal {
 	 */
 	public List<Location> getAll();
 	/**
-	 * Gets a list of all HandlingUnits on a location
+	 * Gets a list of all HandlingUnits on a locationService
 	 * 
-	 * @param location the given location
+	 * @param location the given locationService
 	 * 
 	 * @return a list of HandlingUnits
 	 */
@@ -52,8 +52,8 @@ public interface LocationLocal {
 	/**
 	 * Adds a HandlingUnit to the list of HandlingUnits of this Location
 	 * 
-	 * @param location the location having the List 
-	 * @param handlingUnit the handlingUnit to add
+	 * @param location the locationService having the List 
+	 * @param handlingUnit the handlingUnitService to add
 	 * 
 	 * @return true if adding has been done, else false
 	 */
@@ -61,7 +61,7 @@ public interface LocationLocal {
 	/**
 	 * Get a list of all Location items containing the given HandlingUnit
 	 * 
-	 * @param handlingUnit the handlingUnit to search for
+	 * @param handlingUnit the handlingUnitService to search for
 	 * 
 	 * @return the Location list
 	 */
@@ -69,8 +69,8 @@ public interface LocationLocal {
 	/**
 	 * Get a list of all Location items containing the given HandlingUnit but not on exceptLocation
 	 * 
-	 * @param handlingUnit the handlingUnit to search for
-	 * @param exceptLocation the location not to consider
+	 * @param handlingUnit the handlingUnitService to search for
+	 * @param exceptLocation the locationService not to consider
 	 * 
 	 * @return the Location list
 	 */
@@ -86,7 +86,7 @@ public interface LocationLocal {
 	/**
 	 * Check if a Location is fully occupied related to its capacity
 	 * 
-	 * @param location the location to check
+	 * @param location the locationService to check
 	 * 
 	 * @return true if fully occupied else false
 	 */
@@ -106,7 +106,7 @@ public interface LocationLocal {
 	/**
 	 * Check if a Location will be overweighted related to its maximum weight
 	 * 
-	 * @param location the location to check
+	 * @param location the locationService to check
 	 * @param weight the additional weight
 	 * 
 	 * @return true if the additional weight will exceed the weight limit else false
@@ -115,7 +115,7 @@ public interface LocationLocal {
 	/**
 	 * Check if a Location fits related to its maximum height
 	 * 
-	 * @param location the location to check
+	 * @param location the locationService to check
 	 * @param height the height to drop
 	 * 
 	 * @return true if the height does not fit else false
@@ -124,7 +124,7 @@ public interface LocationLocal {
 	/**
 	 * Check if a Location fits related to its maximum length
 	 * 
-	 * @param location the location to check
+	 * @param location the locationService to check
 	 * @param length the length to drop
 	 * 
 	 * @return true if the length does not fit else false
@@ -133,17 +133,17 @@ public interface LocationLocal {
 	/**
 	 * Check if a Location fits related to its maximum width
 	 * 
-	 * @param location the location to check
+	 * @param location the locationService to check
 	 * @param width the width to drop
 	 * 
 	 * @return true if the width does not fit else false
 	 */
 	public boolean overwidth(final Location location, final WidthCategory width);
 	/**
-	 * Check if a dimension limit exceeds when dropping a HandlingUnit on a Location
+	 * Check if a dimensionService limit exceeds when dropping a HandlingUnit on a Location
 	 * 
-	 * @param location the location to check
-	 * @param handlingUnit the handlingUnit to drop
+	 * @param location the locationService to check
+	 * @param handlingUnit the handlingUnitService to drop
 	 * 
 	 * @throws CapacityExceededException in case the Location capacity will exceed by this drop
 	 * @throws WeightExceededException in case the Location weight will exceed by this drop
@@ -157,7 +157,7 @@ public interface LocationLocal {
 	/**
 	 * Gets all the HandlingUnits possible to Pick from the Location
 	 * 
-	 * @param location the location to fetch the Picks for
+	 * @param location the locationService to fetch the Picks for
 	 * 
 	 * @return the List of HandlingUnits
 	 */

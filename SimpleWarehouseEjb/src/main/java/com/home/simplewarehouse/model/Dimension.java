@@ -20,7 +20,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Any dimension.
+ * Any dimensionService.
  * <p>
  * A maxCapacity of 0 means that an undefined number of goods can be stored in the location.<br>
  * A maxWeight of 0 means that the weight is not relevant for storing goods in the location.<br>
@@ -105,7 +105,7 @@ public class Dimension extends EntityBase implements Serializable {
     private Location location;
     
     /**
-     * Sets all dimension default values
+     * Sets all dimensionService default values
      */
     private void setDimensionDefaults() {
     	this.maxCapacity = CAPACITY_DEFAULT;
@@ -116,7 +116,7 @@ public class Dimension extends EntityBase implements Serializable {
     }
  
     /**
-     * Sets the defaults for the dimension in default constructor
+     * Sets the defaults for the dimensionService in default constructor
      */
     public Dimension() {
     	super();

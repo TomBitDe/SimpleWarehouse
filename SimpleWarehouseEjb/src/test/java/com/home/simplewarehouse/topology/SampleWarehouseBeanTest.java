@@ -23,13 +23,13 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.DimensionBean;
-import com.home.simplewarehouse.location.DimensionLocal;
+import com.home.simplewarehouse.location.DimensionService;
 import com.home.simplewarehouse.location.LocationBean;
-import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.location.LocationStatusBean;
-import com.home.simplewarehouse.location.LocationStatusLocal;
+import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -58,10 +58,10 @@ public class SampleWarehouseBeanTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
 						SampleWarehouseLocal.class, SampleWarehouseBean.class,
-						DimensionLocal.class, DimensionBean.class,
-						LocationStatusLocal.class, LocationStatusBean.class,
-						LocationLocal.class, LocationBean.class,
-						HandlingUnitLocal.class, HandlingUnitBean.class,
+						DimensionService.class, DimensionBean.class,
+						LocationStatusService.class, LocationStatusBean.class,
+						LocationService.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -77,16 +77,16 @@ public class SampleWarehouseBeanTest {
 	private SampleWarehouseLocal sampleWarehouseLocal;
 	
 	@EJB
-	private LocationLocal locationLocal;
+	private LocationService locationService;
 	
 	@EJB
-	private LocationStatusLocal locationStatusLocal;
+	private LocationStatusService locationStatusService;
 	
 	@EJB
-	private DimensionLocal dimensionLocal;
+	private DimensionService dimensionService;
 	
 	@EJB
-	private HandlingUnitLocal handlingUnitLocal;
+	private HandlingUnitService handlingUnitService;
 
 	/**
 	 * Mandatory default constructor
@@ -126,25 +126,25 @@ public class SampleWarehouseBeanTest {
 		
 		sampleWarehouseLocal.initialize();
 		
-		assertNotNull(locationLocal.getAll());
-		assertFalse(locationLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3 , locationLocal.getAll().size());
+		assertNotNull(locationService.getAll());
+		assertFalse(locationService.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3 , locationService.getAll().size());
 		
-		assertNotNull(locationStatusLocal.getAll());
-		assertFalse(locationStatusLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationStatusLocal.getAll().size());
+		assertNotNull(locationStatusService.getAll());
+		assertFalse(locationStatusService.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationStatusService.getAll().size());
 
-		assertNotNull(dimensionLocal.getAll());
-		assertFalse(dimensionLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, dimensionLocal.getAll().size());
+		assertNotNull(dimensionService.getAll());
+		assertFalse(dimensionService.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, dimensionService.getAll().size());
 
-		locationLocal.getAll().forEach(l -> LOG.info(l));
+		locationService.getAll().forEach(l -> LOG.info(l));
 		
-		assertNotNull(handlingUnitLocal.getAll());
-		assertFalse(handlingUnitLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitLocal.getAll().size());
+		assertNotNull(handlingUnitService.getAll());
+		assertFalse(handlingUnitService.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitService.getAll().size());
 		
-		handlingUnitLocal.getAll().forEach(h -> LOG.info(h));
+		handlingUnitService.getAll().forEach(h -> LOG.info(h));
 	}
 	
 	/**
@@ -157,17 +157,17 @@ public class SampleWarehouseBeanTest {
 
 		sampleWarehouseLocal.cleanup();
 		
-		assertNotNull(locationLocal.getAll());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertNotNull(locationService.getAll());
+		assertTrue(locationService.getAll().isEmpty());
 		
-		assertNotNull(locationStatusLocal.getAll());
-		assertTrue(locationStatusLocal.getAll().isEmpty());
+		assertNotNull(locationStatusService.getAll());
+		assertTrue(locationStatusService.getAll().isEmpty());
 
-		assertNotNull(dimensionLocal.getAll());
-		assertTrue(dimensionLocal.getAll().isEmpty());
+		assertNotNull(dimensionService.getAll());
+		assertTrue(dimensionService.getAll().isEmpty());
 
-		assertNotNull(handlingUnitLocal.getAll());
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertNotNull(handlingUnitService.getAll());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 	}
 
 	/**
@@ -180,25 +180,25 @@ public class SampleWarehouseBeanTest {
 		
 		sampleWarehouseLocal.initialize();
 		
-		assertNotNull(locationLocal.getAll());
-		assertFalse(locationLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationLocal.getAll().size());
+		assertNotNull(locationService.getAll());
+		assertFalse(locationService.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationService.getAll().size());
 		
-		assertNotNull(locationStatusLocal.getAll());
-		assertFalse(locationStatusLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationStatusLocal.getAll().size());
+		assertNotNull(locationStatusService.getAll());
+		assertFalse(locationStatusService.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, locationStatusService.getAll().size());
 
-		assertNotNull(dimensionLocal.getAll());
-		assertFalse(dimensionLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, dimensionLocal.getAll().size());
+		assertNotNull(dimensionService.getAll());
+		assertFalse(dimensionService.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, dimensionService.getAll().size());
 
-		locationLocal.getAll().forEach(l -> LOG.info(l));
+		locationService.getAll().forEach(l -> LOG.info(l));
 		
-		assertNotNull(handlingUnitLocal.getAll());
-		assertFalse(handlingUnitLocal.getAll().isEmpty());
-		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitLocal.getAll().size());
+		assertNotNull(handlingUnitService.getAll());
+		assertFalse(handlingUnitService.getAll().isEmpty());
+		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitService.getAll().size());
 		
-		handlingUnitLocal.getAll().forEach(h -> LOG.info(h));
+		handlingUnitService.getAll().forEach(h -> LOG.info(h));
 	}
 	
 	/**
@@ -211,16 +211,16 @@ public class SampleWarehouseBeanTest {
 
 		sampleWarehouseLocal.cleanup();
 		
-		assertNotNull(locationLocal.getAll());
-		assertTrue(locationLocal.getAll().isEmpty());
+		assertNotNull(locationService.getAll());
+		assertTrue(locationService.getAll().isEmpty());
 		
-		assertNotNull(locationStatusLocal.getAll());
-		assertTrue(locationStatusLocal.getAll().isEmpty());
+		assertNotNull(locationStatusService.getAll());
+		assertTrue(locationStatusService.getAll().isEmpty());
 
-		assertNotNull(dimensionLocal.getAll());
-		assertTrue(dimensionLocal.getAll().isEmpty());
+		assertNotNull(dimensionService.getAll());
+		assertTrue(dimensionService.getAll().isEmpty());
 
-		assertNotNull(handlingUnitLocal.getAll());
-		assertTrue(handlingUnitLocal.getAll().isEmpty());
+		assertNotNull(handlingUnitService.getAll());
+		assertTrue(handlingUnitService.getAll().isEmpty());
 	}
 }

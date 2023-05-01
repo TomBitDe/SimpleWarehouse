@@ -20,16 +20,16 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.LocationBean;
-import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.topology.SampleWarehouseBean;
 import com.home.simplewarehouse.topology.SampleWarehouseLocal;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test the pick drop random location bean.
+ * Test the pick drop random locationService bean.
  */
 @RunWith(Arquillian.class)
 public class PickDropRandomLocationTest {
@@ -45,7 +45,7 @@ public class PickDropRandomLocationTest {
 	DropPickRandomLocationLocal2 dropPickRandomLocationLocal2;
 
 	@EJB
-	LocationLocal locationLocal;
+	LocationService locationService;
 	
 	/**
 	 * Configure the deployment.<br>
@@ -67,8 +67,8 @@ public class PickDropRandomLocationTest {
 						SampleWarehouseLocal.class, SampleWarehouseBean.class,
 						DropPickRandomLocationLocal1.class, DropPickRandomLocationBean1.class,
 						DropPickRandomLocationLocal2.class, DropPickRandomLocationBean2.class,
-						HandlingUnitLocal.class, HandlingUnitBean.class,
-						LocationLocal.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
+						LocationService.class, LocationBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -121,7 +121,7 @@ public class PickDropRandomLocationTest {
 		dropPickRandomLocationLocal1.processScenario();
 		
 		// Just satisfy the test
-		assertNotNull(locationLocal.getAll());
+		assertNotNull(locationService.getAll());
 	}
 
 	/**
@@ -135,6 +135,6 @@ public class PickDropRandomLocationTest {
 		dropPickRandomLocationLocal2.processScenario();
 		
 		// Just satisfy the test
-		assertNotNull(locationLocal.getAll());
+		assertNotNull(locationService.getAll());
 	}
 }

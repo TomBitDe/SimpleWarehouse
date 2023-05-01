@@ -10,9 +10,9 @@ import javax.interceptor.Interceptors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.handlingunit.HandlingUnitLocal;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.DimensionException;
-import com.home.simplewarehouse.location.LocationLocal;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.topology.SampleWarehouseLocal;
@@ -32,10 +32,10 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 	private SampleWarehouseLocal sampleWarehouseLocal;
 	
 	@EJB
-	private LocationLocal locationLocal;
+	private LocationService locationService;
 
 	@EJB
-	private HandlingUnitLocal handlingUnitLocal;
+	private HandlingUnitService handlingUnitService;
 
 	/**
 	 * Default constructor
@@ -49,12 +49,12 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 	private void cleanup() {
 		LOG.trace("--> cleanup()");
 		
-		for (Location loc : locationLocal.getAll()) {
-			locationLocal.delete(loc);
+		for (Location loc : locationService.getAll()) {
+			locationService.delete(loc);
 		}
 
-		for (HandlingUnit hu : handlingUnitLocal.getAll()) {
-			handlingUnitLocal.delete(hu);
+		for (HandlingUnit hu : handlingUnitService.getAll()) {
+			handlingUnitService.delete(hu);
 		}
 
 		LOG.trace("<-- cleanup()");		
@@ -66,25 +66,25 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		
 		cleanup();
 
-		HandlingUnit h1 = handlingUnitLocal.create(new HandlingUnit("1"));
-		HandlingUnit h2 = handlingUnitLocal.create(new HandlingUnit("2"));
-		HandlingUnit h3 = handlingUnitLocal.create(new HandlingUnit("3"));
-		HandlingUnit h4 = handlingUnitLocal.create(new HandlingUnit("4"));
+		HandlingUnit h1 = handlingUnitService.create(new HandlingUnit("1"));
+		HandlingUnit h2 = handlingUnitService.create(new HandlingUnit("2"));
+		HandlingUnit h3 = handlingUnitService.create(new HandlingUnit("3"));
+		HandlingUnit h4 = handlingUnitService.create(new HandlingUnit("4"));
 
-		Location lA = locationLocal.create(new Location("A"));
+		Location lA = locationService.create(new Location("A"));
 		LOG.debug(lA);
 		
 		try {
-			// Drop to location in random order
-			handlingUnitLocal.dropTo(lA, h1);
-			lA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(lA, h4);
-			lA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(lA, h2);
-			lA = locationLocal.getById("A");
-			handlingUnitLocal.dropTo(lA, h3);
+			// Drop to locationService in random order
+			handlingUnitService.dropTo(lA, h1);
+			lA = locationService.getById("A");
+			handlingUnitService.dropTo(lA, h4);
+			lA = locationService.getById("A");
+			handlingUnitService.dropTo(lA, h2);
+			lA = locationService.getById("A");
+			handlingUnitService.dropTo(lA, h3);
 		
-			LOG.debug(locationLocal.getById("A"));
+			LOG.debug(locationService.getById("A"));
 		}
 		catch (DimensionException dimex) {
 			LOG.error("Unexpected exception : {}", dimex.getMessage());
