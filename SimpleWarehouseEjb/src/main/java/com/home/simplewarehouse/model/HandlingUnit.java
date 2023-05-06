@@ -33,8 +33,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(HandlingUnit.class);
     
-    private static final int WEIGHT_DEFAULT = 0;
-    private static final float VOLUME_DEFAULT = 0.0f;
+    public static final int WEIGHT_DEFAULT = 0;
+    public static final float VOLUME_DEFAULT = 0.0f;
     private static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
     private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
     private static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
