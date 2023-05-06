@@ -2,6 +2,7 @@ package com.home.simplewarehouse.location;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -159,6 +160,8 @@ public class LocationBeanTest {
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
+		assertNotEquals(true, location.equals(null));
+		assertEquals(1, location.getVersion());
 		
 	    // MANDATORY reread
 		assertNull(locationService.getById("B"));

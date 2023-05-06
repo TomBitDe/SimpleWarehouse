@@ -95,6 +95,8 @@ public class PickDropRandomLocationTest {
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
 		
+		sampleWarehouseLocal.initialize();
+		
 		LOG.trace("<-- beforeTest()");		
 	}
 	
