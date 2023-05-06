@@ -14,7 +14,12 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationService;
+import com.home.simplewarehouse.location.OverheightException;
+import com.home.simplewarehouse.location.OverlengthException;
+import com.home.simplewarehouse.location.OverwidthException;
+import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -52,6 +57,13 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal2
 		
 		if (lA != null) {
 			List<String> huIds = Arrays.asList("4", "1", "3", "2");
+			
+			try {
+				handlingUnitService.dropTo(locationService.getById("A"), handlingUnitService.getById("1"));
+			} catch (CapacityExceededException | WeightExceededException | OverheightException | OverlengthException
+					| OverwidthException e) {
+				LOG.error(e.getMessage());
+			}
 			
 			// Now pick from locationService
 			for (String huId : huIds) {
