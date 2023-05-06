@@ -227,7 +227,7 @@ public class HandlingUnitTest {
 
 		expHandlingUnit = new HandlingUnit("6", -10, -20.0f);
 
-		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.create(expHandlingUnit);
 		assertEquals(HandlingUnit.WEIGHT_DEFAULT, handlingUnit.getWeight());
 		assertEquals(HandlingUnit.VOLUME_DEFAULT, handlingUnit.getVolume(), 0.0f);
 
@@ -237,11 +237,13 @@ public class HandlingUnitTest {
 		expHandlingUnit.setHeight(null);
 		expHandlingUnit.setLength(null);
 		expHandlingUnit.setWidth(null);
-		handlingUnit = handlingUnitLocal.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.create(expHandlingUnit);
 		assertEquals(HeightCategory.NOT_RELEVANT, handlingUnit.getHeight());
 		assertEquals(LengthCategory.NOT_RELEVANT, handlingUnit.getLength());
 		assertEquals(WidthCategory.NOT_RELEVANT, handlingUnit.getWidth());
-				
+		
+		assertEquals(1, expHandlingUnit.getVersion());
+			
 		LOG.info(handlingUnit);	
 	}
 
