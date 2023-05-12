@@ -83,7 +83,6 @@ public class ApplConfigRestService {
         return response;
     }
 
-
 	/**
      * Get a configuration entry by its key value.
      *
