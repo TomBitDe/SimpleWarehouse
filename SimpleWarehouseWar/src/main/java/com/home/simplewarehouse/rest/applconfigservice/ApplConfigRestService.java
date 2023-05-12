@@ -48,7 +48,7 @@ public class ApplConfigRestService {
         List<ApplConfig> applConfigList = applConfigService.getContent();
 
         GenericEntity<List<ApplConfig>> content
-                = new GenericEntity<List<ApplConfig>>(new ArrayList<ApplConfig>(applConfigList)) {
+                = new GenericEntity<List<ApplConfig>>(new ArrayList<>(applConfigList)) {
         };
 
         Response response = Response.ok(content).build();
