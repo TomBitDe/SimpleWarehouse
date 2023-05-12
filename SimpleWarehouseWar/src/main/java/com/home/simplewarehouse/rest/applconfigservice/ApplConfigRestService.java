@@ -68,14 +68,14 @@ public class ApplConfigRestService {
     @Path("/Content/{offset}/{count}")
     @Produces({MediaType.APPLICATION_XML})
     public Response getContent(@PathParam("offset") String offset, @PathParam("count") String count) {
-        int intOffset = Integer.valueOf(offset);
-        int intCount = Integer.valueOf(count);
+        int intOffset = Integer.parseInt(offset);
+        int intCount = Integer.parseInt(count);
 
-        // Get the AirportVOs from the remote call as a List
+        // Get the configuration entries from the remote call as a List
         List<ApplConfig> applConfigList = applConfigService.getContent(intOffset, intCount);
 
         GenericEntity<List<ApplConfig>> content
-                = new GenericEntity<List<ApplConfig>>(new ArrayList<ApplConfig>(applConfigList)) {
+                = new GenericEntity<List<ApplConfig>>(new ArrayList<>(applConfigList)) {
         };
 
         Response response = Response.ok(content).build();
