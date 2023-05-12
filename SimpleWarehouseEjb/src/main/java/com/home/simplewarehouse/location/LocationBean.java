@@ -146,6 +146,28 @@ public class LocationBean implements LocationService {
 	}
 	
 	@Override
+	public List<Location> getAll(int offset, int count) {
+		LOG.trace("--> getAll({}, {})", offset, count);
+
+        if (offset < 0) {
+            throw new IllegalArgumentException("offset < 0");
+        }
+        if (count < 1) {
+            throw new IllegalArgumentException("count < 1");
+        }
+
+        TypedQuery<Location> query = em.createQuery("SELECT l FROM Location l", Location.class);
+        query.setFirstResult(offset);
+        query.setMaxResults(count);
+
+        List<Location> locations = query.getResultList();
+
+		LOG.trace("<-- getAll({}, {})", offset, count);
+
+		return locations;
+	}
+	
+	@Override
 	public List<Location> getAllContaining(final HandlingUnit handlingUnit) {
 		LOG.trace("--> getAllContaining({})", handlingUnit);
 		

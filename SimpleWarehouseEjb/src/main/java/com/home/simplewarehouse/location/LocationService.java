@@ -42,6 +42,15 @@ public interface LocationService {
 	 */
 	public List<Location> getAll();
 	/**
+	 * Get a list of all Location items
+	 * 
+     * @param offset the position to start fetching
+     * @param count  the number of fetches to do
+     *
+	 * @return the Location list based on offset and count
+	 */
+	public List<Location> getAll(int offset, int count);
+	/**
 	 * Gets a list of all HandlingUnits on a locationService
 	 * 
 	 * @param location the given locationService
