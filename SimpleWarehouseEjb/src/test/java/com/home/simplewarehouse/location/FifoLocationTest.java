@@ -129,7 +129,7 @@ public class FifoLocationTest {
 		
 		FifoLocation expLocation = new FifoLocation("A");
 
-		locationService.create(expLocation);
+		locationService.createOrUpdate(expLocation);
 		LOG.info("Fifo Location created: " + expLocation);
 
 		// MANDATORY reread
@@ -154,7 +154,7 @@ public class FifoLocationTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    Location location = locationService.create(new FifoLocation("A"));
+	    Location location = locationService.createOrUpdate(new FifoLocation("A"));
 		LOG.info("Fifo Location create: " + location);
 		
 		assertEquals("A", location.getLocationId());
@@ -165,7 +165,7 @@ public class FifoLocationTest {
 		assertEquals("A", location.getLocationId());
 		LOG.info("Fifo Location deleted: " + location.getLocationId());
 		
-		location = locationService.create(new FifoLocation("A", "Test"));				
+		location = locationService.createOrUpdate(new FifoLocation("A", "Test"));				
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
@@ -177,7 +177,7 @@ public class FifoLocationTest {
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		location = locationService.create(new FifoLocation("A", "Test", ts));
+		location = locationService.createOrUpdate(new FifoLocation("A", "Test", ts));
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
@@ -194,7 +194,7 @@ public class FifoLocationTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    Location location = locationService.create(new FifoLocation("A"));
+	    Location location = locationService.createOrUpdate(new FifoLocation("A"));
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		
@@ -223,11 +223,11 @@ public class FifoLocationTest {
 		assertTrue(locationService.getAll().isEmpty());
 		
 		// Prepare some locations; 5 locations
-		locationService.create(new FifoLocation("A", "Test"));
-		locationService.create(new FifoLocation("B", "Test"));
-		locationService.create(new FifoLocation("C", "Test"));
-		locationService.create(new FifoLocation("D", "Test"));
-		locationService.create(new FifoLocation("E", "Test"));
+		locationService.createOrUpdate(new FifoLocation("A", "Test"));
+		locationService.createOrUpdate(new FifoLocation("B", "Test"));
+		locationService.createOrUpdate(new FifoLocation("C", "Test"));
+		locationService.createOrUpdate(new FifoLocation("D", "Test"));
+		locationService.createOrUpdate(new FifoLocation("E", "Test"));
 
 		// Get them all and output
 		List<Location> locations = locationService.getAll();
@@ -249,7 +249,7 @@ public class FifoLocationTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		Location locA = locationService.create(new FifoLocation("A", "Test"));
+		Location locA = locationService.createOrUpdate(new FifoLocation("A", "Test"));
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		try {
@@ -325,7 +325,7 @@ public class FifoLocationTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		Location locA = locationService.create(new FifoLocation("A", "Test"));
+		Location locA = locationService.createOrUpdate(new FifoLocation("A", "Test"));
 		
 		// Test the special toString also
 		assumeTrue(locA.toString().contains("HandlingUnits FIFO=[]"));
@@ -388,7 +388,7 @@ public class FifoLocationTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		Location locA = locationService.create(new FifoLocation("A", "Test"));
+		Location locA = locationService.createOrUpdate(new FifoLocation("A", "Test"));
 		LOG.info("Fifo Location prepared: " + locA);
 		
 		// Drop to make a relation

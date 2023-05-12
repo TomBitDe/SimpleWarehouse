@@ -127,12 +127,12 @@ public class HandlingUnitComposingTest {
 
 		assertTrue(handlingUnitService.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
 		assertEquals(null, base.getBaseHU());
 		assertTrue(base.getContains().isEmpty());
 		LOG.info(base);
 		
-		HandlingUnit hu2 =  handlingUnitService.create(new HandlingUnit("2"));
+		HandlingUnit hu2 =  handlingUnitService.createOrUpdate(new HandlingUnit("2"));
 		assertEquals(null, hu2.getBaseHU());
 		assertTrue(hu2.getContains().isEmpty());
 		LOG.info(hu2);
@@ -161,7 +161,7 @@ public class HandlingUnitComposingTest {
 		
 		assertTrue(handlingUnitService.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
 
 		// Now place some handling units on base
 		base = handlingUnitService.assign(new HandlingUnit("2"), base);
@@ -191,7 +191,7 @@ public class HandlingUnitComposingTest {
 		
 		assertTrue(handlingUnitService.getAll().isEmpty());
 
-		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
 
 		// Now place some handling units on base
 		base = handlingUnitService.assign(new HandlingUnit("2"), base);
@@ -200,7 +200,7 @@ public class HandlingUnitComposingTest {
 		base = handlingUnitService.assign(new HandlingUnit("5"), base);
 		
 		// Now create an other handling unit as another base
-		HandlingUnit other = handlingUnitService.create(new HandlingUnit("6"));
+		HandlingUnit other = handlingUnitService.createOrUpdate(new HandlingUnit("6"));
 		
 		// Now place a handling unit on the other base
 		other = handlingUnitService.assign(new HandlingUnit("7"), other);
@@ -247,7 +247,7 @@ public class HandlingUnitComposingTest {
 	public void emptyTheBase() {
 		LOG.info("--- Test emptyTheBase");
 
-		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
 
 		// Now place some handling units on base
 		base = handlingUnitService.assign(new HandlingUnit("2"), base);

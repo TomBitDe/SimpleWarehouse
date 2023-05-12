@@ -148,7 +148,7 @@ public class HandlingUnitComposingUseCasesTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 
 		// Create the base handling unit
-		HandlingUnit base = handlingUnitService.create(new HandlingUnit("1"));
+		HandlingUnit base = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
 
 		// Now place some handling units on base
 		base = handlingUnitService.assign(new HandlingUnit("2"), base);

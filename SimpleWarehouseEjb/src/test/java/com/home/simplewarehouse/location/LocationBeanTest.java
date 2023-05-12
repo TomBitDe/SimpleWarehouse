@@ -129,7 +129,7 @@ public class LocationBeanTest {
 		Location location = null;
 		
 		try {
-			location = locationService.create(null);
+			location = locationService.createOrUpdate(null);
 
 			Assert.fail("Exception expected");
 		}
@@ -138,7 +138,7 @@ public class LocationBeanTest {
 		}
 
 		try {
-			location = locationService.create(new Location(null));
+			location = locationService.createOrUpdate(new Location(null));
 
 			Assert.fail("Exception expected");
 		}
@@ -150,12 +150,7 @@ public class LocationBeanTest {
 		
 		Location expLocation = new Location("A");
 
-		locationService.create(expLocation);
-		LOG.info("Location created: " + expLocation);
-
-		// MANDATORY reread
-		location = locationService.getById(expLocation.getLocationId());		
-		LOG.info("Location getById: " + location);
+		location = locationService.createOrUpdate(expLocation);
 		
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
@@ -163,8 +158,28 @@ public class LocationBeanTest {
 		assertNotEquals(true, location.equals(null));
 		assertEquals(1, location.getVersion());
 		
-	    // MANDATORY reread
+		LOG.info(location);
+		
+		expLocation.setUpdateUserId("TestUpdate");
+		
+		location = locationService.createOrUpdate(expLocation);
+		
+		assertEquals(expLocation, location);
+		
+		LOG.info(location);
+		
 		assertNull(locationService.getById("B"));
+		
+		expLocation = new Location("C");
+		expLocation.setDimension(null);
+		expLocation.setLocationStatus(null);
+
+		location = locationService.createOrUpdate(expLocation);
+		
+		assertNotNull(location.getDimension());
+		assertNotNull(location.getLocationStatus());
+		
+		LOG.info(location);
 	}
 	
 	/**
@@ -177,7 +192,7 @@ public class LocationBeanTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationService.create(new Location("A"));
+	    locationService.createOrUpdate(new Location("A"));
 
 	    // MANDATORY reread
 	    Location location = locationService.getById("A");
@@ -191,7 +206,7 @@ public class LocationBeanTest {
 		assertEquals("A", location.getLocationId());
 		LOG.info("Location deleted: " + location.getLocationId());
 		
-		locationService.create(new Location("A", "Test"));
+		locationService.createOrUpdate(new Location("A", "Test"));
 
 		// MANDATORY reread
 		location = locationService.getById("A");				
@@ -206,7 +221,7 @@ public class LocationBeanTest {
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		locationService.create(new Location("A", "Test", ts));
+		locationService.createOrUpdate(new Location("A", "Test", ts));
 
 	    // MANDATORY reread
 		location = locationService.getById("A");
@@ -226,7 +241,7 @@ public class LocationBeanTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationService.create(new Location("A"));
+	    locationService.createOrUpdate(new Location("A"));
 
 	    Location location = locationService.getById("A");
 		assertNotNull(location);
@@ -250,7 +265,7 @@ public class LocationBeanTest {
 		locationService.delete(location);
 		assertTrue(true);
 
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 		location = locationService.getById("A");
 		assertNotNull(location);
 		location.setLocationId(null);
@@ -270,11 +285,11 @@ public class LocationBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		
 		// Prepare some locations; 5 locations
-		locationService.create(new Location("A", "Test"));
-		locationService.create(new Location("B", "Test"));
-		locationService.create(new Location("C", "Test"));
-		locationService.create(new Location("D", "Test"));
-		locationService.create(new Location("E", "Test"));
+		locationService.createOrUpdate(new Location("A", "Test"));
+		locationService.createOrUpdate(new Location("B", "Test"));
+		locationService.createOrUpdate(new Location("C", "Test"));
+		locationService.createOrUpdate(new Location("D", "Test"));
+		locationService.createOrUpdate(new Location("E", "Test"));
 
 		// Get them all and output
 		List<Location> locations = locationService.getAll();
@@ -296,7 +311,7 @@ public class LocationBeanTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		locationService.create(new Location("A", "Test"));
+		locationService.createOrUpdate(new Location("A", "Test"));
 		Location locA = locationService.getById("A");
 		LOG.info("Location prepared: " + locA);
 		
@@ -371,7 +386,7 @@ public class LocationBeanTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		locationService.create(new Location("A", "Test"));
+		locationService.createOrUpdate(new Location("A", "Test"));
 		Location locA = locationService.getById("A");
 		
 		// Test the special toString also
@@ -432,10 +447,10 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.create(new Location("A"));
-		locationService.create(new Location("B"));
-		locationService.create(new Location("C"));
-		locationService.create(new Location("D"));
+		locationService.createOrUpdate(new Location("A"));
+		locationService.createOrUpdate(new Location("B"));
+		locationService.createOrUpdate(new Location("C"));
+		locationService.createOrUpdate(new Location("D"));
 		
 
 		LOG.info("Locations created: " + locationService.getAll().size());
@@ -458,7 +473,7 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
 		Location locA = locationService.getById("A");
@@ -525,7 +540,7 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
 		Location locA = locationService.getById("A");
@@ -583,7 +598,7 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
 		Location locA = locationService.getById("A");
@@ -621,7 +636,7 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
 		Location locA = locationService.getById("A");

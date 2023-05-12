@@ -16,13 +16,13 @@ import com.home.simplewarehouse.model.Location;
  */
 public interface HandlingUnitService {
 	/**
-	 * Create a HandlingUnit and persist
+	 * Create or update a HandlingUnit and persist
 	 * 
 	 * @param handlingUnit the given HandlingUnit
 	 * 
 	 * @return the created HandlingUnit
 	 */
-	public HandlingUnit create(final HandlingUnit handlingUnit);
+	public HandlingUnit createOrUpdate(final HandlingUnit handlingUnit);
 	/**
 	 * Delete a HandlingUnit and remove
 	 * 

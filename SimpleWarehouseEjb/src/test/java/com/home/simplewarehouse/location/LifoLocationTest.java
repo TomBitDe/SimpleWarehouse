@@ -130,7 +130,7 @@ public class LifoLocationTest {
 		
 		LifoLocation expLocation = new LifoLocation("A");
 
-		locationService.create(expLocation);
+		locationService.createOrUpdate(expLocation);
 		LOG.info("Lifo Location created: " + expLocation);
 
 		// MANDATORY reread
@@ -155,7 +155,7 @@ public class LifoLocationTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationService.create(new LifoLocation("A"));
+	    locationService.createOrUpdate(new LifoLocation("A"));
 
 	    // MANDATORY reread
 	    Location location = locationService.getById("A");
@@ -169,7 +169,7 @@ public class LifoLocationTest {
 		assertEquals("A", location.getLocationId());
 		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
-		locationService.create(new LifoLocation("A", "Test"));
+		locationService.createOrUpdate(new LifoLocation("A", "Test"));
 
 		// MANDATORY reread
 		location = locationService.getById("A");				
@@ -184,7 +184,7 @@ public class LifoLocationTest {
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		locationService.create(new LifoLocation("A", "Test", ts));
+		locationService.createOrUpdate(new LifoLocation("A", "Test", ts));
 
 	    // MANDATORY reread
 		location = locationService.getById("A");
@@ -204,7 +204,7 @@ public class LifoLocationTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationService.create(new LifoLocation("A"));
+	    locationService.createOrUpdate(new LifoLocation("A"));
 
 	    Location location = locationService.getById("A");
 		assertNotNull(location);
@@ -235,11 +235,11 @@ public class LifoLocationTest {
 		assertTrue(locationService.getAll().isEmpty());
 		
 		// Prepare some locations; 5 locations
-		locationService.create(new LifoLocation("A", "Test"));
-		locationService.create(new LifoLocation("B", "Test"));
-		locationService.create(new LifoLocation("C", "Test"));
-		locationService.create(new LifoLocation("D", "Test"));
-		locationService.create(new LifoLocation("E", "Test"));
+		locationService.createOrUpdate(new LifoLocation("A", "Test"));
+		locationService.createOrUpdate(new LifoLocation("B", "Test"));
+		locationService.createOrUpdate(new LifoLocation("C", "Test"));
+		locationService.createOrUpdate(new LifoLocation("D", "Test"));
+		locationService.createOrUpdate(new LifoLocation("E", "Test"));
 
 		// Get them all and check
 		List<Location> locations = locationService.getAll();
@@ -261,7 +261,7 @@ public class LifoLocationTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		locationService.create(new LifoLocation("A", "Test"));
+		locationService.createOrUpdate(new LifoLocation("A", "Test"));
 		Location locA = locationService.getById("A");
 		LOG.info("Lifo Location prepared: " + locA);
 		
@@ -338,7 +338,7 @@ public class LifoLocationTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		locationService.create(new LifoLocation("A", "Test"));
+		locationService.createOrUpdate(new LifoLocation("A", "Test"));
 		Location locA = locationService.getById("A");
 		
 		// Test the special toString also
@@ -402,7 +402,7 @@ public class LifoLocationTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		locationService.create(new LifoLocation("A", "Test"));
+		locationService.createOrUpdate(new LifoLocation("A", "Test"));
 		Location locA = locationService.getById("A");
 		LOG.info("Lifo Location prepared: " + locA);
 		

@@ -58,10 +58,15 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
-	public HandlingUnit create(final HandlingUnit handlingUnit) {
+	public HandlingUnit createOrUpdate(final HandlingUnit handlingUnit) {
 		LOG.trace("--> create");
-
-		em.persist(handlingUnit);
+		
+		if (getById(handlingUnit.getId()) == null) {
+			em.persist(handlingUnit);
+		}
+		else {
+			em.merge(handlingUnit);
+		}
 		em.flush();
 
 		LOG.trace("<-- create");
@@ -133,7 +138,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
-			lo = locationService.create(location);
+			lo = locationService.createOrUpdate(location);
 		}
 		else {
 			lo = em.merge(location);
@@ -145,7 +150,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
-			hu = create(handlingUnit);
+			hu = createOrUpdate(handlingUnit);
 		}
 		else {
 			hu = em.merge(handlingUnit);
@@ -209,7 +214,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
-			lo = locationService.create(location);
+			lo = locationService.createOrUpdate(location);
 		}
 		else {
 			lo = em.merge(location);
@@ -247,7 +252,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 				
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
-			hu = create(handlingUnit);
+			hu = createOrUpdate(handlingUnit);
 		}
 		else {
 			hu = em.merge(handlingUnit);
@@ -259,7 +264,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
-			lo = locationService.create(location);
+			lo = locationService.createOrUpdate(location);
 		}
 		else {
 			lo = em.merge(location);
@@ -304,7 +309,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
-			hu = create(handlingUnit);
+			hu = createOrUpdate(handlingUnit);
 		}
 		else {
 			hu = em.merge(handlingUnit);
@@ -312,7 +317,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit ba = getById(base.getId());
 		if (ba == null) {
-			ba = create(base);
+			ba = createOrUpdate(base);
 		}
 		else {
 			ba = em.merge(base);
@@ -345,7 +350,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
-			hu = create(handlingUnit);
+			hu = createOrUpdate(handlingUnit);
 		}
 		else {
 			hu = em.merge(handlingUnit);
@@ -353,7 +358,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit ba = getById(base.getId());
 		if (ba == null) {
-			ba = create(base);
+			ba = createOrUpdate(base);
 		}
 		else {
 			ba = em.merge(base);
@@ -386,7 +391,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
-			hu = create(handlingUnit);
+			hu = createOrUpdate(handlingUnit);
 		}
 		else {
 			hu = em.merge(handlingUnit);
@@ -394,7 +399,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit dest = getById(destHandlingUnit.getId());
 		if (dest == null) {
-			dest = create(destHandlingUnit);
+			dest = createOrUpdate(destHandlingUnit);
 		}
 		else {
 			dest = em.merge(destHandlingUnit);
@@ -425,7 +430,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit ba = getById(base.getId());
 		if (ba == null) {
-			ba = create(base);
+			ba = createOrUpdate(base);
 		}
 		else {
 			ba = em.merge(base);

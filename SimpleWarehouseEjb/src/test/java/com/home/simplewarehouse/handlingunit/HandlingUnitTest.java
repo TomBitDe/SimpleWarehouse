@@ -149,7 +149,7 @@ public class HandlingUnitTest {
 		HandlingUnit handlingUnit = null;
 		
 		try {
-			handlingUnit = handlingUnitService.create(null);
+			handlingUnit = handlingUnitService.createOrUpdate(null);
 
 			Assert.fail("Exception expected");
 		}
@@ -158,7 +158,7 @@ public class HandlingUnitTest {
 		}
 
 		try {
-			handlingUnit = handlingUnitService.create(new HandlingUnit(null));
+			handlingUnit = handlingUnitService.createOrUpdate(new HandlingUnit(null));
 
 			Assert.fail("Exception expected");
 		}
@@ -184,14 +184,23 @@ public class HandlingUnitTest {
 		assertEquals(false, expHandlingUnit.equals(null));
 		assertEquals(false, expHandlingUnit.equals(new Location("A")));
 
-		HandlingUnit handlingUnit = handlingUnitService.create(expHandlingUnit);
+		HandlingUnit handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
+		assertEquals(expHandlingUnit, handlingUnit);
+		
+		LOG.info(handlingUnit);
+		
+		expHandlingUnit.setVolume(10.0f);
+		expHandlingUnit.setHeight(HeightCategory.MIDDLE);
+		expHandlingUnit.setWeight(WEIGHT_MAX);
+		
+		handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		
 		LOG.info(handlingUnit);
 		
 		expHandlingUnit = new HandlingUnit("2", null);
 
-		handlingUnit = handlingUnitService.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertNotNull(handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -200,7 +209,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("3", null, null);
 
-		handlingUnit = handlingUnitService.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertNotNull(handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -209,7 +218,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("4", "Scott Tiger");
 
-		handlingUnit = handlingUnitService.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertEquals(expHandlingUnit.getUpdateUserId(), handlingUnit.getUpdateUserId());
 		assertNotNull(handlingUnit.getUpdateTimestamp());
@@ -218,7 +227,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit = new HandlingUnit("5", "Willi", new Timestamp(System.currentTimeMillis()));
 
-		handlingUnit = handlingUnitService.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
 		assertEquals(expHandlingUnit.getUpdateUserId(), handlingUnit.getUpdateUserId());
 		assertEquals(expHandlingUnit.getUpdateTimestamp(), handlingUnit.getUpdateTimestamp());
@@ -227,7 +236,7 @@ public class HandlingUnitTest {
 
 		expHandlingUnit = new HandlingUnit("6", -10, -20.0f);
 
-		handlingUnit = handlingUnitService.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(HandlingUnit.WEIGHT_DEFAULT, handlingUnit.getWeight());
 		assertEquals(HandlingUnit.VOLUME_DEFAULT, handlingUnit.getVolume(), 0.0f);
 
@@ -237,7 +246,7 @@ public class HandlingUnitTest {
 		expHandlingUnit.setHeight(null);
 		expHandlingUnit.setLength(null);
 		expHandlingUnit.setWidth(null);
-		handlingUnit = handlingUnitService.create(expHandlingUnit);
+		handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(HeightCategory.NOT_RELEVANT, handlingUnit.getHeight());
 		assertEquals(LengthCategory.NOT_RELEVANT, handlingUnit.getLength());
 		assertEquals(WidthCategory.NOT_RELEVANT, handlingUnit.getWidth());
@@ -257,7 +266,7 @@ public class HandlingUnitTest {
 
 		assertTrue(handlingUnitService.getAll().isEmpty());
 
-	    HandlingUnit handlingUnit = handlingUnitService.create(new HandlingUnit("1"));
+	    HandlingUnit handlingUnit = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
 	    
 	    // MANDATORY reread
 		assertEquals("1", handlingUnit.getId());
@@ -275,7 +284,7 @@ public class HandlingUnitTest {
 		handlingUnitService.delete(handlingUnit);
 		assertTrue(true);
 		
-		handlingUnit = handlingUnitService.create(new HandlingUnit("1"));
+		handlingUnit = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
 		assertNotNull(handlingUnit);
 		handlingUnit.setId(null);
 		handlingUnitService.delete(handlingUnit);
@@ -294,11 +303,11 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare some handling units
-		handlingUnitService.create(new HandlingUnit("1"));
-		handlingUnitService.create(new HandlingUnit("2"));
-		handlingUnitService.create(new HandlingUnit("3"));
-		handlingUnitService.create(new HandlingUnit("4"));
-		handlingUnitService.create(new HandlingUnit("5"));
+		handlingUnitService.createOrUpdate(new HandlingUnit("1"));
+		handlingUnitService.createOrUpdate(new HandlingUnit("2"));
+		handlingUnitService.createOrUpdate(new HandlingUnit("3"));
+		handlingUnitService.createOrUpdate(new HandlingUnit("4"));
+		handlingUnitService.createOrUpdate(new HandlingUnit("5"));
 
 		// Another test
 		List<HandlingUnit> handlingUnits = handlingUnitService.getAll();
@@ -706,7 +715,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare a locationService
-		locationService.create(new Location("A"));		
+		locationService.createOrUpdate(new Location("A"));		
 		Location lOA = locationService.getById("A");
 		
 		// Now set the capacity to limit
@@ -761,7 +770,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare handling unit and a locationService
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 		Location lOA = locationService.getById("A");
 		
 		// Now set the weight to limit
@@ -816,7 +825,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare a locationService
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
@@ -895,13 +904,13 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare handling unit and a locationService
-		HandlingUnit hU1 = handlingUnitService.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
-		HandlingUnit hU2 = handlingUnitService.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
-		HandlingUnit hU3 = handlingUnitService.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
-		HandlingUnit hU4 = handlingUnitService.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
-		HandlingUnit hU5 = handlingUnitService.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
+		HandlingUnit hU1 = handlingUnitService.createOrUpdate(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
+		HandlingUnit hU2 = handlingUnitService.createOrUpdate(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
+		HandlingUnit hU3 = handlingUnitService.createOrUpdate(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
+		HandlingUnit hU4 = handlingUnitService.createOrUpdate(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
+		HandlingUnit hU5 = handlingUnitService.createOrUpdate(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
 		
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
@@ -983,13 +992,13 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare handling unit and a locationService
-		HandlingUnit hU1 = handlingUnitService.create(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
-		HandlingUnit hU2 = handlingUnitService.create(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
-		HandlingUnit hU3 = handlingUnitService.create(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
-		HandlingUnit hU4 = handlingUnitService.create(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
-		HandlingUnit hU5 = handlingUnitService.create(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
+		HandlingUnit hU1 = handlingUnitService.createOrUpdate(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
+		HandlingUnit hU2 = handlingUnitService.createOrUpdate(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
+		HandlingUnit hU3 = handlingUnitService.createOrUpdate(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
+		HandlingUnit hU4 = handlingUnitService.createOrUpdate(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
+		HandlingUnit hU5 = handlingUnitService.createOrUpdate(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
 		
-		locationService.create(new Location("A"));
+		locationService.createOrUpdate(new Location("A"));
 		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit

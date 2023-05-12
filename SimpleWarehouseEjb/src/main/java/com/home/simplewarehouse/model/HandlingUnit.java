@@ -316,7 +316,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
      * @param volume the given volume, if <code>null</code> set to VOLUME_DEFAULT
      */
     public void setVolume(float volume) {
-    	if (volume < 0.0) {
+    	if (volume < 0.0f) {
     		this.volume = VOLUME_DEFAULT;
     	}
     	else {

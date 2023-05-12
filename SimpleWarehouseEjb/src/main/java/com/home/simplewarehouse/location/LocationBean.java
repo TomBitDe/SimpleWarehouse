@@ -53,24 +53,30 @@ public class LocationBean implements LocationService {
 	}
 	
 	@Override
-	public Location create(final Location location) {
+	public Location createOrUpdate(final Location location) {
 		LOG.trace("--> create");
 
-		if (location.getLocationStatus() == null) {
-			LocationStatus locationStatus = new LocationStatus(location.getLocationId());
-			locationStatus.setLocation(location);
-			location.setLocationStatus(locationStatus);
+		if (getById(location.getLocationId()) == null) {
+			if (location.getLocationStatus() == null) {
+				LocationStatus locationStatus = new LocationStatus(location.getLocationId());
+				locationStatus.setLocation(location);
+				location.setLocationStatus(locationStatus);
+			}
+
+			if (location.getDimension() == null) {
+				Dimension dimension = new Dimension(location.getLocationId());
+				dimension.setLocation(location);
+				location.setDimension(dimension);
+			}
+
+			// No need to em.persist(locationStatusService) because it is done by cascade =
+			// CascadeType.ALL
+			// Same for dimensionService
+			em.persist(location);
 		}
-		
-		if (location.getDimension() == null) {
-			Dimension dimension = new Dimension(location.getLocationId());
-			dimension.setLocation(location);
-			location.setDimension(dimension);
+		else {
+			em.merge(location);
 		}
-		
-		// No need to    em.persist(locationStatusService)  because it is done by  cascade = CascadeType.ALL
-		// Same for      dimensionService
-		em.persist(location);	
 		em.flush();
 
 		LOG.trace("<-- create");

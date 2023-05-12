@@ -71,7 +71,7 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 			locationList.add(new LifoLocation("LIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		
-		locationList.forEach(l -> locationService.create(l));
+		locationList.forEach(l -> locationService.createOrUpdate(l));
 		
 		// HandlingUnits
 		List<HandlingUnit> handlingUnitList = new ArrayList<>();
@@ -80,7 +80,7 @@ public class SampleWarehouseBean implements SampleWarehouseLocal {
 		for (int val = 1; val <= HANDLING_UNIT_NUM; ++val) {
 			handlingUnitList.add(new HandlingUnit(String.valueOf(val), SampleWarehouseBean.class.getSimpleName()));
 		}
-		handlingUnitList.forEach(h -> handlingUnitService.create(h));
+		handlingUnitList.forEach(h -> handlingUnitService.createOrUpdate(h));
 		
 		LOG.trace("<-- initialize()");
 	}

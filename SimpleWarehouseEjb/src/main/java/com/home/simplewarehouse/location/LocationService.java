@@ -14,13 +14,13 @@ import com.home.simplewarehouse.model.WidthCategory;
  */
 public interface LocationService {
 	/**
-	 * Create a Location and persist
+	 * Create or update a Location and persist
 	 * 
 	 * @param location the given Location
 	 * 
 	 * @return the Location created
 	 */
-	public Location create(final Location location);
+	public Location createOrUpdate(final Location location);
 	/**
 	 * Delete a Location and remove
 	 * 

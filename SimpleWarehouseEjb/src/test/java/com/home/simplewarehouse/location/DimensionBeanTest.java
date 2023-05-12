@@ -122,7 +122,7 @@ public class DimensionBeanTest {
 		
 		Location expLocation = new Location("A");
 		
-		locationService.create(expLocation);
+		locationService.createOrUpdate(expLocation);
 		assertEquals(expLocation, locationService.getById("A"));
 		
 	    // MANDATORY reread
@@ -152,7 +152,7 @@ public class DimensionBeanTest {
 		
 		Location expLocation = new Location("A");
 		
-		locationService.create(expLocation);
+		locationService.createOrUpdate(expLocation);
 	    // MANDATORY reread
 		assertEquals(expLocation, locationService.getById("A"));
 		

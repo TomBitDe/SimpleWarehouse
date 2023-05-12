@@ -121,7 +121,7 @@ public class LocationStatusBeanTest {
 		
 		Location expLocation = new Location("A");
 		
-		locationService.create(expLocation);
+		locationService.createOrUpdate(expLocation);
 		assertEquals(expLocation, locationService.getById("A"));
 		
 	    // MANDATORY reread
@@ -154,7 +154,7 @@ public class LocationStatusBeanTest {
 		
 		Location expLocation = new Location("A");
 		
-		locationService.create(expLocation);
+		locationService.createOrUpdate(expLocation);
 		assertEquals(expLocation, locationService.getById("A"));
 		
 		LOG.info("Location prepared: " + expLocation);

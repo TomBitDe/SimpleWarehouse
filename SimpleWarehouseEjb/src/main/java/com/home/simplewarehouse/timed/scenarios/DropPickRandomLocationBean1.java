@@ -66,12 +66,12 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		
 		cleanup();
 
-		HandlingUnit h1 = handlingUnitService.create(new HandlingUnit("1"));
-		HandlingUnit h2 = handlingUnitService.create(new HandlingUnit("2"));
-		HandlingUnit h3 = handlingUnitService.create(new HandlingUnit("3"));
-		HandlingUnit h4 = handlingUnitService.create(new HandlingUnit("4"));
+		HandlingUnit h1 = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
+		HandlingUnit h2 = handlingUnitService.createOrUpdate(new HandlingUnit("2"));
+		HandlingUnit h3 = handlingUnitService.createOrUpdate(new HandlingUnit("3"));
+		HandlingUnit h4 = handlingUnitService.createOrUpdate(new HandlingUnit("4"));
 
-		Location lA = locationService.create(new Location("A"));
+		Location lA = locationService.createOrUpdate(new Location("A"));
 		LOG.debug(lA);
 		
 		try {
