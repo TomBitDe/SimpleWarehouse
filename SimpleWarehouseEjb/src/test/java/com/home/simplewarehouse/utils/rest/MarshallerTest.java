@@ -3,6 +3,8 @@ package com.home.simplewarehouse.utils.rest;
 import java.io.File;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
@@ -174,6 +176,10 @@ public class MarshallerTest {
 	public void marshallLocation()
 	{
         Location location = new Location("Loc_1");
+        List<HandlingUnit> placed = new ArrayList<>();
+        placed.add(new HandlingUnit("HU_A"));
+        placed.add(new HandlingUnit("HU_B"));
+        location.setHandlingUnits(placed);
         
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Location.class);

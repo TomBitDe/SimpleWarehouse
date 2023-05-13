@@ -82,7 +82,6 @@ public class Location extends EntityBase implements Serializable {
     @OneToMany( mappedBy="location"
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.EAGER )
-    @XmlTransient
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
     private void initAssociated() {
