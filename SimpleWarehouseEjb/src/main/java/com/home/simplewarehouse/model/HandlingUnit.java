@@ -1,5 +1,7 @@
 package com.home.simplewarehouse.model;
 
+import static javax.persistence.LockModeType.NONE;
+
 import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.HashSet;
@@ -18,7 +20,9 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
-import static javax.persistence.LockModeType.NONE;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -26,6 +30,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * Any kind of handling unit.
  */
+@XmlRootElement(name = "HandlingUnit")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name="HANDLING_UNIT")
 @NamedQuery(name = "findAllHandlingUnits", query = "select h from HandlingUnit h", lockMode = NONE)

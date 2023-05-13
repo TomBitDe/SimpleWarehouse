@@ -9,6 +9,9 @@ import java.util.stream.Collectors;
 
 import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -16,6 +19,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * Location with access limit FIFO.
  */
+@XmlRootElement(name = "FifoLocation")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @DiscriminatorValue("FIFO")
 public class FifoLocation extends Location implements Serializable {

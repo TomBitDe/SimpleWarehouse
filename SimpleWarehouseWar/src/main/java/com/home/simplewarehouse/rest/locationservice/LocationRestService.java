@@ -46,10 +46,8 @@ public class LocationRestService {
         GenericEntity<List<Location>> content
                 = new GenericEntity<List<Location>>(new ArrayList<>(locationList)) {
         };
-
-        Response response = Response.ok(content).build();
-
-        return response;
+        
+        return Response.ok(content).build();
     }
     
     /**
@@ -74,9 +72,7 @@ public class LocationRestService {
                 = new GenericEntity<List<Location>>(new ArrayList<>(locationList)) {
         };
 
-        Response response = Response.ok(content).build();
-
-        return response;
+        return Response.ok(content).build();
     }
 
     /**

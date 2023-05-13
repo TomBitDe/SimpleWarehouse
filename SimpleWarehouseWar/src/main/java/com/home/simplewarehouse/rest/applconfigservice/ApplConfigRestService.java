@@ -51,9 +51,7 @@ public class ApplConfigRestService {
                 = new GenericEntity<List<ApplConfig>>(new ArrayList<>(applConfigList)) {
         };
 
-        Response response = Response.ok(content).build();
-
-        return response;
+        return Response.ok(content).build();
     }
 
     /**
@@ -78,9 +76,7 @@ public class ApplConfigRestService {
                 = new GenericEntity<List<ApplConfig>>(new ArrayList<>(applConfigList)) {
         };
 
-        Response response = Response.ok(content).build();
-
-        return response;
+        return Response.ok(content).build();
     }
 
 	/**
@@ -96,9 +92,7 @@ public class ApplConfigRestService {
     public Response getById(@PathParam("key") String key) {
         ApplConfig entry = applConfigService.getById(key);
 
-        Response response = Response.ok().entity(entry).build();
-
-        return response;
+        return Response.ok().entity(entry).build();
     }
 
     /**
@@ -132,9 +126,7 @@ public class ApplConfigRestService {
     public Response count() {
         int val = applConfigService.count();
 
-        Response response = Response.ok().entity(String.valueOf(val)).build();
-
-        return response;
+        return Response.ok().entity(String.valueOf(val)).build();
     }
 
     /**

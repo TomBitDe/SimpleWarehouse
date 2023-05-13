@@ -15,6 +15,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -22,6 +26,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * Status values valid for all locations.
  */
+@XmlRootElement(name = "LocationStatus")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name="LOCATION_STATUS")
 @NamedQuery(name = "findAllLocationStatuses", query = "select l from LocationStatus l", lockMode = NONE)
@@ -82,6 +88,7 @@ public class LocationStatus extends EntityBase implements Serializable {
     @OneToOne
     @MapsId
     @JoinColumn(name = "LOCATION_ID")
+    @XmlTransient
     private Location location;
     
     /**

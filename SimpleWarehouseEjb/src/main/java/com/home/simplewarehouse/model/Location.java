@@ -27,6 +27,11 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -34,6 +39,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * Location with access limit RANDOM.
  */
+@XmlRootElement(name = "Location")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name="LOCATION")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
@@ -75,6 +82,7 @@ public class Location extends EntityBase implements Serializable {
     @OneToMany( mappedBy="location"
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
     		, fetch = FetchType.EAGER )
+    @XmlTransient
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
     private void initAssociated() {

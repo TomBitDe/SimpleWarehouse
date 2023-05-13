@@ -15,6 +15,10 @@ import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Version;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -28,6 +32,8 @@ import org.apache.logging.log4j.Logger;
  * A maxLength of NOT_RELEVANT means that the length is not relevant for storing goods in the location.<br>
  * A maxWidth of NOT_RELEVANT means that the width is not relevant for storing goods in the location.<br>
  */
+@XmlRootElement(name = "Dimension")
+@XmlAccessorType(XmlAccessType.FIELD)
 @Entity
 @Table(name="DIMENSION")
 @NamedQuery(name = "findAllDimensions", query = "select d from Dimension d", lockMode = NONE)
@@ -102,6 +108,7 @@ public class Dimension extends EntityBase implements Serializable {
     @OneToOne
     @MapsId
     @JoinColumn(name = "LOCATION_ID")
+    @XmlTransient
     private Location location;
     
     /**

@@ -5,6 +5,9 @@ import java.sql.Timestamp;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.MappedSuperclass;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -12,6 +15,8 @@ import org.apache.logging.log4j.Logger;
 /**
  * Important attributes (content) for tracking when using entities.
  */
+@XmlRootElement(name = "EntityBase")
+@XmlAccessorType(XmlAccessType.FIELD)
 @MappedSuperclass
 public class EntityBase {
 	private static final Logger LOG = LogManager.getLogger(EntityBase.class);
