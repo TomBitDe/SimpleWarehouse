@@ -1,6 +1,6 @@
 echo off
 
-curl -X OPTIONS -i http://localhost:8080/war/resources/ApplConfigRestService
+curl -X OPTIONS -i http://localhost:8080/war/resources/ApplConfigRestService/Options
 echo=
 echo ----------------------------------------------------------------------
 

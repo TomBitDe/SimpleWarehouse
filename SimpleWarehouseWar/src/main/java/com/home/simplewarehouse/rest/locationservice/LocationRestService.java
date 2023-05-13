@@ -6,6 +6,7 @@ import java.util.List;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.GET;
+import javax.ws.rs.OPTIONS;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -75,6 +76,56 @@ public class LocationRestService {
         return Response.ok(content).build();
     }
 
+	/**
+     * Get a Location by its key value.
+     *
+     * @param key the key value
+     *
+     * @return the matching Location
+     */
+    @GET
+    @Path("/Entry/{key}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response getById(@PathParam("key") String key) {
+        Location location = locationService.getById(key);
+
+        return Response.ok().entity(location).build();
+    }
+
+    /**
+     * Check if a Location exists by its key.
+     *
+     * @param key the key of the Location
+     *
+     * @return true if the Location exists otherwise false
+     */
+    @GET
+    @Path("/Exists/{key}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response exists(@PathParam("key") String key) {
+    	Location location = locationService.getById(key);
+
+        if (location != null) {
+            return Response.ok().entity("true").build();
+        }
+        return Response.ok().entity("false").build();
+
+    }
+
+	/**
+     * Count the number of Locations.
+     *
+     * @return the number of Locations
+     */
+    @GET
+    @Path("/Count")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response count() {
+        int val = locationService.count();
+
+        return Response.ok().entity(String.valueOf(val)).build();
+    }
+
     /**
      * Just check if the REST service is available.
      *
@@ -85,5 +136,17 @@ public class LocationRestService {
     @Produces({MediaType.TEXT_PLAIN})
     public Response ping() {
     	return Response.ok("Pong").build();
+    }
+    /**
+     * Give a list of all supported service operations.
+     *
+     * @return a list of service operations
+     */
+
+    @OPTIONS
+    @Path("/Options")
+    @Produces({MediaType.TEXT_PLAIN})
+    public String getSupportedOperations() {
+        return "GET, DELETE, PUT, POST";
     }
 }

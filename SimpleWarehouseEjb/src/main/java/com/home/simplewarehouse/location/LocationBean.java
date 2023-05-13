@@ -505,4 +505,11 @@ public class LocationBean implements LocationService {
 
 		return ret;
 	}
+
+	@Override
+	public int count() {
+		final TypedQuery<Number> query = (TypedQuery<Number>) em.createQuery("SELECT COUNT(l) FROM Location l", Number.class);
+
+		return query.getSingleResult().intValue();
+	}
 }

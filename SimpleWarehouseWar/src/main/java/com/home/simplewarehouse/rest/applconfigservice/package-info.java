@@ -13,7 +13,7 @@
  * - update (POST http://localhost:8080/war/resources/ApplConfigRestService/Entry/aaa/TestX)<br>
  * - content (GET http://localhost:8080/war/resources/ApplConfigRestService/Content)<br>
  * - content (GET http://localhost:8080/war/resources/ApplConfigRestService/Content/3/5)<br>
- * - id (GET http://localhost:8080/war/resources/ApplConfigRestService/Entry/aaa)<br>
+ * - entry (GET http://localhost:8080/war/resources/ApplConfigRestService/Entry/aaa)<br>
  * - exists (GET http://localhost:8080/war/resources/ApplConfigRestService/Exists/aaa)<br>
  * - count (GET http://localhost:8080/war/resources/ApplConfigRestService/Count)<br>
  * - refresh (GET http://localhost:8080/war/resources/ApplConfigRestService/Refresh)<br>

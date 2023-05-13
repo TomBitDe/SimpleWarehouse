@@ -51,9 +51,15 @@ public interface LocationService {
 	 */
 	public List<Location> getAll(int offset, int count);
 	/**
-	 * Gets a list of all HandlingUnits on a locationService
+	 * Count the Location items
+	 *
+	 * @return the number of Location items
+	 */
+	public int count();
+	/**
+	 * Gets a list of all HandlingUnits on a location
 	 * 
-	 * @param location the given locationService
+	 * @param location the given location
 	 * 
 	 * @return a list of HandlingUnits
 	 */
@@ -70,7 +76,7 @@ public interface LocationService {
 	/**
 	 * Get a list of all Location items containing the given HandlingUnit
 	 * 
-	 * @param handlingUnit the handlingUnitService to search for
+	 * @param handlingUnit the handlingUnit to search for
 	 * 
 	 * @return the Location list
 	 */
@@ -78,8 +84,8 @@ public interface LocationService {
 	/**
 	 * Get a list of all Location items containing the given HandlingUnit but not on exceptLocation
 	 * 
-	 * @param handlingUnit the handlingUnitService to search for
-	 * @param exceptLocation the locationService not to consider
+	 * @param handlingUnit the handlingUnit to search for
+	 * @param exceptLocation the location not to consider
 	 * 
 	 * @return the Location list
 	 */
