@@ -5,8 +5,10 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
@@ -112,6 +114,38 @@ public class LocationRestService {
 
     }
 
+    /**
+     * Create a Location with default values.
+     *
+     * @param key the access key of the Location
+     *
+     * @return the data of the created Location
+     */
+    @PUT
+    @Path("/Entry/{key}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response create(@PathParam("key") String key) {
+    	Location location = locationService.createOrUpdate(new Location(key));
+    	
+    	return Response.ok().entity(location).build();
+    }
+    
+    /**
+     * Delete a Location by its key.
+     *
+     * @param key the key of the location to delete
+     *
+     * @return the data of the removed Location
+     */
+    @DELETE
+    @Path("/Entry/{key}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response delete(@PathParam("key") String key) {
+        locationService.delete(key);
+
+        return Response.ok().build();
+    }
+
 	/**
      * Count the number of Locations.
      *
@@ -137,12 +171,12 @@ public class LocationRestService {
     public Response ping() {
     	return Response.ok("Pong").build();
     }
+    
     /**
      * Give a list of all supported service operations.
      *
      * @return a list of service operations
      */
-
     @OPTIONS
     @Path("/Options")
     @Produces({MediaType.TEXT_PLAIN})

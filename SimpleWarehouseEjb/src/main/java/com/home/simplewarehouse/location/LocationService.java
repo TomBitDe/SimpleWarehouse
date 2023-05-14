@@ -28,6 +28,12 @@ public interface LocationService {
 	 */
 	public void delete(final Location location);
 	/**
+	 * Delete a Location by its id and remove
+	 * 
+	 * @param id of the Location
+	 */
+	public void delete(final String id);
+	/**
 	 * Get a Location by its id
 	 * 
 	 * @param id the id

@@ -119,6 +119,33 @@ public class LocationBean implements LocationService {
 	}
 
 	@Override
+	public void delete(final String id) {
+		LOG.trace("--> delete({})", id);
+
+		Location location = getById(id);
+		
+		if (location != null) {
+			for (HandlingUnit handlingUnit : location.getHandlingUnits()) {
+				handlingUnit.setLocation(null);
+				handlingUnit.setLocaPos(null);		
+				em.flush();
+			}
+			
+			// No need to    em.remove(locationStatusService)  because it is done by  cascade = CascadeType.ALL
+			// Same for      dimensionService
+			em.remove(location);
+			em.flush();
+
+			LOG.debug("deleted: {}", location);
+		} 
+		else {
+			LOG.debug("Location == null");
+		}
+
+		LOG.trace("<-- delete()");
+	}
+
+	@Override
 	public Location getById(final String id) {
 		LOG.trace("--> getById({})", id);
 
@@ -508,7 +535,7 @@ public class LocationBean implements LocationService {
 
 	@Override
 	public int count() {
-		final TypedQuery<Number> query = (TypedQuery<Number>) em.createQuery("SELECT COUNT(l) FROM Location l", Number.class);
+		final TypedQuery<Number> query = em.createQuery("SELECT COUNT(l) FROM Location l", Number.class);
 
 		return query.getSingleResult().intValue();
 	}
