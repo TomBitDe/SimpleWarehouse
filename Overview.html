@@ -5,7 +5,36 @@
 <title>Simple Warehouse</title>
 </head>
 <body>
-This document is the API specification for the Simple Warehouse Application.
-
+This document is the API specification for the Simple Warehouse Application.<br>
+<p>
+Some general information.<br>
+<h2>ConfigCache</h2>
+ConfigCache is refreshed every 3 seconds. See ConfigCacheBean.<br>
+ConfigCache has NO entries at startup.<br>
+<p>
+<h2>TimerJpaSessions</h2>
+Processing of TimerJpaSessionBean1 and TimerJpaSessionBean2 is controlled via ConfigCache:<br>
+<br>
+-Timer1 UP means processing will be done<br>
+-Timer1 DOWN means processing stopped<br>
+-Timer2 UP means processing will be done<br>
+-Timer2 DOWN means processing stopped<br>
+<p>
+Startup state for both timer controlled beans is NO processing.<br>
+<p>
+curl -X PUT -i http://localhost:8080/war/resources/ApplConfigRestService/Entry/Timer1/UP<br>
+curl -X POST -i http://localhost:8080/war/resources/ApplConfigRestService/Entry/Timer1/DOWN<br>
+<br>
+curl -X PUT -i http://localhost:8080/war/resources/ApplConfigRestService/Entry/Timer2/UP<br>
+curl -X POST -i http://localhost:8080/war/resources/ApplConfigRestService/Entry/Timer2/DOWN<br>
+<p>
+<h2>Sample data</h2>
+Handle Simple Warehouse sample data (Locations and Handling Units)<br>
+<br>
+Initialize:<br>
+curl -X PUT -i http://localhost:8080/war/resources/TopologyRestService/SampleData<br>
+<br>
+Cleanup:<br>
+curl -X DELETE -i http://localhost:8080/war/resources/TopologyRestService/SampleData<br>
 </body>
 </html>
