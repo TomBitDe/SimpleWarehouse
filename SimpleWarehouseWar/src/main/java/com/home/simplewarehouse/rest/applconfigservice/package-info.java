@@ -6,7 +6,7 @@
  * <p>
  * Test with your browsers integrated RESTClient functionality. Firefox has a RESTClient add-on.<br>
  * <br>
- * - options (OPTIONS http://localhost:8080/war/resources/ApplConfigRestService)<br>
+ * - options (OPTIONS http://localhost:8080/war/resources/ApplConfigRestService/Options)<br>
  * - ping (GET http://localhost:8080/war/resources/ApplConfigRestService/Ping)<br>
  * - delete (DELETE http://localhost:8080/war/resources/ApplConfigRestService/Entry/aaa)<br>
  * - create (PUT http://localhost:8080/war/resources/ApplConfigRestService/Entry/aaa/Test1)<br>
