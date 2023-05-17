@@ -13,6 +13,7 @@ import javax.ejb.TimerService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.patterns.singleton.simplecache.ConfigCache;
 import com.home.simplewarehouse.timed.scenarios.DropPickRandomLocationLocal2;
 
 /**
@@ -29,6 +30,9 @@ public class TimerJpaSessionsBean2 {
 
 	@Resource
 	private TimerService timerService;
+	
+	@EJB
+	private ConfigCache configCache;
 
 	@EJB
 	private DropPickRandomLocationLocal2 dropPickRandomLocation2;
@@ -60,8 +64,11 @@ public class TimerJpaSessionsBean2 {
 
 		this.setLastAutomaticTimeout(new Date());
 		
-		// Add the session beans here
-		dropPickRandomLocation2.processScenario();
+		// Only when configuration for key Timer2 is UP
+		if (configCache.getData("Timer2", "DOWN").equals("UP")) {
+			// Add the session beans here
+			dropPickRandomLocation2.processScenario();
+		}
 		
 		LOG.trace("<-- automaticTimeout()");
 	}
