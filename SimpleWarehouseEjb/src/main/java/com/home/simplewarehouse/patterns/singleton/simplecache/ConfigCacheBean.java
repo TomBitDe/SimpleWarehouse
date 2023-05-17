@@ -55,7 +55,7 @@ public class ConfigCacheBean implements ConfigCache {
 	/**
 	 * Populate the cache data for the application timer controlled
 	 */
-	@Schedule(minute = "*/2", hour = "*", persistent = false)
+	@Schedule(hour="*", minute="*", second="*/3", persistent = false)
 	@PostConstruct
 	private void populateCache() {
 		LOG.trace("--> populateCache");
