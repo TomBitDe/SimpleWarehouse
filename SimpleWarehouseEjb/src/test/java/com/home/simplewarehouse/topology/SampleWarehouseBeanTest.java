@@ -57,7 +57,7 @@ public class SampleWarehouseBeanTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						SampleWarehouseLocal.class, SampleWarehouseBean.class,
+						SampleWarehouseService.class, SampleWarehouseBean.class,
 						DimensionService.class, DimensionBean.class,
 						LocationStatusService.class, LocationStatusBean.class,
 						LocationService.class, LocationBean.class,
@@ -74,7 +74,7 @@ public class SampleWarehouseBeanTest {
 	}
 	
 	@EJB
-	private SampleWarehouseLocal sampleWarehouseLocal;
+	private SampleWarehouseService sampleWarehouseService;
 	
 	@EJB
 	private LocationService locationService;
@@ -124,7 +124,7 @@ public class SampleWarehouseBeanTest {
 	public void initializeTest() {
 		LOG.info("--- Test initializeTest");
 		
-		sampleWarehouseLocal.initialize();
+		sampleWarehouseService.initialize();
 		
 		assertNotNull(locationService.getAll());
 		assertFalse(locationService.getAll().isEmpty());
@@ -155,7 +155,7 @@ public class SampleWarehouseBeanTest {
 	public void cleanupTest() {
 		LOG.info("--- Test cleanupTest");
 
-		sampleWarehouseLocal.cleanup();
+		sampleWarehouseService.cleanup();
 		
 		assertNotNull(locationService.getAll());
 		assertTrue(locationService.getAll().isEmpty());
@@ -178,7 +178,7 @@ public class SampleWarehouseBeanTest {
 	public void secondInitializeTest() {
 		LOG.info("--- Test secondInitializeTest");
 		
-		sampleWarehouseLocal.initialize();
+		sampleWarehouseService.initialize();
 		
 		assertNotNull(locationService.getAll());
 		assertFalse(locationService.getAll().isEmpty());
@@ -209,7 +209,7 @@ public class SampleWarehouseBeanTest {
 	public void secondCleanupTest() {
 		LOG.info("--- Test secondCleanupTest");
 
-		sampleWarehouseLocal.cleanup();
+		sampleWarehouseService.cleanup();
 		
 		assertNotNull(locationService.getAll());
 		assertTrue(locationService.getAll().isEmpty());

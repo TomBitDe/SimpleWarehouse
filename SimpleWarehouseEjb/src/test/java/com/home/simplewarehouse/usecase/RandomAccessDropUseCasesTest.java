@@ -39,7 +39,7 @@ import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.topology.SampleWarehouseBean;
-import com.home.simplewarehouse.topology.SampleWarehouseLocal;
+import com.home.simplewarehouse.topology.SampleWarehouseService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -51,7 +51,7 @@ public class RandomAccessDropUseCasesTest {
 	private static final Logger LOG = LogManager.getLogger(RandomAccessDropUseCasesTest.class);
 
 	@EJB
-	private SampleWarehouseLocal sampleWarehouseLocal;
+	private SampleWarehouseService sampleWarehouseService;
 	
 	@EJB
 	private LocationStatusService locationStatusService;
@@ -81,7 +81,7 @@ public class RandomAccessDropUseCasesTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						SampleWarehouseLocal.class, SampleWarehouseBean.class,
+						SampleWarehouseService.class, SampleWarehouseBean.class,
 						DimensionService.class, DimensionBean.class,
 						LocationStatusService.class, LocationStatusBean.class,
 						LocationService.class, LocationBean.class,
@@ -133,7 +133,7 @@ public class RandomAccessDropUseCasesTest {
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
 		
-		sampleWarehouseLocal.initialize();
+		sampleWarehouseService.initialize();
 				
 		// Have locations and units ?
 		assertFalse(unitLocal.getAll().isEmpty());
@@ -151,7 +151,7 @@ public class RandomAccessDropUseCasesTest {
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
 		
-		sampleWarehouseLocal.cleanup();
+		sampleWarehouseService.cleanup();
 
 		LOG.trace("<-- afterTest()");
 	}

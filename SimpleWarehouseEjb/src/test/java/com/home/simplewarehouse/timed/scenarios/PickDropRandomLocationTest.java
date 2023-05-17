@@ -24,7 +24,7 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.topology.SampleWarehouseBean;
-import com.home.simplewarehouse.topology.SampleWarehouseLocal;
+import com.home.simplewarehouse.topology.SampleWarehouseService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -36,7 +36,7 @@ public class PickDropRandomLocationTest {
 	private static final Logger LOG = LogManager.getLogger(PickDropRandomLocationTest.class);
 	
 	@EJB
-	SampleWarehouseLocal sampleWarehouseLocal;
+	SampleWarehouseService sampleWarehouseService;
 	
 	@EJB
 	DropPickRandomLocationLocal1 dropPickRandomLocationLocal1;
@@ -64,7 +64,7 @@ public class PickDropRandomLocationTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						SampleWarehouseLocal.class, SampleWarehouseBean.class,
+						SampleWarehouseService.class, SampleWarehouseBean.class,
 						DropPickRandomLocationLocal1.class, DropPickRandomLocationBean1.class,
 						DropPickRandomLocationLocal2.class, DropPickRandomLocationBean2.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
@@ -95,7 +95,7 @@ public class PickDropRandomLocationTest {
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
 		
-		sampleWarehouseLocal.initialize();
+		sampleWarehouseService.initialize();
 		
 		LOG.trace("<-- beforeTest()");		
 	}
@@ -107,7 +107,7 @@ public class PickDropRandomLocationTest {
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
 		
-		sampleWarehouseLocal.cleanup();
+		sampleWarehouseService.cleanup();
 
 		LOG.trace("<-- afterTest()");		
 	}

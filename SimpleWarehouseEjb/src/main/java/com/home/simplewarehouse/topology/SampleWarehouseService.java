@@ -3,7 +3,7 @@ package com.home.simplewarehouse.topology;
 /**
  * Local interface for Sample Warehouse usage.
  */
-public interface SampleWarehouseLocal {
+public interface SampleWarehouseService {
 	/**
 	 * Number of HandlingUnits to create
 	 */

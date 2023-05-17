@@ -24,6 +24,22 @@ curl -X GET -i http://localhost:8080/war/resources/LocationRestService/Exists/B
 echo=
 echo ----------------------------------------------------------------------
 
+curl -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/C
+echo=
+echo ----------------------------------------------------------------------
+
+curl -X GET -i http://localhost:8080/war/resources/LocationRestService/Exists/C
+echo=
+echo ----------------------------------------------------------------------
+
+curl -X DELETE -i http://localhost:8080/war/resources/LocationRestService/Entry/C
+echo=
+echo ----------------------------------------------------------------------
+
+curl -X GET -i http://localhost:8080/war/resources/LocationRestService/Exists/C
+echo=
+echo ----------------------------------------------------------------------
+
 curl -X GET -i http://localhost:8080/war/resources/LocationRestService/Count
 echo=
 echo ----------------------------------------------------------------------

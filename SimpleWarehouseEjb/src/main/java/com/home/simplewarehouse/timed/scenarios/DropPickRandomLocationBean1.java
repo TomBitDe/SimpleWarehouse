@@ -15,7 +15,7 @@ import com.home.simplewarehouse.location.DimensionException;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.topology.SampleWarehouseLocal;
+import com.home.simplewarehouse.topology.SampleWarehouseService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
@@ -29,7 +29,7 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 	private static final Logger LOG = LogManager.getLogger(DropPickRandomLocationBean1.class);
 	
 	@EJB
-	private SampleWarehouseLocal sampleWarehouseLocal;
+	private SampleWarehouseService sampleWarehouseService;
 	
 	@EJB
 	private LocationService locationService;
