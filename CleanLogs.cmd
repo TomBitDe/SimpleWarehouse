@@ -18,5 +18,6 @@ echo PAYARA_HOME is NOT defined
 dir .\logs
 echo=
 del .\logs\*.log*
+del .\logs\*.xml
 echo=
 dir .\logs
