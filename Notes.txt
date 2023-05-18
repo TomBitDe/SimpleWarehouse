@@ -1,2 +1,4 @@
+set JAVA_HOME=C:\Program Files\OpenJDK\jdk-8.0.342.07-hotspot
+
 mvn -B test --file pom.xml
 mvn -B test --file pom.xml 1>errlist 2>&1
