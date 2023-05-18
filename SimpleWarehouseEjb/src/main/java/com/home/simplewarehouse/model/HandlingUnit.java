@@ -23,6 +23,7 @@ import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +32,7 @@ import org.apache.logging.log4j.Logger;
  * Any kind of handling unit.
  */
 @XmlRootElement(name = "HandlingUnit")
-@XmlAccessorType(XmlAccessType.FIELD)
+@XmlAccessorType(XmlAccessType.PUBLIC_MEMBER)
 @Entity
 @Table(name="HANDLING_UNIT")
 @NamedQuery(name = "findAllHandlingUnits", query = "select h from HandlingUnit h", lockMode = NONE)
@@ -426,7 +427,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
      * Gets the HandlingUnits associated Location
      * 
      * @return the Location
-     */	
+     */
+	@XmlTransient
 	public Location getLocation() {
 		return location;
 	}
@@ -438,6 +440,29 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	 */
 	public void setLocation(Location location) {
 		this.location = location;
+	}
+	
+	/**
+	 * Only needed for JAXB
+	 * 
+	 * @param the Location id of this Handling Unit
+	 */
+	public void setLocationId(String locationId) {
+		// No code needed so far
+	}
+
+	/**
+	 * Only needed for JAXB
+	 * 
+	 * @return the Location ids of this Handling Unit
+	 */
+	public String getLocationId() {
+		if (this.location != null && this.location.getLocationId() != null) {
+			return this.location.getLocationId();
+		}
+		else {
+			return "";
+		}
 	}
 	
     /**
@@ -481,6 +506,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	 * 
 	 * @return the containing HandlingUnits
 	 */
+	@XmlTransient
 	public Set<HandlingUnit> getContains() {
 		return contains;
 	}
@@ -492,6 +518,30 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	 */
 	public void setContains(Set<HandlingUnit> contains) {
 		this.contains = contains;
+	}
+	
+	/**
+	 * Only needed for JAXB
+	 * 
+	 * @return the Set of containing Handling Unit ids
+	 */
+	public Set<String> getContainsId() {
+		Set<String> ret = new HashSet<>();
+		
+		Set<HandlingUnit> containsSet = this.getContains();
+		
+		containsSet.stream().forEach(elem -> ret.add(elem.getId()));
+		
+		return ret;
+	}
+	
+	/**
+	 * Only needed for JAXB
+	 * 
+	 * @param containsId the containing Handling Unit id
+	 */
+	public void setContainsId(Set<String> containsId) {
+		// No code needed so far
 	}
 
 	@Override

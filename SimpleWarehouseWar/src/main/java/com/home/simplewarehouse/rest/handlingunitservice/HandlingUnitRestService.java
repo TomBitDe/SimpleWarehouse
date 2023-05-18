@@ -2,12 +2,15 @@ package com.home.simplewarehouse.rest.handlingunitservice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
+import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
@@ -159,6 +162,145 @@ public class HandlingUnitRestService extends StandardServices {
         int val = handlingUnitService.count();
 
         return Response.ok().entity(String.valueOf(val)).build();
+    }
+    
+    /**
+     * Drop on a Location the given Handling Unit.
+     *
+     * @param locationId the id of the Location to drop on
+     * @param handlingUnitId the id of the Handling Unit to drop
+     * 
+     * @return in case of an exception the message
+     */
+    @POST
+    @Path("/Drop/{locationId}/{handlingUnitId}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response drop(@PathParam("locationId") String locationId, @PathParam("handlingUnitId") String handlingUnitId) {
+    	try {
+    	    handlingUnitService.dropTo(locationId, handlingUnitId);
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
+    	
+    	return Response.ok().build();
+    }
+    
+    /**
+     * Pick from a Location the given Handling Unit.
+     * 
+     * @param locationId the id of the Location to drop on
+     * @param handlingUnitId the id of the Handling Unit to drop
+     * 
+     * @return in case of an exception the message
+     */
+    @POST
+    @Path("/Pick/{locationId}/{handlingUnitId}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response pick(@PathParam("locationId") String locationId, @PathParam("handlingUnitId") String handlingUnitId) {
+    	try {
+    	    handlingUnitService.pickFrom(locationId, handlingUnitId);
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
+    	
+    	return Response.ok().build();
+    }
+    
+    /**
+     * Pick from a FIFO / LIFO Location.
+     * 
+     * @param locationId the id of the Location to drop on
+     * @param handlingUnitId the id of the Handling Unit to drop
+     * 
+     * @return the handlingUnit or in case of an exception the message
+     */
+    @POST
+    @Path("/Pick/{locationId}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response pick(@PathParam("locationId") String locationId) {
+    	HandlingUnit handlingUnit = null;
+    	
+    	try {
+            handlingUnit = handlingUnitService.pickFrom(locationId);
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
+
+        return Response.ok().entity(handlingUnit).build();
+    }
+    
+	/**
+	 * Assign a HandlingUnit to this base HandlingUnit
+	 * 
+	 * @param handlingUnitId the HandlingUnit to assign
+	 * @param baseId the base HandlingUnit
+	 * 
+	 * @return the base HandlingUnit
+	 */
+    @POST
+    @Path("/Assign/{handlingUnitId}/{baseId}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response assign(@PathParam("handlingUnitId") String handlingUnitId, @PathParam("baseId") String baseId) {
+    	HandlingUnit base = handlingUnitService.assign(handlingUnitId, baseId);
+    	
+    	return Response.ok().entity(base).build();
+    }
+
+	/**
+	 * Remove a HandlingUnit from this base HandlingUnit
+	 * 
+	 * @param handlingUnitId the HandlingUnit to remove
+	 * @param baseId the base HandlingUnit
+	 * 
+	 * @return the base HandlingUnit
+	 */
+    @POST
+    @Path("/Remove/{handlingUnitId}/{baseId}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response remove(@PathParam("handlingUnitId") String handlingUnitId, @PathParam("baseId") String baseId) {
+    	HandlingUnit base = handlingUnitService.remove(handlingUnitId, baseId);
+    	
+    	return Response.ok().entity(base).build();
+    }
+
+	/**
+	 * Move a HandlingUnit to another destination HandlingUnit
+	 * 
+	 * @param handlingUnitId the HandlingUnit to move
+	 * @param destHandlingUnitId the destination HandlingUnit
+	 * 
+	 * @return the moved HandlingUnit
+	 */
+    @POST
+    @Path("/Move/{handlingUnitId}/{destHandlingUnitId}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response move(@PathParam("handlingUnitId") String handlingUnitId, @PathParam("destHandlingUnitId") String destHandlingUnitId) {
+    	HandlingUnit moved = handlingUnitService.move(handlingUnitId, destHandlingUnitId);
+    	
+    	return Response.ok().entity(moved).build();
+    }
+
+	/**
+	 * Remove all HandlingUnits from this base HandlingUnit
+	 * 
+	 * @param baseId the base HandlingUnit id
+	 * 
+	 * @return a Set of all removed HandlingUnits (can be an empty Set)
+	 */
+    @POST
+    @Path("/Free/{baseId}")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response free(@PathParam("baseId") String baseId) {
+    	Set<HandlingUnit> removed = handlingUnitService.free(baseId);
+    	
+        GenericEntity<Set<HandlingUnit>> content
+                = new GenericEntity<Set<HandlingUnit>>(new HashSet<>(removed)) {
+        };
+
+        return Response.ok(content).build();
     }
 
     /**

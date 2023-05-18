@@ -168,10 +168,14 @@ public class HandlingUnitBean implements HandlingUnitService {
 	
 	@Override
 	public void pickFrom(final Location location, final HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
-		LOG.trace("--> pickFrom()");
+		LOG.trace("--> pickFrom({}, {})", location, handlingUnit);
 
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
+		}
+		
+		if (handlingUnit == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
 		}
 		
 		Location lo = locationService.getById(location.getLocationId());
@@ -180,10 +184,6 @@ public class HandlingUnitBean implements HandlingUnitService {
 		}
 		else {
 			lo = em.merge(location);
-		}
-		
-		if (handlingUnit == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
 		}
 		
 		HandlingUnit hu = getById(handlingUnit.getId());
@@ -243,8 +243,17 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
+	public void pickFrom(final String locationId, final String handlingUnitId) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
+		LOG.trace("--> pickFrom({}, {})", locationId, handlingUnitId);
+		
+		pickFrom(locationService.getById(locationId), getById(handlingUnitId));
+
+		LOG.trace("<-- pickFrom()");
+	}
+	
+	@Override
 	public HandlingUnit pickFrom(final Location location) throws LocationIsEmptyException {
-		LOG.trace("--> pickFrom()");
+		LOG.trace("--> pickFrom({})", location);
 
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
@@ -277,17 +286,30 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
+	public HandlingUnit pickFrom(final String locationId) throws LocationIsEmptyException {
+		LOG.trace("--> pickFrom({})", locationId);
+				
+		LOG.trace("<-- pickFrom()");
+		
+		return pickFrom(locationId);
+	}
+	
+	@Override
 	public void dropTo(final Location location, final HandlingUnit handlingUnit)
 			throws CapacityExceededException, WeightExceededException, OverheightException
 			, OverlengthException, OverwidthException
 	{
-		LOG.trace("--> dropTo()");
+		LOG.trace("--> dropTo({}, {})", location, handlingUnit);
 
 		if (handlingUnit == null) {
 			LOG.warn("HandlingUnit is null; this is valid but nothing will happen!");
 			return;
 		}
 				
+		if (location == null) {
+			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
+		}
+		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
 			hu = createOrUpdate(handlingUnit);
@@ -296,10 +318,6 @@ public class HandlingUnitBean implements HandlingUnitService {
 			hu = em.merge(handlingUnit);
 		}
 
-		if (location == null) {
-			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
-		}
-		
 		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
 			lo = locationService.createOrUpdate(location);
@@ -333,6 +351,18 @@ public class HandlingUnitBean implements HandlingUnitService {
 		em.flush();
 	}
 
+	@Override
+	public void dropTo(final String locationId, final String handlingUnitId)
+			throws CapacityExceededException, WeightExceededException, OverheightException
+			, OverlengthException, OverwidthException
+	{
+		LOG.trace("--> dropTo({}, {})", locationId, handlingUnitId);
+		
+		dropTo(locationService.getById(locationId), getById(handlingUnitId));
+		
+		LOG.trace("<-- dropTo()");
+	}
+	
 	@Override
 	public HandlingUnit assign(final HandlingUnit handlingUnit, final HandlingUnit base) {
 		LOG.trace("--> assign() hu={} base={}", handlingUnit, base);
@@ -375,6 +405,17 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
+	public HandlingUnit assign(final String handlingUnitId, final String baseId) {
+		LOG.trace("--> assign() hu={} base={}", handlingUnitId, baseId);
+		
+		HandlingUnit base = assign(getById(handlingUnitId), getById(baseId));
+		
+		LOG.trace("<-- assign() {}", base);
+		
+		return base;
+	}
+	
+	@Override
 	public HandlingUnit remove(final HandlingUnit handlingUnit, final HandlingUnit base) {
 		LOG.trace("--> remove() hu={} base={}", handlingUnit, base);
 		
@@ -413,6 +454,17 @@ public class HandlingUnitBean implements HandlingUnitService {
 		em.flush();
 		
 		return ba;
+	}
+	
+	@Override
+	public HandlingUnit remove(final String handlingUnitId, final String baseId) {
+		LOG.trace("--> remove() hu={} base={}", handlingUnitId, baseId);
+		
+		HandlingUnit base = remove(getById(handlingUnitId), getById(baseId));
+		
+		LOG.trace("<-- remove() {}", base);
+		
+		return base;
 	}
 	
 	@Override
@@ -459,6 +511,17 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
+	public HandlingUnit move(final String handlingUnitId, final String baseId) {
+		LOG.trace("--> move() hu={} base={}", handlingUnitId, baseId);
+		
+		HandlingUnit hu = move(getById(handlingUnitId), getById(baseId));
+		
+		LOG.trace("<-- move() {}", hu);
+		
+		return hu;
+	}
+	
+	@Override
 	public Set<HandlingUnit> free(final HandlingUnit base) {
 		LOG.trace("--> free() base={}", base);
 		
@@ -503,6 +566,17 @@ public class HandlingUnitBean implements HandlingUnitService {
 		return ret;
 	}
 
+	@Override
+	public Set<HandlingUnit> free(final String baseId) {
+		LOG.trace("--> free() base={}", baseId);
+		
+		Set<HandlingUnit> huSet = free(getById(baseId));
+		
+		LOG.trace("<-- free() {}", huSet);
+		
+		return huSet;
+	}
+	
 	@Override
 	public Set<HandlingUnit> flatContains(HandlingUnit base) {
 		final Set<HandlingUnit> onBase = new HashSet<>(base.getContains());

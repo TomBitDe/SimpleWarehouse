@@ -54,6 +54,16 @@ public interface HandlingUnitService {
 	 */
 	public void pickFrom(final Location location, final HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException;
 	/**
+	 * Pick from a Location the given HandlingUnit
+	 * 
+	 * @param locationId the Location id to pick from
+	 * @param handlingUnitId the HandlingUnit id
+	 * 
+	 * @throws LocationIsEmptyException in case the Location is empty
+	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
+	 */
+	public void pickFrom(final String locationId, final String handlingUnitId) throws LocationIsEmptyException, HandlingUnitNotOnLocationException;
+	/**
 	 * Pick from a FIFO / LIFO Location<br>
 	 * Because of FIFO / LIFO the HandlingUnit is not a parameter.
 	 * The HandlingUnit returned depends on the access limitation.
@@ -64,6 +74,17 @@ public interface HandlingUnitService {
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 */
 	public HandlingUnit pickFrom(final Location location) throws LocationIsEmptyException;
+	/**
+	 * Pick from a FIFO / LIFO Location<br>
+	 * Because of FIFO / LIFO the HandlingUnit is not a parameter.
+	 * The HandlingUnit returned depends on the access limitation.
+	 * 
+	 * @param locationId the Location id to pick from
+	 * @return the HandlingUnit after pick 
+	 * 
+	 * @throws LocationIsEmptyException in case the Location is empty
+	 */
+	public HandlingUnit pickFrom(final String locationId) throws LocationIsEmptyException;
 	/**
 	 * Drop a HandlingUnit on a Location
 	 * 
@@ -77,6 +98,21 @@ public interface HandlingUnitService {
 	 * @throws OverwidthException in case the HandlingUnit does not fit in the Location by this drop
 	 */
 	public void dropTo(final Location location, final HandlingUnit handlingUnit) 
+			throws CapacityExceededException, WeightExceededException, OverheightException
+			, OverlengthException, OverwidthException;
+	/**
+	 * Drop a HandlingUnit on a Location
+	 * 
+	 * @param locationId the given Location id
+	 * @param handlingUnitId the HandlingUnit id
+	 * 
+	 * @throws CapacityExceededException in case the Location capacity will exceed by this drop
+	 * @throws WeightExceededException in case the Location weight will exceed by this drop
+	 * @throws OverheightException in case the HandlingUnit does not fit in the Location by this drop
+	 * @throws OverlengthException in case the HandlingUnit does not fit in the Location by this drop
+	 * @throws OverwidthException in case the HandlingUnit does not fit in the Location by this drop
+	 */
+	public void dropTo(final String locationId, final String handlingUnitId) 
 			throws CapacityExceededException, WeightExceededException, OverheightException
 			, OverlengthException, OverwidthException;
 	/**
@@ -101,7 +137,7 @@ public interface HandlingUnitService {
 	 */
 	public int count();
 	/**
-	 * Remove a HandlingUnit to this base HandlingUnit
+	 * Assign a HandlingUnit to this base HandlingUnit
 	 * 
 	 * @param handlingUnit the HandlingUnit to assign
 	 * @param base the base HandlingUnit
@@ -109,6 +145,15 @@ public interface HandlingUnitService {
 	 * @return the base HandlingUnit
 	 */
 	public HandlingUnit assign(final HandlingUnit handlingUnit, final HandlingUnit base);
+	/**
+	 * Assign a HandlingUnit to this base HandlingUnit
+	 * 
+	 * @param handlingUnitId the HandlingUnit to assign
+	 * @param baseId the base HandlingUnit
+	 * 
+	 * @return the base HandlingUnit
+	 */
+	public HandlingUnit assign(final String handlingUnitId, final String baseId);
 	/**
 	 * Remove a HandlingUnit from this base HandlingUnit
 	 * 
@@ -119,6 +164,15 @@ public interface HandlingUnitService {
 	 */
 	public HandlingUnit remove(final HandlingUnit handlingUnit, final HandlingUnit base);
 	/**
+	 * Remove a HandlingUnit from this base HandlingUnit
+	 * 
+	 * @param handlingUnitId the HandlingUnit to remove
+	 * @param baseId the base HandlingUnit
+	 * 
+	 * @return the base HandlingUnit
+	 */
+	public HandlingUnit remove(final String handlingUnitId, final String baseId);
+	/**
 	 * Move a HandlingUnit to another destination HandlingUnit
 	 * 
 	 * @param handlingUnit the HandlingUnit to move
@@ -128,6 +182,15 @@ public interface HandlingUnitService {
 	 */
 	public HandlingUnit move(final HandlingUnit handlingUnit, final HandlingUnit destHandlingUnit);
 	/**
+	 * Move a HandlingUnit to another destination HandlingUnit
+	 * 
+	 * @param handlingUnitId the HandlingUnit to move
+	 * @param destHandlingUnitId the destination HandlingUnit
+	 * 
+	 * @return the moved HandlingUnit
+	 */
+	public HandlingUnit move(final String handlingUnitId, final String destHandlingUnitId);
+	/**
 	 * Remove all HandlingUnits from this base HandlingUnit
 	 * 
 	 * @param base the base HandlingUnit
@@ -135,6 +198,14 @@ public interface HandlingUnitService {
 	 * @return a Set of all removed HandlingUnits (can be an empty Set)
 	 */
 	public Set<HandlingUnit> free(final HandlingUnit base);
+	/**
+	 * Remove all HandlingUnits from this base HandlingUnit
+	 * 
+	 * @param baseId the base HandlingUnit id
+	 * 
+	 * @return a Set of all removed HandlingUnits (can be an empty Set)
+	 */
+	public Set<HandlingUnit> free(final String baseId);
 	/**
 	 * Return a Set of HandlingUnits places on base from a flat point of view
 	 * 

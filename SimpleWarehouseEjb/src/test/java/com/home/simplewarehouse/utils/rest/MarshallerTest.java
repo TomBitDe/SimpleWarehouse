@@ -1,17 +1,23 @@
 package com.home.simplewarehouse.utils.rest;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.List;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
+import javax.ejb.EJB;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.Marshaller;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.jboss.arquillian.container.test.api.Deployment;
+import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.arquillian.junit.InSequence;
+import org.jboss.shrinkwrap.api.ShrinkWrap;
+import org.jboss.shrinkwrap.api.asset.EmptyAsset;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Assert;
@@ -19,22 +25,66 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.JUnit4;
 
+import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.location.DimensionBean;
+import com.home.simplewarehouse.location.DimensionService;
+import com.home.simplewarehouse.location.LocationBean;
+import com.home.simplewarehouse.location.LocationService;
+import com.home.simplewarehouse.location.LocationStatusBean;
+import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.FifoLocation;
-import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
-@RunWith(JUnit4.class)
+@RunWith(Arquillian.class)
 public class MarshallerTest {
 	private static final Logger LOG = LogManager.getLogger(MarshallerTest.class);
+	
+	private static final String REPORT_FILE_PATH = "../logs/marshaller.xml";
 
-	private static File file = new File("../logs/marshaller.xml");
+	/**
+	 * Configure the deployment.<br>
+	 * Add all needed EJB interfaces and beans for the test.
+	 * 
+	 * @return the archive
+	 */
+	@Deployment
+	public static JavaArchive createTestArchive() {
+		LOG.trace("--> createTestArchive()");
+		JavaArchive archive = ShrinkWrap.create(JavaArchive.class, "test.jar")
+				/* Put the test-*.xml in JARs META-INF folder as *.xml */
+				.addAsManifestResource(new File("src/test/resources/META-INF/test-persistence.xml"), "persistence.xml")
+				.addAsManifestResource(new File("src/test/resources/META-INF/test-ejb-jar.xml"), "ejb-jar.xml")
+				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
+				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
+				.addClasses(
+						DimensionService.class, DimensionBean.class,
+						LocationStatusService.class, LocationStatusBean.class,
+						LocationService.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
+						PerformanceAuditor.class,
+						MonitoringResource.class
+						);
+
+		LOG.debug(archive.toString(true));
+
+		LOG.trace("<-- createTestArchive()");
+		return archive;
+	}
+	
+	@EJB
+	HandlingUnitService handlingUnitService;
+	
+	private static FileOutputStream fos;
 	
 	/**
 	 * Mandatory default constructor
@@ -51,8 +101,17 @@ public class MarshallerTest {
     public static void setUp() {
 		LOG.trace("--> setUp()");
 		
-		file.delete();
-		
+		// Delete old report
+		new File(REPORT_FILE_PATH).delete();
+
+		try {
+			// Append data to report
+			fos = new FileOutputStream(REPORT_FILE_PATH, true);
+		}
+		catch (Exception e) {
+			LOG.fatal(e.getMessage());		
+		}
+				
 		LOG.trace("<-- setUp()");		
     }
 
@@ -63,6 +122,12 @@ public class MarshallerTest {
     public static void tearDown() {
 		LOG.trace("--> tearDown()");
 		
+		try {
+			fos.close();
+		}
+		catch (Exception e) {
+			LOG.fatal(e.getMessage());		
+		}
 		
 		LOG.trace("<-- tearDown()");		
     }
@@ -99,12 +164,20 @@ public class MarshallerTest {
 			JAXBContext jaxbContext = JAXBContext.newInstance(ApplConfig.class);
 			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
 
-			jaxbMarshaller.marshal(config, file);
+			jaxbMarshaller.marshal(config, fos);
 			jaxbMarshaller.marshal(config, System.out);
 		}
 		catch (Exception ex) {
 			LOG.fatal(ex.getMessage());
 			LOG.fatal(ex.toString());
+			try {
+				fos.flush();
+				fos.write(ex.toString().getBytes());
+				fos.flush();
+			}
+			catch (IOException e) {
+				LOG.fatal(e.getMessage());
+			}
 			
 			Assert.fail("Exception not expected");
         }
@@ -120,12 +193,20 @@ public class MarshallerTest {
 			JAXBContext jaxbContext = JAXBContext.newInstance(EntityBase.class);
 			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
 
-			jaxbMarshaller.marshal(entityBase, file);
+			jaxbMarshaller.marshal(entityBase, fos);
 			jaxbMarshaller.marshal(entityBase, System.out);
 		}
 		catch (Exception ex) {
 			LOG.fatal(ex.getMessage());
 			LOG.fatal(ex.toString());
+			try {
+				fos.flush();
+				fos.write(ex.toString().getBytes());
+				fos.flush();
+			}
+			catch (IOException e) {
+				LOG.fatal(e.getMessage());
+			}
 			
 			Assert.fail("Exception not expected");
         }
@@ -140,12 +221,20 @@ public class MarshallerTest {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Dimension.class);
 			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
 
-			jaxbMarshaller.marshal(dimension, file);
+			jaxbMarshaller.marshal(dimension, fos);
 			jaxbMarshaller.marshal(dimension, System.out);
 		}
 		catch (Exception ex) {
 			LOG.fatal(ex.getMessage());
 			LOG.fatal(ex.toString());
+			try {
+				fos.flush();
+				fos.write(ex.toString().getBytes());
+				fos.flush();
+			}
+			catch (IOException e) {
+				LOG.fatal(e.getMessage());
+			}
 			
 			Assert.fail("Exception not expected");
         }
@@ -160,12 +249,20 @@ public class MarshallerTest {
 			JAXBContext jaxbContext = JAXBContext.newInstance(LocationStatus.class);
 			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
 
-			jaxbMarshaller.marshal(locationStatus, file);
+			jaxbMarshaller.marshal(locationStatus, fos);
 			jaxbMarshaller.marshal(locationStatus, System.out);
 		}
 		catch (Exception ex) {
 			LOG.fatal(ex.getMessage());
 			LOG.fatal(ex.toString());
+			try {
+				fos.flush();
+				fos.write(ex.toString().getBytes());
+				fos.flush();
+			}
+			catch (IOException e) {
+				LOG.fatal(e.getMessage());
+			}
 			
 			Assert.fail("Exception not expected");
         }
@@ -185,12 +282,20 @@ public class MarshallerTest {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Location.class);
 			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
 
-			jaxbMarshaller.marshal(location, file);
+			jaxbMarshaller.marshal(location, fos);
 			jaxbMarshaller.marshal(location, System.out);
 		}
 		catch (Exception ex) {
 			LOG.fatal(ex.getMessage());
 			LOG.fatal(ex.toString());
+			try {
+				fos.flush();
+				fos.write(ex.toString().getBytes());
+				fos.flush();
+			}
+			catch (IOException e) {
+				LOG.fatal(e.getMessage());
+			}
 			
 			Assert.fail("Exception not expected");
         }
@@ -206,12 +311,20 @@ public class MarshallerTest {
 			JAXBContext jaxbContext = JAXBContext.newInstance(FifoLocation.class);
 			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
 
-			jaxbMarshaller.marshal(fifo, file);
+			jaxbMarshaller.marshal(fifo, fos);
 			jaxbMarshaller.marshal(fifo, System.out);
 		}
 		catch (Exception ex) {
 			LOG.fatal(ex.getMessage());
 			LOG.fatal(ex.toString());
+			try {
+				fos.flush();
+				fos.write(ex.toString().getBytes());
+				fos.flush();
+			}
+			catch (IOException e) {
+				LOG.fatal(e.getMessage());
+			}
 			
 			Assert.fail("Exception not expected");
         }
@@ -227,12 +340,20 @@ public class MarshallerTest {
 			JAXBContext jaxbContext = JAXBContext.newInstance(LifoLocation.class);
 			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
 
-			jaxbMarshaller.marshal(lifo, file);
+			jaxbMarshaller.marshal(lifo, fos);
 			jaxbMarshaller.marshal(lifo, System.out);
 		}
 		catch (Exception ex) {
 			LOG.fatal(ex.getMessage());
 			LOG.fatal(ex.toString());
+			try {
+				fos.flush();
+				fos.write(ex.toString().getBytes());
+				fos.flush();
+			}
+			catch (IOException e) {
+				LOG.fatal(e.getMessage());
+			}
 			
 			Assert.fail("Exception not expected");
         }
@@ -242,25 +363,36 @@ public class MarshallerTest {
 	@InSequence(21)
 	public void marshallHandlingUnit()
 	{
-		HandlingUnit handlingUnit = new HandlingUnit("HU_B");
-		handlingUnit.setBaseHU(new HandlingUnit("HU_A"));
-		handlingUnit.setLocation(new Location("LOC_2"));
-		Set<HandlingUnit> contains = new HashSet<>();
-		contains.add(new HandlingUnit("HU_C"));
-		contains.add(new HandlingUnit("HU_D"));
-		contains.add(new HandlingUnit("HU_E"));
-		handlingUnit.setContains(contains);
-        
 		try {
+			HandlingUnit base = handlingUnitService.createOrUpdate(new HandlingUnit("HU_A"));
+			base = handlingUnitService.assign(new HandlingUnit("HU_B"), base);
+			base = handlingUnitService.assign(new HandlingUnit("HU_C"), base);
+			base = handlingUnitService.assign(new HandlingUnit("HU_D"), base);
+			handlingUnitService.dropTo(new Location("LOC_1"), base);
+			
+			base = handlingUnitService.getById("HU_A");
+	        
 			JAXBContext jaxbContext = JAXBContext.newInstance(HandlingUnit.class);
 			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
 
-			jaxbMarshaller.marshal(handlingUnit, file);
-			jaxbMarshaller.marshal(handlingUnit, System.out);
+			jaxbMarshaller.marshal(base, fos);
+			jaxbMarshaller.marshal(base, System.out);
+			
+			jaxbMarshaller.marshal(handlingUnitService.getById("HU_B"), fos);
+			jaxbMarshaller.marshal(handlingUnitService.getById("HU_B"), System.out);
+			
 		}
 		catch (Exception ex) {
 			LOG.fatal(ex.getMessage());
 			LOG.fatal(ex.toString());
+			try {
+				fos.flush();
+				fos.write(ex.toString().getBytes());
+				fos.flush();
+			}
+			catch (IOException e) {
+				LOG.fatal(e.getMessage());
+			}
 			
 			Assert.fail("Exception not expected");
         }
@@ -269,6 +401,7 @@ public class MarshallerTest {
 	public static Marshaller defineMarshaller(JAXBContext jaxbContext) throws Exception {
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+		jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
 		
 		return jaxbMarshaller;
 	}

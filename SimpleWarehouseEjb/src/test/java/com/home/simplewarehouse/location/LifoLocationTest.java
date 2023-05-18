@@ -490,7 +490,7 @@ public class LifoLocationTest {
 		LOG.info("--- Test checkExceptionalCases");
 		
 		try {
-			handlingUnitService.pickFrom(null);
+			handlingUnitService.pickFrom((Location)null);
 
 			Assert.fail("Exception expected");
 		}
@@ -500,5 +500,17 @@ public class LifoLocationTest {
 		catch (EJBException ex) {
 			assertTrue(true);
 		}
-	}
+
+		try {
+			handlingUnitService.pickFrom((String)null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (LocationIsEmptyException lieex) {
+			Assert.fail("Not expected: " + lieex);
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
+}
 }
