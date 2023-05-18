@@ -171,6 +171,6 @@ public class LocationRestService extends StandardServices {
     @Produces({MediaType.TEXT_PLAIN})
     @Override
     public String getSupportedOperations() {
-        return "GET, DELETE, PUT, POST";
+        return "GET, DELETE, PUT";
     }
 }
