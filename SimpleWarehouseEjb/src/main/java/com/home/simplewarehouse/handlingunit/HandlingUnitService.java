@@ -30,6 +30,12 @@ public interface HandlingUnitService {
 	 */
 	public void delete(final HandlingUnit handlingUnit);
 	/**
+	 * Delete a HandlingUnit by its id and remove
+	 * 
+	 * @param id of the HandlingUnit
+	 */
+	public void delete(final String id);
+	/**
 	 * Get a HandlingUnit by its id
 	 * 
 	 * @param id the id
@@ -79,6 +85,21 @@ public interface HandlingUnitService {
 	 * @return the HandlingUnit list
 	 */
 	public List<HandlingUnit> getAll();
+	/**
+	 * Get a list of all HandlingUnit items
+	 * 
+     * @param offset the position to start fetching
+     * @param count  the number of fetches to do
+     *
+	 * @return the HandlingUnit list based on offset and count
+	 */
+	public List<HandlingUnit> getAll(int offset, int count);
+	/**
+	 * Count the HandlingUnit items
+	 *
+	 * @return the number of HandlingUnit items
+	 */
+	public int count();
 	/**
 	 * Remove a HandlingUnit to this base HandlingUnit
 	 * 

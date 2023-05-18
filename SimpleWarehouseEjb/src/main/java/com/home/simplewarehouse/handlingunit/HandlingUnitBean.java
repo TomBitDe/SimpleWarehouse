@@ -102,6 +102,22 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
+	public void delete(final String id) {
+		LOG.trace("--> delete({})", id);
+
+		HandlingUnit handlingUnit = getById(id);
+		
+		if (handlingUnit != null) {
+			delete(handlingUnit);
+		} 
+		else {
+			LOG.debug("HandlingUnit == null");
+		}
+
+		LOG.trace("<-- delete()");
+	}
+	
+	@Override
 	public HandlingUnit getById(final String id) {
 		LOG.trace("--> getById({})", id);
 		
@@ -126,6 +142,28 @@ public class HandlingUnitBean implements HandlingUnitService {
 		LOG.trace("<-- getAll()");
 
 		return handlingUnit;
+	}
+	
+	@Override
+	public List<HandlingUnit> getAll(int offset, int count) {
+		LOG.trace("--> getAll({}, {})", offset, count);
+
+        if (offset < 0) {
+            throw new IllegalArgumentException("offset < 0");
+        }
+        if (count < 1) {
+            throw new IllegalArgumentException("count < 1");
+        }
+
+        TypedQuery<HandlingUnit> query = em.createQuery("SELECT h FROM HandlingUnit h", HandlingUnit.class);
+        query.setFirstResult(offset);
+        query.setMaxResults(count);
+
+        List<HandlingUnit> locations = query.getResultList();
+
+		LOG.trace("<-- getAll({}, {})", offset, count);
+
+		return locations;
 	}
 	
 	@Override
@@ -478,6 +516,13 @@ public class HandlingUnitBean implements HandlingUnitService {
  		return onBase;
 	}
 	
+	@Override
+	public int count() {
+		final TypedQuery<Number> query = em.createQuery("SELECT COUNT(h) FROM HandlingUnit h", Number.class);
+
+		return query.getSingleResult().intValue();
+	}
+
 	@Override
 	public void logContains(final HandlingUnit base) {
 		LOG.info("BASE {} contains {}", base.getId(),
