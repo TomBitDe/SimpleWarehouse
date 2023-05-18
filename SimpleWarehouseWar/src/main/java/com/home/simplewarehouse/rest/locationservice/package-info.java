@@ -9,8 +9,10 @@
  * - ping (GET http://localhost:8080/war/resources/LocationRestService/Ping)<br>
  * - content (GET http://localhost:8080/war/resources/LocationRestService/Content)<br>
  * - content (GET http://localhost:8080/war/resources/LocationRestService/Content/3/5)<br>
- * - entry (GET http://localhost:8080/war/resources/LocationRestService/Entry/aaa)<br>
+ * - entry (PUT http://localhost:8080/war/resources/LocationRestService/Entry/aaa)<br>
+ * - read (GET http://localhost:8080/war/resources/LocationRestService/Entry/aaa)<br>
  * - exists (GET http://localhost:8080/war/resources/LocationRestService/Exists/aaa)<br>
+ * - delete (DELETE http://localhost:8080/war/resources/LocationRestService/Entry/aaa)<br>
  * - count (GET http://localhost:8080/war/resources/LocationRestService/Count)<br>
  */
 package com.home.simplewarehouse.rest.locationservice;
