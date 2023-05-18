@@ -125,18 +125,7 @@ public class LocationBean implements LocationService {
 		Location location = getById(id);
 		
 		if (location != null) {
-			for (HandlingUnit handlingUnit : location.getHandlingUnits()) {
-				handlingUnit.setLocation(null);
-				handlingUnit.setLocaPos(null);		
-				em.flush();
-			}
-			
-			// No need to    em.remove(locationStatusService)  because it is done by  cascade = CascadeType.ALL
-			// Same for      dimensionService
-			em.remove(location);
-			em.flush();
-
-			LOG.debug("deleted: {}", location);
+			delete(location);
 		} 
 		else {
 			LOG.debug("Location == null");
