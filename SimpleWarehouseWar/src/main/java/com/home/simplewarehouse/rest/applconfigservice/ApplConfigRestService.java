@@ -19,13 +19,14 @@ import javax.ws.rs.core.Response;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigService;
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
+import com.home.simplewarehouse.rest.standardservices.StandardServices;
 
 /**
  * RESTful Application configuration data service.
  */
 @Path("/ApplConfigRestService")
 @Stateless
-public class ApplConfigRestService {
+public class ApplConfigRestService extends StandardServices {
 	@EJB
 	ApplConfigService applConfigService;
 
@@ -210,18 +211,6 @@ public class ApplConfigRestService {
     }
 
     /**
-     * Just check if the REST service is available.
-     *
-     * @return the text "Pong"
-     */
-    @GET
-    @Path("/Ping")
-    @Produces({MediaType.TEXT_PLAIN})
-    public Response ping() {
-    	return Response.ok("Pong").build();
-    }
-
-    /**
      * Give a list of all supported service operations.
      *
      * @return a list of service operations
@@ -229,6 +218,7 @@ public class ApplConfigRestService {
     @OPTIONS
     @Path("/Options")
     @Produces({MediaType.TEXT_PLAIN})
+    @Override
     public String getSupportedOperations() {
         return "GET, DELETE, PUT, POST";
     }

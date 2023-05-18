@@ -3,7 +3,6 @@ package com.home.simplewarehouse.rest.topologyservice;
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
 import javax.ws.rs.OPTIONS;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
@@ -11,6 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.home.simplewarehouse.rest.standardservices.StandardServices;
 import com.home.simplewarehouse.topology.SampleWarehouseService;
 
 /**
@@ -18,7 +18,7 @@ import com.home.simplewarehouse.topology.SampleWarehouseService;
  */
 @Path("/TopologyRestService")
 @Stateless
-public class TopologyRestService {
+public class TopologyRestService extends StandardServices {
 	@EJB
 	SampleWarehouseService sampleWarehouseService;
 	
@@ -53,18 +53,6 @@ public class TopologyRestService {
     	return Response.ok().build();
     }
 
-    /**
-     * Just check if the REST service is available.
-     *
-     * @return the text "Pong"
-     */
-    @GET
-    @Path("/Ping")
-    @Produces({MediaType.TEXT_PLAIN})
-    public Response ping() {
-    	return Response.ok("Pong").build();
-    }
-    
     /**
      * Give a list of all supported service operations.
      *

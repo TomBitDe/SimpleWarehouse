@@ -18,13 +18,14 @@ import javax.ws.rs.core.Response;
 
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.rest.standardservices.StandardServices;
 
 /**
  * RESTful Location handling service.
  */
 @Path("/LocationRestService")
 @Stateless
-public class LocationRestService {
+public class LocationRestService extends StandardServices {
 	@EJB
 	LocationService locationService;
 
@@ -161,18 +162,6 @@ public class LocationRestService {
     }
 
     /**
-     * Just check if the REST service is available.
-     *
-     * @return the text "Pong"
-     */
-    @GET
-    @Path("/Ping")
-    @Produces({MediaType.TEXT_PLAIN})
-    public Response ping() {
-    	return Response.ok("Pong").build();
-    }
-    
-    /**
      * Give a list of all supported service operations.
      *
      * @return a list of service operations
@@ -180,6 +169,7 @@ public class LocationRestService {
     @OPTIONS
     @Path("/Options")
     @Produces({MediaType.TEXT_PLAIN})
+    @Override
     public String getSupportedOperations() {
         return "GET, DELETE, PUT, POST";
     }
