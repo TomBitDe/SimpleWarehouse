@@ -46,13 +46,18 @@ public class ApplConfigRestService extends StandardServices {
     @Path("/Content")
     @Produces({MediaType.APPLICATION_XML})
     public Response getContent() {
-        List<ApplConfig> applConfigList = applConfigService.getContent();
+    	try {
+            List<ApplConfig> applConfigList = applConfigService.getContent();
 
-        GenericEntity<List<ApplConfig>> content
-                = new GenericEntity<List<ApplConfig>>(new ArrayList<>(applConfigList)) {
-        };
+            GenericEntity<List<ApplConfig>> content
+                    = new GenericEntity<List<ApplConfig>>(new ArrayList<>(applConfigList)) {
+            };
 
-        return Response.ok(content).build();
+            return Response.ok(content).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -70,14 +75,19 @@ public class ApplConfigRestService extends StandardServices {
         int intOffset = Integer.parseInt(offset);
         int intCount = Integer.parseInt(count);
 
-        // Get the configuration entries from the remote call as a List
-        List<ApplConfig> applConfigList = applConfigService.getContent(intOffset, intCount);
+    	try {
+            // Get the configuration entries from the remote call as a List
+            List<ApplConfig> applConfigList = applConfigService.getContent(intOffset, intCount);
 
-        GenericEntity<List<ApplConfig>> content
-                = new GenericEntity<List<ApplConfig>>(new ArrayList<>(applConfigList)) {
-        };
+            GenericEntity<List<ApplConfig>> content
+                    = new GenericEntity<List<ApplConfig>>(new ArrayList<>(applConfigList)) {
+            };
 
-        return Response.ok(content).build();
+            return Response.ok(content).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
 	/**
@@ -91,9 +101,14 @@ public class ApplConfigRestService extends StandardServices {
     @Path("/Entry/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response getById(@PathParam("key") String key) {
-        ApplConfig entry = applConfigService.getById(key);
+    	try {
+            ApplConfig entry = applConfigService.getById(key);
 
-        return Response.ok().entity(entry).build();
+            return Response.ok().entity(entry).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -107,13 +122,17 @@ public class ApplConfigRestService extends StandardServices {
     @Path("/Exists/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response exists(@PathParam("key") String key) {
-    	ApplConfig entry = applConfigService.getById(key);
+    	try {
+    		ApplConfig entry = applConfigService.getById(key);
 
-        if (entry != null) {
-            return Response.ok().entity("true").build();
-        }
-        return Response.ok().entity("false").build();
-
+    		if (entry != null) {
+    			return Response.ok().entity("true").build();
+    		}
+    		return Response.ok().entity("false").build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
 	/**
@@ -125,9 +144,14 @@ public class ApplConfigRestService extends StandardServices {
     @Path("/Count")
     @Produces({MediaType.APPLICATION_XML})
     public Response count() {
-        int val = applConfigService.count();
+    	try {
+            int val = applConfigService.count();
 
-        return Response.ok().entity(String.valueOf(val)).build();
+            return Response.ok().entity(String.valueOf(val)).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -143,14 +167,14 @@ public class ApplConfigRestService extends StandardServices {
     @Produces({MediaType.APPLICATION_XML})
     public Response create(@PathParam("key") String key,
                            @PathParam("value") String value) {
+    	try {
+            ApplConfig entry = applConfigService.create(new ApplConfig(key, value));
 
-        ApplConfig entry = applConfigService.create(new ApplConfig(key, value));
-
-        Response response;
-
-        response = Response.ok().entity(entry).build();
-
-        return response;
+            return Response.ok().entity(entry).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -166,14 +190,14 @@ public class ApplConfigRestService extends StandardServices {
     @Produces({MediaType.APPLICATION_XML})
     public Response update(@PathParam("key") String key,
                            @PathParam("value") String value) {
+    	try {
+            ApplConfig entry = applConfigService.update(new ApplConfig(key, value));
 
-        ApplConfig entry = applConfigService.update(new ApplConfig(key, value));
-
-        Response response;
-
-        response = Response.ok().entity(entry).build();
-
-        return response;
+            return Response.ok().entity(entry).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -187,13 +211,14 @@ public class ApplConfigRestService extends StandardServices {
     @Path("/Entry/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response delete(@PathParam("key") String key) {
-        ApplConfig entry = applConfigService.delete(key);
+    	try {
+            ApplConfig entry = applConfigService.delete(key);
 
-        Response response;
-
-        response = Response.ok().entity(entry).build();
-
-        return response;
+            return Response.ok().entity(entry).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -205,7 +230,12 @@ public class ApplConfigRestService extends StandardServices {
     @Path("/Refresh")
     @Produces({MediaType.TEXT_PLAIN})
     public Response refresh() {
-        applConfigService.refresh();
+    	try {
+            applConfigService.refresh();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
 
         return Response.ok("Refreshed").build();
     }
