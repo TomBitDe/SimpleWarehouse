@@ -79,21 +79,21 @@ public class Dimension extends EntityBase implements Serializable {
 	 * The maximum height
 	 */
 	@Basic(optional = false)
-    @Column(name = "MAX_HEIGHT", nullable = false)
+    @Column(name = "MAX_HEIGHT", nullable = false, length = 80)
     private String maxHeight;
     
 	/**
 	 * The maximum length
 	 */
 	@Basic(optional = false)
-    @Column(name = "MAX_LENGTH", nullable = false)
+    @Column(name = "MAX_LENGTH", nullable = false, length = 80)
     private String maxLength;
 
 	/**
 	 * The maximum width
 	 */
 	@Basic(optional = false)
-    @Column(name = "MAX_WIDTH", nullable = false)
+    @Column(name = "MAX_WIDTH", nullable = false, length = 80)
     private String maxWidth;
 
 	/**

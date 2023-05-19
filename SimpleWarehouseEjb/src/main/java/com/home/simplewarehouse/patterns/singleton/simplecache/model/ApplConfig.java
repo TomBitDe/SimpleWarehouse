@@ -24,12 +24,12 @@ public class ApplConfig implements Serializable {
 	 * The Configuration entries id (key)
 	 */
 	@Id
-	@Column(name = "KEY_VAL", nullable = false)
+	@Column(name = "KEY_VAL", nullable = false, length = 80)
 	private String keyVal;
 	/**
 	 * The Configuration entries value
 	 */
-	@Column(name = "PARAM_VAL", nullable = false)
+	@Column(name = "PARAM_VAL", nullable = false, length = 512)
 	private String paramVal;
 	/**
 	 * The version number for optimistic locking

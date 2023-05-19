@@ -55,7 +55,7 @@ public class Location extends EntityBase implements Serializable {
      * The Location id
      */
     @Id
-    @Column(name = "LOCATION_ID", nullable = false, length = 81)
+    @Column(name = "LOCATION_ID", nullable = false, length = 80)
     private String locationId;
 	/**
 	 * Version number for optimistic locking

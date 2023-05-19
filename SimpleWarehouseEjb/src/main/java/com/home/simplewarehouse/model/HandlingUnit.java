@@ -63,7 +63,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
      * The HandlingUnit id
      */
     @Id
-    @Column(name = "ID", nullable = false)
+    @Column(name = "ID", nullable = false, length = 80)
     private String id;
     /**
      * The position of the HandlingUnit in a Location
@@ -83,17 +83,17 @@ public class HandlingUnit extends EntityBase implements Serializable {
     /**
      * The HandlingUnits height
      */
-    @Column(name = "HEIGHT", nullable = false)
+    @Column(name = "HEIGHT", nullable = false, length = 80)
     private String height;
     /**
      * The HandlingUnits length
      */
-    @Column(name = "LENGTH", nullable = false)
+    @Column(name = "LENGTH", nullable = false, length = 80)
     private String length;
     /**
      * The HandlingUnits width
      */
-    @Column(name = "WIDTH", nullable = false)
+    @Column(name = "WIDTH", nullable = false, length = 80)
     private String width;
     /**
      * The version number for optimistic locking

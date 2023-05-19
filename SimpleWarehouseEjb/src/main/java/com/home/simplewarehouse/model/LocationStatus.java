@@ -62,19 +62,19 @@ public class LocationStatus extends EntityBase implements Serializable {
 	 * Location error status
 	 */
 	@Basic(optional = false)
-    @Column(name = "ERROR_STATUS")
+    @Column(name = "ERROR_STATUS", nullable = false, length = 80)
 	private String errorStatus;
 	/**
 	 * Location ltosStatus status (long time out of service)
 	 */
 	@Basic(optional = false)
-	@Column(name = "LTOS_STATUS")
+	@Column(name = "LTOS_STATUS", nullable = false, length = 80)
 	private String ltosStatus;
 	/**
 	 * Lock status of the location
 	 */
 	@Basic(optional = false)
-	@Column(name = "LOCK_STATUS")
+	@Column(name = "LOCK_STATUS", nullable = false, length = 80)
 	private String lockStatus;
 	/**
 	 * Version number for optimistic locking
