@@ -36,6 +36,6 @@ public class StandardServices {
     @Path("/Options")
     @Produces({MediaType.TEXT_PLAIN})
     public String getSupportedOperations() {
-        return "GET";
+        return "OPTIONS, GET";
     }
 }

@@ -61,7 +61,8 @@ public class TopologyRestService extends StandardServices {
     @OPTIONS
     @Path("/Options")
     @Produces({MediaType.TEXT_PLAIN})
+    @Override
     public String getSupportedOperations() {
-        return "PUT, DELETE";
+        return "OPTIONS, GET, PUT, DELETE";
     }
 }
