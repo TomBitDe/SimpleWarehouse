@@ -45,13 +45,18 @@ public class LocationRestService extends StandardServices {
     @Path("/Content")
     @Produces({MediaType.APPLICATION_XML})
     public Response getContent() {
-        List<Location> locationList = locationService.getAll();
+    	try {
+            List<Location> locationList = locationService.getAll();
 
-        GenericEntity<List<Location>> content
-                = new GenericEntity<List<Location>>(new ArrayList<>(locationList)) {
-        };
-        
-        return Response.ok(content).build();
+            GenericEntity<List<Location>> content
+                    = new GenericEntity<List<Location>>(new ArrayList<>(locationList)) {
+            };
+            
+            return Response.ok(content).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
     
     /**
@@ -69,14 +74,19 @@ public class LocationRestService extends StandardServices {
         int intOffset = Integer.parseInt(offset);
         int intCount = Integer.parseInt(count);
 
-        // Get the configuration entries from the remote call as a List
-        List<Location> locationList = locationService.getAll(intOffset, intCount);
+    	try {
+            // Get the configuration entries from the remote call as a List
+            List<Location> locationList = locationService.getAll(intOffset, intCount);
 
-        GenericEntity<List<Location>> content
-                = new GenericEntity<List<Location>>(new ArrayList<>(locationList)) {
-        };
+            GenericEntity<List<Location>> content
+                    = new GenericEntity<List<Location>>(new ArrayList<>(locationList)) {
+            };
 
-        return Response.ok(content).build();
+            return Response.ok(content).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
 	/**
@@ -90,9 +100,14 @@ public class LocationRestService extends StandardServices {
     @Path("/Entry/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response getById(@PathParam("key") String key) {
-        Location location = locationService.getById(key);
+    	try {
+            Location location = locationService.getById(key);
 
-        return Response.ok().entity(location).build();
+            return Response.ok().entity(location).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -106,13 +121,17 @@ public class LocationRestService extends StandardServices {
     @Path("/Exists/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response exists(@PathParam("key") String key) {
-    	Location location = locationService.getById(key);
+    	try {
+        	Location location = locationService.getById(key);
 
-        if (location != null) {
-            return Response.ok().entity("true").build();
-        }
-        return Response.ok().entity("false").build();
-
+            if (location != null) {
+                return Response.ok().entity("true").build();
+            }
+            return Response.ok().entity("false").build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -126,9 +145,14 @@ public class LocationRestService extends StandardServices {
     @Path("/Entry/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response create(@PathParam("key") String key) {
-    	Location location = locationService.createOrUpdate(new Location(key));
-    	
-    	return Response.ok().entity(location).build();
+    	try {
+        	Location location = locationService.createOrUpdate(new Location(key));
+        	
+        	return Response.ok().entity(location).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
     
     /**
@@ -142,7 +166,12 @@ public class LocationRestService extends StandardServices {
     @Path("/Entry/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response delete(@PathParam("key") String key) {
-        locationService.delete(key);
+    	try {
+            locationService.delete(key);
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
 
         return Response.ok().build();
     }
@@ -156,9 +185,14 @@ public class LocationRestService extends StandardServices {
     @Path("/Count")
     @Produces({MediaType.APPLICATION_XML})
     public Response count() {
-        int val = locationService.count();
+    	try {
+            int val = locationService.count();
 
-        return Response.ok().entity(String.valueOf(val)).build();
+            return Response.ok().entity(String.valueOf(val)).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
