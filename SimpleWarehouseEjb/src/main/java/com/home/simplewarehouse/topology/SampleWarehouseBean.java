@@ -50,6 +50,9 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 	public void initialize() {
 		LOG.trace("--> initialize()");
 		
+		// Do a cleanup before
+		cleanup();
+		
 		// Locations
 		List<Location> locationList = new ArrayList<>();
 		locationList.clear();
