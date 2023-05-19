@@ -50,6 +50,10 @@
 			<artifactId>log4j-core</artifactId>
 		</dependency>
 		<dependency>
+			<groupId>org.apache.logging.log4j</groupId>
+			<artifactId>log4j-web</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<scope>test</scope>
@@ -60,6 +64,11 @@
         	<version>0.0.1-SNAPSHOT</version>
         	<scope>provided</scope>
         </dependency>
+		<dependency>
+    		<groupId>com.google.guava</groupId>
+    		<artifactId>guava</artifactId>
+    		<version>31.1-jre</version>
+		</dependency>
     </dependencies>
 
     <build>
