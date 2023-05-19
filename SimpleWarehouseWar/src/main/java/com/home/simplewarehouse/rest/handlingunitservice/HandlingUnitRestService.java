@@ -48,13 +48,18 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Content")
     @Produces({MediaType.APPLICATION_XML})
     public Response getContent() {
-        List<HandlingUnit> handlingUnitList = handlingUnitService.getAll();
+    	try {
+            List<HandlingUnit> handlingUnitList = handlingUnitService.getAll();
 
-        GenericEntity<List<HandlingUnit>> content
-                = new GenericEntity<List<HandlingUnit>>(new ArrayList<>(handlingUnitList)) {
-        };
-        
-        return Response.ok(content).build();
+            GenericEntity<List<HandlingUnit>> content
+                    = new GenericEntity<List<HandlingUnit>>(new ArrayList<>(handlingUnitList)) {
+            };
+            
+            return Response.ok(content).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
     
     /**
@@ -72,14 +77,19 @@ public class HandlingUnitRestService extends StandardServices {
         int intOffset = Integer.parseInt(offset);
         int intCount = Integer.parseInt(count);
 
-        // Get the configuration entries from the remote call as a List
-        List<HandlingUnit> handlingUnitList = handlingUnitService.getAll(intOffset, intCount);
+    	try {
+            // Get the configuration entries from the remote call as a List
+            List<HandlingUnit> handlingUnitList = handlingUnitService.getAll(intOffset, intCount);
 
-        GenericEntity<List<HandlingUnit>> content
-                = new GenericEntity<List<HandlingUnit>>(new ArrayList<>(handlingUnitList)) {
-        };
+            GenericEntity<List<HandlingUnit>> content
+                    = new GenericEntity<List<HandlingUnit>>(new ArrayList<>(handlingUnitList)) {
+            };
 
-        return Response.ok(content).build();
+            return Response.ok(content).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
 	/**
@@ -93,9 +103,14 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Entry/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response getById(@PathParam("key") String key) {
-        HandlingUnit handlingUnit = handlingUnitService.getById(key);
+    	try {
+            HandlingUnit handlingUnit = handlingUnitService.getById(key);
 
-        return Response.ok().entity(handlingUnit).build();
+            return Response.ok().entity(handlingUnit).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -109,13 +124,17 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Exists/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response exists(@PathParam("key") String key) {
-    	HandlingUnit handlingUnit = handlingUnitService.getById(key);
+    	try {
+        	HandlingUnit handlingUnit = handlingUnitService.getById(key);
 
-        if (handlingUnit != null) {
-            return Response.ok().entity("true").build();
-        }
-        return Response.ok().entity("false").build();
-
+            if (handlingUnit != null) {
+                return Response.ok().entity("true").build();
+            }
+            return Response.ok().entity("false").build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
@@ -129,9 +148,14 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Entry/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response create(@PathParam("key") String key) {
-    	HandlingUnit handlingUnit = handlingUnitService.createOrUpdate(new HandlingUnit(key));
-    	
-    	return Response.ok().entity(handlingUnit).build();
+    	try {
+        	HandlingUnit handlingUnit = handlingUnitService.createOrUpdate(new HandlingUnit(key));
+        	
+        	return Response.ok().entity(handlingUnit).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
     
     /**
@@ -145,7 +169,12 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Entry/{key}")
     @Produces({MediaType.APPLICATION_XML})
     public Response delete(@PathParam("key") String key) {
-        handlingUnitService.delete(key);
+    	try {
+            handlingUnitService.delete(key);
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
 
         return Response.ok().build();
     }
@@ -159,9 +188,14 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Count")
     @Produces({MediaType.APPLICATION_XML})
     public Response count() {
-        int val = handlingUnitService.count();
+    	try {
+            int val = handlingUnitService.count();
 
-        return Response.ok().entity(String.valueOf(val)).build();
+            return Response.ok().entity(String.valueOf(val)).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
     
     /**
@@ -244,9 +278,14 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Assign/{handlingUnitId}/{baseId}")
     @Produces({MediaType.APPLICATION_XML})
     public Response assign(@PathParam("handlingUnitId") String handlingUnitId, @PathParam("baseId") String baseId) {
-    	HandlingUnit base = handlingUnitService.assign(handlingUnitId, baseId);
-    	
-    	return Response.ok().entity(base).build();
+    	try {
+        	HandlingUnit base = handlingUnitService.assign(handlingUnitId, baseId);
+        	
+        	return Response.ok().entity(base).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
 	/**
@@ -261,9 +300,14 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Remove/{handlingUnitId}/{baseId}")
     @Produces({MediaType.APPLICATION_XML})
     public Response remove(@PathParam("handlingUnitId") String handlingUnitId, @PathParam("baseId") String baseId) {
-    	HandlingUnit base = handlingUnitService.remove(handlingUnitId, baseId);
-    	
-    	return Response.ok().entity(base).build();
+    	try {
+        	HandlingUnit base = handlingUnitService.remove(handlingUnitId, baseId);
+        	
+        	return Response.ok().entity(base).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
 	/**
@@ -278,9 +322,14 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Move/{handlingUnitId}/{destHandlingUnitId}")
     @Produces({MediaType.APPLICATION_XML})
     public Response move(@PathParam("handlingUnitId") String handlingUnitId, @PathParam("destHandlingUnitId") String destHandlingUnitId) {
-    	HandlingUnit moved = handlingUnitService.move(handlingUnitId, destHandlingUnitId);
-    	
-    	return Response.ok().entity(moved).build();
+    	try {
+        	HandlingUnit moved = handlingUnitService.move(handlingUnitId, destHandlingUnitId);
+        	
+        	return Response.ok().entity(moved).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
 	/**
@@ -294,13 +343,18 @@ public class HandlingUnitRestService extends StandardServices {
     @Path("/Free/{baseId}")
     @Produces({MediaType.APPLICATION_XML})
     public Response free(@PathParam("baseId") String baseId) {
-    	Set<HandlingUnit> removed = handlingUnitService.free(baseId);
-    	
-        GenericEntity<Set<HandlingUnit>> content
-                = new GenericEntity<Set<HandlingUnit>>(new HashSet<>(removed)) {
-        };
+    	try {
+        	Set<HandlingUnit> removed = handlingUnitService.free(baseId);
+        	
+            GenericEntity<Set<HandlingUnit>> content
+                    = new GenericEntity<Set<HandlingUnit>>(new HashSet<>(removed)) {
+            };
 
-        return Response.ok(content).build();
+            return Response.ok(content).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
     }
 
     /**
