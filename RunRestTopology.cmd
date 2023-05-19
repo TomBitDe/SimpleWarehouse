@@ -1,18 +1,18 @@
 echo off
 
-curl -X OPTIONS -i http://localhost:8080/war/resources/TopologyRestService/Options
+curl -v -X OPTIONS -i http://localhost:8080/war/resources/TopologyRestService/Options
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/TopologyRestService/Ping
+curl -v -X GET -i http://localhost:8080/war/resources/TopologyRestService/Ping
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X POST -i http://localhost:8080/war/resources/TopologyRestService/SampleData
+curl -v -X POST -i http://localhost:8080/war/resources/TopologyRestService/SampleData
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X DELETE -i http://localhost:8080/war/resources/TopologyRestService/SampleData
+curl -v -X DELETE -i http://localhost:8080/war/resources/TopologyRestService/SampleData
 echo=
 echo ----------------------------------------------------------------------
 

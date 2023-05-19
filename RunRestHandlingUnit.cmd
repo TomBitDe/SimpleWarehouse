@@ -1,46 +1,46 @@
 echo off
 
-curl -X OPTIONS -i http://localhost:8080/war/resources/HandlingUnitRestService/Options
+curl -v -X OPTIONS -i http://localhost:8080/war/resources/HandlingUnitRestService/Options
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Ping
+curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Ping
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Content
+curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Content
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Content/0/10
+curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Content/0/10
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Exists/1
+curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Exists/1
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Exists/2
+curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Exists/2
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X PUT -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/3
+curl -v -X PUT -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/3
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Exists/3
+curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Exists/3
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X DELETE -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/3
+curl -v -X DELETE -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/3
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Exists/3
+curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Exists/3
 echo=
 echo ----------------------------------------------------------------------
 
-curl -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Count
+curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Count
 echo=
 echo ----------------------------------------------------------------------
 
