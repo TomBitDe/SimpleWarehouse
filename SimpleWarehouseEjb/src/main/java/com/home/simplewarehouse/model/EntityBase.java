@@ -36,7 +36,7 @@ public class EntityBase {
      * The user id of the user who has done the last update
      */
     @Basic(optional = false)
-    @Column(name = "UPDATE_USER", nullable = false)
+    @Column(name = "UPDATE_USER", nullable = false, length = 512)
     private String updateUserId;
     
     /**
