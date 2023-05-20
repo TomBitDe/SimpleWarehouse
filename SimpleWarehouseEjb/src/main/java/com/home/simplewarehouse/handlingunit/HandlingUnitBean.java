@@ -42,6 +42,8 @@ public class HandlingUnitBean implements HandlingUnitService {
 	private static final String HU_IS_NULL_MSG = "HandlingUnit is null";
 	private static final String BASE_IS_NULL_MSG = "Base is null";
 	
+	private static final String END_PICK_FROM = "<-- pickFrom()";
+	
 	@PersistenceContext
 	private EntityManager em;
 	
@@ -170,13 +172,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public void pickFrom(final Location location, final HandlingUnit handlingUnit) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.trace("--> pickFrom({}, {})", location, handlingUnit);
 
-		if (location == null) {
-			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
-		}
-		
-		if (handlingUnit == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
-		}
+		checkIllegalArgument(location, handlingUnit);
 		
 		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
@@ -239,7 +235,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 			}
 		}
 
-		LOG.trace("<-- pickFrom()");
+		LOG.trace(END_PICK_FROM);
 	}
 
 	@Override
@@ -248,16 +244,14 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		pickFrom(locationService.getById(locationId), getById(handlingUnitId));
 
-		LOG.trace("<-- pickFrom()");
+		LOG.trace(END_PICK_FROM);
 	}
 	
 	@Override
 	public HandlingUnit pickFrom(final Location location) throws LocationIsEmptyException {
 		LOG.trace("--> pickFrom({})", location);
 
-		if (location == null) {
-			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
-		}
+		checkIllegalArgument(location);
 		
 		Location lo = locationService.getById(location.getLocationId());
 		if (lo == null) {
@@ -280,7 +274,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		em.flush();
 		
-		LOG.trace("<-- pickFrom()");
+		LOG.trace(END_PICK_FROM);
 
 		return getById(picksAvailable.get(0).getId());
 	}
@@ -289,7 +283,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit pickFrom(final String locationId) throws LocationIsEmptyException {
 		LOG.trace("--> pickFrom({})", locationId);
 				
-		LOG.trace("<-- pickFrom()");
+		LOG.trace(END_PICK_FROM);
 		
 		return pickFrom(locationId);
 	}
@@ -305,10 +299,8 @@ public class HandlingUnitBean implements HandlingUnitService {
 			LOG.warn("HandlingUnit is null; this is valid but nothing will happen!");
 			return;
 		}
-				
-		if (location == null) {
-			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
-		}
+		
+		checkIllegalArgument(location);
 		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
@@ -366,14 +358,10 @@ public class HandlingUnitBean implements HandlingUnitService {
 	@Override
 	public HandlingUnit assign(final HandlingUnit handlingUnit, final HandlingUnit base) {
 		LOG.trace("--> assign() hu={} base={}", handlingUnit, base);
-		
-		if (handlingUnit == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
-		}
 
-		if (base == null) {
-			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
-		}
+		checkIllegalArgument(handlingUnit, HU_IS_NULL_MSG);
+
+		checkIllegalArgument(base, BASE_IS_NULL_MSG);
 		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
@@ -419,13 +407,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit remove(final HandlingUnit handlingUnit, final HandlingUnit base) {
 		LOG.trace("--> remove() hu={} base={}", handlingUnit, base);
 		
-		if (handlingUnit == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
-		}
+		checkIllegalArgument(handlingUnit, HU_IS_NULL_MSG);
 
-		if (base == null) {
-			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
-		}
+		checkIllegalArgument(base, BASE_IS_NULL_MSG);
 		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
@@ -471,14 +455,10 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit move(final HandlingUnit handlingUnit, final HandlingUnit destHandlingUnit) {
 		LOG.trace("--> move() hu={} destHu={}", handlingUnit, destHandlingUnit);
 		
-		if (handlingUnit == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
-		}
+		checkIllegalArgument(handlingUnit, HU_IS_NULL_MSG);
 
-		if (destHandlingUnit == null) {
-			throw new IllegalArgumentException(HU_IS_NULL_MSG);
-		}
-
+		checkIllegalArgument(destHandlingUnit, HU_IS_NULL_MSG);
+		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
 			hu = createOrUpdate(handlingUnit);
@@ -524,11 +504,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 	@Override
 	public Set<HandlingUnit> free(final HandlingUnit base) {
 		LOG.trace("--> free() base={}", base);
-		
-		if (base == null) {
-			throw new IllegalArgumentException(BASE_IS_NULL_MSG);
-		}
-		
+
+		checkIllegalArgument(base, BASE_IS_NULL_MSG);
+
 		HandlingUnit ba = getById(base.getId());
 		if (ba == null) {
 			ba = createOrUpdate(base);
@@ -609,5 +587,27 @@ public class HandlingUnitBean implements HandlingUnitService {
 		LOG.info("BASE {} flat contains {}", base.getId(),
 				flatContains(base).stream().map(h -> h.getId()).collect(Collectors.toList())
 				);
+	}
+	
+	private void checkIllegalArgument(final Location location, final HandlingUnit handlingUnit) {
+		if (location == null) {
+			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
+		}
+		
+		if (handlingUnit == null) {
+			throw new IllegalArgumentException(HU_IS_NULL_MSG);
+		}
+	}
+
+	private void checkIllegalArgument(final Location location) {
+		if (location == null) {
+			throw new IllegalArgumentException(LOCATION_IS_NULL_MSG);
+		}
+	}
+
+	private void checkIllegalArgument(final HandlingUnit handlingUnit, final String msg) {
+		if (handlingUnit == null) {
+			throw new IllegalArgumentException(msg);
+		}
 	}
 }
