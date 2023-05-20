@@ -3,11 +3,11 @@ echo off
 IF "%PAYARA_HOME%"=="" GOTO NOT_DEFINED 
 
 :CLEAN_DOMAINS
-dir %PAYARA_HOME%\glassfish\domains\domain1\logs
+dir %PAYARA_HOME%\payara5\glassfish\domains\domain1\logs
 echo=
-del %PAYARA_HOME%\glassfish\domains\domain1\logs\*.log*
+del %PAYARA_HOME%\payara5\glassfish\domains\domain1\logs\*.log*
 echo=
-dir %PAYARA_HOME%\glassfish\domains\domain1\logs
+dir %PAYARA_HOME%\payara5\glassfish\domains\domain1\logs
 echo=
 GOTO CLEAN_LOGS
 
