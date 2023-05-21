@@ -265,6 +265,7 @@ public class LocationBeanTest {
 		locationService.delete(location);
 		assertTrue(true);
 
+		// Delete locationId null
 		locationService.createOrUpdate(new Location("A"));
 		location = locationService.getById("A");
 		assertNotNull(location);
@@ -272,6 +273,25 @@ public class LocationBeanTest {
 		locationService.delete(location);
 		location = locationService.getById("A");
 		assertNotNull(location);
+		
+		// Now delete by id
+		locationService.delete("A");
+		location = locationService.getById("A");
+		assertNull(location);
+
+		locationService.delete("AAAAA");
+		location = locationService.getById("AAAAA");
+		assertNull(location);
+
+		// Delete id null
+		try {
+			locationService.delete((String)null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
 	}
 	
 	/**
@@ -297,6 +317,29 @@ public class LocationBeanTest {
 
 		assertFalse(locations.isEmpty());
 		assertEquals(5, locations.size());
+		
+		locations = locationService.getAll(0, 3);
+		assertEquals(3, locations.size());
+		
+		try {
+			locations = locationService.getAll(-3, 3);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
+
+		try {
+			locations = locationService.getAll(2, 0);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
+		
+		assertEquals(locations.size(), locationService.count());
 	}
 	
 	/**
@@ -672,5 +715,12 @@ public class LocationBeanTest {
 		catch (Exception ex) {
 			Assert.fail("Not expected: " + ex);						
 		}
+		
+		locA = locationService.getById("A");
+		assertFalse(locationService.addHandlingUnit(locA, null));
+		
+		HandlingUnit hU2 = new HandlingUnit("2");
+		hU2.setId(null);
+		assertFalse(locationService.addHandlingUnit(locA, hU2));
 	}
 }

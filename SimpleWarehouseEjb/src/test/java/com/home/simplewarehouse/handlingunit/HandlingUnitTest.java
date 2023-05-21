@@ -286,11 +286,24 @@ public class HandlingUnitTest {
 		handlingUnit = handlingUnitService.getById("1");
 		assertNotNull(handlingUnit);
 		
-		// "1" stille exists because delete above was done with null
+		// "1" still exists because delete above was done with null
 		// now delete with String id
 		handlingUnitService.delete("1");
 		handlingUnit = handlingUnitService.getById("1");
 		assertNull(handlingUnit);
+
+		handlingUnitService.delete("99");
+		handlingUnit = handlingUnitService.getById("99");
+		assertNull(handlingUnit);
+		
+		try {
+			handlingUnitService.delete((String)null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
 	}
 	
 	/**
@@ -317,6 +330,30 @@ public class HandlingUnitTest {
 		assertEquals(5, handlingUnits.size());
 		
 		handlingUnits.forEach(hU -> LOG.info(hU));
+
+		handlingUnits = handlingUnitService.getAll(3, 9);
+		assertEquals(2, handlingUnits.size());
+		
+		try {
+			handlingUnits = handlingUnitService.getAll(-3, 3);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
+
+		try {
+			handlingUnits = handlingUnitService.getAll(2, 0);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
+		
+		assertEquals(handlingUnits.size(), handlingUnitService.count());
+
 	}
 	
 	/**
