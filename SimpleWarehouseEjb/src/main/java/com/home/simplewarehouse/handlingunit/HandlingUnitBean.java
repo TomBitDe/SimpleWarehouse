@@ -242,7 +242,23 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public void pickFrom(final String locationId, final String handlingUnitId) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.trace("--> pickFrom({}, {})", locationId, handlingUnitId);
 		
-		pickFrom(locationService.getById(locationId), getById(handlingUnitId));
+		Location location;
+		if (locationId == null) {
+			location = null;
+		}
+		else {
+			location = locationService.getById(locationId);
+		}
+		
+		HandlingUnit handlingUnit;
+		if (handlingUnitId == null) {
+			handlingUnit = null;
+		}
+		else {
+			handlingUnit = getById(handlingUnitId);
+		}
+		
+		pickFrom(location, handlingUnit);
 
 		LOG.trace(END_PICK_FROM);
 	}
@@ -282,10 +298,20 @@ public class HandlingUnitBean implements HandlingUnitService {
 	@Override
 	public HandlingUnit pickFrom(final String locationId) throws LocationIsEmptyException {
 		LOG.trace("--> pickFrom({})", locationId);
-				
+
+		Location location;
+		if (locationId == null) {
+			location = null;
+		}
+		else {
+			location = locationService.getById(locationId);
+		}
+		
+		HandlingUnit hu = pickFrom(location);
+		
 		LOG.trace(END_PICK_FROM);
 		
-		return pickFrom(locationId);
+		return hu;
 	}
 	
 	@Override
@@ -295,12 +321,12 @@ public class HandlingUnitBean implements HandlingUnitService {
 	{
 		LOG.trace("--> dropTo({}, {})", location, handlingUnit);
 
+		checkIllegalArgument(location);
+		
 		if (handlingUnit == null) {
 			LOG.warn("HandlingUnit is null; this is valid but nothing will happen!");
 			return;
 		}
-		
-		checkIllegalArgument(location);
 		
 		HandlingUnit hu = getById(handlingUnit.getId());
 		if (hu == null) {
@@ -350,7 +376,23 @@ public class HandlingUnitBean implements HandlingUnitService {
 	{
 		LOG.trace("--> dropTo({}, {})", locationId, handlingUnitId);
 		
-		dropTo(locationService.getById(locationId), getById(handlingUnitId));
+		Location location;
+		if (locationId == null) {
+			location = null;
+		}
+		else {
+			location = locationService.getById(locationId);
+		}
+		
+		HandlingUnit handlingUnit;
+		if (handlingUnitId == null) {
+			handlingUnit = null;
+		}
+		else {
+			handlingUnit = getById(handlingUnitId);
+		}
+				
+		dropTo(location, handlingUnit);
 		
 		LOG.trace("<-- dropTo()");
 	}
@@ -396,7 +438,23 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit assign(final String handlingUnitId, final String baseId) {
 		LOG.trace("--> assign() hu={} base={}", handlingUnitId, baseId);
 		
-		HandlingUnit base = assign(getById(handlingUnitId), getById(baseId));
+		HandlingUnit handlingUnit;
+		if (handlingUnitId == null) {
+			handlingUnit = null;
+		}
+		else {
+			handlingUnit = getById(handlingUnitId);
+		}
+		
+		HandlingUnit base;
+		if (baseId == null) {
+			base = null;
+		}
+		else {
+			base = getById(baseId);
+		}
+		
+		base = assign(handlingUnit, base);
 		
 		LOG.trace("<-- assign() {}", base);
 		
@@ -444,7 +502,23 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit remove(final String handlingUnitId, final String baseId) {
 		LOG.trace("--> remove() hu={} base={}", handlingUnitId, baseId);
 		
-		HandlingUnit base = remove(getById(handlingUnitId), getById(baseId));
+		HandlingUnit handlingUnit;
+		if (handlingUnitId == null) {
+			handlingUnit = null;
+		}
+		else {
+			handlingUnit = getById(handlingUnitId);
+		}
+		
+		HandlingUnit base;
+		if (baseId == null) {
+			base = null;
+		}
+		else {
+			base = getById(baseId);
+		}
+		
+		base = remove(handlingUnit, base);
 		
 		LOG.trace("<-- remove() {}", base);
 		
@@ -493,8 +567,24 @@ public class HandlingUnitBean implements HandlingUnitService {
 	@Override
 	public HandlingUnit move(final String handlingUnitId, final String baseId) {
 		LOG.trace("--> move() hu={} base={}", handlingUnitId, baseId);
+
+		HandlingUnit handlingUnit;
+		if (handlingUnitId == null) {
+			handlingUnit = null;
+		}
+		else {
+			handlingUnit = getById(handlingUnitId);
+		}
 		
-		HandlingUnit hu = move(getById(handlingUnitId), getById(baseId));
+		HandlingUnit base;
+		if (baseId == null) {
+			base = null;
+		}
+		else {
+			base = getById(baseId);
+		}
+		
+		HandlingUnit hu = move(handlingUnit, base);
 		
 		LOG.trace("<-- move() {}", hu);
 		
@@ -547,8 +637,16 @@ public class HandlingUnitBean implements HandlingUnitService {
 	@Override
 	public Set<HandlingUnit> free(final String baseId) {
 		LOG.trace("--> free() base={}", baseId);
+
+		HandlingUnit base;
+		if (baseId == null) {
+			base = null;
+		}
+		else {
+			base = getById(baseId);
+		}
 		
-		Set<HandlingUnit> huSet = free(getById(baseId));
+		Set<HandlingUnit> huSet = free(base);
 		
 		LOG.trace("<-- free() {}", huSet);
 		
