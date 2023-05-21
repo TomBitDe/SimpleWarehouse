@@ -268,17 +268,12 @@ public class HandlingUnitTest {
 
 	    HandlingUnit handlingUnit = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
 	    
-	    // MANDATORY reread
 		assertEquals("1", handlingUnit.getId());
 		
-		// Delete the handlingUnitService
+		// Delete the handlingUnit
 		handlingUnitService.delete(handlingUnit);
-		assertNotNull(handlingUnit);
+		assertNull(handlingUnitService.getById("1"));
 
-	    // MANDATORY reread
-		assertEquals("1", handlingUnit.getId());
-		LOG.info(handlingUnit);
-		
 		// Delete null
 		handlingUnit = null;
 		handlingUnitService.delete(handlingUnit);
@@ -290,6 +285,10 @@ public class HandlingUnitTest {
 		handlingUnitService.delete(handlingUnit);
 		handlingUnit = handlingUnitService.getById("1");
 		assertNotNull(handlingUnit);
+		
+		handlingUnitService.delete("1");
+		handlingUnit = handlingUnitService.getById("1");
+		assertNull(handlingUnit);
 	}
 	
 	/**
@@ -349,6 +348,29 @@ public class HandlingUnitTest {
 			assertTrue(lOA.getHandlingUnits().contains(hU1));
 
 			LOG.info(lOA);
+			
+			// Now by id
+			HandlingUnit hU2 = handlingUnitService.createOrUpdate(new HandlingUnit("2"));
+			Location lOB = locationService.createOrUpdate(new Location("B"));
+			
+			handlingUnitService.dropTo("B", "2");
+
+			// MANDATORY reread
+			hU2 = handlingUnitService.getById("2");
+			lOB = locationService.getById("B");
+
+			LOG.info(hU2);
+
+			// Handling Unit is on locationService now
+			assertEquals(lOB, hU2.getLocation());
+
+			assertFalse(lOB.getHandlingUnits().isEmpty());
+			assertEquals(1, lOB.getHandlingUnits().size());
+
+			// Location must contain handling unit now
+			assertTrue(lOB.getHandlingUnits().contains(hU2));
+
+			LOG.info(lOB);
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
@@ -380,6 +402,19 @@ public class HandlingUnitTest {
 		catch (EJBException ex) {
 			assertTrue(true);
 		}
+
+		// Now by id
+		try {
+			handlingUnitService.dropTo(null, "1");
+
+			Assert.fail("Exception expected");
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);
+		}
+		catch (EJBException ejbex) {
+			assertTrue(true);
+		}
 	}
 	
 	/**
@@ -401,6 +436,18 @@ public class HandlingUnitTest {
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
+		}
+
+		try {
+			handlingUnitService.dropTo("A", null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);
+		}
+		catch (EJBException ejbex) {
+			assertTrue(true);
 		}
 	}
 	
