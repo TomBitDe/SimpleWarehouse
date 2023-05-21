@@ -286,6 +286,8 @@ public class HandlingUnitTest {
 		handlingUnit = handlingUnitService.getById("1");
 		assertNotNull(handlingUnit);
 		
+		// "1" stille exists because delete above was done with null
+		// now delete with String id
 		handlingUnitService.delete("1");
 		handlingUnit = handlingUnitService.getById("1");
 		assertNull(handlingUnit);
