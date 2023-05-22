@@ -339,7 +339,7 @@ public class LocationBeanTest {
 			assertTrue(true);
 		}
 		
-		assertEquals(locations.size(), locationService.count());
+		assertEquals(locationService.getAll().size(), locationService.count());
 	}
 	
 	/**

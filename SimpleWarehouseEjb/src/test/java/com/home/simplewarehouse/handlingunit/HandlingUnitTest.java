@@ -352,8 +352,7 @@ public class HandlingUnitTest {
 			assertTrue(true);
 		}
 		
-		assertEquals(handlingUnits.size(), handlingUnitService.count());
-
+		assertEquals(handlingUnitService.getAll().size(), handlingUnitService.count());
 	}
 	
 	/**
