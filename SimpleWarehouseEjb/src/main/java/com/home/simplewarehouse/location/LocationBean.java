@@ -487,23 +487,6 @@ public class LocationBean implements LocationService {
 	}
 
 	@Override
-	public boolean addHandlingUnit(final Location location, final HandlingUnit handlingUnit) {
-		if (location == null) {
-			throw new IllegalArgumentException(LOCATION_IS_NULL);
-		}
-
-		if (location.getLocationId() == null) {
-			throw new IllegalArgumentException(LOCATION_ID_IS_NULL);
-		}
-		
-		if (handlingUnit == null || handlingUnit.getId() == null) {
-			return false;
-		}
-		
-		return location.addHandlingUnit(handlingUnit);
-	}
-
-	@Override
 	public List<HandlingUnit> getAvailablePicks(final Location location) {
 		LOG.trace("--> getAvailablePicks()");
 		

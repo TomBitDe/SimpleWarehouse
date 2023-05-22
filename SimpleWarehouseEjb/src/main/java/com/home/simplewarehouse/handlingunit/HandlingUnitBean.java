@@ -362,11 +362,12 @@ public class HandlingUnitBean implements HandlingUnitService {
 		}
 
 		hu.setLocation(lo);
-		locationService.addHandlingUnit(lo, hu);
+		lo.addHandlingUnit(hu);
+		em.merge(hu);
+		em.merge(lo);
+		em.flush();
 		
 		LOG.trace("<-- dropTo()");
-
-		em.flush();
 	}
 
 	@Override

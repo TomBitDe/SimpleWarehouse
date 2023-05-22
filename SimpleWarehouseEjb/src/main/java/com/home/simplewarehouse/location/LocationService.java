@@ -71,15 +71,6 @@ public interface LocationService {
 	 */
 	public List<HandlingUnit> getHandlingUnits(final Location location);
 	/**
-	 * Adds a HandlingUnit to the list of HandlingUnits of this Location
-	 * 
-	 * @param location the locationService having the List 
-	 * @param handlingUnit the handlingUnitService to add
-	 * 
-	 * @return true if adding has been done, else false
-	 */
-	public boolean addHandlingUnit(final Location location, final HandlingUnit handlingUnit);
-	/**
 	 * Get a list of all Location items containing the given HandlingUnit
 	 * 
 	 * @param handlingUnit the handlingUnit to search for

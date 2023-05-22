@@ -31,6 +31,7 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -504,6 +505,23 @@ public class LocationBeanTest {
 
 		Location expLocation = locationService.getById("C");
 		assertTrue(freeCapacityLocations.contains(expLocation));
+
+		// Now make location B full
+		Location location = locationService.getById("B");
+		Dimension dim = location.getDimension();
+		dim.setMaxCapacity(1);
+		location.setDimension(dim);
+		location = locationService.createOrUpdate(location);
+		
+		try {
+			handlingUnitService.dropTo(location, new HandlingUnit("1"));
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);			
+		}
+		
+		freeCapacityLocations = locationService.getAllWithFreeCapacity();
+		assertEquals(3, freeCapacityLocations.size());
 	}
 
 	/**
@@ -667,60 +685,5 @@ public class LocationBeanTest {
 		assertNotNull(locA);
 		assertFalse(locationService.getAllFull().isEmpty());
 		assertEquals(1, locationService.getAllFull().size());
-	}
-
-	/**
-	 * Test add handling unit only exceptional cases
-	 */
-	@Test
-	@InSequence(17)
-	public void addHandlingUnit() {
-		LOG.info("--- Test addHandlingUnit");
-		
-		assertTrue(locationService.getAll().isEmpty());
-
-		locationService.createOrUpdate(new Location("A"));
-
-		LOG.info("Locations created: " + locationService.getAll().size());
-		Location locA = locationService.getById("A");
-		
-		assertTrue(locationService.getAllFull().isEmpty());
-		
-		boolean ret = locationService.addHandlingUnit(locA, null);
-		assertFalse(ret);
-		
-		// Drop to make a relation
-		try {
-			locationService.addHandlingUnit(null, new HandlingUnit("1", "Test"));
-			
-			Assert.fail("Exception expected");
-		}
-		catch (EJBException iaex) {
-			LOG.info("Expected exception: " + iaex.getMessage());
-		}
-		catch (Exception ex) {
-			Assert.fail("Not expected: " + ex);						
-		}
-
-		HandlingUnit hU1 = handlingUnitService.getById("1");
-		locA.setLocationId(null);
-		try {
-			locationService.addHandlingUnit(locA, hU1);
-			
-			Assert.fail("Exception expected");
-		}
-		catch (EJBException iaex) {
-			LOG.info("Expected exception: " + iaex.getMessage());
-		}
-		catch (Exception ex) {
-			Assert.fail("Not expected: " + ex);						
-		}
-		
-		locA = locationService.getById("A");
-		assertFalse(locationService.addHandlingUnit(locA, null));
-		
-		HandlingUnit hU2 = new HandlingUnit("2");
-		hU2.setId(null);
-		assertFalse(locationService.addHandlingUnit(locA, hU2));
 	}
 }
