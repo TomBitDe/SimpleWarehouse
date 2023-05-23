@@ -149,6 +149,26 @@ public class HandlingUnitComposingTest {
 		assertTrue(hu2.getContains().isEmpty());
 		assertEquals(base, hu2.getBaseHU());
 		LOG.info(hu2);
+		
+		// Now with ids
+		HandlingUnit otherBase = handlingUnitService.createOrUpdate(new HandlingUnit("3"));
+		LOG.info(otherBase);
+		
+		HandlingUnit hu4 =  handlingUnitService.createOrUpdate(new HandlingUnit("4"));
+		LOG.info(hu4);
+		
+		// Now place a single handling unit on base
+		otherBase = handlingUnitService.assign("4", "3");
+		
+		assertEquals(1, otherBase.getContains().size());
+		assertTrue(otherBase.getContains().contains(hu4));
+		assertNull(otherBase.getBaseHU());
+		LOG.info(otherBase);
+		
+		hu4 = handlingUnitService.getById("4");
+		assertTrue(hu4.getContains().isEmpty());
+		assertEquals(otherBase, hu4.getBaseHU());
+		LOG.info(hu4);
 	}
 	
 	/**
@@ -176,6 +196,23 @@ public class HandlingUnitComposingTest {
 			item = handlingUnitService.getById(item.getId());
 			// Remove the handling unit from base
 			base = handlingUnitService.remove(item, base);
+		}
+		
+		assertTrue(base.getContains().isEmpty());
+		
+		// Now with ids; still have the Handling Units from above
+		base = handlingUnitService.assign("2", "1");
+		base = handlingUnitService.assign("3", "1");
+		base = handlingUnitService.assign("4", "1");
+		base = handlingUnitService.assign("5", "1");
+		
+		// Get the set of all handling units on base
+	    baseContains = base.getContains();
+		for (HandlingUnit item : baseContains) {
+			// Reread is mandatory
+			item = handlingUnitService.getById(item.getId());
+			// Remove the handling unit from base
+			base = handlingUnitService.remove(item.getId(), "1");
 		}
 		
 		assertTrue(base.getContains().isEmpty());
@@ -237,6 +274,17 @@ public class HandlingUnitComposingTest {
 		
 		// Other is the base of the moved handling unit now
 		assertEquals(other, hu4.getBaseHU());
+		
+		// Now with ids
+		HandlingUnit hu2 = handlingUnitService.getById("2");
+		assertEquals(base.getId(), hu2.getBaseHU().getId());
+		
+		hu2 = handlingUnitService.move(hu2.getId(), other.getId());
+		// Mandatory reread
+		other = handlingUnitService.getById(other.getId());
+		base = handlingUnitService.getById(base.getId());
+		assertTrue(other.getContains().contains(hu2));
+		assertFalse(base.getContains().contains(hu4));
 	}
 	
 	/**
@@ -264,5 +312,21 @@ public class HandlingUnitComposingTest {
 		assertTrue(base.getContains().isEmpty());
 		// The amount of handling units freed from base
 		assertEquals(3, freed.size());
+		
+		// Now free with base id
+		base = handlingUnitService.assign(handlingUnitService.getById("2").getId(), base.getId());
+		base = handlingUnitService.assign(handlingUnitService.getById("3").getId(), base.getId());
+		base = handlingUnitService.assign(handlingUnitService.getById("6").getId(), base.getId());
+		
+		// Now free base
+		freed = handlingUnitService.free("1");
+		
+		// Reread base is a must
+		base = handlingUnitService.getById("1");
+		
+		// Base has no handling units any longer
+		assertTrue(base.getContains().isEmpty());
+		// The amount of handling units freed from base
+		assertEquals(3, freed.size());		
 	}
 }
