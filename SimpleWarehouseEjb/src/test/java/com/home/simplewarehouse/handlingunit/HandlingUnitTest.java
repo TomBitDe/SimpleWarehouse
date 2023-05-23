@@ -515,7 +515,7 @@ public class HandlingUnitTest {
 		HandlingUnit hU1 = handlingUnitService.getById("1");
 		Location lOA = locationService.getById("A");
 
-		// Handling Unit is on locationService now
+		// Handling Unit is on location now
 		assertEquals(lOA, hU1.getLocation());
 		
 		assertFalse(lOA.getHandlingUnits().isEmpty());
@@ -559,6 +559,33 @@ public class HandlingUnitTest {
 			// Location is null not allowed
 			LOG.info("Expected exception: " + ex.getMessage());
 		}
+
+		// Now with ids
+		try {
+			handlingUnitService.dropTo(new Location("B"), new HandlingUnit("2"));
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);
+		}
+		
+	    // MANDATORY reread
+		HandlingUnit hU2 = handlingUnitService.getById("2");
+		Location lOB = locationService.getById("B");
+
+		// Handling Unit is on location now
+		assertEquals(lOB, hU2.getLocation());
+		
+		// Now do the pick
+		handlingUnitService.pickFrom(lOB, hU2);
+
+	    // MANDATORY reread
+		hU2 = handlingUnitService.getById("2");
+		lOB = locationService.getById("B");
+		
+		assertNull(hU2.getLocation());
+		assertFalse(lOB.getHandlingUnits().contains(hU2));
+		LOG.info(hU2);
+		LOG.info(lOB);
 	}
 	
 	/**

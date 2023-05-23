@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Set;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -20,6 +21,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -169,6 +171,19 @@ public class HandlingUnitComposingTest {
 		assertTrue(hu4.getContains().isEmpty());
 		assertEquals(otherBase, hu4.getBaseHU());
 		LOG.info(hu4);
+		
+		// Now an edge case
+		try {
+			hu4 = null;
+			otherBase = null;
+			
+			handlingUnitService.assign(hu4, otherBase);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue("Exception is: " + ex.getMessage(), true);
+		}
 	}
 	
 	/**
@@ -327,6 +342,25 @@ public class HandlingUnitComposingTest {
 		// Base has no handling units any longer
 		assertTrue(base.getContains().isEmpty());
 		// The amount of handling units freed from base
-		assertEquals(3, freed.size());		
+		assertEquals(3, freed.size());
+		
+		HandlingUnit otherBase = new HandlingUnit("10");
+		try {
+			freed = handlingUnitService.free(otherBase);
+
+			assertTrue(freed.isEmpty());
+		}
+		catch (EJBException ex) {
+			Assert.fail("Exception not expected: " + ex.getMessage());
+		}
+		
+		try {
+			freed = handlingUnitService.free((String)null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue("Exception is: " + ex.getMessage(), true);
+		}
 	}
 }
