@@ -576,7 +576,7 @@ public class HandlingUnitTest {
 		assertEquals(lOB, hU2.getLocation());
 		
 		// Now do the pick
-		handlingUnitService.pickFrom(lOB, hU2);
+		handlingUnitService.pickFrom(lOB.getLocationId(), hU2.getId());
 
 	    // MANDATORY reread
 		hU2 = handlingUnitService.getById("2");
@@ -584,6 +584,27 @@ public class HandlingUnitTest {
 		
 		assertNull(hU2.getLocation());
 		assertFalse(lOB.getHandlingUnits().contains(hU2));
+		
+		try {
+			handlingUnitService.pickFrom("B", (String)null);
+			
+			Assert.fail("Expected an Exception to be thrown");
+		}
+		catch (EJBException ex) {
+			// Location is null not allowed
+			LOG.info("Expected exception: " + ex.getMessage());
+		}
+		
+		try {
+			handlingUnitService.pickFrom((String)null, (String)null);
+			
+			Assert.fail("Expected an Exception to be thrown");
+		}
+		catch (EJBException ex) {
+			// Location is null not allowed
+			LOG.info("Expected exception: " + ex.getMessage());
+		}
+		
 		LOG.info(hU2);
 		LOG.info(lOB);
 	}
@@ -998,6 +1019,49 @@ public class HandlingUnitTest {
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertTrue(locationService.overheight(lOA, handlingUnitService.getById("4").getHeight()));
+		}
+		catch (DimensionException capex) {
+			Assert.fail("Unexpected exception: " +  capex.getMessage());
+		}
+
+		lOA.getDimension().setMaxHeight(HeightCategory.LOW);
+		try {
+			handlingUnitService.dropTo(lOA, new HandlingUnit("5", 0, 0.0f, HeightCategory.MIDDLE));
+
+			Assert.fail("Exception expected");
+		}
+		catch (OverheightException wex) {
+			assertTrue(true);
+			LOG.info(wex.getMessage());
+
+			// MANDATORY reread
+			lOA = locationService.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(locationService.overheight(lOA, handlingUnitService.getById("5").getHeight()));
+		}
+		catch (DimensionException capex) {
+			Assert.fail("Unexpected exception: " +  capex.getMessage());
+		}
+
+		try {
+			handlingUnitService.dropTo(lOA, new HandlingUnit("6", 0, 0.0f, HeightCategory.HIGH));
+
+			Assert.fail("Exception expected");
+		}
+		catch (OverheightException wex) {
+			assertTrue(true);
+			LOG.info(wex.getMessage());
+
+			// MANDATORY reread
+			lOA = locationService.getById("A");
+
+			// Check the locations
+			assertNotNull(lOA);
+			assertFalse(lOA.getHandlingUnits().isEmpty());
+			assertTrue(locationService.overheight(lOA, handlingUnitService.getById("6").getHeight()));
 		}
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
