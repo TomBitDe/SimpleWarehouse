@@ -14,18 +14,19 @@ import javax.websocket.Session;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.war.websocket.model.Device;
+import com.home.simplewarehouse.war.websocket.model.Location;
 
 /**
- * Handle the Web Socket session and the entity that has to be controlled.
+ * Handle the Web Socket session and the entities that have to be controlled.
  */
 @ApplicationScoped
 public class DeviceSessionHandler {
 	private static final Logger LOG = LogManager.getLogger(DeviceSessionHandler.class);
+	
+	private static final String ACTION = "action";
 
-	private int deviceId = 0;
     private final Set<Session> sessions = new HashSet<>();
-    private final Set<Device> devices = new HashSet<>();
+    private final Set<Location> locations = new HashSet<>();
 
     /**
      * Add a session to the Set of controlled sessions
@@ -36,8 +37,8 @@ public class DeviceSessionHandler {
     	LOG.debug("--> addSession");
 
         sessions.add(session);
-        for (Device device : devices) {
-            JsonObject addMessage = createAddMessage(device);
+        for (Location location : locations) {
+            JsonObject addMessage = createAddMessage(location);
             sendToSession(session, addMessage);
         }
 
@@ -60,100 +61,72 @@ public class DeviceSessionHandler {
     /**
      * Get a list of all managed entities
      *
-     * @return the entities (Devices)
+     * @return the entities (Locations)
      */
-    public List<Device> getDevices() {
-    	LOG.debug("--> getDevices");
+    public List<Location> getLocations() {
+    	LOG.debug("--> getLocations");
 
-    	LOG.debug("<-- getDevices");
-        return new ArrayList<>(devices);
+    	LOG.debug("<-- getLocations");
+        return new ArrayList<>(locations);
     }
 
     /**
-     * Add an entity (Device) to the set of managed entities
+     * Add an entity (Location) to the set of managed entities
      *
-     * @param device the entity to add
+     * @param location the entity to add
      */
-    public void addDevice(Device device) {
-    	LOG.debug("--> addDevice");
+    public void addLocation(Location location) {
+    	LOG.debug("--> addLocation");
 
-        device.setId(deviceId);
-        devices.add(device);
-        deviceId++;
-        JsonObject addMessage = createAddMessage(device);
+        location.setId(location.getId());
+        locations.add(location);
+        JsonObject addMessage = createAddMessage(location);
         sendToAllConnectedSessions(addMessage);
 
-        LOG.debug("<-- addDevice");
+        LOG.debug("<-- addLocation");
     }
 
     /**
-     * Remove an entity (Device) from the set of managed entities
+     * Remove an entity (Location) from the set of managed entities
      *
      * @param id the id of the entity to remove
      */
-    public void removeDevice(int id) {
-    	LOG.debug("--> removeDevice");
+    public void removeLocation(String id) {
+    	LOG.debug("--> removeLocation");
 
-        Device device = getDeviceById(id);
-        if (device != null) {
-            devices.remove(device);
+    	Location location = getLocationById(id);
+        if (location != null) {
+            locations.remove(location);
             JsonProvider provider = JsonProvider.provider();
             JsonObject removeMessage = provider.createObjectBuilder()
-                    .add("action", "remove")
+                    .add(ACTION, "remove")
                     .add("id", id)
                     .build();
             sendToAllConnectedSessions(removeMessage);
         }
 
-        LOG.debug("<-- removeDevice");
+        LOG.debug("<-- removeLocation");
     }
 
     /**
-     * Switch the entity (Device) on/off
-     *
-     * @param id the id of the entity to change its internal state
-     */
-    public void toggleDevice(int id) {
-    	LOG.debug("--> toggleDevice");
-
-        JsonProvider provider = JsonProvider.provider();
-        Device device = getDeviceById(id);
-        if (device != null) {
-            if ("On".equals(device.getStatus())) {
-                device.setStatus("Off");
-            } else {
-                device.setStatus("On");
-            }
-            JsonObject updateDevMessage = provider.createObjectBuilder()
-                    .add("action", "toggle")
-                    .add("id", device.getId())
-                    .add("status", device.getStatus())
-                    .build();
-            sendToAllConnectedSessions(updateDevMessage);
-        }
-
-        LOG.debug("<-- toggleDevice");
-    }
-
-    /**
-     * Get the entity (Device) by its id
+     * Get the entity (Location) by its id
      *
      * @param id the id to use
      *
-     * @return the matching entity (Device) or null in case of no match
+     * @return the matching entity (Location) or null in case of no match
      */
-    private Device getDeviceById(int id) {
-    	LOG.debug("--> getDeviceById");
+    private Location getLocationById(String id) {
+    	LOG.debug("--> getLocationById({})", id);
 
-    	for (Device device : devices) {
-            if (device.getId() == id) {
-                LOG.debug("<-- getDeviceById");
+    	for (Location location : locations) {
+            if (location.getId().equals(id)) {
+                LOG.debug("<-- getLocationById");
 
-                return device;
+                return location;
             }
         }
 
-        LOG.debug("<-- getDeviceById");
+        LOG.debug("<-- getLocationById");
 
         return null;
     }
@@ -161,21 +134,19 @@ public class DeviceSessionHandler {
     /**
      * Create a JSON object out of an entity (Device) for further processing
      *
-     * @param device the given entity (Device)
+     * @param location the given entity (Device)
      *
      * @return the related JSON object
      */
-    private JsonObject createAddMessage(Device device) {
+    private JsonObject createAddMessage(Location location) {
     	LOG.debug("--> createAddMessage");
 
         JsonProvider provider = JsonProvider.provider();
         JsonObject addMessage = provider.createObjectBuilder()
-                .add("action", "add")
-                .add("id", device.getId())
-                .add("name", device.getName())
-                .add("type", device.getType())
-                .add("status", device.getStatus())
-                .add("description", device.getDescription())
+                .add(ACTION, "add")
+                .add("id", location.getId())
+                .add("type", location.getType())
+                .add("version", location.getVersion())
                 .build();
 
         LOG.debug("<-- createAddMessage");

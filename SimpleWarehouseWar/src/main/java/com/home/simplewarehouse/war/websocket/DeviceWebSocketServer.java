@@ -17,7 +17,7 @@ import javax.websocket.server.ServerEndpoint;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.war.websocket.model.Device;
+import com.home.simplewarehouse.war.websocket.model.Location;
 
 /**
  * The Web Socket Server handles all the general tasks of a Web Socket implementation.<br>
@@ -28,6 +28,8 @@ import com.home.simplewarehouse.war.websocket.model.Device;
 @ServerEndpoint("/actions")
 public class DeviceWebSocketServer {
 	private static final Logger LOG = LogManager.getLogger(DeviceWebSocketServer.class);
+	
+	private static final String ACTION = "action";
 
     @Inject
     private DeviceSessionHandler sessionHandler;
@@ -83,25 +85,18 @@ public class DeviceWebSocketServer {
         try (JsonReader reader = Json.createReader(new StringReader(message))) {
             JsonObject jsonMessage = reader.readObject();
 
-            LOG.info("jsonMessage action = <" + jsonMessage.getString("action") + ">");
+            LOG.info("jsonMessage action = <{}>", jsonMessage.getString(ACTION));
 
-            if ("add".equals(jsonMessage.getString("action"))) {
-                Device device = new Device();
-                device.setName(jsonMessage.getString("name"));
-                device.setDescription(jsonMessage.getString("description"));
-                device.setType(jsonMessage.getString("type"));
-                device.setStatus("Off");
-                sessionHandler.addDevice(device);
+            if ("add".equals(jsonMessage.getString(ACTION))) {
+            	Location location = new Location();
+            	location.setId(jsonMessage.getString("id"));
+            	location.setType(jsonMessage.getString("type"));
+                sessionHandler.addLocation(location);
             }
 
-            if ("remove".equals(jsonMessage.getString("action"))) {
-                int id = jsonMessage.getInt("id");
-                sessionHandler.removeDevice(id);
-            }
-
-            if ("toggle".equals(jsonMessage.getString("action"))) {
-                int id = jsonMessage.getInt("id");
-                sessionHandler.toggleDevice(id);
+            if ("remove".equals(jsonMessage.getString(ACTION))) {
+                String id = jsonMessage.getString("id");
+                sessionHandler.removeLocation(id);
             }
         }
 

@@ -7,107 +7,74 @@ var socket = new WebSocket("ws://localhost:8080/war/actions");
 socket.onmessage = onMessage;
 
 function onMessage(event) {
-    var device = JSON.parse(event.data);
-    if (device.action === "add") {
-        printDeviceElement(device);
+    var location = JSON.parse(event.data);
+    if (location.action === "add") {
+        printLocationElement(location);
     }
-    if (device.action === "remove") {
-        document.getElementById(device.id).remove();
+    if (location.action === "remove") {
+        document.getElementById(location.id).remove();
         //device.parentNode.removeChild(device);
-    }
-    if (device.action === "toggle") {
-        var node = document.getElementById(device.id);
-        var statusText = node.children[2];
-        if (device.status === "On") {
-            statusText.innerHTML = "Status: " + device.status + " (<a href=\"#\" OnClick=toggleDevice(" + device.id + ")>Turn off</a>)";
-        } else if (device.status === "Off") {
-            statusText.innerHTML = "Status: " + device.status + " (<a href=\"#\" OnClick=toggleDevice(" + device.id + ")>Turn on</a>)";
-        }
     }
 }
 
-function addDevice(name, type, description) {
-    var DeviceAction = {
+function addLocation(name, type) {
+    var LocationAction = {
         action: "add",
         name: name,
         type: type,
-        description: description
     };
-    socket.send(JSON.stringify(DeviceAction));
+    socket.send(JSON.stringify(LocationAction));
 }
 
-function removeDevice(element) {
+function removeLocation(element) {
     var id = element;
-    var DeviceAction = {
+    var LocationAction = {
         action: "remove",
         id: id
     };
-    socket.send(JSON.stringify(DeviceAction));
+    socket.send(JSON.stringify(LocationAction));
 }
 
-function toggleDevice(element) {
-    var id = element;
-    var DeviceAction = {
-        action: "toggle",
-        id: id
-    };
-    socket.send(JSON.stringify(DeviceAction));
-}
-
-function printDeviceElement(device) {
+function printLocationElement(location) {
     var content = document.getElementById("content");
     
-    var deviceDiv = document.createElement("div");
-    deviceDiv.setAttribute("id", device.id);
-    deviceDiv.setAttribute("class", "device " + device.type);
-    content.appendChild(deviceDiv);
+    var locationDiv = document.createElement("div");
+    locationDiv.setAttribute("id", location.id);
+    locationDiv.setAttribute("class", "type " + device.type);
+    content.appendChild(locationDiv);
 
-    var deviceName = document.createElement("span");
-    deviceName.setAttribute("class", "deviceName");
-    deviceName.innerHTML = device.name;
-    deviceDiv.appendChild(deviceName);
+    var locationId = document.createElement("span");
+    locationId.setAttribute("class", "locationId");
+    locationId.innerHTML = location.id;
+    deviceDiv.appendChild(locationId);
 
-    var deviceType = document.createElement("span");
-    deviceType.innerHTML = "<b>Type:</b> " + device.type;
-    deviceDiv.appendChild(deviceType);
+    var locationType = document.createElement("span");
+    locationType.innerHTML = "<b>Type:</b> " + location.type;
+    location.appendChild(locationType);
 
-    var deviceStatus = document.createElement("span");
-    if (device.status === "On") {
-        deviceStatus.innerHTML = "<b>Status:</b> " + device.status + " (<a href=\"#\" OnClick=toggleDevice(" + device.id + ")>Turn off</a>)";
-    } else if (device.status === "Off") {
-        deviceStatus.innerHTML = "<b>Status:</b> " + device.status + " (<a href=\"#\" OnClick=toggleDevice(" + device.id + ")>Turn on</a>)";
-        //deviceDiv.setAttribute("class", "device off");
-    }
-    deviceDiv.appendChild(deviceStatus);
-
-    var deviceDescription = document.createElement("span");
-    deviceDescription.innerHTML = "<b>Comments:</b> " + device.description;
-    deviceDiv.appendChild(deviceDescription);
-
-    var removeDevice = document.createElement("span");
-    removeDevice.setAttribute("class", "removeDevice");
-    removeDevice.innerHTML = "<a href=\"#\" OnClick=removeDevice(" + device.id + ")>Remove device</a>";
-    deviceDiv.appendChild(removeDevice);
+    var removeLocation = document.createElement("span");
+    removeLocation.setAttribute("class", "removeLocation");
+    removeLocation.innerHTML = "<a href=\"#\" OnClick=removeLocation(" + location.id + ")>Remove Location</a>";
+    locationDiv.appendChild(removeLocation);
 }
 
-function showForm() {
-    document.getElementById("addDeviceForm").style.display = '';
+function showLocationForm() {
+    document.getElementById("addLocationForm").style.display = '';
 }
 
-function hideForm() {
-    document.getElementById("addDeviceForm").style.display = "none";
+function hideLocationForm() {
+    document.getElementById("addLocationForm").style.display = "none";
 }
 
-function formSubmit() {
-    var form = document.getElementById("addDeviceForm");
-    var name = form.elements["device_name"].value;
-    var type = form.elements["device_type"].value;
-    var description = form.elements["device_description"].value;
+function formLocationSubmit() {
+    var form = document.getElementById("addLocationForm");
+    var name = form.elements["Location_id"].value;
+    var type = form.elements["Location_type"].value;
     hideForm();
-    document.getElementById("addDeviceForm").reset();
-    addDevice(name, type, description);
+    document.getElementById("addLocationForm").reset();
+    addLocation(name, type);
 }
 
 function init() {
-    hideForm();
+    hideLocationForm();
 }
