@@ -71,7 +71,7 @@ public class Configurator implements ConfiguratorMXBean {
 	 * Fetch the Configuration items, merge with a custom configuration and register in JMX
 	 */
 	@PostConstruct
-	public void fetchConfiguration() {
+	public void fetchConfigurationAndRegisterInJMX() {
 		this.configuration = new HashMap<String, String>() {
 			private static final long serialVersionUID = 1L;
 
@@ -174,9 +174,9 @@ public class Configurator implements ConfiguratorMXBean {
 	/**
 	 * Register this Configurator in JMX
 	 */
-	void registerInJMX() {
+	private void registerInJMX() {
 	    try {
-	        objectName = new ObjectName("Configurator:type=" + this.getClass().getName());
+	        objectName = new ObjectName("SimpleWarehouseConfigurator:type=" + this.getClass().getName());
 	        platformMBeanServer = ManagementFactory.getPlatformMBeanServer();
 	        Configurator thiz = sc.getBusinessObject(Configurator.class);
 	        platformMBeanServer.registerMBean(thiz, objectName);
