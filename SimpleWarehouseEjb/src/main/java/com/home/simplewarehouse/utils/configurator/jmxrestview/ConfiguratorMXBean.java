@@ -2,9 +2,6 @@ package com.home.simplewarehouse.utils.configurator.jmxrestview;
 
 import java.util.Map;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
-
 /**
  * Defines the ConfiguratorMXBean.
  */
@@ -35,16 +32,12 @@ public interface ConfiguratorMXBean {
 	 * @param key the key value for this entry
 	 * @param value the entries value
 	 * @param uriInfo the Uri info
-	 * 
-	 * @return the response
 	 */
-	public Response addEntry(String key, String value, UriInfo uriInfo);
+	public void addEntry(String key, String value);
 	/**
 	 * Delete the configuration entry for the given key
 	 * 
 	 * @param key the key value
-	 * 
-	 * @return the response
 	 */
-	public Response deleteEntry(String key);
+	public void deleteEntry(String key);
 }

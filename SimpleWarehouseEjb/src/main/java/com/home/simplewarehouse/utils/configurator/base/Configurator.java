@@ -1,7 +1,6 @@
 package com.home.simplewarehouse.utils.configurator.base;
 
 import java.lang.management.ManagementFactory;
-import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -14,6 +13,7 @@ import javax.annotation.security.PermitAll;
 import javax.ejb.LocalBean;
 import javax.ejb.SessionContext;
 import javax.ejb.Singleton;
+import javax.ejb.Startup;
 import javax.enterprise.inject.Instance;
 import javax.enterprise.inject.spi.AnnotatedField;
 import javax.enterprise.inject.spi.InjectionPoint;
@@ -26,10 +26,7 @@ import javax.ws.rs.GET;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
-import javax.ws.rs.core.Context;
 import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.UriInfo;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -40,8 +37,9 @@ import com.home.simplewarehouse.utils.configurator.pluggable.ConfigurationProvid
 /**
  * The Configurator class.
  */
-@LocalBean
 @Singleton
+@Startup
+@LocalBean
 @Path("configuration")
 @javax.ws.rs.Produces({MediaType.TEXT_PLAIN})
 public class Configurator implements ConfiguratorMXBean {
@@ -109,6 +107,7 @@ public class Configurator implements ConfiguratorMXBean {
 	 */
 	@GET
     @PermitAll
+	@Override
 	public String getConfiguration() {
 		return this.configuration.toString();
 	}
@@ -123,6 +122,7 @@ public class Configurator implements ConfiguratorMXBean {
 	@GET
     @PermitAll
 	@Path("{key}")
+	@Override
 	public String getEntry(@PathParam("key") String key) {
 
 		return configuration.get(key);
@@ -133,26 +133,14 @@ public class Configurator implements ConfiguratorMXBean {
 	 * 
 	 * @param key the key value for this entry
 	 * @param value the entries value
-	 * @param uriInfo the Uri info
-	 * 
-	 * @return the response
 	 */
 	@PUT
     @PermitAll
-	@Path("{key}")
+	@Path("{key}/{value}")
 	@Consumes({MediaType.TEXT_PLAIN})
-	public Response addEntry(@PathParam("key") String key, String value, @Context UriInfo uriInfo) {
-		Response response = null;
-
-		if (this.configuration.containsKey(key)) {
-			response = Response.noContent().build();
-		}
-		else {
-			URI uri = uriInfo.getAbsolutePathBuilder().build(key);
-			response = Response.created(uri).build();
-		}
-
-		return response;
+	@Override
+	public void addEntry(@PathParam("key") String key, @PathParam("key") String value) {
+		this.configuration.put(key, value);
 	}
 
 	/**
@@ -165,12 +153,11 @@ public class Configurator implements ConfiguratorMXBean {
 	@DELETE
     @PermitAll
 	@Path("{key}")
-	public Response deleteEntry(@PathParam("key") String key) {
+	@Override
+	public void deleteEntry(String key) {
 		this.configuration.remove(key);
-
-		return Response.noContent().build();
 	}
-
+	
 	/**
 	 * Register this Configurator in JMX
 	 */
