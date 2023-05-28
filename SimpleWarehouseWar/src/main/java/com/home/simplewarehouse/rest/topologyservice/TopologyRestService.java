@@ -31,6 +31,8 @@ public class TopologyRestService extends StandardServices {
 
     /**
      * Create Simple Warehouse sample data.
+     * 
+     * @return the response
      */
     @POST
     @Path("/SampleData")
@@ -48,6 +50,8 @@ public class TopologyRestService extends StandardServices {
     
     /**
      * Delete the Simple Warehouse sample data.
+     * 
+     * @return the response
      */
     @DELETE
     @Path("/SampleData")

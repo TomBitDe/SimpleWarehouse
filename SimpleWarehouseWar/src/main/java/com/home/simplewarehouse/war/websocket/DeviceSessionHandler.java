@@ -29,6 +29,16 @@ public class DeviceSessionHandler {
     private final Set<Location> locations = new HashSet<>();
 
     /**
+     * Not needed but done
+     */
+    public DeviceSessionHandler() {
+    	super();
+    	
+    	LOG.trace("--> DeviceSessionHandler");
+    	LOG.trace("<-- DeviceSessionHandler");
+    }
+    
+    /**
      * Add a session to the Set of controlled sessions
      *
      * @param session the session to handle

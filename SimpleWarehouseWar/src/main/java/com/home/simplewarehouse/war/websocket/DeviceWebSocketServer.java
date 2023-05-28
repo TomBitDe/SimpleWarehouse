@@ -33,6 +33,16 @@ public class DeviceWebSocketServer {
 
     @Inject
     private DeviceSessionHandler sessionHandler;
+    
+    /**
+     * Not needed but done
+     */
+    public DeviceWebSocketServer() {
+    	super();
+    	
+    	LOG.trace("--> DeviceWebSocketServer");
+    	LOG.trace("<-- DeviceWebSocketServer");
+    }
 
     /**
      * On open add the session using the session handler

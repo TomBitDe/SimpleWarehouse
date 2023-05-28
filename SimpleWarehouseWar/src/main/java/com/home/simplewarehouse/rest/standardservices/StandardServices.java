@@ -7,6 +7,9 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+/**
+ * Standard services for all REST. 
+ */
 public class StandardServices {
 	/**
 	 * Mandatory default constructor

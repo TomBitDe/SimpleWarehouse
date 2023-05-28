@@ -246,7 +246,6 @@ public class HandlingUnitRestService extends StandardServices {
      * Pick from a FIFO / LIFO Location.
      * 
      * @param locationId the id of the Location to drop on
-     * @param handlingUnitId the id of the Handling Unit to drop
      * 
      * @return the handlingUnit or in case of an exception the message
      */

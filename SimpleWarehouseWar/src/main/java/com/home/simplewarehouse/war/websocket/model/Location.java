@@ -6,6 +6,9 @@ import java.util.Set;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Adapted Location VO.
+ */
 public class Location {
 	private static final Logger LOG = LogManager.getLogger(Location.class);
 
@@ -14,6 +17,9 @@ public class Location {
     private int version;
 	private Set<String> handlingUnitIds = new HashSet<>();
 
+	/**
+	 * Needed constructor
+	 */
     public Location() {
     	super();
 
@@ -22,6 +28,8 @@ public class Location {
     }
 
 	/**
+	 * Gets the Locations id
+	 * 
 	 * @return the id
 	 */
 	public String getId() {
@@ -29,6 +37,8 @@ public class Location {
 	}
 
 	/**
+	 * Sets the Locations id
+	 * 
 	 * @param id the id to set
 	 */
 	public void setId(String id) {
@@ -36,6 +46,8 @@ public class Location {
 	}
 
 	/**
+	 * Gets the Locations type
+	 * 
 	 * @return the type
 	 */
 	public String getType() {
@@ -43,6 +55,8 @@ public class Location {
 	}
 
 	/**
+	 * Sets the Locations type
+	 * 
 	 * @param type the type to set
 	 */
 	public void setType(String type) {
@@ -50,6 +64,8 @@ public class Location {
 	}
 
 	/**
+	 * Gets the Locations version
+	 * 
 	 * @return the version
 	 */
 	public int getVersion() {
@@ -57,6 +73,8 @@ public class Location {
 	}
 
 	/**
+	 * Sets the Locations version
+	 * 
 	 * @param version the version to set
 	 */
 	public void setVersion(int version) {
@@ -64,14 +82,18 @@ public class Location {
 	}
 
 	/**
-	 * @return the handlingUnits
+	 * Gets the Locations containing Handling Unit ids
+	 * 
+	 * @return the handlingUnitIds
 	 */
 	public Set<String> getHandlingUnitIds() {
 		return handlingUnitIds;
 	}
 
 	/**
-	 * @param handlingUnits the handlingUnits to set
+	 * Sets the Locations containing Handling Unit ids
+	 * 
+	 * @param handlingUnitIds the handlingUnits to set
 	 */
 	public void setHandlingUnitIds(Set<String> handlingUnitIds) {
 		this.handlingUnitIds = handlingUnitIds;
