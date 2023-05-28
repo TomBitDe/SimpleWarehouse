@@ -3,23 +3,23 @@ package com.home.simplewarehouse.utils.configurator.jmxrestview;
 import java.util.Map;
 
 /**
- * Defines the ConfiguratorMXBean.
+ * Defines the Configurator MXBean.
  */
 public interface ConfiguratorMXBean {
 	/**
-	 * Gets the Configuration Map
+	 * Gets all the Configuration entries as Map
 	 * 
 	 * @return the Map
 	 */
 	public Map<String, String> getConfigurationMap();
 	/**
-	 * Gets the Configuration
+	 * Gets all the Configuration entries as a single String
 	 * 
 	 * @return the Configuration as String
 	 */
 	public String getConfiguration();
 	/**
-	 * Gets the Configuation entry for the given key
+	 * Gets the Configuration entry for the given key
 	 * 
 	 * @param key the key value
 	 * 
@@ -31,11 +31,10 @@ public interface ConfiguratorMXBean {
 	 * 
 	 * @param key the key value for this entry
 	 * @param value the entries value
-	 * @param uriInfo the Uri info
 	 */
 	public void addEntry(String key, String value);
 	/**
-	 * Delete the configuration entry for the given key
+	 * Delete the Configuration entry for the given key
 	 * 
 	 * @param key the key value
 	 */

@@ -31,8 +31,8 @@ import javax.ws.rs.core.MediaType;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider;
 import com.home.simplewarehouse.utils.configurator.jmxrestview.ConfiguratorMXBean;
-import com.home.simplewarehouse.utils.configurator.pluggable.ConfigurationProvider;
 
 /**
  * The Configurator class.
@@ -48,7 +48,7 @@ public class Configurator implements ConfiguratorMXBean {
 	private Map<String, String> configuration;
 
 	@Inject
-	private Instance<ConfigurationProvider> configurationProvider;
+	private Instance<CacheDataProvider> configurationProvider;
 
 	private Set<String> unconfiguredFields = new HashSet<>();
 
@@ -64,24 +64,25 @@ public class Configurator implements ConfiguratorMXBean {
 	public Configurator() {
 		super();
 	}
+	
+	/**
+	 * Give some general not configurable defaults here
+	 * 
+	 * @param origin the configuration Map to fill with this defaults
+	 */
+	private static void setDefaults(Map<String, String> origin) {
+		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean1.secondsConfig", "*/5");
+		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean2.secondsConfig", "*/8");
+	}
 
 	/**
 	 * Fetch the Configuration items, merge with a custom configuration and register in JMX
 	 */
 	@PostConstruct
 	public void fetchConfigurationAndRegisterInJMX() {
-		this.configuration = new HashMap<String, String>() {
-			private static final long serialVersionUID = 1L;
-
-		    {
-		    	// Default values are here
-			    put("com.home.gftest.latestarter.ControllerSessionTimer.controllerSessionRuns", "*/8");
-			    put("pingControllerRuns", "*/5");
-		    }
-		};
-
-		// Override defaults with explicitly configured entries
-		this.configuration.put("com.home.gftest.latestarter.ControllerSessionTimer.controllerSessionRuns", "*/3");
+		this.configuration = new HashMap<>();
+		
+		setDefaults(this.configuration);
 
 		mergeWithCustomConfiguration();
 
@@ -89,14 +90,38 @@ public class Configurator implements ConfiguratorMXBean {
 	}
 
 	private void mergeWithCustomConfiguration() {
-		for (ConfigurationProvider provider : configurationProvider) {
-			Map<String, String> customConfiguration = provider.getConfiguration();
+		for (CacheDataProvider provider : configurationProvider) {
+			Map<String, String> customConfiguration = provider.loadCacheData();
 			this.configuration.putAll(customConfiguration);
 		}
 	}
 
+	private Map<String, String> syncWithCustomConfiguration() {
+		Map<String, String> synced = new HashMap<>();
+		
+		setDefaults(synced);
+		
+		for (CacheDataProvider provider : configurationProvider) {
+			Map<String, String> provided = provider.loadCacheData();
+
+			final Set<String> providedKeys = provided.keySet();
+						
+			for (String providedKey : providedKeys) {
+				if (synced.containsKey(providedKey)) {
+					synced.replace(providedKey, provided.get(providedKey));
+				}
+				else {
+					synced.put(providedKey, provided.get(providedKey));
+				}
+			}
+		}
+		
+		return synced;
+	}
+
 	@Override
 	public Map<String, String> getConfigurationMap() {
+		this.configuration = syncWithCustomConfiguration();
 		return this.configuration;
 	}
 
@@ -109,6 +134,7 @@ public class Configurator implements ConfiguratorMXBean {
     @PermitAll
 	@Override
 	public String getConfiguration() {
+		this.configuration = syncWithCustomConfiguration();
 		return this.configuration.toString();
 	}
 

@@ -17,7 +17,7 @@ import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
  * Load data for a cache from a DB table.<br>
  * Since this are application global data the DB table is 'ApplConfig (APPL_CONFIG)'.<br>
  */
-@Stateless
+@Stateless(name = "CacheDataFromDbTable")
 @Local(com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider.class)
 public class CacheDataFromDbTable implements CacheDataProvider {
 	private static final Logger LOG = LogManager.getLogger(CacheDataFromDbTable.class);

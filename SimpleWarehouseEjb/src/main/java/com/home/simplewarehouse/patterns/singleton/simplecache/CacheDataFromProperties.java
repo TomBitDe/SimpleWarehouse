@@ -16,8 +16,8 @@ import org.apache.logging.log4j.Logger;
  * Load data for a cache from a properties file.<br>
  * Since this are application global data the file name is 'globals.properties'.<br>
  */
-@Stateless
-@Local(com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider.class)
+@Stateless(name = "CacheDataFromProperties")
+@Local(com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider.class) 
 public class CacheDataFromProperties implements CacheDataProvider {
 	private static final Logger LOG = LogManager.getLogger(CacheDataFromProperties.class);
 	private static final String GLOBAL_PROPS = "globals.properties";
