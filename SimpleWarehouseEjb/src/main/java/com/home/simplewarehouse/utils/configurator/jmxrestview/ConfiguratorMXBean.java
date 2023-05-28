@@ -27,6 +27,15 @@ public interface ConfiguratorMXBean {
 	 */
 	public String getEntry(String key);
 	/**
+	 * Gets the Configuration entry for the given key
+	 * 
+	 * @param key the key value
+	 * @param defaultValue the value returned if nothing found for the key
+	 * 
+	 * @return the entry or the defaultValue as String
+	 */
+	public String getEntry(String key, String defaultValue);
+	/**
 	 * Add this entry to the Configuration
 	 * 
 	 * @param key the key value for this entry

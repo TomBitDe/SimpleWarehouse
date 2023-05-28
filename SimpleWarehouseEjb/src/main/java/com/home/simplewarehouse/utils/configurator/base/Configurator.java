@@ -155,6 +155,27 @@ public class Configurator implements ConfiguratorMXBean {
 	}
 
 	/**
+	 * Gets the Configuation entry for the given key
+	 * 
+	 * @param key the key value
+	 * 
+	 * @return the entry as String
+	 */
+	@GET
+    @PermitAll
+	@Path("{key}/{defaultValue}")
+	@Override
+	public String getEntry(@PathParam("key") String key, @PathParam("defaultValue") String defaultValue) {
+		String ret = configuration.get(key);
+		
+		if (ret == null) {
+			ret = defaultValue;
+		}
+		
+		return ret;
+	}
+
+	/**
 	 * Add this entry to the Configuration
 	 * 
 	 * @param key the key value for this entry
@@ -270,5 +291,10 @@ public class Configurator implements ConfiguratorMXBean {
 		}
 
 		return valueForFieldName;
+	}
+
+	public Object getData(String string, String string2) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }
