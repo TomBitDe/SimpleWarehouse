@@ -45,6 +45,9 @@ import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
+/**
+ * Test for Entity marshalling.
+ */
 @RunWith(Arquillian.class)
 public class MarshallerTest {
 	private static final Logger LOG = LogManager.getLogger(MarshallerTest.class);
@@ -154,6 +157,9 @@ public class MarshallerTest {
 		LOG.trace("<-- afterTest()");		
 	}
 
+	/**
+	 * Test ApplConfig entity
+	 */
 	@Test
 	@InSequence(0)
 	public void marshallApplConfig()
@@ -183,6 +189,9 @@ public class MarshallerTest {
         }
 	}
 	
+	/**
+	 * Test EntityBase entity
+	 */
 	@Test
 	@InSequence(3)
 	public void marshallEntityBase()
@@ -212,6 +221,9 @@ public class MarshallerTest {
         }
 	}
 	
+	/**
+	 * Test Dimension entity
+	 */
 	@Test
 	@InSequence(6)
 	public void marshallDimension() {
@@ -240,6 +252,9 @@ public class MarshallerTest {
         }
 	}
 	
+	/**
+	 * Test LocationStatus entity
+	 */
 	@Test
 	@InSequence(9)
 	public void marshallLocationStatus() {
@@ -268,6 +283,9 @@ public class MarshallerTest {
         }
 	}
 	
+	/**
+	 * Test Location entity
+	 */
 	@Test
 	@InSequence(12)
 	public void marshallLocation()
@@ -301,6 +319,9 @@ public class MarshallerTest {
         }
 	}
 
+	/**
+	 * Test FifoLocation entity
+	 */
 	@Test
 	@InSequence(15)
 	public void marshallFifoLocation()
@@ -330,6 +351,9 @@ public class MarshallerTest {
         }
 	}
 
+	/**
+	 * Test LifoLocation entity
+	 */
 	@Test
 	@InSequence(18)
 	public void marshallLifoLocation()
@@ -359,6 +383,9 @@ public class MarshallerTest {
         }
 	}
 
+	/**
+	 * Test HandlingUnit entity
+	 */
 	@Test
 	@InSequence(21)
 	public void marshallHandlingUnit()
@@ -398,7 +425,7 @@ public class MarshallerTest {
         }
 	}
 
-	public static Marshaller defineMarshaller(JAXBContext jaxbContext) throws Exception {
+	private static Marshaller defineMarshaller(JAXBContext jaxbContext) throws Exception {
 		Marshaller jaxbMarshaller = jaxbContext.createMarshaller();
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);

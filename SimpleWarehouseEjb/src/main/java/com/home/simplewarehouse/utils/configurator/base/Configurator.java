@@ -173,8 +173,6 @@ public class Configurator implements ConfiguratorMXBean {
 	 * Delete the configuration entry for the given key
 	 * 
 	 * @param key the key value
-	 * 
-	 * @return the response
 	 */
 	@DELETE
     @PermitAll

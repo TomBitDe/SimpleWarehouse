@@ -445,7 +445,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	/**
 	 * Only needed for JAXB
 	 * 
-	 * @param the Location id of this Handling Unit
+	 * @param locationId the Location id of this Handling Unit
 	 */
 	public void setLocationId(String locationId) {
 		// No code needed so far
