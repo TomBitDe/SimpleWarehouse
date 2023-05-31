@@ -45,10 +45,10 @@ public class CacheDataFromProperties implements CacheDataProvider {
 			inputStream = this.getClass().getClassLoader().getResourceAsStream(GLOBAL_PROPS);
 
 	        if (inputStream == null) {
-	        	LOG.warn("InputStream is: {} --> cache is EMPTY!", inputStream);
+	        	LOG.warn("InputStream is: {} --> cache is null!", inputStream);
 	        }
 	        else {
-		        LOG.info("InputStream is: {}", inputStream);
+		        LOG.info("InputStream is available!");
 
 		        Properties properties = new Properties();
 
