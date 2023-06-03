@@ -40,7 +40,7 @@ public class CacheDataFromProperties implements CacheDataProvider {
 		InputStream inputStream = null;
 
 		try {
-			LOG.info("Load cache from [{}]", GLOBAL_PROPS);
+			LOG.debug("Load cache from [{}]", GLOBAL_PROPS);
 
 			inputStream = this.getClass().getClassLoader().getResourceAsStream(GLOBAL_PROPS);
 
@@ -48,7 +48,7 @@ public class CacheDataFromProperties implements CacheDataProvider {
 	        	LOG.warn("InputStream is [{}]: check if [{}] is available!", inputStream, GLOBAL_PROPS);
 	        }
 	        else {
-		        LOG.info("InputStream is available!");
+		        LOG.debug("InputStream is available!");
 
 		        Properties properties = new Properties();
 
@@ -56,7 +56,7 @@ public class CacheDataFromProperties implements CacheDataProvider {
 				inputStream.close();
 
 				properties.forEach((key, val) -> map.put((String) key, new ValueSourceEntry((String)val, "Properties")));
-				LOG.info("{} = {}", GLOBAL_PROPS, map);
+				LOG.debug("{} = {}", GLOBAL_PROPS, map);
 	        }
 		}
         catch (IOException e) {

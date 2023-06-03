@@ -75,12 +75,12 @@ public class ConfigCacheBean implements ConfigCache {
 
 		Map<String, ValueSourceEntry> map = cacheDataProvider.loadCacheData();
 
-		LOG.info("-------- Cache data --------");
+		LOG.debug("-------- ConfigCache data --------");
 		if (map.isEmpty()) {
-			LOG.info("EMPTY!");
+			LOG.debug("EMPTY!");
 		}
 		else {
-			map.forEach((k,v) -> LOG.info("Key=[{}] Value=[{}]", k, v));
+			map.forEach((k,v) -> LOG.debug("Key=[{}] Value=[{}]", k, v));
 		}
 
 		LOG.trace("<-- createFreshCache");

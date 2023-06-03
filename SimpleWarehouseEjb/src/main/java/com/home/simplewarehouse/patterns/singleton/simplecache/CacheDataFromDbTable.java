@@ -45,7 +45,7 @@ public class CacheDataFromDbTable implements CacheDataProvider {
 		for (ApplConfig entry : configList) {
 			map.put(entry.getKeyVal(), new ValueSourceEntry(entry.getParamVal(), "DbTable"));
 		}
-		LOG.info("Global configurations = {}", map);
+		LOG.debug("DbTable configurations = {}", map);
 
 		LOG.trace("<-- loadCacheData");
 
