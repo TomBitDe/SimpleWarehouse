@@ -115,6 +115,8 @@ public class ApplConfigManagerBean implements ApplConfigManager, ApplConfigServi
 		ApplConfig entry = getById(config.getKeyVal());
 		if (entry != null) {
 			entry.setParamVal(config.getParamVal());
+			
+			em.merge(entry);
 		}
 
 		LOG.trace("<-- update");
