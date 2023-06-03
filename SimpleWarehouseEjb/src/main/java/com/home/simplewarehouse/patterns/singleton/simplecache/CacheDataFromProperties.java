@@ -40,12 +40,12 @@ public class CacheDataFromProperties implements CacheDataProvider {
 		InputStream inputStream = null;
 
 		try {
-			LOG.info("Refresh cache from [{}]", GLOBAL_PROPS);
+			LOG.info("Load cache from [{}]", GLOBAL_PROPS);
 
 			inputStream = this.getClass().getClassLoader().getResourceAsStream(GLOBAL_PROPS);
 
 	        if (inputStream == null) {
-	        	LOG.warn("InputStream is: {} --> cache is null!", inputStream);
+	        	LOG.warn("InputStream is [{}]: check if [{}] is available!", inputStream, GLOBAL_PROPS);
 	        }
 	        else {
 		        LOG.info("InputStream is available!");
