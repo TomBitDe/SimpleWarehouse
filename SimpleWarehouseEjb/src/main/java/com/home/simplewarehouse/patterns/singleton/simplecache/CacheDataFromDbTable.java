@@ -35,15 +35,15 @@ public class CacheDataFromDbTable implements CacheDataProvider {
 	}
 
 	@Override
-	public Map<String, String> loadCacheData() {
+	public Map<String, ValueSourceEntry> loadCacheData() {
 		LOG.trace("--> loadCacheData");
 
-		Map<String, String> map = new HashMap<>();
+		Map<String, ValueSourceEntry> map = new HashMap<>();
 
 		List<ApplConfig> configList = applConfigManager.getAll();
 
 		for (ApplConfig entry : configList) {
-			map.put(entry.getKeyVal(), entry.getParamVal());
+			map.put(entry.getKeyVal(), new ValueSourceEntry(entry.getParamVal(), "DbTable"));
 		}
 		LOG.info("Global configurations = {}", map);
 

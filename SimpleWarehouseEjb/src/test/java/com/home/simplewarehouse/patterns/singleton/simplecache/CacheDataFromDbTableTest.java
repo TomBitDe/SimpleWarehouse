@@ -68,7 +68,7 @@ public class CacheDataFromDbTableTest {
 	{
 		LOG.debug("--> loadCacheDataTest");
 
-		Map<String, String> configMap = cacheDataProvider.loadCacheData();
+		Map<String, ValueSourceEntry> configMap = cacheDataProvider.loadCacheData();
 		// Not known if db or properties is the source. So test only the following
 		assertNotNull(configMap);
 

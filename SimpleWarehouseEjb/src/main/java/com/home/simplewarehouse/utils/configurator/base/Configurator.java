@@ -32,6 +32,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.CacheDataProvider;
+import com.home.simplewarehouse.patterns.singleton.simplecache.ValueSourceEntry;
 import com.home.simplewarehouse.utils.configurator.jmxrestview.ConfiguratorMXBean;
 
 /**
@@ -44,8 +45,10 @@ import com.home.simplewarehouse.utils.configurator.jmxrestview.ConfiguratorMXBea
 @javax.ws.rs.Produces({MediaType.TEXT_PLAIN})
 public class Configurator implements ConfiguratorMXBean {
 	private static final Logger LOG = LogManager.getLogger(Configurator.class);
+	
+	private static final String SOURCE_DEFAULT = "Default";
 
-	private Map<String, String> configuration;
+	private Map<String, ValueSourceEntry> configuration;
 
 	@Inject
 	private Instance<CacheDataProvider> configurationProvider;
@@ -70,9 +73,9 @@ public class Configurator implements ConfiguratorMXBean {
 	 * 
 	 * @param origin the configuration Map to fill with this defaults
 	 */
-	private static void setDefaults(Map<String, String> origin) {
-		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean1.secondsConfig", "*/5");
-		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean2.secondsConfig", "*/8");
+	private static void setDefaults(Map<String, ValueSourceEntry> origin) {
+		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean1.secondsConfig", new ValueSourceEntry("*/5", SOURCE_DEFAULT));
+		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean2.secondsConfig", new ValueSourceEntry("*/8", SOURCE_DEFAULT));
 	}
 
 	/**
@@ -89,29 +92,37 @@ public class Configurator implements ConfiguratorMXBean {
 		registerInJMX();
 	}
 
+	/**
+	 * At startup time put all the configurations from providers to the initial
+	 * (defaults) configuration
+	 */
 	private void mergeWithCustomConfiguration() {
+		// Loop over all providers
 		for (CacheDataProvider provider : configurationProvider) {
-			Map<String, String> customConfiguration = provider.loadCacheData();
+			// Load data from this provider
+			Map<String, ValueSourceEntry> customConfiguration = provider.loadCacheData();
+			// Put all to the current configuration
 			this.configuration.putAll(customConfiguration);
 		}
 	}
 
-	private Map<String, String> syncWithCustomConfiguration() {
-		Map<String, String> synced = new HashMap<>();
-		
-		setDefaults(synced);
+	// TODO Does not really work
+	// Configuration is the master
+	// 
+	private Map<String, ValueSourceEntry> syncWithCustomConfiguration() {
+		Map<String, ValueSourceEntry> synced = new HashMap<>(this.configuration);
 		
 		for (CacheDataProvider provider : configurationProvider) {
-			Map<String, String> provided = provider.loadCacheData();
+			Map<String, ValueSourceEntry> provided = provider.loadCacheData();
 
 			final Set<String> providedKeys = provided.keySet();
 						
 			for (String providedKey : providedKeys) {
-				if (synced.containsKey(providedKey)) {
+				if (this.configuration.containsKey(providedKey)) {
 					synced.replace(providedKey, provided.get(providedKey));
 				}
 				else {
-					synced.put(providedKey, provided.get(providedKey));
+					synced.put(providedKey, provided.get(providedKey));						
 				}
 			}
 		}
@@ -120,7 +131,7 @@ public class Configurator implements ConfiguratorMXBean {
 	}
 
 	@Override
-	public Map<String, String> getConfigurationMap() {
+	public Map<String, ValueSourceEntry> getConfigurationMap() {
 		this.configuration = syncWithCustomConfiguration();
 		return this.configuration;
 	}
@@ -150,14 +161,20 @@ public class Configurator implements ConfiguratorMXBean {
 	@Path("{key}")
 	@Override
 	public String getEntry(@PathParam("key") String key) {
+		String ret = null;
 
-		return configuration.get(key);
+		if (this.configuration.get(key) != null) {
+			ret = this.configuration.get(key).getValue();
+		}
+
+		return ret;
 	}
 
 	/**
 	 * Gets the Configuation entry for the given key
 	 * 
 	 * @param key the key value
+	 * @param defaultValue the default value if nothing found for the key
 	 * 
 	 * @return the entry as String
 	 */
@@ -166,7 +183,11 @@ public class Configurator implements ConfiguratorMXBean {
 	@Path("{key}/{defaultValue}")
 	@Override
 	public String getEntry(@PathParam("key") String key, @PathParam("defaultValue") String defaultValue) {
-		String ret = configuration.get(key);
+		String ret = null;
+		
+		if (this.configuration.get(key) != null) {
+			ret = this.configuration.get(key).getValue();
+		}
 		
 		if (ret == null) {
 			ret = defaultValue;
@@ -176,7 +197,7 @@ public class Configurator implements ConfiguratorMXBean {
 	}
 
 	/**
-	 * Add this entry to the Configuration
+	 * Put this entry to the Configuration (add or replace)
 	 * 
 	 * @param key the key value for this entry
 	 * @param value the entries value
@@ -186,8 +207,8 @@ public class Configurator implements ConfiguratorMXBean {
 	@Path("{key}/{value}")
 	@Consumes({MediaType.TEXT_PLAIN})
 	@Override
-	public void addEntry(@PathParam("key") String key, @PathParam("key") String value) {
-		this.configuration.put(key, value);
+	public void putEntry(@PathParam("key") String key, @PathParam("key") String value) {
+		this.configuration.put(key, new ValueSourceEntry(value, "Configurator"));
 	}
 
 	/**
@@ -282,7 +303,7 @@ public class Configurator implements ConfiguratorMXBean {
 	}
 
 	private String getValueForKey(String fieldName) throws NotConfiguredException {
-		String valueForFieldName = configuration.get(fieldName);
+		String valueForFieldName = this.configuration.get(fieldName).getValue();
 
 		if (valueForFieldName == null) {
 			this.unconfiguredFields.add(fieldName);
@@ -291,10 +312,5 @@ public class Configurator implements ConfiguratorMXBean {
 		}
 
 		return valueForFieldName;
-	}
-
-	public Object getData(String string, String string2) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 }

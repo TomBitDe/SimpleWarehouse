@@ -11,5 +11,5 @@ public interface CacheDataProvider {
 	 *
 	 * @return a Map of data for the cache
 	 */
-	public Map<String, String> loadCacheData();
+	public Map<String, ValueSourceEntry> loadCacheData();
 }

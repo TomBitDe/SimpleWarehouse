@@ -2,6 +2,8 @@ package com.home.simplewarehouse.utils.configurator.jmxrestview;
 
 import java.util.Map;
 
+import com.home.simplewarehouse.patterns.singleton.simplecache.ValueSourceEntry;
+
 /**
  * Defines the Configurator MXBean.
  */
@@ -11,7 +13,7 @@ public interface ConfiguratorMXBean {
 	 * 
 	 * @return the Map
 	 */
-	public Map<String, String> getConfigurationMap();
+	public Map<String, ValueSourceEntry> getConfigurationMap();
 	/**
 	 * Gets all the Configuration entries as a single String
 	 * 
@@ -36,12 +38,12 @@ public interface ConfiguratorMXBean {
 	 */
 	public String getEntry(String key, String defaultValue);
 	/**
-	 * Add this entry to the Configuration
+	 * Put this entry to the Configuration (add or replace value)
 	 * 
 	 * @param key the key value for this entry
 	 * @param value the entries value
 	 */
-	public void addEntry(String key, String value);
+	public void putEntry(String key, String value);
 	/**
 	 * Delete the Configuration entry for the given key
 	 * 

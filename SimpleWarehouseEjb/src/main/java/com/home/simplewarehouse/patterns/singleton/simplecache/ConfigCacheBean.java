@@ -26,7 +26,7 @@ public class ConfigCacheBean implements ConfigCache {
 	private static final String KEY_DEFAULT_VALUE_FORMATTER = "Key=[{}] DefaultValue=[{}]";
 	private static final String VALUE_FORMATTER = "Value=[{}]";
 
-	private Map<String, String> cache;
+	private Map<String, ValueSourceEntry> cache;
 
 	@EJB
 	private CacheDataProvider cacheDataProvider;
@@ -70,10 +70,10 @@ public class ConfigCacheBean implements ConfigCache {
 	 *
 	 * @return the data map for the cache
 	 */
-	private Map<String, String> createFreshCache() {
+	private Map<String, ValueSourceEntry> createFreshCache() {
 		LOG.trace("--> createFreshCache");
 
-		Map<String, String> map = cacheDataProvider.loadCacheData();
+		Map<String, ValueSourceEntry> map = cacheDataProvider.loadCacheData();
 
 		LOG.info("-------- Cache data --------");
 		if (map.isEmpty()) {
@@ -92,9 +92,13 @@ public class ConfigCacheBean implements ConfigCache {
 	@Lock(LockType.READ)
 	public String getData(String key) {
 		LOG.trace("Key=[{}]", key);
-
-		String val = cache.get(key);
-
+		
+		String val = null;
+		
+		if (cache.get(key) != null) {
+			val = cache.get(key).getValue();
+		}
+		
 		LOG.trace(VALUE_FORMATTER, val);
 
 	    return val;
@@ -105,8 +109,12 @@ public class ConfigCacheBean implements ConfigCache {
 	public String getData(String key, String defaultValue) {
 		LOG.trace(KEY_DEFAULT_VALUE_FORMATTER, key, defaultValue);
 
-		String val = cache.get(key);
-
+		String val = null;
+		
+		if (cache.get(key) != null) {
+			val = cache.get(key).getValue();
+		}
+		
 		if (val == null) {
 			val = defaultValue;
 		}
@@ -124,7 +132,12 @@ public class ConfigCacheBean implements ConfigCache {
 		int val;
 
 		try {
-		    val = Integer.valueOf(cache.get(key));
+			if (cache.get(key) != null) {
+				val = Integer.valueOf(cache.get(key).getValue());
+			}
+			else {
+				val = defaultValue;
+			}
 		}
 		catch(NumberFormatException nex) {
 			val = defaultValue;
@@ -143,7 +156,12 @@ public class ConfigCacheBean implements ConfigCache {
 		long val;
 
 		try {
-		    val = Long.valueOf(cache.get(key));
+			if (cache.get(key) != null) {
+				val = Integer.valueOf(cache.get(key).getValue());
+			}
+			else {
+				val = defaultValue;
+			}
 		}
 		catch(NumberFormatException nex) {
 			val = defaultValue;

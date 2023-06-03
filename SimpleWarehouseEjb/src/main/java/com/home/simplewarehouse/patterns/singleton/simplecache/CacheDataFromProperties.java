@@ -32,10 +32,10 @@ public class CacheDataFromProperties implements CacheDataProvider {
 	}
 
 	@Override
-	public Map<String, String> loadCacheData() {
+	public Map<String, ValueSourceEntry> loadCacheData() {
 		LOG.trace("--> loadCacheData");
 
-		Map<String, String> map = new HashMap<>();
+		Map<String, ValueSourceEntry> map = new HashMap<>();
 
 		InputStream inputStream = null;
 
@@ -55,7 +55,7 @@ public class CacheDataFromProperties implements CacheDataProvider {
 				properties.load(inputStream);
 				inputStream.close();
 
-				properties.forEach((key, val) -> map.put((String) key, (String) val));
+				properties.forEach((key, val) -> map.put((String) key, new ValueSourceEntry((String)val, "Properties")));
 				LOG.info("{} = {}", GLOBAL_PROPS, map);
 	        }
 		}
