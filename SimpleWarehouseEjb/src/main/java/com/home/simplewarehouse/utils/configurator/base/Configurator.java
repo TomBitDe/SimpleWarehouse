@@ -47,6 +47,7 @@ public class Configurator implements ConfiguratorMXBean {
 	private static final Logger LOG = LogManager.getLogger(Configurator.class);
 	
 	private static final String SOURCE_DEFAULT = "Default";
+	private static final String SOURCE_CONFIGURATOR = "Configurator";
 
 	private Map<String, ValueSourceEntry> configuration;
 
@@ -106,26 +107,54 @@ public class Configurator implements ConfiguratorMXBean {
 		}
 	}
 
-	// TODO Does not really work
-	// Configuration is the master
-	// 
+	/**
+	 * Sync configuration with custom configurations from other sources<br>
+	 * <br>
+	 * Entries in configuration are always master
+	 * 
+	 * 
+	 * @return the synced configuration
+	 */
 	private Map<String, ValueSourceEntry> syncWithCustomConfiguration() {
-		Map<String, ValueSourceEntry> synced = new HashMap<>(this.configuration);
+		Map<String, ValueSourceEntry> synced = new HashMap<>();
 		
+		LOG.info("+++ CONNFIGURATION SYNC START ++++++++++++++++++++++++++++++++++++");
+		LOG.info("--- STEP ONE -----------------------------------------------------");
+		final Set<String> configurationKeys = configuration.keySet();
+		for (String configurationKey : configurationKeys) {
+			final String source = configuration.get(configurationKey).getSource();
+			
+			if (source.equals(SOURCE_DEFAULT) || source.equals(SOURCE_CONFIGURATOR)) {
+				LOG.info("Put for key=[{}] source=[{}]", configurationKey, source);
+				synced.put(configurationKey, configuration.get(configurationKey));
+			}
+			else {
+				LOG.info("No put for key=[{}] source=[{}]", configurationKey, source);
+			}
+		}
+		LOG.info("--- AFTER STEP ONE -----------------------------------------------");
+		synced.forEach((k,v) -> LOG.info("Key=[{}] Value=[{}]", k, v));
+		
+		LOG.info("--- STEP TWO -----------------------------------------------------");
 		for (CacheDataProvider provider : configurationProvider) {
 			Map<String, ValueSourceEntry> provided = provider.loadCacheData();
 
 			final Set<String> providedKeys = provided.keySet();
 						
 			for (String providedKey : providedKeys) {
-				if (this.configuration.containsKey(providedKey)) {
-					synced.replace(providedKey, provided.get(providedKey));
+				if (synced.containsKey(providedKey)) {
+					LOG.info("NO REPLACE for key=[{}] {}", providedKey, provided.get(providedKey));
+					LOG.info("SYNCED ALREADY has key=[{}] {}", providedKey, synced.get(providedKey));
 				}
 				else {
+					LOG.info("Put for key=[{}] {}", providedKey, provided.get(providedKey));
 					synced.put(providedKey, provided.get(providedKey));						
 				}
 			}
 		}
+		LOG.info("--- AFTER STEP TWO -----------------------------------------------");
+		synced.forEach((k,v) -> LOG.info("Key=[{}] Value=[{}]", k, v));
+		LOG.info("+++ CONNFIGURATION SYNC END ++++++++++++++++++++++++++++++++++++++");
 		
 		return synced;
 	}
@@ -208,7 +237,7 @@ public class Configurator implements ConfiguratorMXBean {
 	@Consumes({MediaType.TEXT_PLAIN})
 	@Override
 	public void putEntry(@PathParam("key") String key, @PathParam("key") String value) {
-		this.configuration.put(key, new ValueSourceEntry(value, "Configurator"));
+		this.configuration.put(key, new ValueSourceEntry(value, SOURCE_CONFIGURATOR));
 	}
 
 	/**
@@ -303,8 +332,12 @@ public class Configurator implements ConfiguratorMXBean {
 	}
 
 	private String getValueForKey(String fieldName) throws NotConfiguredException {
-		String valueForFieldName = this.configuration.get(fieldName).getValue();
-
+		String valueForFieldName = null;
+		
+		if (this.configuration.get(fieldName) != null) {
+			valueForFieldName = this.configuration.get(fieldName).getValue();
+		}
+		
 		if (valueForFieldName == null) {
 			this.unconfiguredFields.add(fieldName);
 			LOG.fatal("No configuration in Configurator for fieldName [{}]", fieldName);
