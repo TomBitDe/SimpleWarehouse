@@ -3,18 +3,35 @@ package com.home.simplewarehouse.patterns.singleton.simplecache;
 import java.io.Serializable;
 import java.util.Objects;
 
+/**
+ * A value combined with the values source class.
+ */
 public class ValueSourceEntry implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * The value
+	 */
 	private String value = "";
+	/**
+	 * The source of the value
+	 */
 	private String source = "";
 	
+	/**
+	 * Only valid constructor
+	 * 
+	 * @param value the value
+	 * @param source the source of the value
+	 */
 	public ValueSourceEntry(String value, String source) {
 		this.value = value;
 		this.source = source;
 	}
 
 	/**
+	 * Gets the value
+	 * 
 	 * @return the value
 	 */
 	public String getValue() {
@@ -22,6 +39,8 @@ public class ValueSourceEntry implements Serializable {
 	}
 
 	/**
+	 * Sets the value
+	 * 
 	 * @param value the value to set
 	 */
 	public void setValue(String value) {
@@ -29,6 +48,8 @@ public class ValueSourceEntry implements Serializable {
 	}
 
 	/**
+	 * Gets the source of the value e.g. DbTable or Properties
+	 * 
 	 * @return the source
 	 */
 	public String getSource() {
@@ -36,6 +57,8 @@ public class ValueSourceEntry implements Serializable {
 	}
 
 	/**
+	 * Sets the source of the value
+	 * 
 	 * @param source the source to set
 	 */
 	public void setSource(String source) {

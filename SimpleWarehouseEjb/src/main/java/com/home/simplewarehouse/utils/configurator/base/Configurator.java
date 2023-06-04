@@ -49,8 +49,14 @@ public class Configurator implements ConfiguratorMXBean {
 	private static final String SOURCE_DEFAULT = "Default";
 	private static final String SOURCE_CONFIGURATOR = "Configurator";
 
+	/**
+	 * The current configuration
+	 */
 	private Map<String, ValueSourceEntry> configuration;
 
+	/**
+	 * Configurations from other providers like DbTable or Properties
+	 */
 	@Inject
 	private Instance<CacheDataProvider> configurationProvider;
 
@@ -70,7 +76,7 @@ public class Configurator implements ConfiguratorMXBean {
 	}
 	
 	/**
-	 * Give some general not configurable defaults here
+	 * Give some general configurable defaults here
 	 * 
 	 * @param origin the configuration Map to fill with this defaults
 	 */
@@ -110,8 +116,10 @@ public class Configurator implements ConfiguratorMXBean {
 	/**
 	 * Sync configuration with custom configurations from other sources<br>
 	 * <br>
-	 * Entries in configuration are always master
-	 * 
+	 * Entries in configuration are always master. Other sources are synced with the
+	 * configurator. SOURCE_DEFAULT and SOURCE_CONFIGURATOR always remain here.
+	 * Configurations from other sources are only put to synced if not already in the
+	 * configuration.
 	 * 
 	 * @return the synced configuration
 	 */
