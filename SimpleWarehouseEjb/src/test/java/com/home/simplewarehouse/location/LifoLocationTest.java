@@ -480,7 +480,34 @@ public class LifoLocationTest {
 			Assert.fail("Not expected: " + ex);
 		}
 	}
-
+	
+	/**
+	 * Test pickFrom
+	 */
+	@Test
+	@InSequence(8)
+	public void pickFromLifo() {
+		LOG.info("--- Test pickFromLifo");
+		
+		try {
+			// One single drop
+			handlingUnitService.dropTo(new LifoLocation("W"), new HandlingUnit("8"));
+			
+			// Now pick with id
+			HandlingUnit hu8 = handlingUnitService.pickFrom("W");
+			
+			// Check
+			assertNotNull(hu8);
+			assertEquals("8", hu8.getId());
+			
+			// Location is empty
+			assertTrue(locationService.getById("W").getAvailablePicks().isEmpty());
+		}
+		catch (LocationIsEmptyException | DimensionException ex) {
+			Assert.fail("Not expected: " + ex);
+		}
+	}
+	
 	/**
 	 * Test exceptional cases
 	 */
@@ -512,5 +539,24 @@ public class LifoLocationTest {
 		catch (EJBException ex) {
 			assertTrue(true);
 		}
-}
+		
+		try {
+			handlingUnitService.pickFrom(new LifoLocation("X"));
+
+			Assert.fail("Exception expected");
+		}
+		catch (LocationIsEmptyException e) {
+			assertTrue(true);
+		}
+		
+		locationService.createOrUpdate(new LifoLocation("Y"));
+		try {
+			handlingUnitService.pickFrom("Y");
+
+			Assert.fail("Exception expected");
+		}
+		catch (LocationIsEmptyException e) {
+			assertTrue(true);
+		}		
+	}
 }
