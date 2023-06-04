@@ -2,6 +2,7 @@ package com.home.simplewarehouse.handlingunit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -172,13 +173,22 @@ public class HandlingUnitComposingTest {
 		assertEquals(otherBase, hu4.getBaseHU());
 		LOG.info(hu4);
 		
-		// Now an edge case
+		// Now some edge cases
 		try {
 			hu4 = null;
 			otherBase = null;
 			
 			handlingUnitService.assign(hu4, otherBase);
 			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue("Exception is: " + ex.getMessage(), true);
+		}
+		
+		try {
+			handlingUnitService.assign((String) null, (String) null);
+
 			Assert.fail("Exception expected");
 		}
 		catch (EJBException ex) {
@@ -231,6 +241,19 @@ public class HandlingUnitComposingTest {
 		}
 		
 		assertTrue(base.getContains().isEmpty());
+		
+		HandlingUnit hu8 = handlingUnitService.remove(new HandlingUnit("9"), new HandlingUnit("8"));
+		assertNotNull(hu8);
+		
+		// Now some edge cases
+		try {
+			handlingUnitService.remove((String) null, (String) null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue("Exception is: " + ex.getMessage(), true);
+		}
 	}
 	
 	/**
@@ -300,6 +323,19 @@ public class HandlingUnitComposingTest {
 		base = handlingUnitService.getById(base.getId());
 		assertTrue(other.getContains().contains(hu2));
 		assertFalse(base.getContains().contains(hu4));
+		
+		HandlingUnit hu9 = handlingUnitService.move(new HandlingUnit("9"), new HandlingUnit("8"));
+		assertNotNull(hu9);
+
+		// Now some edge cases
+		try {
+			handlingUnitService.move((String) null, (String) null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue("Exception is: " + ex.getMessage(), true);
+		}
 	}
 	
 	/**
