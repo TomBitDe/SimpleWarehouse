@@ -174,18 +174,7 @@ public class MarshallerTest {
 			jaxbMarshaller.marshal(config, System.out);
 		}
 		catch (Exception ex) {
-			LOG.fatal(ex.getMessage());
-			LOG.fatal(ex.toString());
-			try {
-				fos.flush();
-				fos.write(ex.toString().getBytes());
-				fos.flush();
-			}
-			catch (IOException e) {
-				LOG.fatal(e.getMessage());
-			}
-			
-			Assert.fail("Exception not expected");
+			handleException(ex);
         }
 	}
 	
@@ -206,19 +195,8 @@ public class MarshallerTest {
 			jaxbMarshaller.marshal(entityBase, System.out);
 		}
 		catch (Exception ex) {
-			LOG.fatal(ex.getMessage());
-			LOG.fatal(ex.toString());
-			try {
-				fos.flush();
-				fos.write(ex.toString().getBytes());
-				fos.flush();
-			}
-			catch (IOException e) {
-				LOG.fatal(e.getMessage());
-			}
-			
-			Assert.fail("Exception not expected");
-        }
+			handleException(ex);
+		}
 	}
 	
 	/**
@@ -237,19 +215,8 @@ public class MarshallerTest {
 			jaxbMarshaller.marshal(dimension, System.out);
 		}
 		catch (Exception ex) {
-			LOG.fatal(ex.getMessage());
-			LOG.fatal(ex.toString());
-			try {
-				fos.flush();
-				fos.write(ex.toString().getBytes());
-				fos.flush();
-			}
-			catch (IOException e) {
-				LOG.fatal(e.getMessage());
-			}
-			
-			Assert.fail("Exception not expected");
-        }
+			handleException(ex);
+		}
 	}
 	
 	/**
@@ -268,19 +235,8 @@ public class MarshallerTest {
 			jaxbMarshaller.marshal(locationStatus, System.out);
 		}
 		catch (Exception ex) {
-			LOG.fatal(ex.getMessage());
-			LOG.fatal(ex.toString());
-			try {
-				fos.flush();
-				fos.write(ex.toString().getBytes());
-				fos.flush();
-			}
-			catch (IOException e) {
-				LOG.fatal(e.getMessage());
-			}
-			
-			Assert.fail("Exception not expected");
-        }
+			handleException(ex);
+		}
 	}
 	
 	/**
@@ -304,19 +260,7 @@ public class MarshallerTest {
 			jaxbMarshaller.marshal(location, System.out);
 		}
 		catch (Exception ex) {
-			LOG.fatal(ex.getMessage());
-			LOG.fatal(ex.toString());
-			try {
-				fos.flush();
-				fos.write(ex.toString().getBytes());
-				fos.flush();
-			}
-			catch (IOException e) {
-				LOG.fatal(e.getMessage());
-			}
-			
-			Assert.fail("Exception not expected");
-        }
+			handleException(ex);        }
 	}
 
 	/**
@@ -336,19 +280,7 @@ public class MarshallerTest {
 			jaxbMarshaller.marshal(fifo, System.out);
 		}
 		catch (Exception ex) {
-			LOG.fatal(ex.getMessage());
-			LOG.fatal(ex.toString());
-			try {
-				fos.flush();
-				fos.write(ex.toString().getBytes());
-				fos.flush();
-			}
-			catch (IOException e) {
-				LOG.fatal(e.getMessage());
-			}
-			
-			Assert.fail("Exception not expected");
-        }
+			handleException(ex);        }
 	}
 
 	/**
@@ -368,19 +300,7 @@ public class MarshallerTest {
 			jaxbMarshaller.marshal(lifo, System.out);
 		}
 		catch (Exception ex) {
-			LOG.fatal(ex.getMessage());
-			LOG.fatal(ex.toString());
-			try {
-				fos.flush();
-				fos.write(ex.toString().getBytes());
-				fos.flush();
-			}
-			catch (IOException e) {
-				LOG.fatal(e.getMessage());
-			}
-			
-			Assert.fail("Exception not expected");
-        }
+			handleException(ex);        }
 	}
 
 	/**
@@ -410,18 +330,7 @@ public class MarshallerTest {
 			
 		}
 		catch (Exception ex) {
-			LOG.fatal(ex.getMessage());
-			LOG.fatal(ex.toString());
-			try {
-				fos.flush();
-				fos.write(ex.toString().getBytes());
-				fos.flush();
-			}
-			catch (IOException e) {
-				LOG.fatal(e.getMessage());
-			}
-			
-			Assert.fail("Exception not expected");
+			handleException(ex);
         }
 	}
 
@@ -431,5 +340,20 @@ public class MarshallerTest {
 		jaxbMarshaller.setProperty(Marshaller.JAXB_FRAGMENT, true);
 		
 		return jaxbMarshaller;
+	}
+	
+	private static void handleException(Exception ex) {
+		LOG.fatal(ex.getMessage());
+		LOG.fatal(ex.toString());
+		try {
+			fos.flush();
+			fos.write(ex.toString().getBytes());
+			fos.flush();
+		}
+		catch (IOException e) {
+			LOG.fatal(e.getMessage());
+		}
+		
+		Assert.fail("Exception not expected");
 	}
 }
