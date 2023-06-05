@@ -53,11 +53,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.Moni
 public class HandlingUnitTest {
 	private static final Logger LOG = LogManager.getLogger(HandlingUnitTest.class);
 
-	private static final int CAPACITY_MAX = 2;
-	private static final int WEIGHT_MAX = 960;
-	private static final HeightCategory HEIGHT_MAX = HeightCategory.MIDDLE;
-	private static final WidthCategory WIDTH_MAX = WidthCategory.WIDE;
-	private static final LengthCategory LENGTH_MAX = LengthCategory.SHORT;
+	private static final int WEIGHT_960 = 960;
 	
 	@EJB
 	HandlingUnitService handlingUnitService;
@@ -191,7 +187,7 @@ public class HandlingUnitTest {
 		
 		expHandlingUnit.setVolume(10.0f);
 		expHandlingUnit.setHeight(HeightCategory.MIDDLE);
-		expHandlingUnit.setWeight(WEIGHT_MAX);
+		expHandlingUnit.setWeight(WEIGHT_960);
 		
 		handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
@@ -884,7 +880,7 @@ public class HandlingUnitTest {
 			// Check the locations
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
-			assertEquals(CAPACITY_MAX, lOA.getHandlingUnits().size());
+			assertEquals(2, lOA.getHandlingUnits().size());
 		}
 		catch (DimensionException wex) {
 			Assert.fail("Unexpected exception: " +  wex.getMessage());
@@ -907,7 +903,7 @@ public class HandlingUnitTest {
 		Location lOA = locationService.getById("A");
 		
 		// Now set the weight to limit
-		lOA.getDimension().setMaxWeight(WEIGHT_MAX);
+		lOA.getDimension().setMaxWeight(WEIGHT_960);
 
 		try {
 			// Drop to make a relation
@@ -957,12 +953,12 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare a locationService
-		locationService.createOrUpdate(new Location("A"));
-		Location lOA = locationService.getById("A");
+		// Prepare a location
+		Location lOA = locationService.createOrUpdate(new Location("A"));
 		
 		// Now set the height to limit
-		lOA.getDimension().setMaxHeight(HEIGHT_MAX);
+		lOA.getDimension().setMaxHeight(HeightCategory.MIDDLE);
+		lOA = locationService.createOrUpdate(lOA);
 
 		try {
 			// Drop to make a relation
@@ -1090,7 +1086,7 @@ public class HandlingUnitTest {
 		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
-		lOA.getDimension().setMaxWidth(WIDTH_MAX);
+		lOA.getDimension().setMaxWidth(WidthCategory.WIDE);
 
 		try {
 			// Drop to make a relation
@@ -1178,7 +1174,7 @@ public class HandlingUnitTest {
 		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
-		lOA.getDimension().setMaxLength(LENGTH_MAX);
+		lOA.getDimension().setMaxLength(LengthCategory.SHORT);
 		
 		try {
 			// Drop to make a relation
@@ -1228,5 +1224,140 @@ public class HandlingUnitTest {
 		catch (DimensionException capex) {
 			Assert.fail("Unexpected exception: " +  capex.getMessage());
 		}
+	}
+	
+	@Test
+	@InSequence(42)
+	public void checkOverheight() {
+		LOG.info("--- Test checkOverheight");
+		
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+
+		// Prepare a location
+		Location lOA = locationService.createOrUpdate(new Location("A"));
+		
+		// Now set the height to limit
+		lOA.getDimension().setMaxHeight(HeightCategory.HIGH);
+		lOA = locationService.createOrUpdate(lOA);
+		
+		assertFalse(locationService.overheight(lOA, HeightCategory.NOT_RELEVANT));
+		assertFalse(locationService.overheight(lOA, HeightCategory.HIGH));
+		assertFalse(locationService.overheight(lOA, HeightCategory.MIDDLE));
+		assertFalse(locationService.overheight(lOA, HeightCategory.LOW));
+		assertTrue(locationService.overheight(lOA, HeightCategory.TOO_HIGH));
+		assertTrue(locationService.overheight(lOA, HeightCategory.UNKNOWN));
+		
+		// Now change the limit
+		lOA.getDimension().setMaxHeight(HeightCategory.LOW);
+		lOA = locationService.createOrUpdate(lOA);
+		
+		assertFalse(locationService.overheight(lOA, HeightCategory.NOT_RELEVANT));
+		assertTrue(locationService.overheight(lOA, HeightCategory.HIGH));
+		assertTrue(locationService.overheight(lOA, HeightCategory.MIDDLE));
+		assertFalse(locationService.overheight(lOA, HeightCategory.LOW));
+		assertTrue(locationService.overheight(lOA, HeightCategory.TOO_HIGH));
+		assertTrue(locationService.overheight(lOA, HeightCategory.UNKNOWN));
+	}
+
+	@Test
+	@InSequence(45)
+	public void checkOverlength() {
+		LOG.info("--- Test checkOverlength");
+		
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+
+		// Prepare a location
+		Location lOA = locationService.createOrUpdate(new Location("A"));
+		
+		// Now set the length to limit
+		lOA.getDimension().setMaxLength(LengthCategory.LONG);
+		lOA = locationService.createOrUpdate(lOA);
+		
+		assertFalse(locationService.overlength(lOA, LengthCategory.NOT_RELEVANT));
+		assertFalse(locationService.overlength(lOA, LengthCategory.LONG));
+		assertFalse(locationService.overlength(lOA, LengthCategory.MIDDLE));
+		assertFalse(locationService.overlength(lOA, LengthCategory.SHORT));
+		assertTrue(locationService.overlength(lOA, LengthCategory.TOO_LONG));
+		assertTrue(locationService.overlength(lOA, LengthCategory.UNKNOWN));
+		
+		// Now change the limit
+		lOA.getDimension().setMaxLength(LengthCategory.SHORT);
+		lOA = locationService.createOrUpdate(lOA);
+		
+		assertFalse(locationService.overlength(lOA, LengthCategory.NOT_RELEVANT));
+		assertTrue(locationService.overlength(lOA, LengthCategory.LONG));
+		assertTrue(locationService.overlength(lOA, LengthCategory.MIDDLE));
+		assertFalse(locationService.overlength(lOA, LengthCategory.SHORT));
+		assertTrue(locationService.overlength(lOA, LengthCategory.TOO_LONG));
+		assertTrue(locationService.overlength(lOA, LengthCategory.UNKNOWN));
+
+		// Now change the limit
+		lOA.getDimension().setMaxLength(LengthCategory.MIDDLE);
+		lOA = locationService.createOrUpdate(lOA);
+		
+		assertFalse(locationService.overlength(lOA, LengthCategory.NOT_RELEVANT));
+		assertTrue(locationService.overlength(lOA, LengthCategory.LONG));
+		assertFalse(locationService.overlength(lOA, LengthCategory.MIDDLE));
+		assertFalse(locationService.overlength(lOA, LengthCategory.SHORT));
+		assertTrue(locationService.overlength(lOA, LengthCategory.TOO_LONG));
+		assertTrue(locationService.overlength(lOA, LengthCategory.UNKNOWN));
+
+		// Now change the capacity
+		lOA.getDimension().setMaxCapacity(9);
+		lOA = locationService.createOrUpdate(lOA);
+
+		assertFalse(locationService.overlength(lOA, LengthCategory.NOT_RELEVANT));
+		assertFalse(locationService.overlength(lOA, LengthCategory.LONG));
+		assertFalse(locationService.overlength(lOA, LengthCategory.MIDDLE));
+		assertFalse(locationService.overlength(lOA, LengthCategory.SHORT));
+		assertFalse(locationService.overlength(lOA, LengthCategory.TOO_LONG));
+		assertFalse(locationService.overlength(lOA, LengthCategory.UNKNOWN));
+	}
+
+	@Test
+	@InSequence(48)
+	public void checkOverwidth() {
+		LOG.info("--- Test checkOverwidth");
+		
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		assertTrue(locationService.getAll().isEmpty());
+
+		// Prepare a location
+		Location lOA = locationService.createOrUpdate(new Location("A"));
+		
+		// Now set the length to limit
+		lOA.getDimension().setMaxWidth(WidthCategory.WIDE);
+		lOA = locationService.createOrUpdate(lOA);
+		
+		assertFalse(locationService.overwidth(lOA, WidthCategory.NOT_RELEVANT));
+		assertFalse(locationService.overwidth(lOA, WidthCategory.WIDE));
+		assertFalse(locationService.overwidth(lOA, WidthCategory.MIDDLE));
+		assertFalse(locationService.overwidth(lOA, WidthCategory.NARROW));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.TOO_WIDE));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.UNKNOWN));
+
+		// Now change the limit
+		lOA.getDimension().setMaxWidth(WidthCategory.MIDDLE);
+		lOA = locationService.createOrUpdate(lOA);
+		
+		assertFalse(locationService.overwidth(lOA, WidthCategory.NOT_RELEVANT));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.WIDE));
+		assertFalse(locationService.overwidth(lOA, WidthCategory.MIDDLE));
+		assertFalse(locationService.overwidth(lOA, WidthCategory.NARROW));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.TOO_WIDE));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.UNKNOWN));
+
+		// Now change the limit
+		lOA.getDimension().setMaxWidth(WidthCategory.NARROW);
+		lOA = locationService.createOrUpdate(lOA);
+		
+		assertFalse(locationService.overwidth(lOA, WidthCategory.NOT_RELEVANT));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.WIDE));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.MIDDLE));
+		assertFalse(locationService.overwidth(lOA, WidthCategory.NARROW));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.TOO_WIDE));
+		assertTrue(locationService.overwidth(lOA, WidthCategory.UNKNOWN));
 	}
 }

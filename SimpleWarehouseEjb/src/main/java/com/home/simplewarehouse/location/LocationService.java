@@ -98,7 +98,7 @@ public interface LocationService {
 	/**
 	 * Check if a Location is fully occupied related to its capacity
 	 * 
-	 * @param location the locationService to check
+	 * @param location the location to check
 	 * 
 	 * @return true if fully occupied else false
 	 */
@@ -118,7 +118,7 @@ public interface LocationService {
 	/**
 	 * Check if a Location will be overweighted related to its maximum weight
 	 * 
-	 * @param location the locationService to check
+	 * @param location the location to check
 	 * @param weight the additional weight
 	 * 
 	 * @return true if the additional weight will exceed the weight limit else false
@@ -127,7 +127,7 @@ public interface LocationService {
 	/**
 	 * Check if a Location fits related to its maximum height
 	 * 
-	 * @param location the locationService to check
+	 * @param location the location to check
 	 * @param height the height to drop
 	 * 
 	 * @return true if the height does not fit else false
@@ -136,7 +136,7 @@ public interface LocationService {
 	/**
 	 * Check if a Location fits related to its maximum length
 	 * 
-	 * @param location the locationService to check
+	 * @param location the location to check
 	 * @param length the length to drop
 	 * 
 	 * @return true if the length does not fit else false
@@ -145,17 +145,17 @@ public interface LocationService {
 	/**
 	 * Check if a Location fits related to its maximum width
 	 * 
-	 * @param location the locationService to check
+	 * @param location the location to check
 	 * @param width the width to drop
 	 * 
 	 * @return true if the width does not fit else false
 	 */
 	public boolean overwidth(final Location location, final WidthCategory width);
 	/**
-	 * Check if a dimensionService limit exceeds when dropping a HandlingUnit on a Location
+	 * Check if a dimension limit exceeds when dropping a HandlingUnit on a Location
 	 * 
-	 * @param location the locationService to check
-	 * @param handlingUnit the handlingUnitService to drop
+	 * @param location the location to check
+	 * @param handlingUnit the handlingUnit to drop
 	 * 
 	 * @throws CapacityExceededException in case the Location capacity will exceed by this drop
 	 * @throws WeightExceededException in case the Location weight will exceed by this drop
@@ -169,7 +169,7 @@ public interface LocationService {
 	/**
 	 * Gets all the HandlingUnits possible to Pick from the Location
 	 * 
-	 * @param location the locationService to fetch the Picks for
+	 * @param location the location to fetch the Picks for
 	 * 
 	 * @return the List of HandlingUnits
 	 */
