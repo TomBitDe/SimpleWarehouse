@@ -60,7 +60,8 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal2
 			
 			try {
 				handlingUnitService.dropTo(locationService.getById("A"), handlingUnitService.getById("1"));
-			} catch (CapacityExceededException | WeightExceededException | OverheightException | OverlengthException
+			}
+			catch (CapacityExceededException | WeightExceededException | OverheightException | OverlengthException
 					| OverwidthException e) {
 				LOG.error(e.getMessage());
 			}
