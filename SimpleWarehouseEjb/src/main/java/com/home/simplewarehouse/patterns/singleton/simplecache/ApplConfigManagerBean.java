@@ -99,6 +99,7 @@ public class ApplConfigManagerBean implements ApplConfigManager, ApplConfigServi
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public ApplConfig create(ApplConfig config) {
 		LOG.trace("--> create");
 
@@ -109,6 +110,7 @@ public class ApplConfigManagerBean implements ApplConfigManager, ApplConfigServi
 		return getById(config.getKeyVal());
 	}
 	@Override
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public ApplConfig update(ApplConfig config) {
 		LOG.trace("--> update");
 
@@ -125,6 +127,7 @@ public class ApplConfigManagerBean implements ApplConfigManager, ApplConfigServi
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.REQUIRED)
 	public ApplConfig delete(String keyVal) {
 		LOG.trace("--> delete({})", keyVal);
 

@@ -1,5 +1,8 @@
 package com.home.simplewarehouse.patterns.singleton.simplecache;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
@@ -11,6 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.arquillian.junit.InSequence;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
@@ -64,6 +68,7 @@ public class CacheDataFromDbTableTest {
 	 * Test loading of cache data
 	 */
 	@Test
+	@InSequence(3)
 	public void loadCacheDataTest()
 	{
 		LOG.debug("--> loadCacheDataTest");
@@ -73,5 +78,41 @@ public class CacheDataFromDbTableTest {
 		assertNotNull(configMap);
 
 		LOG.debug("<-- loadCacheDataTest");
+	}
+	
+	/**
+	 * Test ValueSourceEntry
+	 */
+	@Test
+	@InSequence(6)
+	public void valueSourceEntryTest()
+	{
+		LOG.debug("--> valueSourceEntryTest");
+		
+		Map<String, ValueSourceEntry> configMap = cacheDataProvider.loadCacheData();
+		assertNotNull(configMap);
+		
+		configMap.values().forEach(e -> LOG.debug("Entry: {}", e.toString()));
+		
+		ValueSourceEntry entry = new ValueSourceEntry("DUMMY_XYZ", "Test");
+		ValueSourceEntry same = new ValueSourceEntry("DUMMY_XYZ", "Test");
+		
+		configMap.put("NEW", entry);
+		
+		ValueSourceEntry other = new ValueSourceEntry("A", "Test");
+		
+		other.setValue("DUMMY_VW");
+		other.setSource(entry.getSource());
+		
+		assertEquals(entry, entry);
+		assertNotEquals(other, entry);
+		assertEquals(same, entry);
+		assertNotEquals(entry, null);
+		assertNotEquals(null, entry);
+		boolean b = configMap.equals(other);
+		assertFalse(b);
+		assertNotEquals(0, other.hashCode());
+		
+		LOG.debug("<-- valueSourceEntryTest");
 	}
 }
