@@ -428,7 +428,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		ba.setContains(ba.getContains());
 		
-		LOG.trace("<-- assign() {}", ba);
+		LOG.trace("<-- assign() base={}", ba);
 		
 		em.flush();
 		
@@ -457,7 +457,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		base = assign(handlingUnit, base);
 		
-		LOG.trace("<-- assign() {}", base);
+		LOG.trace("<-- assign() base={}", base);
 		
 		return base;
 	}
@@ -488,11 +488,16 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		hu.setBaseHU(null);
 		boolean ret = ba.getContains().remove(hu);
-		LOG.info("remove result is: {}", ret);
+		if (ret) {
+			LOG.info("hu={} removed from base={}", hu.getId(), ba.getId());
+		}
+		else {
+			LOG.warn("base={} does not contain hu={}; NO REMOVE", ba.getId(), hu.getId());
+		}
 		
 		ba.setContains(ba.getContains());
 		
-		LOG.trace("<-- remove() {}", ba);
+		LOG.trace("<-- remove() base={}", ba);
 		
 		em.flush();
 		
@@ -521,7 +526,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		base = remove(handlingUnit, base);
 		
-		LOG.trace("<-- remove() {}", base);
+		LOG.trace("<-- remove() base={}", base);
 		
 		return base;
 	}
@@ -587,7 +592,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit hu = move(handlingUnit, base);
 		
-		LOG.trace("<-- move() {}", hu);
+		LOG.trace("<-- move() hu={}", hu);
 		
 		return hu;
 	}
