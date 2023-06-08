@@ -1,6 +1,8 @@
 package com.home.simplewarehouse.patterns.singleton.simplecache;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -82,7 +84,7 @@ public class ApplConfigManagerTest {
 
 		List<ApplConfig> configList = applConfigManager.getAll();
 		assertTrue(configList.isEmpty());
-
+		
 		LOG.debug("<-- getAllTest");
 	}
 
@@ -161,6 +163,11 @@ public class ApplConfigManagerTest {
 	{
 		ApplConfig entry = applConfigService.getById("DUMMY_F");
 		assertNotNull(entry);
+		assertNotNull(entry.toString());
+		assertTrue(entry.toString().startsWith("ApplConfig [keyVal="));
+		assertNotEquals(0, entry.getVersion());
+		assertFalse(entry.equals(null));
+		assertTrue(entry.equals(entry));
 		
 		entry.setParamVal("Value_2");
 		
