@@ -24,7 +24,7 @@ public abstract class AbstractTimerSession {
 	/**
 	 * Default constructor
 	 */
-	public AbstractTimerSession() {
+	protected AbstractTimerSession() {
 		super();
 	}
 	
