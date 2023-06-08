@@ -1226,6 +1226,9 @@ public class HandlingUnitTest {
 		}
 	}
 	
+	/**
+	 * Test overheight
+	 */
 	@Test
 	@InSequence(42)
 	public void checkOverheight() {
@@ -1260,6 +1263,9 @@ public class HandlingUnitTest {
 		assertTrue(locationService.overheight(lOA, HeightCategory.UNKNOWN));
 	}
 
+	/**
+	 * Test overlength
+	 */
 	@Test
 	@InSequence(45)
 	public void checkOverlength() {
@@ -1316,6 +1322,9 @@ public class HandlingUnitTest {
 		assertFalse(locationService.overlength(lOA, LengthCategory.UNKNOWN));
 	}
 
+	/**
+	 * Test overwidth
+	 */
 	@Test
 	@InSequence(48)
 	public void checkOverwidth() {
