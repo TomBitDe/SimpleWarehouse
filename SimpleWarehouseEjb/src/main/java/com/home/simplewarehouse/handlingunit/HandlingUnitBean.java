@@ -361,6 +361,13 @@ public class HandlingUnitBean implements HandlingUnitService {
 			}				
 		}
 
+		// HandlingUnit is on top of other; so remove first
+		if (hu.getBaseHU() != null) {
+			remove(hu, hu.getBaseHU());
+			// And reread changed HandlingUnit
+			hu = getById(hu.getId());
+		}
+		
 		hu.setLocation(lo);
 		lo.addHandlingUnit(hu);
 		em.merge(hu);
