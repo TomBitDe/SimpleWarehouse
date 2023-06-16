@@ -28,10 +28,7 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
-import com.home.simplewarehouse.location.LocationStatusBean;
-import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.HandlingUnit;
-import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -44,10 +41,7 @@ public class HandlingUnitComposingUseCasesTest {
 
 	@EJB
 	HandlingUnitService handlingUnitService;
-	
-	@EJB
-	LocationService locationService;
-	
+		
 	/**
 	 * Configure the deployment.<br>
 	 * Add all needed EJB interfaces and beans for the test.
@@ -67,7 +61,6 @@ public class HandlingUnitComposingUseCasesTest {
 				.addClasses(
 						HandlingUnitService.class, HandlingUnitBean.class,
 						LocationService.class, LocationBean.class,
-						LocationStatusService.class, LocationStatusBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -106,11 +99,6 @@ public class HandlingUnitComposingUseCasesTest {
 	public void afterTest() {
 		LOG.trace("--> afterTest()");
 
-		// Cleanup locations
-		List<Location> locations = locationService.getAll();
-		
-		locations.stream().forEach(l -> locationService.delete(l));
-		
 		// Cleanup handling units
 		List<HandlingUnit> handlingUnits = handlingUnitService.getAll();
 		
