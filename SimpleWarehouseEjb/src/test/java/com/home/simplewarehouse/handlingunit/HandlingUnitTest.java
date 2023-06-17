@@ -666,7 +666,7 @@ public class HandlingUnitTest {
 			LOG.info("Exception: " + isNotOnLocation.getMessage());
 		}
 		
-		// Check locationService is set to ERROR for manual adjustment (Inventur)
+		// Check location is set to ERROR for manual adjustment (Inventur)
 	    // MANDATORY reread
 		lOA = locationService.getById("A");
 		assertEquals(ErrorStatus.ERROR,lOA.getLocationStatus().getErrorStatus());
@@ -676,7 +676,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test delete a handling unit with reference to a locationService
+	 * Test delete a handling unit with reference to a location
 	 */
 	@Test
 	@InSequence(20)

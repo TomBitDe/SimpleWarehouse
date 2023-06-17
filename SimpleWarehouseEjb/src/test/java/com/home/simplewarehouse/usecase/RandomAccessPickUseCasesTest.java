@@ -404,7 +404,7 @@ public class RandomAccessPickUseCasesTest {
 			// Check hu3 is not linked to lB
 			assertNull(hu3.getLocation());
 
-			// Check if locationService is in ERROR now
+			// Check if location is in ERROR now
 			assertEquals(ErrorStatus.ERROR, lB.getLocationStatus().getErrorStatus());
 
 			// Check lB still contains hu2
