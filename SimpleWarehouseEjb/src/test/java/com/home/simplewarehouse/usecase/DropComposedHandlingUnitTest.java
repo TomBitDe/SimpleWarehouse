@@ -1,7 +1,9 @@
 package com.home.simplewarehouse.usecase;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -18,8 +20,10 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -88,6 +92,26 @@ public class DropComposedHandlingUnitTest {
 	}
 	
 	/**
+	 * What to do before ALL tests will be executed (once before all tests)
+	 */
+	@BeforeClass
+	public static void beforeClass() {
+		LOG.trace("--> beforeClass()");
+		
+		LOG.trace("<-- beforeClass()");		
+	}
+	
+	/**
+	 * What to do after ALL tests have been done (once after all tests)
+	 */
+	@AfterClass
+	public static void afterClass() {
+		LOG.trace("--> afterClass()");
+
+		LOG.trace("<-- afterClass()");
+	}
+	
+	/**
 	 * What to do before an individual test will be executed (each test)
 	 */
 	@Before
@@ -119,6 +143,28 @@ public class DropComposedHandlingUnitTest {
 		LOG.trace("<-- afterTest()");		
 	}
 
+	/**
+	 * Drop composed handling unit (stack) on a location
+	 * <br>
+     * <pre>{@code
+     * 
+     *      +-- hU4 --+
+     *      +-- hU3 --+
+     *      +-- hU2 --+
+     *      +-- hU1 --+
+     *                                       +-------------+
+     *                                       | lA          |
+     *                                       |             |
+     *      +-- hU4 --+                      |             |
+     *      +-- hU3 --+                      | +-- hU4 --+ |
+     *      +-- hU2 --+                      | +-- hU3 --+ |
+     *      +-- hU1 --+   dropTo(lOA, hU3)   |             |
+     *                                       +-------------+
+     *  
+     *                                         +-- hU2 --+
+     *                                         +-- hU1 --+
+     * }</pre>
+	 */
 	@Test
 	@InSequence(3)
 	public void dropComposed() {
@@ -153,14 +199,20 @@ public class DropComposedHandlingUnitTest {
 			
 			hU3 = handlingUnitService.getById(hU3.getId());
 			assertTrue(locationService.getHandlingUnits(lOA).contains(hU3));
+			assertNull(hU3.getBaseHU());
 			hU4 = handlingUnitService.getById(hU4.getId());
 			assertTrue(handlingUnitService.flatContains(hU3).contains(hU4));
+			assertEquals(hU3, hU4.getBaseHU());
 			
 			assertFalse(handlingUnitService.flatContains(base).contains(hU3));
 			assertFalse(handlingUnitService.flatContains(base).contains(hU4));
 
+			base = handlingUnitService.getById(base.getId());
+			assertNull(base.getBaseHU());
+
 			hU2 = handlingUnitService.getById(hU2.getId());
 			assertTrue(handlingUnitService.flatContains(base).contains(hU2));
+			assertEquals(base, hU2.getBaseHU());	
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
