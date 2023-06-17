@@ -28,7 +28,9 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
+import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.DimensionException;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
@@ -43,8 +45,8 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.Moni
  * Test the Handling Unit bean for composedHandlingUnits drop.
  */
 @RunWith(Arquillian.class)
-public class DropComposedHandlingUnitTest {
-	private static final Logger LOG = LogManager.getLogger(DropComposedHandlingUnitTest.class);
+public class DropPickComposedHandlingUnitTest {
+	private static final Logger LOG = LogManager.getLogger(DropPickComposedHandlingUnitTest.class);
 
 	@EJB
 	HandlingUnitService handlingUnitService;
@@ -86,7 +88,7 @@ public class DropComposedHandlingUnitTest {
 	/**
 	 * Mandatory default constructor
 	 */
-	public DropComposedHandlingUnitTest() {
+	public DropPickComposedHandlingUnitTest() {
 		super();
 		// DO NOTHING HERE!
 	}
@@ -148,13 +150,13 @@ public class DropComposedHandlingUnitTest {
 	 * <br>
      * <pre>{@code
      * 
-     *      +-- hU4 --+
-     *      +-- hU3 --+
-     *      +-- hU2 --+
-     *      +-- hU1 --+
+     *      +-- hU4 --+                      +-------------+
+     *      +-- hU3 --+                      | lOA         |
+     *      +-- hU2 --+                      |             |
+     *      +-- hU1 --+                      +-------------+
+     *
      *                                       +-------------+
-     *                                       | lA          |
-     *                                       |             |
+     *                                       | lOA         |
      *      +-- hU4 --+                      |             |
      *      +-- hU3 --+                      | +-- hU4 --+ |
      *      +-- hU2 --+                      | +-- hU3 --+ |
@@ -167,8 +169,8 @@ public class DropComposedHandlingUnitTest {
 	 */
 	@Test
 	@InSequence(3)
-	public void dropComposed() {
-		LOG.info("--- Test dropComposed");
+	public void dropToComposedSimple() {
+		LOG.info("--- Test dropToComposedSimple");
 
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
@@ -217,5 +219,109 @@ public class DropComposedHandlingUnitTest {
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
 		}
+	}
+
+	/**
+	 * Pick composed handling unit (stack) from a location
+	 * <br>
+     * <pre>{@code
+     * 
+     *        +-- hU4 --+                      +-------------+
+     *        +-- hU3 --+                      | lOA         |
+     *        +-- hU2 --+                      |             |
+     *        +-- hU1 --+                      +-------------+
+     *
+     *                                         +-------------+
+     *                                         | lOA         |
+     *        +-- hU4 --+                      |             |
+     *        +-- hU3 --+                      | +-- hU4 --+ |
+     *        +-- hU2 --+                      | +-- hU3 --+ |
+     *        +-- hU1 --+   dropTo(lOA, hU1)   | +-- hU2 --+ |
+     *                                         | +-- hU1 --+ |
+     *                                         +-------------+
+     *  
+     *      +-------------+                    +-------------+
+     *      | lOA         |                    | lOA         |
+     *      |             |                    |             |
+     *      | +-- hU4 --+ |                    |             |
+     *      | +-- hU3 --+ |                    |             |
+     *      | +-- hU2 --+ | pickFrom(lOA, hU3) | +-- hU2 --+ |
+     *      | +-- hU1 --+ |                    | +-- hU1 --+ |
+     *      +-------------+                    +-------------+
+     *
+     *                                           +-- hU4 --+
+     *                                           +-- hU3 --+
+     *
+     * }</pre>
+	 */
+	@Test
+	@InSequence(6)
+	public void pickFromComposedSimple() {
+		LOG.info("--- Test pickFromComposedSimple");
+
+		assertTrue(handlingUnitService.getAll().isEmpty());
+		
+		// Create the base handling unit
+		HandlingUnit base = handlingUnitService.createOrUpdate(new HandlingUnit("1"));
+		assertNotNull(base);
+
+		// Now place some handling units on base
+		base = handlingUnitService.assign(new HandlingUnit("2"), base);
+		assertNotNull(base);
+		HandlingUnit hU2 = handlingUnitService.assign(new HandlingUnit("3"), handlingUnitService.getById("2"));
+		assertNotNull(hU2);
+		HandlingUnit hU3 = handlingUnitService.assign(new HandlingUnit("4"), handlingUnitService.getById("3"));
+		assertNotNull(hU3);
+		HandlingUnit hU4 = handlingUnitService.getById("4");
+		assertNotNull(hU4);
+
+		// Create a location
+		Location lOA = locationService.createOrUpdate(new Location("A"));
+		assertNotNull(lOA);
+		
+ 		try {
+ 			// Do the drop
+			handlingUnitService.dropTo(lOA, base);
+			
+			lOA = locationService.getById(lOA.getLocationId());
+			assertNotNull(lOA);
+			
+			base = handlingUnitService.getById(base.getId());
+			assertTrue(locationService.getHandlingUnits(lOA).contains(base));
+			assertNull(base.getBaseHU());
+
+			// Mandatory reread
+			hU3 = handlingUnitService.getById(hU3.getId());
+
+			// Now test the pick
+			handlingUnitService.pickFrom(lOA, hU3);
+			
+			lOA = locationService.getById(lOA.getLocationId());
+			assertTrue(lOA.getHandlingUnits().contains(base));
+			
+			base = handlingUnitService.getById(base.getId());
+			assertEquals(lOA, base.getLocation());
+			assertEquals(1, base.getContains().size());
+			assertTrue(base.getContainsId().contains("2"));
+
+			hU2 = handlingUnitService.getById(hU2.getId());
+			assertEquals(base, hU2.getBaseHU());
+			assertEquals(0, hU2.getContains().size());
+			assertNull(hU2.getLocation());
+
+			hU3 = handlingUnitService.getById(hU3.getId());
+			assertNull(hU3.getBaseHU());
+			assertEquals(1, hU3.getContains().size());
+			assertTrue(hU3.getContainsId().contains("4"));
+			assertNull(hU3.getLocation());
+
+			hU4 = handlingUnitService.getById(hU4.getId());
+			assertEquals(hU3, hU4.getBaseHU());
+			assertEquals(0, hU4.getContains().size());
+			assertNull(hU4.getLocation());
+ 		}
+ 		catch (DimensionException | LocationIsEmptyException | HandlingUnitNotOnLocationException ex) {
+			Assert.fail("Not expected: " + ex);
+ 		}
 	}
 }

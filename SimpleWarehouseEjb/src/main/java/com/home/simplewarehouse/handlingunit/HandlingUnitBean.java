@@ -207,25 +207,35 @@ public class HandlingUnitBean implements HandlingUnitService {
 			throw new LocationIsEmptyException("Location [" + lo.getLocationId() + "] is EMPTY");
 		}
 		else {
-			if (lo.getHandlingUnits().contains(hu)) {
-				// Pick it now
-				hu.setLocation(null);
-				hu.setLocaPos(null);
-				
-				lo.removeHandlingUnit(hu);
+			Location baseLocation = getDeepBaseLocation(hu);
+			
+			if (baseLocation == null) {
+				lo.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 				
 				em.flush();
+				
+				throw new HandlingUnitNotOnLocationException("Handling unit not on any Location!");
+			}
+			else if (baseLocation.equals(lo)) {
+				if (lo.getHandlingUnits().contains(hu)) {
+					// Pick it now
+					hu.setLocation(null);
+					hu.setLocaPos(null);
+					
+					lo.removeHandlingUnit(hu);
+					
+					em.flush();
+				}
+				else {
+					// The hu is part of an other hu; remove only
+					remove(hu, getById(hu.getBaseHU().getId()));
+				}
 			}
 			else {
-				// Check handlingUnitService is already stored elsewhere
-				List<Location> locations = locationService.getAllContainingExceptLocation(hu, lo);
-				
-				for (Location other : locations) {					
-					// HandlingUnit is already stored elsewhere
-					LOG.warn(HU_IS_HERE_FORMATTER, hu.getId(), other);
+				// HandlingUnit is already stored elsewhere
+				LOG.warn(HU_IS_HERE_FORMATTER, hu.getId(), baseLocation);
 
-					other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
-				}
+				baseLocation.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 				
 				lo.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 				
@@ -720,5 +730,20 @@ public class HandlingUnitBean implements HandlingUnitService {
 		if (handlingUnit == null) {
 			throw new IllegalArgumentException(msg);
 		}
+	}
+	
+	private Location getDeepBaseLocation(final HandlingUnit handlingUnit) {
+		Location ret = null;
+		
+		HandlingUnit hu = getById(handlingUnit.getId());
+		
+		if (hu.getBaseHU() == null) {
+			ret = hu.getLocation();
+		}
+		else {
+			ret = getDeepBaseLocation(hu.getBaseHU());
+		}
+		
+		return ret;
 	}
 }
