@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
     <head>
         <title>Graphics</title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
@@ -10,30 +10,79 @@
 
         <div id="wrapper">
             <h1>Java Websocket Home</h1>
-            <p>Welcome to the Java WebSocket Home. Click the Add a Location button to start adding Locations.</p>
+            <p>Welcome to the Java WebSocket Home.<br />
+            <br />
+            Click the button<br />
+            <ul>
+            <li>'Add a Location' to start adding Locations</li>
+            <li>'Add a Handling Unit' to start adding Handling Units</li>
+            <li>'Drop' to drop a Handling Unit on a Location</li>
+            <li>'Pick' to pick a Handling Unit from a Location</li>
+            <li>'Assign' to assign a Handling Unit to another</li>
+            <li>'Move' to move a Handling Unit to another</li>
+            <li>'Remove' to remove a Handling Unit from another</li>
+            <li>'Free' to free a Handling Unit from all anothers</li>
+            </ul>
+            </p>
             <br />
             <div id="addLocation">
                 <div class="button"> <a href="#" OnClick="showLocationForm()">Add a Location</a> </div>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="button"> <a href="#" OnClick="showHandlingUnitForm()">Add a Handling Unit</a> </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="button"> <a href="#" OnClick="showDropForm()">Drop</a> </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="button"> <a href="#" OnClick="showPickForm()">Pick</a> </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="button"> <a href="#" OnClick="showAssignForm()">Assign</a> </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="button"> <a href="#" OnClick="showMoveForm()">Move</a> </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="button"> <a href="#" OnClick="showRemoveForm()">Remove</a> </span>
+                <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                <span class="button"> <a href="#" OnClick="showFreeForm()">Free</a> </span>
                 <form id="addLocationForm">
+					<br />
                     <h3>Add a new Location</h3>
-                    <span>Name: <input type="text" name="Location_id" id="Location_id"></span>
+                    <span>Id: <input type="text" name="Location_id" id="Location_id"></span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <span>Type: 
                         <select id="location_type">
                             <option name="type" value="Random">Random</option>
                             <option name="type" value="Lifo">Lifo</option>
                             <option name="type" value="Fifo">Fifo</option>
                         </select></span>
-
-                    <span>Description:<br />
-                        <textarea name="description" id="device_description" rows="2" cols="50"></textarea>
-                    </span>
-
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <input type="button" class="button" value="Add" onclick=formLocationSubmit()>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
                     <input type="reset" class="button" value="Cancel" onclick=hideLocationForm()>
                 </form>
             </div>
+            <div id="addHandlingUnit">
+                <form id="addHandlingUnitForm">
+					<br />
+                    <h3>Add a new Handling Unit</h3>
+                    <span>Id: <input type="text" name="HandlingUnit_id" id="HandlingUnit_id"></span>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input type="button" class="button" value="Add" onclick=formHandlingUnitSubmit()>
+                    <span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                    <input type="reset" class="button" value="Cancel" onclick=hideHandlingUnitForm()>
+                </form>
+            </div>
+            <div id="dropHandlingUnit">
+                <form id="dropHandlingUnitForm">
+					<br />
+                    <h3>Drop a Handling Unit on a Location</h3>
+                </form>
+            </div>
+            <div id="pickHandlingUnit">
+                <form id="pickHandlingUnitForm">
+					<br />
+                    <h3>Pick a Handling Unit from a Location</h3>
+                </form>
+            </div>
             <br />
-            <h3>Current Locations</h3>
+            <h3>Current Locations and Handling Units</h3>
             <div id="content">
             </div>
         </div>
