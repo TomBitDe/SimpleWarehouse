@@ -1,7 +1,6 @@
 /**
  * 
  */
-
 window.onload = init;
 var socket = new WebSocket("ws://localhost:8080/war/actions");
 socket.onmessage = onMessage;
@@ -75,6 +74,69 @@ function formLocationSubmit() {
     addLocation(name, type);
 }
 
+function showHandlingUnitForm() {
+    document.getElementById("addHandlingUnitForm").style.display = '';
+}
+
+function hideHandlingUnitForm() {
+    document.getElementById("addHandlingUnitForm").style.display = "none";
+}
+
+function showDropForm() {
+    document.getElementById("dropForm").style.display = '';
+}
+
+function hideDropForm() {
+    document.getElementById("dropForm").style.display = "none";
+}
+
+function showPickForm() {
+    document.getElementById("pickForm").style.display = '';
+}
+
+function hidePickForm() {
+    document.getElementById("pickForm").style.display = "none";
+}
+
+function showAssignForm() {
+    document.getElementById("assignForm").style.display = '';
+}
+
+function hideAssignForm() {
+    document.getElementById("assignForm").style.display = "none";
+}
+
+function showMoveForm() {
+    document.getElementById("moveForm").style.display = '';
+}
+
+function hideMoveForm() {
+    document.getElementById("moveForm").style.display = "none";
+}
+
+function showRemoveForm() {
+    document.getElementById("removeForm").style.display = '';
+}
+
+function hideRemoveForm() {
+    document.getElementById("removeForm").style.display = "none";
+}
+
+function showFreeForm() {
+    document.getElementById("freeForm").style.display = '';
+}
+
+function hideFreeForm() {
+    document.getElementById("freeForm").style.display = "none";
+}
+
 function init() {
     hideLocationForm();
+    hideHandlingUnitForm();
+    hideDropForm();
+    hidePickForm();
+    hideAssignForm();
+    hideMoveForm();
+    hideRemoveForm();
+    hideFreeForm();
 }

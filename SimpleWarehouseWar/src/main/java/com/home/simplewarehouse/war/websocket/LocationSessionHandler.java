@@ -20,8 +20,8 @@ import com.home.simplewarehouse.war.websocket.model.Location;
  * Handle the Web Socket session and the entities that have to be controlled.
  */
 @ApplicationScoped
-public class DeviceSessionHandler {
-	private static final Logger LOG = LogManager.getLogger(DeviceSessionHandler.class);
+public class LocationSessionHandler {
+	private static final Logger LOG = LogManager.getLogger(LocationSessionHandler.class);
 	
 	private static final String ACTION = "action";
 
@@ -31,11 +31,11 @@ public class DeviceSessionHandler {
     /**
      * Not needed but done
      */
-    public DeviceSessionHandler() {
+    public LocationSessionHandler() {
     	super();
     	
-    	LOG.trace("--> DeviceSessionHandler");
-    	LOG.trace("<-- DeviceSessionHandler");
+    	LOG.trace("--> LocationSessionHandler");
+    	LOG.trace("<-- LocationSessionHandler");
     }
     
     /**

@@ -26,22 +26,22 @@ import com.home.simplewarehouse.war.websocket.model.Location;
  */
 @ApplicationScoped
 @ServerEndpoint("/actions")
-public class DeviceWebSocketServer {
-	private static final Logger LOG = LogManager.getLogger(DeviceWebSocketServer.class);
+public class LocationWebSocketServer {
+	private static final Logger LOG = LogManager.getLogger(LocationWebSocketServer.class);
 	
 	private static final String ACTION = "action";
 
     @Inject
-    private DeviceSessionHandler sessionHandler;
+    private LocationSessionHandler sessionHandler;
     
     /**
      * Not needed but done
      */
-    public DeviceWebSocketServer() {
+    public LocationWebSocketServer() {
     	super();
     	
-    	LOG.trace("--> DeviceWebSocketServer");
-    	LOG.trace("<-- DeviceWebSocketServer");
+    	LOG.trace("--> LocationWebSocketServer");
+    	LOG.trace("<-- LocationWebSocketServer");
     }
 
     /**
