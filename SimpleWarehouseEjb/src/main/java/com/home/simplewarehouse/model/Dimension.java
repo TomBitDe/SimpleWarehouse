@@ -123,7 +123,7 @@ public class Dimension extends EntityBase implements Serializable {
     }
  
     /**
-     * Sets the defaults for the dimensionService in default constructor
+     * Sets the defaults for the Dimension in default constructor
      */
     public Dimension() {
     	super();
