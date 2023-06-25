@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.war.websocket;
 
 import java.io.StringReader;
+import java.util.Collections;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -51,11 +52,11 @@ public class LocationWebSocketServer {
      */
 	@OnOpen
 	public void open(Session session) {
-		LOG.debug("--> open");
+		LOG.trace("--> open");
 
 		sessionHandler.addSession(session);
 
-		LOG.debug("<-- open");
+		LOG.trace("<-- open");
 	}
 
 	/**
@@ -65,11 +66,11 @@ public class LocationWebSocketServer {
 	 */
 	@OnClose
 	public void close(Session session) {
-		LOG.debug("--> close");
+		LOG.trace("--> close");
 
 		sessionHandler.removeSession(session);
 
-		LOG.debug("<-- close");
+		LOG.trace("<-- close");
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class LocationWebSocketServer {
 	 */
 	@OnMessage
 	public void handleMessage(String message, Session session) {
-		LOG.debug("--> handleMessage");
+		LOG.trace("--> handleMessage");
 
         try (JsonReader reader = Json.createReader(new StringReader(message))) {
             JsonObject jsonMessage = reader.readObject();
@@ -101,6 +102,8 @@ public class LocationWebSocketServer {
             	Location location = new Location();
             	location.setId(jsonMessage.getString("id"));
             	location.setType(jsonMessage.getString("type"));
+            	location.setVersion(0);
+            	location.setHandlingUnitIds(Collections.emptySet());
                 sessionHandler.addLocation(location);
             }
 
@@ -110,6 +113,6 @@ public class LocationWebSocketServer {
             }
         }
 
-        LOG.debug("<-- handleMessage");
+        LOG.trace("<-- handleMessage");
 	}
 }

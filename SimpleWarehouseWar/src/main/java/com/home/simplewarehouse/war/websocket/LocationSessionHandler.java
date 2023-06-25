@@ -44,7 +44,7 @@ public class LocationSessionHandler {
      * @param session the session to handle
      */
     public void addSession(Session session) {
-    	LOG.debug("--> addSession");
+    	LOG.trace("--> addSession");
 
         sessions.add(session);
         for (Location location : locations) {
@@ -52,7 +52,7 @@ public class LocationSessionHandler {
             sendToSession(session, addMessage);
         }
 
-    	LOG.debug("<-- addSession");
+    	LOG.trace("<-- addSession");
     }
 
     /**
@@ -61,11 +61,11 @@ public class LocationSessionHandler {
      * @param session the session to handle
      */
     public void removeSession(Session session) {
-    	LOG.debug("--> removeSession");
+    	LOG.trace("--> removeSession");
 
     	sessions.remove(session);
 
-    	LOG.debug("<-- removeSession");
+    	LOG.trace("<-- removeSession");
     }
 
     /**
@@ -74,9 +74,9 @@ public class LocationSessionHandler {
      * @return the entities (Locations)
      */
     public List<Location> getLocations() {
-    	LOG.debug("--> getLocations");
+    	LOG.trace("--> getLocations");
 
-    	LOG.debug("<-- getLocations");
+    	LOG.trace("<-- getLocations");
         return new ArrayList<>(locations);
     }
 
@@ -86,14 +86,17 @@ public class LocationSessionHandler {
      * @param location the entity to add
      */
     public void addLocation(Location location) {
-    	LOG.debug("--> addLocation");
+    	LOG.trace("--> addLocation");
 
+    	LOG.debug("Location={}", location);
         location.setId(location.getId());
         locations.add(location);
         JsonObject addMessage = createAddMessage(location);
+        LOG.debug("JsonObject={}", addMessage);
+        
         sendToAllConnectedSessions(addMessage);
 
-        LOG.debug("<-- addLocation");
+        LOG.trace("<-- addLocation");
     }
 
     /**
@@ -102,7 +105,7 @@ public class LocationSessionHandler {
      * @param id the id of the entity to remove
      */
     public void removeLocation(String id) {
-    	LOG.debug("--> removeLocation");
+    	LOG.trace("--> removeLocation");
 
     	Location location = getLocationById(id);
         if (location != null) {
@@ -112,10 +115,12 @@ public class LocationSessionHandler {
                     .add(ACTION, "remove")
                     .add("id", id)
                     .build();
+            LOG.debug("JsonObject={}", removeMessage);
+            
             sendToAllConnectedSessions(removeMessage);
         }
 
-        LOG.debug("<-- removeLocation");
+        LOG.trace("<-- removeLocation");
     }
 
     /**
@@ -126,7 +131,7 @@ public class LocationSessionHandler {
      * @return the matching entity (Location) or null in case of no match
      */
     private Location getLocationById(String id) {
-    	LOG.debug("--> getLocationById({})", id);
+    	LOG.trace("--> getLocationById({})", id);
 
     	for (Location location : locations) {
             if (location.getId().equals(id)) {
@@ -136,20 +141,20 @@ public class LocationSessionHandler {
             }
         }
 
-        LOG.debug("<-- getLocationById");
+        LOG.trace("<-- getLocationById");
 
         return null;
     }
 
     /**
-     * Create a JSON object out of an entity (Device) for further processing
+     * Create a JSON object out of an entity (Location) for further processing
      *
-     * @param location the given entity (Device)
+     * @param location the given entity (Location)
      *
      * @return the related JSON object
      */
     private JsonObject createAddMessage(Location location) {
-    	LOG.debug("--> createAddMessage");
+    	LOG.trace("--> createAddMessage");
 
         JsonProvider provider = JsonProvider.provider();
         JsonObject addMessage = provider.createObjectBuilder()
@@ -157,9 +162,10 @@ public class LocationSessionHandler {
                 .add("id", location.getId())
                 .add("type", location.getType())
                 .add("version", location.getVersion())
+//                .add("handlingUnitIds", location.getHandlingUnitIds())
                 .build();
 
-        LOG.debug("<-- createAddMessage");
+        LOG.trace("<-- createAddMessage");
 
         return addMessage;
     }
@@ -170,13 +176,13 @@ public class LocationSessionHandler {
      * @param message the JSON object to send
      */
     private void sendToAllConnectedSessions(JsonObject message) {
-    	LOG.debug("--> sendToAllConnectedSessions");
+    	LOG.trace("--> sendToAllConnectedSessions");
 
         for (Session session : sessions) {
             sendToSession(session, message);
         }
 
-        LOG.debug("<-- sendToAllConnectedSessions");
+        LOG.trace("<-- sendToAllConnectedSessions");
     }
 
     /**
@@ -186,7 +192,7 @@ public class LocationSessionHandler {
      * @param message the JSON object to send
      */
     private void sendToSession(Session session, JsonObject message) {
-    	LOG.debug("--> sendToSession");
+    	LOG.trace("--> sendToSession");
 
     	try {
             session.getBasicRemote().sendText(message.toString());
@@ -196,7 +202,7 @@ public class LocationSessionHandler {
             LOG.fatal(ex);
         }
     	finally {
-        	LOG.debug("<-- sendToSession");
+        	LOG.trace("<-- sendToSession");
     	}
     }
 }
