@@ -75,6 +75,12 @@ public class Location extends EntityBase implements Serializable {
     @PrimaryKeyJoinColumn(name = "LOCATION_ID")
     private Dimension dimension;
     /**
+     * The associated Position
+     */
+    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @PrimaryKeyJoinColumn(name = "LOCATION_ID")
+    private Position position;
+    /**
      * The associated HandlingUnits
      */
     @OneToMany( mappedBy="location"
@@ -89,6 +95,8 @@ public class Location extends EntityBase implements Serializable {
     	LocationStatus ls = new LocationStatus();
     	ls.setLocation(this);
     	this.setLocationStatus(ls);
+    	Position pos = new Position();
+    	this.setPosition(pos);
     }
 
     private void initAssociated(String id) {
@@ -98,6 +106,9 @@ public class Location extends EntityBase implements Serializable {
     	LocationStatus ls = new LocationStatus(id);
     	ls.setLocation(this);
     	this.setLocationStatus(ls);
+    	Position pos = new Position(id);
+    	pos.setLocation(this);
+    	this.setPosition(pos);
     }
 
     /**
@@ -211,6 +222,24 @@ public class Location extends EntityBase implements Serializable {
 	 */
 	public void setDimension(Dimension dimension) {
 		this.dimension = dimension;
+	}
+
+	/**
+	 * Gets the Position assigned to this Location
+	 * 
+	 * @return the assigned Position
+	 */
+	public Position getPosition() {
+		return position;
+	}
+
+	/**
+	 * Assigns the Position to this Location
+	 * 
+	 * @param position the Position to assign
+	 */
+	public void setPosition(Position position) {
+		this.position = position;
 	}
 
 	/**
@@ -366,6 +395,8 @@ public class Location extends EntityBase implements Serializable {
 		    .append(locationStatus)
 		    .append(", " + System.lineSeparator() + '\t' + '\t')
 		    .append(dimension)
+			.append(", " + System.lineSeparator() + '\t' + '\t')
+		    .append(position)
 			.append(", " + System.lineSeparator() + '\t' + '\t')
 			.append("HandlingUnits ")
 			.append(toString(getHandlingUnits()))

@@ -11,6 +11,7 @@
 		<class>com.home.simplewarehouse.model.LifoLocation</class>
 		<class>com.home.simplewarehouse.model.LocationStatus</class>
 		<class>com.home.simplewarehouse.model.Dimension</class>
+		<class>com.home.simplewarehouse.model.Position</class>
 		<class>com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig</class>	
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />

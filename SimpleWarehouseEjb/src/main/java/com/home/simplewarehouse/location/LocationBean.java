@@ -21,6 +21,7 @@ import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
+import com.home.simplewarehouse.model.Position;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -67,6 +68,12 @@ public class LocationBean implements LocationService {
 				Dimension dimension = new Dimension(location.getLocationId());
 				dimension.setLocation(location);
 				location.setDimension(dimension);
+			}
+			
+			if (location.getPosition() == null) {
+				Position position = new Position(location.getLocationId());
+				position.setLocation(location);
+				location.setPosition(position);
 			}
 
 			// No need to em.persist(locationStatusService) because it is done by cascade =
