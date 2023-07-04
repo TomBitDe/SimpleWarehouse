@@ -12,6 +12,9 @@
 		<class>com.home.simplewarehouse.model.LocationStatus</class>
 		<class>com.home.simplewarehouse.model.Dimension</class>
 		<class>com.home.simplewarehouse.model.Position</class>
+		<class>com.home.simplewarehouse.model.LogicalPosition</class>
+		<class>com.home.simplewarehouse.model.RelativPosition</class>
+		<class>com.home.simplewarehouse.model.AbsolutPosition</class>
 		<class>com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig</class>
 		<properties>
 			<property name="eclipselink.ddl-generation" value="drop-and-create-tables" />

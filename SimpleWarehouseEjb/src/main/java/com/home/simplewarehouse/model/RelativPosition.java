@@ -1,6 +1,5 @@
 package com.home.simplewarehouse.model;
 
-import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Basic;
@@ -17,8 +16,9 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "RelativPosition")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
+//@Table(name="RELATIV_POSITION")
 @DiscriminatorValue("RELATIV")
-public class RelativPosition extends Position implements Serializable {
+public class RelativPosition extends Position {
     private static final long serialVersionUID = 1L;
     
 	/**
@@ -56,7 +56,22 @@ public class RelativPosition extends Position implements Serializable {
     	super(id);
     }
     
+    /**
+     * Absolute Position with coordinates
+     * 
+     * @param x the given x coordinate
+     * @param y the given y coordinate
+     * @param z the given z coordinate
+     */
+    public RelativPosition(int x, int y, int z) {
+    	this.xCoord = x;
+    	this.yCoord = y;
+    	this.zCoord = z;
+    }
+    
 	/**
+	 * Gets the x coordinate
+	 * 
 	 * @return the xCoord
 	 */
 	public int getxCoord() {
@@ -64,6 +79,8 @@ public class RelativPosition extends Position implements Serializable {
 	}
 
 	/**
+	 * Sets the x coordinate
+	 * 
 	 * @param xCoord the xCoord to set
 	 */
 	public void setxCoord(int xCoord) {
@@ -71,6 +88,8 @@ public class RelativPosition extends Position implements Serializable {
 	}
 
 	/**
+	 * Gets the y coordinate
+	 * 
 	 * @return the yCoord
 	 */
 	public int getyCoord() {
@@ -78,6 +97,8 @@ public class RelativPosition extends Position implements Serializable {
 	}
 
 	/**
+	 * Sets the y coordinate
+	 * 
 	 * @param yCoord the yCoord to set
 	 */
 	public void setyCoord(int yCoord) {
@@ -85,6 +106,8 @@ public class RelativPosition extends Position implements Serializable {
 	}
 
 	/**
+	 * Gets the z coordinate
+	 * 
 	 * @return the zCoord
 	 */
 	public int getzCoord() {
@@ -92,6 +115,8 @@ public class RelativPosition extends Position implements Serializable {
 	}
 
 	/**
+	 * Sets the z coordinate
+	 * 
 	 * @param zCoord the zCoord to set
 	 */
 	public void setzCoord(int zCoord) {

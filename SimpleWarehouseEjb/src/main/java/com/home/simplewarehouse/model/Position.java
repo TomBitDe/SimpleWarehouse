@@ -3,8 +3,6 @@ package com.home.simplewarehouse.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.Basic;
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.DiscriminatorValue;
@@ -34,7 +32,7 @@ import org.apache.logging.log4j.Logger;
 @Table(name="POSITION")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="TYPE", discriminatorType=DiscriminatorType.STRING, length=20)
-@DiscriminatorValue("LOGICAL")
+@DiscriminatorValue("NONE")
 public class Position extends EntityBase implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Position.class);
@@ -44,12 +42,6 @@ public class Position extends EntityBase implements Serializable {
      */
 	@Id
 	private String locationId;
-	/**
-	 * Position identifier
-	 */
-	@Basic(optional = true)
-    @Column(name = "POSITION_ID", nullable = true, length = 80)
-	private String positionId;
 	/**
 	 * Version number for optimistic locking
 	 */
@@ -65,21 +57,6 @@ public class Position extends EntityBase implements Serializable {
     @XmlTransient
     private Location location;
 
-    /**
-     * Gets the position
-     * 
-     * @return the position id
-     */
-    public String getPositionId() {
-    	return positionId;
-    }
-    /**
-     * Sets the position id
-     */
-    public void setPositionId(String id) {
-    	this.positionId = id;
-    }
-    
     /**
 	 * Gets the version
 	 * 
@@ -103,18 +80,35 @@ public class Position extends EntityBase implements Serializable {
 	}
 
 	/**
-	 * Default with id
+	 * Default with location id
 	 * 
-	 * @param locationId
+	 * @param locationId the location id
 	 */
 	public Position(String locationId) {
 		super();
 		LOG.trace("--> Position({})", locationId);
 
 		this.locationId = locationId;
-		this.positionId = locationId;
 
 		LOG.trace("<-- Position()");
+	}
+	
+	/**
+	 * Gets the location id
+	 * 
+	 * @return the location id
+	 */
+	public String getLocationId() {
+		return this.locationId;
+	}
+	
+	/**
+	 * Sets the location id
+	 * 
+	 * @param id the location id
+	 */
+	public void setLocationId(String id) {
+		this.locationId = id;
 	}
 
 	/**
@@ -159,8 +153,6 @@ public class Position extends EntityBase implements Serializable {
 		builder.append("Position [")
 		    .append("locationId=")
 		    .append(locationId)
-		    .append("positionId=")
-		    .append(positionId)
 		    .append(", version=")
 		    .append(version)
 		    .append(", ")

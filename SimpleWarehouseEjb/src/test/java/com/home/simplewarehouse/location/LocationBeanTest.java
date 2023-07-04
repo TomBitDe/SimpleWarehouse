@@ -30,10 +30,13 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.model.AbsolutPosition;
 import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LogicalPosition;
+import com.home.simplewarehouse.model.RelativPosition;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -181,6 +184,27 @@ public class LocationBeanTest {
 		assertNotNull(location.getDimension());
 		assertNotNull(location.getLocationStatus());
 		assertNotNull(location.getPosition());
+		assertTrue(location.getPosition() instanceof LogicalPosition);
+				
+		LOG.info(location);
+
+		expLocation = new Location("D");
+		expLocation.setPosition(new RelativPosition(1, 1, 1));
+
+		location = locationService.createOrUpdate(expLocation);
+		
+		assertNotNull(location.getPosition());
+		assertTrue(location.getPosition() instanceof RelativPosition);
+		
+		LOG.info(location);
+
+		expLocation = new Location("F");
+		expLocation.setPosition(new AbsolutPosition(1.25f, 3.12f, 1.01f));
+
+		location = locationService.createOrUpdate(expLocation);
+		
+		assertNotNull(location.getPosition());
+		assertTrue(location.getPosition() instanceof AbsolutPosition);
 		
 		LOG.info(location);
 	}
