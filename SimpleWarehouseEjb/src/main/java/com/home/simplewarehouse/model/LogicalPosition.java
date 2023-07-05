@@ -14,7 +14,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Position values for locations.
+ * Logical position for locations (just a position id).
  */
 @XmlRootElement(name = "LogicalPosition")
 @XmlAccessorType(XmlAccessType.FIELD)

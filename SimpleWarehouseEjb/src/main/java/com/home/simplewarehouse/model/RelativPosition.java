@@ -11,7 +11,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * Position relative positions for locations.
+ * Relative position values for locations.
  */
 @XmlRootElement(name = "RelativPosition")
 @XmlAccessorType(XmlAccessType.FIELD)
