@@ -25,6 +25,8 @@ public class LogicalPosition extends Position {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(LogicalPosition.class);
     
+    private static final String DEFAULT_LOG_TRACE_EXIT = "<-- LogicalPosition()";
+    
 	/**
 	 * Position identifier
 	 */
@@ -55,7 +57,7 @@ public class LogicalPosition extends Position {
 	public LogicalPosition() {
 		super();
 		LOG.trace("--> LogicalPosition()");
-		LOG.trace("<-- LogicalPosition()");
+		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
 	}
 
 	/**
@@ -70,7 +72,7 @@ public class LogicalPosition extends Position {
 		
 		this.positionId = positionId;
 		
-		LOG.trace("<-- LogicalPosition()");
+		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
 	}
 	
 	/**
@@ -84,7 +86,7 @@ public class LogicalPosition extends Position {
 		
 		this.positionId = positionId;
 		
-		LOG.trace("<-- LogicalPosition()");
+		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
 	}
 
 	@Override
