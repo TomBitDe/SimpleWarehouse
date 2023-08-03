@@ -110,7 +110,7 @@ public class DimensionBeanTest {
 	}
 
 	/**
-	 * Dimension is linked to locationService
+	 * Dimension is linked to location
 	 */
 	@Test
 	@InSequence(0)
@@ -120,18 +120,15 @@ public class DimensionBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		assertTrue(dimensionService.getAll().isEmpty());
 		
-		Location expLocation = new Location("A");
-		
-		locationService.createOrUpdate(expLocation);
+		Location expLocation = locationService.createOrUpdate(new Location("A"));
 		assertEquals(expLocation, locationService.getById("A"));
 		
-	    // MANDATORY reread
 		Dimension dimension = dimensionService.getById(expLocation.getLocationId());		
 		LOG.info("Dimension getById: " + dimension);
 		
 		// Now check the corresponding Dimension
-		assertEquals("A", dimension.getLocationId());
-		assertEquals(0, dimension.getMaxCapacity());
+		assertEquals(expLocation.getLocationId(), dimension.getLocationId());
+		assertEquals(expLocation.getDimension().getMaxCapacity(), dimension.getMaxCapacity());
 		assertEquals(EntityBase.USER_DEFAULT, dimension.getUpdateUserId());
 		assertNotNull(dimension.getUpdateTimestamp());
 		
@@ -150,19 +147,17 @@ public class DimensionBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		assertTrue(dimensionService.getAll().isEmpty());
 		
-		Location expLocation = new Location("A");
-		
-		locationService.createOrUpdate(expLocation);
-	    // MANDATORY reread
+		Location expLocation = locationService.createOrUpdate(new Location("A"));
+
 		assertEquals(expLocation, locationService.getById("A"));
 		
 		LOG.info("Location prepared: " + expLocation);
 		LOG.info("Dimension implicite prepared: "+ expLocation.getDimension());
 		
-		// Delete the locationService
+		// Delete the location
 		locationService.delete(expLocation);
 		
-		// Now check the locationService
+		// Now check the location
 	    // MANDATORY reread
 		assertNull(locationService.getById("A"));
 		assertNull(dimensionService.getById("A"));
