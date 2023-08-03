@@ -4,7 +4,6 @@ import static javax.persistence.LockModeType.NONE;
 
 import java.io.Serializable;
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
@@ -252,10 +251,10 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @return the List of HandlingUnits
 	 */
-	public List<HandlingUnit> getHandlingUnits() {
+	public Set<HandlingUnit> getHandlingUnits() {
 		LOG.trace("--> getHandlingUnits()");
 
-		List<HandlingUnit> ret = new ArrayList<>();
+		Set<HandlingUnit> ret = new HashSet<>();
 
 		handlingUnits.forEach(ret::add);
 
@@ -269,7 +268,7 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param handlingUnits the list of HandlingUnits
 	 */
-	public void setHandlingUnits(List<HandlingUnit> handlingUnits) {
+	public void setHandlingUnits(Set<HandlingUnit> handlingUnits) {
 		LOG.trace("--> setHandlingUnits()");
 
 		this.handlingUnits.clear();
@@ -297,7 +296,7 @@ public class Location extends EntityBase implements Serializable {
 			handlingUnit.setLocation(this);
 			handlingUnit.setLocaPos(null);
 
-			List<HandlingUnit> list = getHandlingUnits();
+			Set<HandlingUnit> list = getHandlingUnits();
 			ret = list.add(handlingUnit);
 			setHandlingUnits(list);
 		}
@@ -320,7 +319,7 @@ public class Location extends EntityBase implements Serializable {
 		boolean ret = false;
 
 		if (handlingUnit != null) {
-			List<HandlingUnit> list = getHandlingUnits();
+			Set<HandlingUnit> list = getHandlingUnits();
 			ret = list.remove(handlingUnit);
 			setHandlingUnits(list);
 
@@ -370,7 +369,7 @@ public class Location extends EntityBase implements Serializable {
 		return Objects.equals(locationId, other.locationId);
 	}
 
-	protected String toString(List<HandlingUnit> list) {
+	protected String toString(Set<HandlingUnit> list) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("RANDOM=[");

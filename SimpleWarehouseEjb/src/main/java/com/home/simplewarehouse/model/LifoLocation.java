@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.DiscriminatorValue;
@@ -72,7 +73,7 @@ public class LifoLocation extends Location implements Serializable {
 		handlingUnit.setLocation(this);		
 		handlingUnit.setLocaPos(1);
 		
-		List <HandlingUnit> list = getHandlingUnits();
+		Set<HandlingUnit> list = getHandlingUnits();
 		boolean ret = list.add(handlingUnit);
 		setHandlingUnits(list);
 		
@@ -85,7 +86,7 @@ public class LifoLocation extends Location implements Serializable {
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
 		
-		List<HandlingUnit> list = getHandlingUnits();
+		Set<HandlingUnit> list = getHandlingUnits();
 		boolean b = list.remove( handlingUnit );
 		setHandlingUnits(list);
 	    
@@ -118,7 +119,7 @@ public class LifoLocation extends Location implements Serializable {
 	}
 
 	@Override
-	protected String toString(List<HandlingUnit> list) {
+	protected String toString(Set<HandlingUnit> list) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("LIFO=[");

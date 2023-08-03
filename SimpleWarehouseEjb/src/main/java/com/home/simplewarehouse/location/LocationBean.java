@@ -2,6 +2,7 @@ package com.home.simplewarehouse.location;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -482,7 +483,7 @@ public class LocationBean implements LocationService {
 	}
 
 	@Override
-	public List<HandlingUnit> getHandlingUnits(final Location location) {
+	public Set<HandlingUnit> getHandlingUnits(final Location location) {
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL);
 		}
