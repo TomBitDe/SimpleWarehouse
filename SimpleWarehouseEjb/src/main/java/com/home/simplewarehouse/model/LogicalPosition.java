@@ -114,7 +114,7 @@ public class LogicalPosition extends Position {
 		
 		builder.append("LogicalPosition [")
 		    .append("positionId=")
-		    .append(positionId)
+		    .append(getPositionId())
 		    .append(", ")
 			.append(super.toString())
 			.append("]");

@@ -152,9 +152,9 @@ public class Position extends EntityBase implements Serializable {
 		
 		builder.append("Position [")
 		    .append("locationId=")
-		    .append(locationId)
+		    .append(getLocationId())
 		    .append(", version=")
-		    .append(version)
+		    .append(getVersion())
 		    .append(", ")
 			.append(super.toString())
 			.append("]");

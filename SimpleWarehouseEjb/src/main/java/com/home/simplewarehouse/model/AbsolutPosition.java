@@ -146,9 +146,9 @@ public class AbsolutPosition extends Position {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("AbsolutPosition [xCoord=").append(xCoord)
-		    .append(", yCoord=").append(yCoord)
-		    .append(", zCoord=").append(zCoord)
+		builder.append("AbsolutPosition [xCoord=").append(getxCoord())
+		    .append(", yCoord=").append(getyCoord())
+		    .append(", zCoord=").append(getzCoord())
 		    .append("]");
 
 		return builder.toString();

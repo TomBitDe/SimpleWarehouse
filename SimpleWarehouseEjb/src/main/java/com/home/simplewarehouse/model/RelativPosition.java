@@ -146,9 +146,9 @@ public class RelativPosition extends Position {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("RelativPosition [xCoord=").append(xCoord)
-		    .append(", yCoord=").append(yCoord)
-		    .append(", zCoord=").append(zCoord)
+		builder.append("RelativPosition [xCoord=").append(getxCoord())
+		    .append(", yCoord=").append(getyCoord())
+		    .append(", zCoord=").append(getzCoord())
 		    .append("]");
 
 		return builder.toString();
