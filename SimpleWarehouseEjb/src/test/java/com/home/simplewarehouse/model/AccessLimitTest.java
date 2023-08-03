@@ -11,10 +11,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
+/**
+ * Test the Access Limit Enum.
+ */
 @RunWith(JUnit4.class)
 public class AccessLimitTest {
 	private static final Logger LOG = LogManager.getLogger(AccessLimitTest.class);
 	
+	/**
+	 * Mandatory default constructor
+	 */
+	public AccessLimitTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+	
+	/**
+	 * Test sorting
+	 */
 	@Test
 	public void sortFromTest() {
 		EnumMap<AccessLimit, Integer> accessLimitForSort = new EnumMap<AccessLimit, Integer>(AccessLimit.class);
