@@ -40,147 +40,146 @@ import org.apache.logging.log4j.Logger;
 @XmlRootElement(name = "Location")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-@Table(name="LOCATION")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="ACCESS_LIMIT", discriminatorType=DiscriminatorType.STRING, length=20)
+@Table(name = "LOCATION")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "ACCESS_LIMIT", discriminatorType = DiscriminatorType.STRING, length = 20)
 @DiscriminatorValue("RANDOM")
 @NamedQuery(name = "findAllLocations", query = "select l from Location l", lockMode = NONE)
 public class Location extends EntityBase implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private static final Logger LOG = LogManager.getLogger(Location.class);
-    
-    private static final String ID_FORMATTER = "locationId={0}";
+	private static final long serialVersionUID = 1L;
+	private static final Logger LOG = LogManager.getLogger(Location.class);
 
-    /**
-     * The Location id
-     */
-    @Id
-    @Column(name = "LOCATION_ID", nullable = false, length = 80)
-    private String locationId;
+	private static final String ID_FORMATTER = "locationId={0}";
+
+	/**
+	 * The Location id
+	 */
+	@Id
+	@Column(name = "LOCATION_ID", nullable = false, length = 80)
+	private String locationId;
 	/**
 	 * Version number for optimistic locking
 	 */
-    @Version
-    private int version;
-    /**
-     * The associated LocationStatus
-     */
-    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn(name = "LOCATION_ID")
-    private LocationStatus locationStatus;
-    /**
-     * The associated Dimension
-     */
-    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn(name = "LOCATION_ID")
-    private Dimension dimension;
-    /**
-     * The associated Position
-     */
-    @OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @PrimaryKeyJoinColumn(name = "LOCATION_ID")
-    private Position position;
-    /**
-     * The associated HandlingUnits
-     */
-    @OneToMany( mappedBy="location"
-    		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
-    		, fetch = FetchType.EAGER )
+	@Version
+	private int version;
+	/**
+	 * The associated LocationStatus
+	 */
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
+	private LocationStatus locationStatus;
+	/**
+	 * The associated Dimension
+	 */
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
+	private Dimension dimension;
+	/**
+	 * The associated Position
+	 */
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
+	private Position position;
+	/**
+	 * The associated HandlingUnits
+	 */
+	@OneToMany(mappedBy = "location", cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
+			CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
-    private void initAssociated() {
-    	Dimension dim = new Dimension();
-    	dim.setLocation(this);
-    	this.setDimension(dim);
-    	LocationStatus ls = new LocationStatus();
-    	ls.setLocation(this);
-    	this.setLocationStatus(ls);
-    	Position pos = new LogicalPosition(this.getLocationId());
-    	pos.setLocation(this);
-    	this.setPosition(pos);
-    }
+	private void initAssociated() {
+		Dimension dim = new Dimension();
+		dim.setLocation(this);
+		this.setDimension(dim);
+		LocationStatus ls = new LocationStatus();
+		ls.setLocation(this);
+		this.setLocationStatus(ls);
+		Position pos = new LogicalPosition(this.getLocationId());
+		pos.setLocation(this);
+		this.setPosition(pos);
+	}
 
-    private void initAssociated(String id) {
-    	Dimension dim = new Dimension(id);
-    	dim.setLocation(this);
-    	this.setDimension(dim);
-    	LocationStatus ls = new LocationStatus(id);
-    	ls.setLocation(this);
-    	this.setLocationStatus(ls);
-    	Position pos = new LogicalPosition(id);
-    	pos.setLocation(this);
-    	this.setPosition(pos);
-    }
+	private void initAssociated(String id) {
+		Dimension dim = new Dimension(id);
+		dim.setLocation(this);
+		this.setDimension(dim);
+		LocationStatus ls = new LocationStatus(id);
+		ls.setLocation(this);
+		this.setLocationStatus(ls);
+		Position pos = new LogicalPosition(id);
+		pos.setLocation(this);
+		this.setPosition(pos);
+	}
 
-    /**
-     * Default Random Location
-     */
-    public Location() {
-    	super();
-    	initAssociated();
-    }
-    
-    /**
-     * Random Location with id
-     * 
-     * @param id the given id
-     */
-    public Location(String id) {
-    	super();
-    	this.locationId = id;
-    	initAssociated(id);
-    }
-    
-    /**
-     * Random Location with id and user
-     * 
-     * @param id the given id
-     * @param user the given user
-     */
-    public Location(String id, String user) {
-    	super(user);
-    	this.locationId = id;
-    	initAssociated(id);
-    }
-    
-    /**
-     * Random Location with id, user and timestamp
-     * 
-     * @param id the given id
-     * @param user the given user
-     * @param timestamp the given timestamp
-     */
-    public Location(String id, String user, Timestamp timestamp) {
-    	super(user, timestamp);
-    	this.locationId = id;
-    	initAssociated(id);
-    }
-    
-    /**
-     * Gets the Location id
-     * 
-     * @return the id
-     */
-    public String getLocationId() {
-    	LOG.debug(ID_FORMATTER, this.locationId);
-        return this.locationId;
-    }
+	/**
+	 * Default Random Location
+	 */
+	public Location() {
+		super();
+		initAssociated();
+	}
 
-    /**
-     * Sets the Location id
-     * 
-     * @param id the given id
-     */
-    public void setLocationId(final String id) {
-        this.locationId = id;
-        LOG.debug(ID_FORMATTER, this.locationId);
-    }
+	/**
+	 * Random Location with id
+	 * 
+	 * @param id the given id
+	 */
+	public Location(String id) {
+		super();
+		this.locationId = id;
+		initAssociated(id);
+	}
 
-    /**
-     * Gets the version
-     * 
-     * @return the version number
-     */
+	/**
+	 * Random Location with id and user
+	 * 
+	 * @param id   the given id
+	 * @param user the given user
+	 */
+	public Location(String id, String user) {
+		super(user);
+		this.locationId = id;
+		initAssociated(id);
+	}
+
+	/**
+	 * Random Location with id, user and timestamp
+	 * 
+	 * @param id        the given id
+	 * @param user      the given user
+	 * @param timestamp the given timestamp
+	 */
+	public Location(String id, String user, Timestamp timestamp) {
+		super(user, timestamp);
+		this.locationId = id;
+		initAssociated(id);
+	}
+
+	/**
+	 * Gets the Location id
+	 * 
+	 * @return the id
+	 */
+	public String getLocationId() {
+		LOG.debug(ID_FORMATTER, this.locationId);
+		return this.locationId;
+	}
+
+	/**
+	 * Sets the Location id
+	 * 
+	 * @param id the given id
+	 */
+	public void setLocationId(final String id) {
+		this.locationId = id;
+		LOG.debug(ID_FORMATTER, this.locationId);
+	}
+
+	/**
+	 * Gets the version
+	 * 
+	 * @return the version number
+	 */
 	public int getVersion() {
 		return version;
 	}
@@ -241,7 +240,7 @@ public class Location extends EntityBase implements Serializable {
 	 */
 	public void setPosition(Position position) {
 		this.position = position;
-		
+
 		if (position != null) {
 			position.setLocation(this);
 			position.setLocationId(locationId);
@@ -257,14 +256,14 @@ public class Location extends EntityBase implements Serializable {
 		LOG.trace("--> getHandlingUnits()");
 
 		List<HandlingUnit> ret = new ArrayList<>();
-		
+
 		handlingUnits.forEach(ret::add);
-		
+
 		LOG.trace("<-- getHandlingUnits()");
 
 		return ret;
 	}
-	
+
 	/**
 	 * Sets the list of HandlingUnits for this Location
 	 * 
@@ -274,9 +273,11 @@ public class Location extends EntityBase implements Serializable {
 		LOG.trace("--> setHandlingUnits()");
 
 		this.handlingUnits.clear();
-		
-		handlingUnits.forEach(this.handlingUnits::add);
-		
+
+		if (handlingUnits != null) {
+			handlingUnits.forEach(this.handlingUnits::add);
+		}
+
 		LOG.trace("<-- setHandlingUnits()");
 	}
 
@@ -290,42 +291,50 @@ public class Location extends EntityBase implements Serializable {
 	public boolean addHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> addHandlingUnit()");
 
-		handlingUnit.setLocation(this);
-		handlingUnit.setLocaPos(null);
-		
-		List<HandlingUnit> list = getHandlingUnits();
-		boolean ret = list.add(handlingUnit);
-		setHandlingUnits(list);
-		
+		boolean ret = false;
+
+		if (handlingUnit != null) {
+			handlingUnit.setLocation(this);
+			handlingUnit.setLocaPos(null);
+
+			List<HandlingUnit> list = getHandlingUnits();
+			ret = list.add(handlingUnit);
+			setHandlingUnits(list);
+		}
+
 		LOG.trace("<-- addHandlingUnit()");
-		
+
 		return ret;
 	}
-	
+
 	/**
 	 * Remove this HandlingUnit from the Location
 	 * 
 	 * @param handlingUnit the HandlingUnit
 	 * 
-	 * @return true if add succeeded, else false
+	 * @return true if remove succeeded, else false
 	 */
 	public boolean removeHandlingUnit(HandlingUnit handlingUnit) {
 		LOG.trace("--> removeHandlingUnit()");
-		
-		List<HandlingUnit> list = getHandlingUnits();
-		boolean b = list.remove( handlingUnit );
-		setHandlingUnits(list);
 
-		if ( b ) {
-			handlingUnit.setLocation(null);
-			handlingUnit.setLocaPos(null);
+		boolean ret = false;
+
+		if (handlingUnit != null) {
+			List<HandlingUnit> list = getHandlingUnits();
+			ret = list.remove(handlingUnit);
+			setHandlingUnits(list);
+
+			if (ret) {
+				handlingUnit.setLocation(null);
+				handlingUnit.setLocaPos(null);
+			}
 		}
-	    
+
 		LOG.trace("<-- removeHandlingUnit()");
 
-		return b;
+		return ret;
 	}
-	
+
 	/**
 	 * Gets all the HandlingUnits possible to Pick from the Location
 	 * 
@@ -334,8 +343,8 @@ public class Location extends EntityBase implements Serializable {
 	public List<HandlingUnit> getAvailablePicks() {
 		LOG.trace("--> getAvailablePicks()");
 
-		List<HandlingUnit> ret = getHandlingUnits().stream().collect( Collectors.toList() );
-		
+		List<HandlingUnit> ret = getHandlingUnits().stream().collect(Collectors.toList());
+
 		LOG.trace("<-- getAvailablePicks()");
 
 		return ret;
@@ -356,60 +365,44 @@ public class Location extends EntityBase implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Location other = (Location) obj;
-		
+
 		// Only locationId; this is a must. Otherwise stack overflow
 		return Objects.equals(locationId, other.locationId);
 	}
-	
+
 	protected String toString(List<HandlingUnit> list) {
 		StringBuilder builder = new StringBuilder();
 
 		builder.append("RANDOM=[");
-		
+
 		if (list == null) {
 			builder.append("null");
+		} else {
+			list.stream().forEach(item -> builder.append('"').append(item.getId()).append('"').append(" "));
 		}
-		else {
-		    list.stream().forEach(item -> builder
-		    		.append('"')
-		    		.append(item.getId())
-		    		.append('"')
-		    		.append(" "));
-		}
-		
+
 		// Replace trailing " " by "]" (see above) or just append "]"
 		int idx = builder.lastIndexOf(" ");
 		if (idx > 0) {
-		    builder.replace(idx, idx + 1, "]");
+			builder.replace(idx, idx + 1, "]");
+		} else {
+			builder.append("]");
 		}
-		else {
-		    builder.append("]");
-		}
-		
+
 		return builder.toString();
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Location [")
-			.append(System.lineSeparator() + "\tlocationId=")
-		    .append(locationId)
-		    .append(", version=")
-		    .append(version)
-		    .append(", " + System.lineSeparator() + '\t' + '\t')
-		    .append(locationStatus)
-		    .append(", " + System.lineSeparator() + '\t' + '\t')
-		    .append(dimension)
-			.append(", " + System.lineSeparator() + '\t' + '\t')
-		    .append(position)
-			.append(", " + System.lineSeparator() + '\t' + '\t')
-			.append("HandlingUnits ")
-			.append(toString(getHandlingUnits()))
-			.append(", " + System.lineSeparator() + '\t')
-			.append(super.toString())
-			.append("]");
-		
+		builder.append("Location [").append(System.lineSeparator() + "\tlocationId=").append(locationId)
+				.append(", version=").append(version).append(", " + System.lineSeparator() + '\t' + '\t')
+				.append(locationStatus).append(", " + System.lineSeparator() + '\t' + '\t').append(dimension)
+				.append(", " + System.lineSeparator() + '\t' + '\t').append(position)
+				.append(", " + System.lineSeparator() + '\t' + '\t').append("HandlingUnits ")
+				.append(toString(getHandlingUnits())).append(", " + System.lineSeparator() + '\t')
+				.append(super.toString()).append("]");
+
 		return builder.toString();
 	}
 }

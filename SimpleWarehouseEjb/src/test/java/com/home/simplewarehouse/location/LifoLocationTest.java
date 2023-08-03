@@ -128,18 +128,12 @@ public class LifoLocationTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-		LifoLocation expLocation = new LifoLocation("A");
-
-		locationService.createOrUpdate(expLocation);
+		Location expLocation = locationService.createOrUpdate(new LifoLocation("A"));
 		LOG.info("Lifo Location created: " + expLocation);
 
-		// MANDATORY reread
-		Location location = locationService.getById(expLocation.getLocationId());		
-		LOG.info("LifoLocation getById: " + location);
-		
-		assertEquals(expLocation, location);
-		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
-		assertNotNull(location.getUpdateTimestamp());
+		assertEquals(expLocation, locationService.getById("A"));
+		assertEquals(EntityBase.USER_DEFAULT, expLocation.getUpdateUserId());
+		assertNotNull(expLocation.getUpdateTimestamp());
 		
 	    // Should be null because never created
 		assertNull(locationService.getById("B"));
@@ -155,39 +149,31 @@ public class LifoLocationTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationService.createOrUpdate(new LifoLocation("A"));
+		Location location = locationService.createOrUpdate(new LifoLocation("A"));
 
-	    // MANDATORY reread
-	    Location location = locationService.getById("A");
-		LOG.info("Lifo Location getById: " + location);
-		
 		assertEquals("A", location.getLocationId());
 		
-		// Delete the locationService
+		// Delete the location
 		locationService.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
-		locationService.createOrUpdate(new LifoLocation("A", "Test"));
+		location = locationService.createOrUpdate(new LifoLocation("A", "Test"));
 
-		// MANDATORY reread
-		location = locationService.getById("A");				
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
 		LOG.info("Lifo Location created: " + location);
 
-		// Delete the locationService
+		// Delete the location
 		locationService.delete(location);
 		LOG.info("Lifo Location deleted: " + location.getLocationId());
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		locationService.createOrUpdate(new LifoLocation("A", "Test", ts));
+		location = locationService.createOrUpdate(new LifoLocation("A", "Test", ts));
 
-	    // MANDATORY reread
-		location = locationService.getById("A");
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
@@ -195,7 +181,7 @@ public class LifoLocationTest {
 	}
 
 	/**
-	 * Test the delete by locationService
+	 * Test the delete by location
 	 */
 	@Test
 	@InSequence(2)
@@ -204,9 +190,8 @@ public class LifoLocationTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationService.createOrUpdate(new LifoLocation("A"));
+	    Location location = locationService.createOrUpdate(new LifoLocation("A"));
 
-	    Location location = locationService.getById("A");
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		
@@ -261,8 +246,7 @@ public class LifoLocationTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		locationService.createOrUpdate(new LifoLocation("A", "Test"));
-		Location locA = locationService.getById("A");
+		Location locA = locationService.createOrUpdate(new LifoLocation("A", "Test"));
 		LOG.info("Lifo Location prepared: " + locA);
 		
 		// Drop to make a relation
