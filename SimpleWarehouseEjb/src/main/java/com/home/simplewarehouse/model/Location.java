@@ -374,17 +374,14 @@ public class Location extends EntityBase implements Serializable {
 
 		builder.append("RANDOM=[");
 
-		if (list == null) {
-			builder.append("null");
-		} else {
-			list.stream().forEach(item -> builder.append('"').append(item.getId()).append('"').append(" "));
-		}
+		list.stream().forEach(item -> builder.append('"').append(item.getId()).append('"').append(" "));
 
 		// Replace trailing " " by "]" (see above) or just append "]"
 		int idx = builder.lastIndexOf(" ");
 		if (idx > 0) {
 			builder.replace(idx, idx + 1, "]");
-		} else {
+		}
+		else {
 			builder.append("]");
 		}
 

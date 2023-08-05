@@ -133,18 +133,13 @@ public class FifoLocation extends Location implements Serializable {
 
 		builder.append("FIFO=[");
 		
-		if (list == null) {
-			builder.append("null");
-		}
-		else {
-		    list.stream().forEach(item -> builder
-		    		.append('"')
-		    		.append(item.getId())
-		    		.append(" Pos ")
-		    		.append(item.getLocaPos())
-		    		.append('"')
-		    		.append(" "));
-		}
+	    list.stream().forEach(item -> builder
+    		.append('"')
+    		.append(item.getId())
+    		.append(" Pos ")
+    		.append(item.getLocaPos())
+    		.append('"')
+    		.append(" "));
 		
 		// Replace trailing " " by "]" (see above) or just append "]"
 		int idx = builder.lastIndexOf(" ");

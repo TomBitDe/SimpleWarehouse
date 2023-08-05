@@ -124,22 +124,17 @@ public class LifoLocation extends Location implements Serializable {
 
 		builder.append("LIFO=[");
 		
-		if (list == null) {
-			builder.append("null");
-		}
-		else {
-			List<HandlingUnit> result = list.stream().sorted((o1, o2) -> o1.getLocaPos()
-					.compareTo(o2.getLocaPos()))
-					.collect(Collectors.toList());
+		List<HandlingUnit> result = list.stream().sorted((o1, o2) -> o1.getLocaPos()
+			.compareTo(o2.getLocaPos()))
+			.collect(Collectors.toList());
 			
-			result.stream().forEach(item -> builder
-		    		.append('"')
-		    		.append(item.getId())
-		    		.append(" Pos ")
-		    		.append(item.getLocaPos())
-		    		.append('"')
-		    		.append(" "));
-		}
+		result.stream().forEach(item -> builder
+			.append('"')
+			.append(item.getId())
+			.append(" Pos ")
+			.append(item.getLocaPos())
+			.append('"')
+			.append(" "));
 		
 		// Replace trailing " " by "]" (see above) or just append "]"
 		int idx = builder.lastIndexOf(" ");
