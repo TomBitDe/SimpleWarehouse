@@ -3,10 +3,10 @@ package com.home.simplewarehouse.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.SortedMap;
 import java.util.TreeMap;
 
 /**
@@ -34,7 +34,7 @@ public enum AccessLimit {
 	 *  
 	 * @return a sorted TreeMap
 	 */
-	public static TreeMap<Integer, AccessLimit> sortFrom(EnumMap<AccessLimit, Integer> map) {
+	public static SortedMap<Integer, AccessLimit> sortFrom(Map<AccessLimit, Integer> map) {
 		TreeMap<Integer, AccessLimit> ret = new TreeMap<>();
 		
 		List<Map.Entry<AccessLimit, Integer>> toSort = new ArrayList<>();
