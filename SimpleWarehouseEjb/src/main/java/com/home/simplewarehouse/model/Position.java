@@ -33,7 +33,7 @@ import org.apache.logging.log4j.Logger;
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="TYPE", discriminatorType=DiscriminatorType.STRING, length=20)
 @DiscriminatorValue("NONE")
-public class Position extends EntityBase implements Serializable {
+public class Position implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Position.class);
     
@@ -56,19 +56,6 @@ public class Position extends EntityBase implements Serializable {
     @JoinColumn(name = "LOCATION_ID")
     @XmlTransient
     private Location location;
-
-    /**
-	 * Gets the version
-	 * 
-	 * @return the version number
-	 */
-	public int getVersion() {
-		return version;
-	}
-
-	protected void setVersion(int version) {
-		this.version = version;
-	}
 
 	/**
 	 * Default constructor
@@ -109,6 +96,19 @@ public class Position extends EntityBase implements Serializable {
 	 */
 	public void setLocationId(String id) {
 		this.locationId = id;
+	}
+
+    /**
+	 * Gets the version
+	 * 
+	 * @return the version number
+	 */
+	public int getVersion() {
+		return version;
+	}
+
+	protected void setVersion(int version) {
+		this.version = version;
 	}
 
 	/**
