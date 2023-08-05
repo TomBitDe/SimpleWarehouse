@@ -3,7 +3,7 @@ package com.home.simplewarehouse.model;
 import static org.junit.Assert.assertEquals;
 
 import java.util.EnumMap;
-import java.util.TreeMap;
+import java.util.Map;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -31,7 +31,7 @@ public class AccessLimitTest {
 	 */
 	@Test
 	public void sortFromTest() {
-		EnumMap<AccessLimit, Integer> accessLimitForSort = new EnumMap<AccessLimit, Integer>(AccessLimit.class);
+		Map<AccessLimit, Integer> accessLimitForSort = new EnumMap<AccessLimit, Integer>(AccessLimit.class);
 
 		accessLimitForSort.put(AccessLimit.RANDOM, 3);
 		accessLimitForSort.put(AccessLimit.FIFO, 1);
@@ -39,7 +39,7 @@ public class AccessLimitTest {
 
 		LOG.info("Keys={} Values={}", accessLimitForSort.keySet(), accessLimitForSort.values());
 
-		TreeMap<Integer, AccessLimit> sorted = AccessLimit.sortFrom(accessLimitForSort);
+		Map<Integer, AccessLimit> sorted = AccessLimit.sortFrom(accessLimitForSort);
 		
 		assertEquals(3, sorted.values().size());
 		assertEquals(AccessLimit.FIFO, sorted.get(1));
