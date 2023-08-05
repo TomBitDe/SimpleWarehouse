@@ -205,7 +205,7 @@ public class MarshallerTest {
 	@Test
 	@InSequence(6)
 	public void marshallDimension() {
-		Dimension dimension = new Dimension("Loc_1");
+		Dimension dimension = new Dimension(new Location("Loc_1"));
 
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Dimension.class);
