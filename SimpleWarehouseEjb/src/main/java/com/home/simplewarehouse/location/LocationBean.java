@@ -67,7 +67,7 @@ public class LocationBean implements LocationService {
 			}
 
 			if (location.getDimension() == null) {
-				Dimension dimension = new Dimension(location.getLocationId());
+				Dimension dimension = new Dimension(location);
 				dimension.setLocation(location);
 				location.setDimension(dimension);
 			}

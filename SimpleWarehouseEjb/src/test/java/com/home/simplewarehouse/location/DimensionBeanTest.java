@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.location;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -25,9 +26,12 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
-import com.home.simplewarehouse.model.EntityBase;
-import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Dimension;
+import com.home.simplewarehouse.model.EntityBase;
+import com.home.simplewarehouse.model.HeightCategory;
+import com.home.simplewarehouse.model.LengthCategory;
+import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -127,7 +131,7 @@ public class DimensionBeanTest {
 		LOG.info("Dimension getById: " + dimension);
 		
 		// Now check the corresponding Dimension
-		assertEquals(expLocation.getLocationId(), dimension.getLocationId());
+		assertEquals(expLocation.getLocationId(), dimension.getLocation().getLocationId());
 		assertEquals(expLocation.getDimension().getMaxCapacity(), dimension.getMaxCapacity());
 		assertEquals(EntityBase.USER_DEFAULT, dimension.getUpdateUserId());
 		assertNotNull(dimension.getUpdateTimestamp());
@@ -161,5 +165,71 @@ public class DimensionBeanTest {
 	    // MANDATORY reread
 		assertNull(locationService.getById("A"));
 		assertNull(dimensionService.getById("A"));
+	}
+	
+	@Test
+	@InSequence(4)
+	public void modifyDimension() {
+		LOG.info("--- Test modifyDimension");
+
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(dimensionService.getAll().isEmpty());
+		
+		// With Dimension DEFAULTS
+		Location location = new Location("A");
+		// Now change
+		Dimension changed = new Dimension(location, 5, 900, HeightCategory.MIDDLE, LengthCategory.SHORT, WidthCategory.NARROW, "Test");
+		location.setDimension(changed);
+		
+		Location expLocation = locationService.createOrUpdate(location);
+
+		assertEquals("A", expLocation.getLocationId());
+		assertEquals(5, expLocation.getDimension().getMaxCapacity());
+		assertEquals(900, expLocation.getDimension().getMaxWeight());
+		assertEquals(HeightCategory.MIDDLE, expLocation.getDimension().getMaxHeight());
+		assertEquals(LengthCategory.SHORT, expLocation.getDimension().getMaxLength());
+		assertEquals(WidthCategory.NARROW, expLocation.getDimension().getMaxWidth());
+		assertEquals("Test", expLocation.getDimension().getUpdateUserId());
+		
+		// Change again
+		location = expLocation;
+		location.getDimension().setMaxCapacity(-1);
+		location.getDimension().setMaxWeight(-1);
+		location.getDimension().setMaxHeight(null);
+		location.getDimension().setMaxLength(null);
+		location.getDimension().setMaxWidth(null);
+		location.getDimension().setUpdateUserId(null);
+		
+		expLocation = locationService.createOrUpdate(location);
+
+		assertEquals("A", expLocation.getLocationId());
+		assertEquals(0, expLocation.getDimension().getMaxCapacity());
+		assertEquals(0, expLocation.getDimension().getMaxWeight());
+		assertEquals(HeightCategory.NOT_RELEVANT, expLocation.getDimension().getMaxHeight());
+		assertEquals(LengthCategory.NOT_RELEVANT, expLocation.getDimension().getMaxLength());
+		assertEquals(WidthCategory.NOT_RELEVANT, expLocation.getDimension().getMaxWidth());
+		assertEquals("System", expLocation.getDimension().getUpdateUserId());
+	}
+	
+	@Test
+	@InSequence(8)
+	public void equalsTest() {
+		LOG.info("--- Test equalsTest");
+
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(dimensionService.getAll().isEmpty());
+		
+		// With Dimension DEFAULTS
+		Location location = new Location("A");
+		
+		Location expLocation = locationService.createOrUpdate(location);
+		
+		assertTrue(expLocation.getDimension().equals(location.getDimension()));
+		
+		expLocation = locationService.createOrUpdate(new Location("B"));
+		
+		assertFalse(expLocation.getDimension().equals(location.getDimension()));
+		assertFalse(expLocation.getDimension().equals(null));
+		assertFalse(expLocation.equals(location.getDimension()));
 	}
 }

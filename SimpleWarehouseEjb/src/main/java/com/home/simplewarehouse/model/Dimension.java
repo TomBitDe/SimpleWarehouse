@@ -24,7 +24,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Any dimensionService.
+ * Any dimension.
  * <p>
  * A maxCapacity of 0 means that an undefined number of goods can be stored in the location.<br>
  * A maxWeight of 0 means that the weight is not relevant for storing goods in the location.<br>
@@ -51,6 +51,7 @@ public class Dimension extends EntityBase implements Serializable {
      * Default weight value
      */
     public static final int WEIGHT_DEFAULT = 0;
+    
     private static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
     private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
     private static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
@@ -134,12 +135,13 @@ public class Dimension extends EntityBase implements Serializable {
     /**
      * Create this Dimension
      * 
-     * @param locationId the given Location id
+     * @param location the given Location id
      */
-    public Dimension(String locationId) {
+    public Dimension(Location location) {
     	super();
     	
-    	this.locationId = locationId;
+    	this.locationId = location.getLocationId();
+    	this.location = location;
     	
     	setDimensionDefaults();
     }
@@ -147,102 +149,78 @@ public class Dimension extends EntityBase implements Serializable {
     /**
      * Create this Dimension
      * 
-     * @param locationId the given Location id
+     * @param location the given Location 
      * @param user the given user
      */
-    public Dimension(String locationId, String user) {
-    	super(user);
+    public Dimension(Location location, String user) {
+    	this(location);
     	
-    	this.locationId = locationId;
-    	
-    	setDimensionDefaults();
+    	this.setUpdateUserId(user);
     }
     
     /**
      * Create this Dimension
      * 
-     * @param locationId the given Location id
+     * @param location the given Location
      * @param maxCapacity the given maximum capacity
      * @param user the given user
      */
-	public Dimension(String locationId, int maxCapacity, String user) {
-		super(user);
+	public Dimension(Location location, int maxCapacity, String user) {
+    	this(location, user);
 		
-		this.locationId = locationId;
-		
-    	setDimensionDefaults();
-
     	setMaxCapacity(maxCapacity);
     }
 
     /**
      * Create this Dimension
      * 
-     * @param locationId the given Location id
+     * @param location the given Location 
      * @param maxCapacity the given maximum capacity
      * @param maxWeight the given maximum weight
      * @param user the given user
      */
-	public Dimension(String locationId, int maxCapacity, int maxWeight, String user) {
-		super(user);
+	public Dimension(Location location, int maxCapacity, int maxWeight, String user) {
+    	this(location, maxCapacity, user);
 		
-		this.locationId = locationId;
-		
-    	setDimensionDefaults();
-
-    	setMaxCapacity(maxCapacity);
     	setMaxWeight(maxWeight);
 	}
 
     /**
      * Create this Dimension
      * 
-     * @param locationId the given Location id
+     * @param location the given Location 
      * @param maxCapacity the given maximum capacity
      * @param maxWeight the given maximum weight
      * @param maxHeight the given maximum height
      * @param user the given user
      */
-	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight, String user) {
-		super(user);
+	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight, String user) {
+    	this(location, maxCapacity, maxWeight, user);
 		
-		this.locationId = locationId;
-		
-    	setDimensionDefaults();
-
-    	setMaxCapacity(maxCapacity);
-    	setMaxWeight(maxWeight);
     	setMaxHeight(maxHeight);
 	}
 
     /**
      * Create this Dimension
      * 
-     * @param locationId the given Location id
+     * @param location the given Location 
      * @param maxCapacity the given maximum capacity
      * @param maxWeight the given maximum weight
      * @param maxHeight the given maximum height
      * @param maxLength the given maximum length
      * @param user the given user
      */
-	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight
+	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight
 			, LengthCategory maxLength, String user) {
-		super(user);
+    	this(location, maxCapacity, maxWeight, maxHeight, user);
 		
-		this.locationId = locationId;
-		
-    	setDimensionDefaults();
-
-    	setMaxCapacity(maxCapacity);
-    	setMaxWeight(maxWeight);
-    	setMaxHeight(maxHeight);
     	setMaxLength(maxLength);
 	}
 
     /**
      * Create this Dimension
      * 
-     * @param locationId the given Location id
+     * @param location the given Location 
      * @param maxCapacity the given maximum capacity
      * @param maxWeight the given maximum weight
      * @param maxHeight the given maximum height
@@ -250,18 +228,10 @@ public class Dimension extends EntityBase implements Serializable {
      * @param maxWidth the given maximum width
      * @param user the given user
      */
-	public Dimension(String locationId, int maxCapacity, int maxWeight, HeightCategory maxHeight
+	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight
 			, LengthCategory maxLength, WidthCategory maxWidth, String user) {
-		super(user);
-		
-		this.locationId = locationId;
-		
-    	setDimensionDefaults();
+    	this(location, maxCapacity, maxWeight, maxHeight, maxLength, user);
 
-    	setMaxCapacity(maxCapacity);
-    	setMaxWeight(maxWeight);
-    	setMaxHeight(maxHeight);
-    	setMaxLength(maxLength);
     	setMaxWidth(maxWidth);
 	}
 
@@ -270,19 +240,9 @@ public class Dimension extends EntityBase implements Serializable {
 	 * 
 	 * @return the location id
 	 */
-	public String getLocationId() {
+	private String getLocationId() {
 		LOG.debug(ID_FORMATTER, this.locationId);
 		return this.locationId;
-	}
-
-	/**
-	 * Sets the location id
-	 * 
-	 * @param locationId the location id
-	 */
-	public void setLocationId(String locationId) {
-		this.locationId = locationId;
-		LOG.debug(ID_FORMATTER, this.locationId);
 	}
 
 	/**
@@ -302,8 +262,9 @@ public class Dimension extends EntityBase implements Serializable {
 	 */
 	public void setMaxCapacity(int maxCapacity) {
     	if (maxCapacity < 0) {
-			LOG.info("Invalid parameter maxCapacity ({}); keep DEFAULT value ({})", maxCapacity
+			LOG.info("Invalid parameter maxCapacity ({}); set DEFAULT value ({})", maxCapacity
 					, CAPACITY_DEFAULT);
+			this.maxCapacity = CAPACITY_DEFAULT;
 		}
 		else {
 		    this.maxCapacity = maxCapacity;
@@ -327,8 +288,9 @@ public class Dimension extends EntityBase implements Serializable {
 	 */
 	public void setMaxWeight(int maxWeight) {
     	if (maxWeight < 0) {
-			LOG.info("Invalid parameter maxWeight ({}); keep DEFAULT value ({})", maxWeight
+			LOG.info("Invalid parameter maxWeight ({}); set DEFAULT value ({})", maxWeight
 					, WEIGHT_DEFAULT);
+			this.maxWeight = WEIGHT_DEFAULT;
 		}
 		else {
 		    this.maxWeight = maxWeight;
@@ -352,8 +314,9 @@ public class Dimension extends EntityBase implements Serializable {
 	 */
 	public void setMaxHeight(HeightCategory maxHeight) {
     	if (maxHeight == null) {
-			LOG.info("Invalid parameter maxHeight ({}); keep DEFAULT value ({})", maxHeight
+			LOG.info("Invalid parameter maxHeight ({}); set DEFAULT value ({})", maxHeight
 					, HEIGHT_DEFAULT);
+			this.maxHeight = HEIGHT_DEFAULT.name();
 		}
 		else {
 			this.maxHeight = maxHeight.name();
@@ -377,8 +340,9 @@ public class Dimension extends EntityBase implements Serializable {
 	 */
 	public void setMaxLength(LengthCategory maxLength) {
     	if (maxLength == null) {
-			LOG.info("Invalid parameter maxLength ({}); keep DEFAULT value ({})", maxLength
+			LOG.info("Invalid parameter maxLength ({}); set DEFAULT value ({})", maxLength
 					, LENGTH_DEFAULT);
+			this.maxLength = LENGTH_DEFAULT.name();
 		}
 		else {
 			this.maxLength = maxLength.name();
@@ -402,8 +366,9 @@ public class Dimension extends EntityBase implements Serializable {
 	 */
 	public void setMaxWidth(WidthCategory maxWidth) {
     	if (maxWidth == null) {
-			LOG.info("Invalid parameter maxWidth ({}); keep DEFAULT value ({})", maxWidth
+			LOG.info("Invalid parameter maxWidth ({}); set DEFAULT value ({})", maxWidth
 					, WIDTH_DEFAULT);
+			this.maxWidth = WIDTH_DEFAULT.name();
 		}
 		else {
 			this.maxWidth = maxWidth.name();
@@ -415,12 +380,8 @@ public class Dimension extends EntityBase implements Serializable {
 	 * 
 	 * @return the version value
 	 */
-	public int getVersion() {
+	private int getVersion() {
 		return version;
-	}
-
-	protected void setVersion(int version) {
-		this.version = version;
 	}
 
 	/**
@@ -441,21 +402,29 @@ public class Dimension extends EntityBase implements Serializable {
 		this.location = location;
 	}
 
+	
 	@Override
 	public int hashCode() {
-		return Objects.hash(locationId, version);
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result
+				+ Objects.hash(location, locationId, maxCapacity, maxHeight, maxLength, maxWeight, maxWidth, version);
+		return result;
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
+		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
 		Dimension other = (Dimension) obj;
-		return Objects.equals(locationId, other.locationId) && version == other.version;
+		return Objects.equals(location, other.location) && Objects.equals(locationId, other.locationId)
+				&& maxCapacity == other.maxCapacity && Objects.equals(maxHeight, other.maxHeight)
+				&& Objects.equals(maxLength, other.maxLength) && maxWeight == other.maxWeight
+				&& Objects.equals(maxWidth, other.maxWidth) && version == other.version;
 	}
 
 	@Override
@@ -464,19 +433,19 @@ public class Dimension extends EntityBase implements Serializable {
 		
 		builder.append("Dimension [")
 		    .append("locationId=")
-		    .append(locationId)
+		    .append(getLocationId())
 		    .append(", maxCapacity=")
-		    .append(maxCapacity)
+		    .append(getMaxCapacity())
 		    .append(", maxWeight=")
-		    .append(maxWeight)
+		    .append(getMaxWeight())
 		    .append(", maxHeight=")
-		    .append(maxHeight)
+		    .append(getMaxHeight())
 		    .append(", maxLength=")
-		    .append(maxLength)
+		    .append(getMaxLength())
 		    .append(", maxWidth=")
-		    .append(maxWidth)
+		    .append(getMaxWidth())
 		    .append(", version=")
-		    .append(version)
+		    .append(getVersion())
 		    .append(", ")
 			.append(super.toString())
 			.append("]");
