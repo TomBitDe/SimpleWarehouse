@@ -2,6 +2,7 @@ package com.home.simplewarehouse.location;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -224,12 +225,12 @@ public class DimensionBeanTest {
 		
 		Location expLocation = locationService.createOrUpdate(location);
 		
-		assertTrue(expLocation.getDimension().equals(location.getDimension()));
+		assertEquals(expLocation.getDimension(), location.getDimension());
 		
 		expLocation = locationService.createOrUpdate(new Location("B"));
 		
-		assertFalse(expLocation.getDimension().equals(location.getDimension()));
-		assertFalse(expLocation.getDimension().equals(null));
-		assertFalse(expLocation.equals(location.getDimension()));
+		assertNotEquals(expLocation.getDimension(), location.getDimension());
+		assertNotEquals(expLocation.getDimension(), null);
+		assertNotEquals(expLocation, location.getDimension());
 	}
 }

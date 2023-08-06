@@ -104,7 +104,8 @@ public class CacheDataFromDbTableTest {
 		other.setValue("DUMMY_VW");
 		other.setSource(entry.getSource());
 		
-		assertEquals(entry, entry);
+		ValueSourceEntry copy = entry;
+		assertEquals(entry, copy);
 		assertNotEquals(other, entry);
 		assertEquals(same, entry);
 		assertNotEquals(entry, null);

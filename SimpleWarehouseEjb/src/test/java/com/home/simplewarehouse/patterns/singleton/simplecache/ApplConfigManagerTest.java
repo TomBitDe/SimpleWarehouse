@@ -5,6 +5,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -166,8 +167,10 @@ public class ApplConfigManagerTest {
 		assertNotNull(entry.toString());
 		assertTrue(entry.toString().startsWith("ApplConfig [keyVal="));
 		assertNotEquals(0, entry.getVersion());
-		assertFalse(entry.equals(null));
-		assertTrue(entry.equals(entry));
+		assertNotEquals(null, entry);
+		ApplConfig other = entry;
+		assertEquals(entry, other);
+		assertSame(entry, other);
 		
 		entry.setParamVal("Value_2");
 		
