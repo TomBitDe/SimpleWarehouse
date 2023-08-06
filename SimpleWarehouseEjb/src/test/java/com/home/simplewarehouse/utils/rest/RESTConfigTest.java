@@ -13,6 +13,14 @@ import org.junit.Test;
  */
 public class RESTConfigTest {
 	/**
+	 * Mandatory default constructor
+	 */
+	public RESTConfigTest() {
+		super();
+		// DO NOTHING HERE!
+	}
+
+	/**
 	 * Test creation of config
 	 */
 	@Test
