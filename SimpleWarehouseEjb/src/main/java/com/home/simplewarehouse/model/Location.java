@@ -93,7 +93,7 @@ public class Location extends EntityBase implements Serializable {
 		LocationStatus ls = new LocationStatus();
 		ls.setLocation(this);
 		this.setLocationStatus(ls);
-		Position pos = new LogicalPosition(this.getLocationId());
+		Position pos = new LogicalPosition();
 		pos.setLocation(this);
 		this.setPosition(pos);
 	}
@@ -104,8 +104,7 @@ public class Location extends EntityBase implements Serializable {
 		LocationStatus ls = new LocationStatus(id);
 		ls.setLocation(this);
 		this.setLocationStatus(ls);
-		Position pos = new LogicalPosition(id);
-		pos.setLocation(this);
+		Position pos = new LogicalPosition(this);
 		this.setPosition(pos);
 	}
 
@@ -241,7 +240,6 @@ public class Location extends EntityBase implements Serializable {
 
 		if (position != null) {
 			position.setLocation(this);
-			position.setLocationId(locationId);
 		}
 	}
 

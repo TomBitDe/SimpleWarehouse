@@ -52,8 +52,8 @@ public class AbsolutPosition extends Position {
      * 
      * @param id the given id
      */
-    public AbsolutPosition(String id) {
-    	super(id);
+    public AbsolutPosition(Location location) {
+    	super(location);
     }
     
     /**

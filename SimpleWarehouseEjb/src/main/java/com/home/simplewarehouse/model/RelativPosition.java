@@ -52,8 +52,8 @@ public class RelativPosition extends Position {
      * 
      * @param id the given id
      */
-    public RelativPosition(String id) {
-    	super(id);
+    public RelativPosition(Location location) {
+    	super(location);
     }
     
     /**

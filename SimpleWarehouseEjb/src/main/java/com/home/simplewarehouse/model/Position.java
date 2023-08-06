@@ -67,15 +67,16 @@ public class Position implements Serializable {
 	}
 
 	/**
-	 * Default with location id
+	 * Default with location
 	 * 
-	 * @param locationId the location id
+	 * @param location the location
 	 */
-	public Position(String locationId) {
+	public Position(Location location) {
 		super();
-		LOG.trace("--> Position({})", locationId);
+		LOG.trace("--> Position({})", location);
 
-		this.locationId = locationId;
+		this.location = location;
+		this.locationId = location.getLocationId();
 
 		LOG.trace("<-- Position()");
 	}
@@ -85,30 +86,17 @@ public class Position implements Serializable {
 	 * 
 	 * @return the location id
 	 */
-	public String getLocationId() {
+	private String getLocationId() {
 		return this.locationId;
 	}
 	
-	/**
-	 * Sets the location id
-	 * 
-	 * @param id the location id
-	 */
-	public void setLocationId(String id) {
-		this.locationId = id;
-	}
-
     /**
 	 * Gets the version
 	 * 
 	 * @return the version number
 	 */
-	public int getVersion() {
+	private int getVersion() {
 		return version;
-	}
-
-	protected void setVersion(int version) {
-		this.version = version;
 	}
 
 	/**
@@ -143,7 +131,7 @@ public class Position implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Position other = (Position) obj;
-		return Objects.equals(locationId, other.locationId) && version == other.version;
+		return Objects.equals(location, other.location) && version == other.version;
 	}
 
 	@Override

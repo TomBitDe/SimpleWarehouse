@@ -73,7 +73,7 @@ public class LocationBean implements LocationService {
 			}
 			
 			if (location.getPosition() == null) {
-				Position position = new LogicalPosition(location.getLocationId());
+				Position position = new LogicalPosition(location);
 				position.setLocation(location);
 				location.setPosition(position);
 			}

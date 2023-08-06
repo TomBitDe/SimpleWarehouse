@@ -66,9 +66,9 @@ public class LogicalPosition extends Position {
 	 * @param locationId the location id
 	 * @param positionId the position id
 	 */
-	public LogicalPosition(String locationId, String positionId) {
-		super(locationId);
-		LOG.trace("--> LogicalPosition({}, {})", locationId, positionId);
+	public LogicalPosition(Location location, String positionId) {
+		super(location);
+		LOG.trace("--> LogicalPosition({}, {})", location, positionId);
 		
 		this.positionId = positionId;
 		
@@ -80,11 +80,11 @@ public class LogicalPosition extends Position {
 	 * 
 	 * @param positionId the position identifier
 	 */
-	public LogicalPosition(String positionId) {
-		super(positionId);
-		LOG.trace("--> LogicalPosition({})", positionId);
+	public LogicalPosition(Location location) {
+		super(location);
+		LOG.trace("--> LogicalPosition({})", location);
 		
-		this.positionId = positionId;
+		this.positionId = location.getLocationId();
 		
 		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
 	}

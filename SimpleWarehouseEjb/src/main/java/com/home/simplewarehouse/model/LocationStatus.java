@@ -282,10 +282,6 @@ public class LocationStatus extends EntityBase implements Serializable {
 		return version;
 	}
 
-	protected void setVersion(int version) {
-		this.version = version;
-	}
-
 	/**
 	 * Gets the Location
 	 * 
@@ -327,15 +323,15 @@ public class LocationStatus extends EntityBase implements Serializable {
 		
 		builder.append("LocationStatus [")
 		    .append("locationId=")
-		    .append(locationId)
+		    .append(getLocationId())
 		    .append(", errorStatus=")
-		    .append(errorStatus)
+		    .append(getErrorStatus())
 		    .append(", ltosStatus=")
-		    .append(ltosStatus)
+		    .append(getLtosStatus())
 		    .append(", lockStatus=")
-		    .append(lockStatus)
+		    .append(getLockStatus())
 		    .append(", version=")
-		    .append(version)
+		    .append(getVersion())
 		    .append(", ")
 			.append(super.toString())
 			.append("]");
