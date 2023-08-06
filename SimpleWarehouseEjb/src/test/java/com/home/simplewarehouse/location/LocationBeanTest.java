@@ -189,7 +189,7 @@ public class LocationBeanTest {
 		LOG.info(location);
 
 		expLocation = new Location("D");
-		expLocation.setPosition(new RelativPosition(1, 1, 1));
+		new RelativPosition(expLocation, 1, 1, 1);
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -199,7 +199,7 @@ public class LocationBeanTest {
 		LOG.info(location);
 
 		expLocation = new Location("F");
-		expLocation.setPosition(new AbsolutPosition(1.25f, 3.12f, 1.01f));
+		new AbsolutPosition(expLocation, 1.25f, 3.12f, 1.01f);
 
 		location = locationService.createOrUpdate(expLocation);
 		
