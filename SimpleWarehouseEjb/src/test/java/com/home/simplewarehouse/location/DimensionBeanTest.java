@@ -168,6 +168,9 @@ public class DimensionBeanTest {
 		assertNull(dimensionService.getById("A"));
 	}
 	
+	/**
+	 * Test modify dimension
+	 */
 	@Test
 	@InSequence(4)
 	public void modifyDimension() {
@@ -212,6 +215,9 @@ public class DimensionBeanTest {
 		assertEquals("System", expLocation.getDimension().getUpdateUserId());
 	}
 	
+	/**
+	 * Test equals
+	 */
 	@Test
 	@InSequence(8)
 	public void equalsTest() {

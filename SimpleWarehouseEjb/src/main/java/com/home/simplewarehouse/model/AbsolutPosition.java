@@ -48,22 +48,25 @@ public class AbsolutPosition extends Position {
     }
 
     /**
-     * Absolute Position with id
+     * Absolute Position with location
      * 
-     * @param id the given id
+     * @param location the given location
      */
     public AbsolutPosition(Location location) {
     	super(location);
     }
     
     /**
-     * Absolute Position with id and coordinates
+     * Absolute Position with location and coordinates
      * 
+     * @param location the given location
      * @param x the given x coordinate
      * @param y the given y coordinate
      * @param z the given z coordinate
      */
-    public AbsolutPosition(float x, float y, float z) {
+    public AbsolutPosition(Location location, float x, float y, float z) {
+    	super(location);
+    	
     	this.xCoord = x;
     	this.yCoord = y;
     	this.zCoord = z;

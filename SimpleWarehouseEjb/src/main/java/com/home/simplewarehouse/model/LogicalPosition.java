@@ -63,7 +63,7 @@ public class LogicalPosition extends Position {
 	/**
 	 * Constructor with location and position id
 	 * 
-	 * @param locationId the location id
+	 * @param location the location
 	 * @param positionId the position id
 	 */
 	public LogicalPosition(Location location, String positionId) {
@@ -76,9 +76,9 @@ public class LogicalPosition extends Position {
 	}
 	
 	/**
-	 * Constructor with position identifier
+	 * Constructor with location
 	 * 
-	 * @param positionId the position identifier
+	 * @param location the given location
 	 */
 	public LogicalPosition(Location location) {
 		super(location);

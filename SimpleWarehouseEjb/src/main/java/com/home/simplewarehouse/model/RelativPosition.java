@@ -48,9 +48,9 @@ public class RelativPosition extends Position {
     }
 
     /**
-     * Absolute Position with id
+     * Absolute Position with location
      * 
-     * @param id the given id
+     * @param location the given location
      */
     public RelativPosition(Location location) {
     	super(location);
@@ -59,11 +59,14 @@ public class RelativPosition extends Position {
     /**
      * Absolute Position with coordinates
      * 
+     * @param location the given location
      * @param x the given x coordinate
      * @param y the given y coordinate
      * @param z the given z coordinate
      */
-    public RelativPosition(int x, int y, int z) {
+    public RelativPosition(Location location, int x, int y, int z) {
+    	super(location);
+
     	this.xCoord = x;
     	this.yCoord = y;
     	this.zCoord = z;
