@@ -159,7 +159,6 @@ public class LocationBeanTest {
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
-		assertEquals(1, location.getVersion());
 		
 		LOG.info(location);
 		

@@ -177,12 +177,8 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @return the version number
 	 */
-	public int getVersion() {
+	private int getVersion() {
 		return version;
-	}
-
-	protected void setVersion(int version) {
-		this.version = version;
 	}
 
 	/**
@@ -389,7 +385,7 @@ public class Location extends EntityBase implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("Location [").append(System.lineSeparator() + "\tlocationId=").append(locationId)
-				.append(", version=").append(version).append(", " + System.lineSeparator() + '\t' + '\t')
+				.append(", version=").append(getVersion()).append(", " + System.lineSeparator() + '\t' + '\t')
 				.append(locationStatus).append(", " + System.lineSeparator() + '\t' + '\t').append(dimension)
 				.append(", " + System.lineSeparator() + '\t' + '\t').append(position)
 				.append(", " + System.lineSeparator() + '\t' + '\t').append("HandlingUnits ")

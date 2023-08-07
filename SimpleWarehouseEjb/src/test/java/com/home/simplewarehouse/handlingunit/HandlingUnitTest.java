@@ -247,8 +247,6 @@ public class HandlingUnitTest {
 		assertEquals(LengthCategory.NOT_RELEVANT, handlingUnit.getLength());
 		assertEquals(WidthCategory.NOT_RELEVANT, handlingUnit.getWidth());
 		
-		assertEquals(1, expHandlingUnit.getVersion());
-			
 		LOG.info(handlingUnit);	
 	}
 

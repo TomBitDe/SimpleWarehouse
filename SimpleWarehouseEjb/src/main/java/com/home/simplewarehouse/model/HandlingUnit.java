@@ -415,12 +415,8 @@ public class HandlingUnit extends EntityBase implements Serializable {
      * 
      * @return the version number
      */
-	public int getVersion() {
+	private int getVersion() {
 		return version;
-	}
-
-	protected void setVersion(int version) {
-		this.version = version;
 	}
 
     /**
@@ -585,7 +581,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
 		    .append(", baseHU=")
 		    .append(baseHU == null ? "null" : baseHU.getId())
 		    .append(", version=")
-		    .append(version)
+		    .append(getVersion())
 		    .append(", ")
 		    .append(location == null ? "Location=null" : location)
 			.append(", " + System.lineSeparator() + '\t' + '\t')

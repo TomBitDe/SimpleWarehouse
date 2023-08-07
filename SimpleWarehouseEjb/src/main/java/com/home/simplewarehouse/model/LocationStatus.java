@@ -278,7 +278,7 @@ public class LocationStatus extends EntityBase implements Serializable {
 	 * 
 	 * @return the version number
 	 */
-	public int getVersion() {
+	private int getVersion() {
 		return version;
 	}
 
