@@ -190,6 +190,18 @@ public class LocationBeanTest {
 		LOG.info(location);
 
 		expLocation = new Location("D");
+		new LogicalPosition(expLocation, "X");
+
+		location = locationService.createOrUpdate(expLocation);
+		
+		assertNotNull(location.getPosition());
+		assertTrue(location.getPosition() instanceof LogicalPosition);
+		assertEquals(expLocation, location.getPosition().getLocation());
+		assertEquals("X", ((LogicalPosition)location.getPosition()).getPositionId());
+		
+		LOG.info(location);
+
+		expLocation = new Location("E");
 		new RelativPosition(expLocation, 1, 1, 1);
 
 		location = locationService.createOrUpdate(expLocation);
