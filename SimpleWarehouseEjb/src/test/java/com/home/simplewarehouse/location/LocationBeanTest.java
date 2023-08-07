@@ -185,6 +185,7 @@ public class LocationBeanTest {
 		assertNotNull(location.getLocationStatus());
 		assertNotNull(location.getPosition());
 		assertTrue(location.getPosition() instanceof LogicalPosition);
+		assertEquals(expLocation, location.getPosition().getLocation());
 				
 		LOG.info(location);
 
@@ -195,6 +196,7 @@ public class LocationBeanTest {
 		
 		assertNotNull(location.getPosition());
 		assertTrue(location.getPosition() instanceof RelativPosition);
+		assertEquals(expLocation, location.getPosition().getLocation());
 		
 		LOG.info(location);
 
@@ -205,6 +207,7 @@ public class LocationBeanTest {
 		
 		assertNotNull(location.getPosition());
 		assertTrue(location.getPosition() instanceof AbsolutPosition);
+		assertEquals(expLocation, location.getPosition().getLocation());
 		
 		LOG.info(location);
 	}
