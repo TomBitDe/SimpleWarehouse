@@ -70,7 +70,7 @@ public class LogicalPosition extends Position {
 		super(location);
 		LOG.trace("--> LogicalPosition({}, {})", location, positionId);
 		
-		this.positionId = positionId;
+		setPositionId(positionId);
 		
 		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
 	}
