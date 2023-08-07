@@ -140,10 +140,12 @@ public class AbsolutPosition extends Position {
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof AbsolutPosition))
 			return false;
 		AbsolutPosition other = (AbsolutPosition) obj;
-		return xCoord == other.xCoord && yCoord == other.yCoord && zCoord == other.zCoord;
+		return Float.floatToIntBits(xCoord) == Float.floatToIntBits(other.xCoord)
+				&& Float.floatToIntBits(yCoord) == Float.floatToIntBits(other.yCoord)
+				&& Float.floatToIntBits(zCoord) == Float.floatToIntBits(other.zCoord);
 	}
 
 	@Override

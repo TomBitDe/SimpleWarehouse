@@ -140,7 +140,7 @@ public class RelativPosition extends Position {
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof RelativPosition))
 			return false;
 		RelativPosition other = (RelativPosition) obj;
 		return xCoord == other.xCoord && yCoord == other.yCoord && zCoord == other.zCoord;

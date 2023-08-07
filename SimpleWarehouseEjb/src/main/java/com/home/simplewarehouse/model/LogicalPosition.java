@@ -96,13 +96,14 @@ public class LogicalPosition extends Position {
 		result = prime * result + Objects.hash(positionId);
 		return result;
 	}
+	
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
 		if (!super.equals(obj))
 			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof LogicalPosition))
 			return false;
 		LogicalPosition other = (LogicalPosition) obj;
 		return Objects.equals(positionId, other.positionId);

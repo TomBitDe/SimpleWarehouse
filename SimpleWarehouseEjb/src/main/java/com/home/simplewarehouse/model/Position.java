@@ -120,19 +120,18 @@ public class Position implements Serializable {
 	
 	@Override
 	public int hashCode() {
-		return Objects.hash(locationId, version);
+		return Objects.hash(location, locationId, version);
 	}
 
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
 			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
+		if (!(obj instanceof Position))
 			return false;
 		Position other = (Position) obj;
-		return Objects.equals(location, other.location) && version == other.version;
+		return Objects.equals(location, other.location) && Objects.equals(locationId, other.locationId)
+				&& version == other.version;
 	}
 
 	@Override
