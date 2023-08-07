@@ -77,6 +77,7 @@ public class Position implements Serializable {
 
 		this.location = location;
 		this.locationId = location.getLocationId();
+		location.setPosition(this);
 
 		LOG.trace("<-- Position()");
 	}
