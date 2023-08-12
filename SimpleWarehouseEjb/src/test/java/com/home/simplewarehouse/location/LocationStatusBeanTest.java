@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.location;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -26,13 +27,16 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.EntityBase;
+import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
+import com.home.simplewarehouse.model.LockStatus;
+import com.home.simplewarehouse.model.LtosStatus;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test the Location Status bean.
+ * Test the LocationStatus bean.
  */
 @RunWith(Arquillian.class)
 public class LocationStatusBeanTest {
@@ -109,7 +113,7 @@ public class LocationStatusBeanTest {
 	}
 
 	/**
-	 * Location status is always linked to locationService
+	 * Location status is always linked to location
 	 */
 	@Test
 	@InSequence(0)
@@ -121,11 +125,10 @@ public class LocationStatusBeanTest {
 		
 		Location expLocation = new Location("A");
 		
-		locationService.createOrUpdate(expLocation);
-		assertEquals(expLocation, locationService.getById("A"));
+		Location location = locationService.createOrUpdate(expLocation);
+		assertEquals(expLocation, location);
 		
-	    // MANDATORY reread
-		LocationStatus locationStatus = locationStatusService.getById(expLocation.getLocationId());		
+		LocationStatus locationStatus = location.getLocationStatus();		
 		LOG.info("LocationStatus getById: " + locationStatus);
 		
 		// Now check the corresponding LocationStatus
@@ -160,12 +163,106 @@ public class LocationStatusBeanTest {
 		LOG.info("Location prepared: " + expLocation);
 		LOG.info("LocationStatus implicite prepared: "+ expLocation.getLocationStatus());
 		
-		// Delete the locationService
+		// Delete the location
 		locationService.delete(expLocation);
 		
-		// Now check the locationService
+		// Now check the location
 	    // MANDATORY reread
 		assertNull(locationService.getById("A"));
 		assertNull(locationStatusService.getById("A"));
+	}
+	
+
+	/**
+	 * Test modify dimension
+	 */
+	@Test
+	@InSequence(4)
+	public void modifyLocationStatus() {
+		LOG.info("--- Test modifyLocationStatus");
+
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(locationStatusService.getAll().isEmpty());
+		
+		// With Dimension DEFAULTS
+		Location location = new Location("A");
+		// Now change
+		LocationStatus changed = new LocationStatus(location, ErrorStatus.NONE, LtosStatus.YES, LockStatus.DROP_LOCKED, "Test");
+		location.setLocationStatus(changed);
+		
+		Location expLocation = locationService.createOrUpdate(location);
+
+		assertEquals("A", expLocation.getLocationId());
+		assertEquals(ErrorStatus.NONE, expLocation.getLocationStatus().getErrorStatus());
+		assertEquals(LtosStatus.YES, expLocation.getLocationStatus().getLtosStatus());
+		assertEquals(LockStatus.DROP_LOCKED, expLocation.getLocationStatus().getLockStatus());
+		assertEquals("Test", expLocation.getLocationStatus().getUpdateUserId());
+		
+		// Change again
+		location = expLocation;
+		location.getLocationStatus().setErrorStatus(null);;
+		location.getLocationStatus().setLtosStatus(null);
+		location.getLocationStatus().setLockStatus(null);
+		location.getLocationStatus().setUpdateUserId(null);
+		
+		expLocation = locationService.createOrUpdate(location);
+
+		assertEquals("A", expLocation.getLocationId());
+		assertEquals(ErrorStatus.ERROR, expLocation.getLocationStatus().getErrorStatus());
+		assertEquals(LtosStatus.YES, expLocation.getLocationStatus().getLtosStatus());
+		assertEquals(LockStatus.LOCKED, expLocation.getLocationStatus().getLockStatus());
+		assertEquals("System", expLocation.getDimension().getUpdateUserId());
+
+		// Change again
+		location = expLocation;
+		location.getLocationStatus().setErrorStatus(ErrorStatus.NONE);;
+		location.getLocationStatus().setLtosStatus(LtosStatus.NO);
+		location.getLocationStatus().setLockStatus(LockStatus.PICK_LOCKED);
+		location.getLocationStatus().setUpdateUserId("Changer");
+		
+		expLocation = locationService.createOrUpdate(location);
+
+		assertEquals("A", expLocation.getLocationId());
+		assertEquals(ErrorStatus.NONE, expLocation.getLocationStatus().getErrorStatus());
+		assertEquals(LtosStatus.NO, expLocation.getLocationStatus().getLtosStatus());
+		assertEquals(LockStatus.PICK_LOCKED, expLocation.getLocationStatus().getLockStatus());
+		assertEquals("Changer", expLocation.getLocationStatus().getUpdateUserId());
+
+		location = new Location("B");
+		// Change again
+		location.setLocationStatus(new LocationStatus(location, null, null, null, null));
+		
+		expLocation = locationService.createOrUpdate(location);
+
+		assertEquals("B", expLocation.getLocationId());
+		assertEquals(ErrorStatus.NONE, expLocation.getLocationStatus().getErrorStatus());
+		assertEquals(LtosStatus.NO, expLocation.getLocationStatus().getLtosStatus());
+		assertEquals(LockStatus.UNLOCKED, expLocation.getLocationStatus().getLockStatus());
+		assertEquals("System", expLocation.getDimension().getUpdateUserId());
+	}
+	
+	/**
+	 * Test equals
+	 */
+	@Test
+	@InSequence(8)
+	public void equalsTest() {
+		LOG.info("--- Test equalsTest");
+
+		assertTrue(locationService.getAll().isEmpty());
+		assertTrue(locationStatusService.getAll().isEmpty());
+		
+		// With Dimension DEFAULTS
+		Location location = new Location("A");
+		
+		Location expLocation = locationService.createOrUpdate(location);
+		
+		assertEquals(expLocation.getLocationStatus(), location.getLocationStatus());
+		
+		expLocation = locationService.createOrUpdate(new Location("B"));
+		
+		assertNotEquals(expLocation.getLocationStatus(), location.getLocationStatus());
+		assertNotEquals(expLocation.getLocationStatus(), null);
+		assertNotEquals(expLocation, location.getLocationStatus());
 	}
 }

@@ -67,9 +67,9 @@ public class AbsolutPosition extends Position {
     public AbsolutPosition(Location location, float x, float y, float z) {
     	super(location);
     	
-    	this.xCoord = x;
-    	this.yCoord = y;
-    	this.zCoord = z;
+    	setxCoord(x);
+    	setyCoord(y);
+    	setzCoord(z);
     }
     
 	/**
@@ -86,7 +86,7 @@ public class AbsolutPosition extends Position {
 	 * 
 	 * @param xCoord the xCoord to set
 	 */
-	public void setxCoord(long xCoord) {
+	public void setxCoord(float xCoord) {
 		this.xCoord = xCoord;
 	}
 
@@ -104,7 +104,7 @@ public class AbsolutPosition extends Position {
 	 * 
 	 * @param yCoord the yCoord to set
 	 */
-	public void setyCoord(long yCoord) {
+	public void setyCoord(float yCoord) {
 		this.yCoord = yCoord;
 	}
 
@@ -122,7 +122,7 @@ public class AbsolutPosition extends Position {
 	 * 
 	 * @param zCoord the zCoord to set
 	 */
-	public void setzCoord(long zCoord) {
+	public void setzCoord(float zCoord) {
 		this.zCoord = zCoord;
 	}
 

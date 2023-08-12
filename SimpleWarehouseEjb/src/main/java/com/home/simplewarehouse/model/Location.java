@@ -101,8 +101,7 @@ public class Location extends EntityBase implements Serializable {
 	private void initAssociated(String id) {
 		Dimension dim = new Dimension(this);
 		this.setDimension(dim);
-		LocationStatus ls = new LocationStatus(id);
-		ls.setLocation(this);
+		LocationStatus ls = new LocationStatus(this);
 		this.setLocationStatus(ls);
 		Position pos = new LogicalPosition(this);
 		this.setPosition(pos);

@@ -35,28 +35,25 @@ public class LogicalPosition extends Position {
 	private String positionId;
 
 	/**
-     * Gets the position
-     * 
-     * @return the position id
-     */
-    public String getPositionId() {
-    	return positionId;
-    }
-    /**
-     * Sets the position
-     * 
-     * @param id the position id
-     */
-    public void setPositionId(String id) {
-    	this.positionId = id;
-    }
-    
-	/**
 	 * Default constructor
 	 */
 	public LogicalPosition() {
 		super();
 		LOG.trace("--> LogicalPosition()");
+		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
+	}
+
+	/**
+	 * Constructor with location
+	 * 
+	 * @param location the given location
+	 */
+	public LogicalPosition(Location location) {
+		super(location);
+		LOG.trace("--> LogicalPosition({})", location);
+		
+		setPositionId(location.getLocationId());
+		
 		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
 	}
 
@@ -76,19 +73,22 @@ public class LogicalPosition extends Position {
 	}
 	
 	/**
-	 * Constructor with location
-	 * 
-	 * @param location the given location
-	 */
-	public LogicalPosition(Location location) {
-		super(location);
-		LOG.trace("--> LogicalPosition({})", location);
-		
-		this.positionId = location.getLocationId();
-		
-		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
-	}
-
+     * Gets the position
+     * 
+     * @return the position id
+     */
+    public String getPositionId() {
+    	return positionId;
+    }
+    /**
+     * Sets the position
+     * 
+     * @param id the position id
+     */
+    public void setPositionId(String id) {
+    	this.positionId = id;
+    }
+    
 	@Override
 	public int hashCode() {
 		final int prime = 31;

@@ -61,7 +61,7 @@ public class LocationBean implements LocationService {
 
 		if (getById(location.getLocationId()) == null) {
 			if (location.getLocationStatus() == null) {
-				LocationStatus locationStatus = new LocationStatus(location.getLocationId());
+				LocationStatus locationStatus = new LocationStatus(location);
 				locationStatus.setLocation(location);
 				location.setLocationStatus(locationStatus);
 			}

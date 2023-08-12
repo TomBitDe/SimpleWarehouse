@@ -225,7 +225,7 @@ public class MarshallerTest {
 	@Test
 	@InSequence(9)
 	public void marshallLocationStatus() {
-		LocationStatus locationStatus = new LocationStatus("Loc_1");
+		LocationStatus locationStatus = new LocationStatus(new Location("Loc_1"));
 
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(LocationStatus.class);

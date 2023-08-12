@@ -67,9 +67,9 @@ public class RelativPosition extends Position {
     public RelativPosition(Location location, int x, int y, int z) {
     	super(location);
 
-    	this.xCoord = x;
-    	this.yCoord = y;
-    	this.zCoord = z;
+    	setxCoord(x);
+    	setyCoord(y);
+    	setzCoord(z);
     }
     
 	/**

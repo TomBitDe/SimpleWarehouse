@@ -112,12 +112,13 @@ public class LocationStatus extends EntityBase implements Serializable {
     /**
      * Create this LocationStatus
      * 
-     * @param locationId the given location id
+     * @param location the given location
      */
-    public LocationStatus(String locationId) {
+    public LocationStatus(Location location) {
     	super();
     	
-    	this.locationId = locationId;
+     	setLocationId(location.getLocationId());
+     	setLocation(location);
     	
     	setStatusesDefaults();
     }
@@ -125,13 +126,13 @@ public class LocationStatus extends EntityBase implements Serializable {
     /**
      * Create this LocationStatus
      * 
-     * @param locationId the given location id
+     * @param location the given location
      * @param user the given user name
      */
-    public LocationStatus(String locationId, String user) {
-    	super(user);
+    public LocationStatus(Location location, String user) {
+    	this(location);
     	
-    	this.locationId = locationId;
+    	this.setUpdateUserId(user);
     	
     	setStatusesDefaults();
     }
@@ -139,16 +140,14 @@ public class LocationStatus extends EntityBase implements Serializable {
     /**
      * Create this LocationStatus
      * 
-     * @param locationId the given location id
+     * @param location the given location
      * @param errorStatus the given error status
      * @param ltosStatus the given ltos status
      * @param lockStatus the given lock status
      * @param user the given user name
      */
-	public LocationStatus(String locationId, ErrorStatus errorStatus, LtosStatus ltosStatus, LockStatus lockStatus, String user) {
-		super(user);
-		
-		this.locationId = locationId;
+	public LocationStatus(Location location, ErrorStatus errorStatus, LtosStatus ltosStatus, LockStatus lockStatus, String user) {
+		this(location, user);
 		
 		if (errorStatus == null) {
 			String defVal = ERROR_STATUS_DEFAULT.name();

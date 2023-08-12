@@ -140,8 +140,8 @@ public class Dimension extends EntityBase implements Serializable {
     public Dimension(Location location) {
     	super();
     	
-    	this.locationId = location.getLocationId();
-    	this.location = location;
+     	setLocationId(location.getLocationId());
+     	setLocation(location);
     	
     	setDimensionDefaults();
     }
@@ -240,9 +240,19 @@ public class Dimension extends EntityBase implements Serializable {
 	 * 
 	 * @return the location id
 	 */
-	private String getLocationId() {
+	public String getLocationId() {
 		LOG.debug(ID_FORMATTER, this.locationId);
 		return this.locationId;
+	}
+
+	/**
+	 * Sets the location id
+	 * 
+	 * @param locationId the id
+	 */
+	public void setLocationId(String locationId) {
+		this.locationId = locationId;
+		LOG.debug(ID_FORMATTER, this.locationId);
 	}
 
 	/**
