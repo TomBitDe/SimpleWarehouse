@@ -31,7 +31,9 @@
  *                                                                                                   +-----------------+  +-----------------+  +-----------------+ 
  *                                                                                                   | LogicalPosition |  | RelativPosition |  | AbsolutPosition |
  *                                                                                                   |                 |  |                 |  |                 |
- *                                                                                                   |  ...            |  |  ...            |  |  ...            |
+ *                                                                                                   |  positionId     |  |  xCoord         |  |  xCoord         |
+ *                                                                                                   |                 |  |  yCoord         |  |  yCoord         |
+ *                                                                                                   |                 |  |  zCoord         |  |  zCoord         |
  *                                                                                                   +-----------------+  +-----------------+  +-----------------+
  *
  * }</pre>
