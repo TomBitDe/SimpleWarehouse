@@ -41,14 +41,14 @@ public class RelativPosition extends Position {
 	int zCoord;
 
     /**
-     * Default Absolute Position
+     * Default Relative Position
      */
     public RelativPosition() {
     	super();
     }
 
     /**
-     * Absolute Position with location
+     * Relative Position with location
      * 
      * @param location the given location
      */
@@ -57,7 +57,7 @@ public class RelativPosition extends Position {
     }
     
     /**
-     * Absolute Position with coordinates
+     * Relative Position with coordinates
      * 
      * @param location the given location
      * @param x the given x coordinate
