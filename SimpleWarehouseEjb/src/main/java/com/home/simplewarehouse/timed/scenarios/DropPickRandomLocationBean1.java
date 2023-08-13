@@ -75,7 +75,7 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		LOG.debug(lA);
 		
 		try {
-			// Drop to locationService in random order
+			// Drop to location in random order
 			handlingUnitService.dropTo(lA, h1);
 			lA = locationService.getById("A");
 			handlingUnitService.dropTo(lA, h4);

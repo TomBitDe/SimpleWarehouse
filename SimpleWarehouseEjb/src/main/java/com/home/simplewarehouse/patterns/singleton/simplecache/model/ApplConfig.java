@@ -100,10 +100,6 @@ public class ApplConfig implements Serializable {
 		return this.version;
 	}
 
-	protected void setVersion(int version) {
-		this.version = version;
-	}
-
 	@Override
 	public int hashCode() {
 		return Objects.hash(keyVal, paramVal, version);
@@ -129,11 +125,11 @@ public class ApplConfig implements Serializable {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("ApplConfig [keyVal=");
-		builder.append(keyVal);
+		builder.append(getKeyVal());
 		builder.append(", paramVal=");
-		builder.append(paramVal);
+		builder.append(getParamVal());
 		builder.append(", version=");
-		builder.append(version);
+		builder.append(getVersion());
 		builder.append("]");
 
 		return builder.toString();

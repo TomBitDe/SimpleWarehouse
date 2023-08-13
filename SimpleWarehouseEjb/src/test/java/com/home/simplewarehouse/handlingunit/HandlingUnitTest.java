@@ -166,7 +166,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Simple handling unit with no reference to a locationService
+	 * Simple handling unit with no reference to a location
 	 */
 	@Test
 	@InSequence(1)
@@ -247,13 +247,11 @@ public class HandlingUnitTest {
 		assertEquals(LengthCategory.NOT_RELEVANT, handlingUnit.getLength());
 		assertEquals(WidthCategory.NOT_RELEVANT, handlingUnit.getWidth());
 		
-		assertEquals(1, expHandlingUnit.getVersion());
-			
 		LOG.info(handlingUnit);	
 	}
 
 	/**
-	 * Test delete of a simple handling unit with no reference to a locationService
+	 * Test delete of a simple handling unit with no reference to a location
 	 */
 	@Test
 	@InSequence(2)
@@ -352,7 +350,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the dropTo method to create reference to a locationService
+	 * Test the dropTo method to create reference to a location
 	 */
 	@Test
 	@InSequence(4)
@@ -412,7 +410,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the dropTo method to create reference to a none existing locationService
+	 * Test the dropTo method to create reference to a none existing location
 	 */
 	@Test
 	@InSequence(5)
@@ -452,7 +450,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the dropTo method to create reference to a none existing handlingUnitService
+	 * Test the dropTo method to create reference to a none existing handlingUnit
 	 */
 	@Test
 	@InSequence(8)
@@ -486,7 +484,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the pickFrom method to remove the reference to a locationService
+	 * Test the pickFrom method to remove the reference to a location
 	 * 
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
@@ -606,7 +604,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test the pickFrom method to remove the reference to an EMPTY locationService
+	 * Test the pickFrom method to remove the reference to an EMPTY location
 	 * 
 	 * @throws LocationIsEmptyException in case the Location is empty
 	 * @throws HandlingUnitNotOnLocationException in case the Location does not contain the HandlingUnit
@@ -633,7 +631,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test pickFrom a Location that does not contain the handling unit
+	 * Test pickFrom a location that does not contain the handling unit
 	 * 
 	 * @throws LocationIsEmptyException in case the locationService is EMPTY
 	 * @throws HandlingUnitNotOnLocationException in case the handling unit is not on that locationService
@@ -727,7 +725,7 @@ public class HandlingUnitTest {
 	}
 	
 	/**
-	 * Test a double drop to the same locationService
+	 * Test a double drop to the same location
 	 */
 	@Test
 	@InSequence(23)
@@ -775,7 +773,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test double drop to other locationService
+	 * Test double drop to other location
 	 */
 	@Test
 	@InSequence(25)
@@ -833,7 +831,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to locationService capacity exceeds
+	 * Test drop to location capacity exceeds
 	 */
 	@Test
 	@InSequence(28)
@@ -888,7 +886,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to locationService weight exceeds
+	 * Test drop to location weight exceeds
 	 */
 	@Test
 	@InSequence(30)
@@ -943,7 +941,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to locationService overheight
+	 * Test drop to location overheight
 	 */
 	@Test
 	@InSequence(33)
@@ -1065,7 +1063,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to locationService overwidth
+	 * Test drop to location overwidth
 	 */
 	@Test
 	@InSequence(36)
@@ -1153,7 +1151,7 @@ public class HandlingUnitTest {
 	}
 
 	/**
-	 * Test drop to locationService overlength
+	 * Test drop to location overlength
 	 */
 	@Test
 	@InSequence(39)

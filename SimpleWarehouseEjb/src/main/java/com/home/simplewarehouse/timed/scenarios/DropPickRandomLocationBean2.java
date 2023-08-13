@@ -66,7 +66,7 @@ public class DropPickRandomLocationBean2 implements DropPickRandomLocationLocal2
 				LOG.error(e.getMessage());
 			}
 			
-			// Now pick from locationService
+			// Now pick from location
 			for (String huId : huIds) {
 			    try {
 				    handlingUnitService.pickFrom(locationService.getById("A"), handlingUnitService.getById(huId));

@@ -3,8 +3,8 @@ package com.home.simplewarehouse.utils.rest;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.xml.bind.JAXBContext;
@@ -205,7 +205,7 @@ public class MarshallerTest {
 	@Test
 	@InSequence(6)
 	public void marshallDimension() {
-		Dimension dimension = new Dimension("Loc_1");
+		Dimension dimension = new Dimension(new Location("Loc_1"));
 
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Dimension.class);
@@ -225,7 +225,7 @@ public class MarshallerTest {
 	@Test
 	@InSequence(9)
 	public void marshallLocationStatus() {
-		LocationStatus locationStatus = new LocationStatus("Loc_1");
+		LocationStatus locationStatus = new LocationStatus(new Location("Loc_1"));
 
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(LocationStatus.class);
@@ -247,7 +247,7 @@ public class MarshallerTest {
 	public void marshallLocation()
 	{
         Location location = new Location("Loc_1");
-        List<HandlingUnit> placed = new ArrayList<>();
+        Set<HandlingUnit> placed = new HashSet<>();
         placed.add(new HandlingUnit("HU_A"));
         placed.add(new HandlingUnit("HU_B"));
         location.setHandlingUnits(placed);

@@ -2,6 +2,7 @@ package com.home.simplewarehouse.location;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
@@ -21,6 +22,8 @@ import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
+import com.home.simplewarehouse.model.LogicalPosition;
+import com.home.simplewarehouse.model.Position;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -33,7 +36,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 public class LocationBean implements LocationService {
 	private static final Logger LOG = LogManager.getLogger(LocationBean.class);
 	
-	private static final String LOCATION_IS_NULL = "locationService is null";
+	private static final String LOCATION_IS_NULL = "location is null";
 	private static final String LOCATION_ID_IS_NULL = "locationId is null";
 	
 	private static final String HEIGHT_DOES_NOT_FIT = "Location has maximum height {}, heigth {} does not fit";
@@ -58,15 +61,21 @@ public class LocationBean implements LocationService {
 
 		if (getById(location.getLocationId()) == null) {
 			if (location.getLocationStatus() == null) {
-				LocationStatus locationStatus = new LocationStatus(location.getLocationId());
+				LocationStatus locationStatus = new LocationStatus(location);
 				locationStatus.setLocation(location);
 				location.setLocationStatus(locationStatus);
 			}
 
 			if (location.getDimension() == null) {
-				Dimension dimension = new Dimension(location.getLocationId());
+				Dimension dimension = new Dimension(location);
 				dimension.setLocation(location);
 				location.setDimension(dimension);
+			}
+			
+			if (location.getPosition() == null) {
+				Position position = new LogicalPosition(location);
+				position.setLocation(location);
+				location.setPosition(position);
 			}
 
 			// No need to em.persist(locationStatusService) because it is done by cascade =
@@ -474,7 +483,7 @@ public class LocationBean implements LocationService {
 	}
 
 	@Override
-	public List<HandlingUnit> getHandlingUnits(final Location location) {
+	public Set<HandlingUnit> getHandlingUnits(final Location location) {
 		if (location == null) {
 			throw new IllegalArgumentException(LOCATION_IS_NULL);
 		}

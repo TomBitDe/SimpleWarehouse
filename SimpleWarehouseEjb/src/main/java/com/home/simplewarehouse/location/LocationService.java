@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.location;
 
 import java.util.List;
+import java.util.Set;
 
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -63,13 +64,13 @@ public interface LocationService {
 	 */
 	public int count();
 	/**
-	 * Gets a list of all HandlingUnits on a location
+	 * Gets a set of all HandlingUnits on a location
 	 * 
 	 * @param location the given location
 	 * 
 	 * @return a list of HandlingUnits
 	 */
-	public List<HandlingUnit> getHandlingUnits(final Location location);
+	public Set<HandlingUnit> getHandlingUnits(final Location location);
 	/**
 	 * Get a list of all Location items containing the given HandlingUnit
 	 * 

@@ -2,7 +2,6 @@ package com.home.simplewarehouse.location;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -31,10 +30,13 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.model.AbsolutPosition;
 import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LogicalPosition;
+import com.home.simplewarehouse.model.RelativPosition;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -118,7 +120,7 @@ public class LocationBeanTest {
 	}
 
 	/**
-	 * Simple locationService with no reference to handling units
+	 * Simple location with no reference to handling units
 	 */
 	@Test
 	@InSequence(0)
@@ -152,12 +154,11 @@ public class LocationBeanTest {
 		Location expLocation = new Location("A");
 
 		location = locationService.createOrUpdate(expLocation);
-		
+
+		assertNotNull(location);
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
-		assertNotEquals(true, location.equals(null));
-		assertEquals(1, location.getVersion());
 		
 		LOG.info(location);
 		
@@ -174,11 +175,50 @@ public class LocationBeanTest {
 		expLocation = new Location("C");
 		expLocation.setDimension(null);
 		expLocation.setLocationStatus(null);
+		expLocation.setPosition(null);
 
 		location = locationService.createOrUpdate(expLocation);
 		
+		// Defaults are set because null does not fit
 		assertNotNull(location.getDimension());
 		assertNotNull(location.getLocationStatus());
+		assertNotNull(location.getPosition());
+		assertTrue(location.getPosition() instanceof LogicalPosition);
+		assertEquals(expLocation, location.getPosition().getLocation());
+				
+		LOG.info(location);
+
+		expLocation = new Location("D");
+		new LogicalPosition(expLocation, "X");
+
+		location = locationService.createOrUpdate(expLocation);
+		
+		assertNotNull(location.getPosition());
+		assertTrue(location.getPosition() instanceof LogicalPosition);
+		assertEquals(expLocation, location.getPosition().getLocation());
+		assertEquals("X", ((LogicalPosition)location.getPosition()).getPositionId());
+		
+		LOG.info(location);
+
+		expLocation = new Location("E");
+		new RelativPosition(expLocation, 1, 1, 1);
+
+		location = locationService.createOrUpdate(expLocation);
+		
+		assertNotNull(location.getPosition());
+		assertTrue(location.getPosition() instanceof RelativPosition);
+		assertEquals(expLocation, location.getPosition().getLocation());
+		
+		LOG.info(location);
+
+		expLocation = new Location("F");
+		new AbsolutPosition(expLocation, 1.25f, 3.12f, 1.01f);
+
+		location = locationService.createOrUpdate(expLocation);
+		
+		assertNotNull(location.getPosition());
+		assertTrue(location.getPosition() instanceof AbsolutPosition);
+		assertEquals(expLocation, location.getPosition().getLocation());
 		
 		LOG.info(location);
 	}
@@ -193,10 +233,8 @@ public class LocationBeanTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationService.createOrUpdate(new Location("A"));
+	    Location location = locationService.createOrUpdate(new Location("A"));
 
-	    // MANDATORY reread
-	    Location location = locationService.getById("A");
 		LOG.info("Location getById: " + location);
 		
 		assertEquals("A", location.getLocationId());
@@ -207,10 +245,8 @@ public class LocationBeanTest {
 		assertEquals("A", location.getLocationId());
 		LOG.info("Location deleted: " + location.getLocationId());
 		
-		locationService.createOrUpdate(new Location("A", "Test"));
+		location = locationService.createOrUpdate(new Location("A", "Test"));
 
-		// MANDATORY reread
-		location = locationService.getById("A");				
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
@@ -222,10 +258,8 @@ public class LocationBeanTest {
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		locationService.createOrUpdate(new Location("A", "Test", ts));
+		location = locationService.createOrUpdate(new Location("A", "Test", ts));
 
-	    // MANDATORY reread
-		location = locationService.getById("A");
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
@@ -233,7 +267,7 @@ public class LocationBeanTest {
 	}
 
 	/**
-	 * Test the delete by locationService
+	 * Test the delete by location
 	 */
 	@Test
 	@InSequence(2)
@@ -242,13 +276,12 @@ public class LocationBeanTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    locationService.createOrUpdate(new Location("A"));
+	    Location location = locationService.createOrUpdate(new Location("A"));
 
-	    Location location = locationService.getById("A");
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
 		
-		// Delete the locationService
+		// Delete the location
 		locationService.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
@@ -267,8 +300,7 @@ public class LocationBeanTest {
 		assertTrue(true);
 
 		// Delete locationId null
-		locationService.createOrUpdate(new Location("A"));
-		location = locationService.getById("A");
+		location = locationService.createOrUpdate(new Location("A"));
 		assertNotNull(location);
 		location.setLocationId(null);
 		locationService.delete(location);
@@ -344,7 +376,7 @@ public class LocationBeanTest {
 	}
 	
 	/**
-	 * Test delete a locationService with handling units on it
+	 * Test delete a location with handling units on it
 	 */
 	@Test
 	@InSequence(4)
@@ -419,7 +451,7 @@ public class LocationBeanTest {
 	}
 
 	/**
-	 * Test delete a locationService with one single handling unit on it
+	 * Test delete a location with one single handling unit on it
 	 */
 	@Test
 	@InSequence(5)
@@ -429,9 +461,8 @@ public class LocationBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
-		// Prepare a locationService
-		locationService.createOrUpdate(new Location("A", "Test"));
-		Location locA = locationService.getById("A");
+		// Prepare a location
+		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
 		
 		// Test the special toString also
 		assumeTrue(locA.toString().contains("HandlingUnits RANDOM=[]"));
@@ -460,7 +491,7 @@ public class LocationBeanTest {
 			HandlingUnit hU8 = handlingUnitService.getById("8");
 			LOG.info(hU8);
 		
-			// Now delete the locationService
+			// Now delete the location
 			// MANDATORY reread
 			locA = locationService.getById("A");
 			locationService.delete(locA);
@@ -473,7 +504,7 @@ public class LocationBeanTest {
 		
 			assertNull(hU8.getLocation());
 		
-			LOG.info("Sample hU1 has no longer a locationService");
+			LOG.info("Sample hU1 has no longer a location");
 			LOG.info(hU8);
 		}
 		catch (DimensionException dimex) {
@@ -525,7 +556,7 @@ public class LocationBeanTest {
 	}
 
 	/**
-	 * Test get handling units on a locationService
+	 * Test get handling units on a location
 	 */
 	@Test
 	@InSequence(8)
@@ -559,8 +590,6 @@ public class LocationBeanTest {
 			Assert.fail("Not expected: " + dimex);			
 		}
 
-		// MANDATORY reread
-		locA = locationService.getById("A");
 		assertNotNull(locA);
 		assertFalse(locationService.getHandlingUnits(locA).isEmpty());
 		assertEquals(5, locationService.getHandlingUnits(locA).size());
@@ -592,7 +621,7 @@ public class LocationBeanTest {
 	}
 
 	/**
-	 * Test get available picks on a locationService
+	 * Test get available picks on a location
 	 */
 	@Test
 	@InSequence(11)
