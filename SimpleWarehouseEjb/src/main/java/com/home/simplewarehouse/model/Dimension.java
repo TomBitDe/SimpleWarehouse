@@ -51,10 +51,18 @@ public class Dimension extends EntityBase implements Serializable {
      * Default weight value
      */
     public static final int WEIGHT_DEFAULT = 0;
-    
-    private static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
-    private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
-    private static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
+    /**
+     * Default height value
+     */
+    public static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
+    /**
+     * Default length value
+     */
+    public static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
+    /**
+     * Default width value
+     */
+    public static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
     
     /**
      * The location id
@@ -268,7 +276,7 @@ public class Dimension extends EntityBase implements Serializable {
 	 * Sets the maximum capacity
 	 * 
 	 * @param maxCapacity the maximum capacity. A value less than zero is not allowed and sets
-	 * maxCapacity to {@value CAPACITY_DEFAULT}
+	 * maxCapacity to {@link #CAPACITY_DEFAULT}
 	 */
 	public void setMaxCapacity(int maxCapacity) {
     	if (maxCapacity < 0) {
@@ -294,7 +302,7 @@ public class Dimension extends EntityBase implements Serializable {
 	 * Sets the maximum weight
 	 * 
 	 * @param maxWeight the maximum weight. A value less than zero is not allowed and sets
-	 * maxWeight to {@value WEIGHT_DEFAULT}
+	 * maxWeight to {@link #WEIGHT_DEFAULT}
 	 */
 	public void setMaxWeight(int maxWeight) {
     	if (maxWeight < 0) {
@@ -320,7 +328,7 @@ public class Dimension extends EntityBase implements Serializable {
 	 * Sets the maximum height
 	 * 
 	 * @param maxHeight the maximum height. A value of {@code null} is not allowed and sets
-	 * maxHeight to {@link HEIGHT_DEFAULT}
+	 * maxHeight to {@link #HEIGHT_DEFAULT}
 	 */
 	public void setMaxHeight(HeightCategory maxHeight) {
     	if (maxHeight == null) {
@@ -346,7 +354,7 @@ public class Dimension extends EntityBase implements Serializable {
 	 * Sets the maximum length
 	 * 
 	 * @param maxLength the maximum length. A value of {@code null} is not allowed and sets
-	 * maxLength to {@link LENGTH_DEFAULT}
+	 * maxLength to {@link #LENGTH_DEFAULT}
 	 */
 	public void setMaxLength(LengthCategory maxLength) {
     	if (maxLength == null) {
@@ -372,7 +380,7 @@ public class Dimension extends EntityBase implements Serializable {
 	 * Sets the maximum width
 	 * 
 	 * @param maxWidth the maximum width. A value of {@code null} is not allowed and sets
-	 * maxWidth to {@link WIDTH_DEFAULT}
+	 * maxWidth to {@link #WIDTH_DEFAULT}
 	 */
 	public void setMaxWidth(WidthCategory maxWidth) {
     	if (maxWidth == null) {
