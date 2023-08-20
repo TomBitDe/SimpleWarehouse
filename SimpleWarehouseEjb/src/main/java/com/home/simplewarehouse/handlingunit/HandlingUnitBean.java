@@ -174,21 +174,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 
 		checkIllegalArgument(location, handlingUnit);
 		
-		Location lo = locationService.getById(location.getLocationId());
-		if (lo == null) {
-			lo = locationService.createOrUpdate(location);
-		}
-		else {
-			lo = em.merge(location);
-		}
+		Location lo = persistOrMerge(location);
 		
-		HandlingUnit hu = getById(handlingUnit.getId());
-		if (hu == null) {
-			hu = createOrUpdate(handlingUnit);
-		}
-		else {
-			hu = em.merge(handlingUnit);
-		}
+		HandlingUnit hu = persistOrMerge(handlingUnit);
 		
 		if ((lo.getHandlingUnits()).isEmpty()) {
 			// Check handlingUnitService is already stored elsewhere
@@ -252,21 +240,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public void pickFrom(final String locationId, final String handlingUnitId) throws LocationIsEmptyException, HandlingUnitNotOnLocationException {
 		LOG.trace("--> pickFrom({}, {})", locationId, handlingUnitId);
 		
-		Location location;
-		if (locationId == null) {
-			location = null;
-		}
-		else {
-			location = locationService.getById(locationId);
-		}
+		Location location = initLocation(locationId);
 		
-		HandlingUnit handlingUnit;
-		if (handlingUnitId == null) {
-			handlingUnit = null;
-		}
-		else {
-			handlingUnit = getById(handlingUnitId);
-		}
+		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
 		
 		pickFrom(location, handlingUnit);
 
@@ -279,13 +255,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 
 		checkIllegalArgument(location);
 		
-		Location lo = locationService.getById(location.getLocationId());
-		if (lo == null) {
-			lo = locationService.createOrUpdate(location);
-		}
-		else {
-			lo = em.merge(location);
-		}
+		Location lo = persistOrMerge(location);
 		
 		List<HandlingUnit> picksAvailable = lo.getAvailablePicks();
 		
@@ -309,13 +279,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit pickFrom(final String locationId) throws LocationIsEmptyException {
 		LOG.trace("--> pickFrom({})", locationId);
 
-		Location location;
-		if (locationId == null) {
-			location = null;
-		}
-		else {
-			location = locationService.getById(locationId);
-		}
+		Location location = initLocation(locationId);
 		
 		HandlingUnit hu = pickFrom(location);
 		
@@ -338,21 +302,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 			return;
 		}
 		
-		HandlingUnit hu = getById(handlingUnit.getId());
-		if (hu == null) {
-			hu = createOrUpdate(handlingUnit);
-		}
-		else {
-			hu = em.merge(handlingUnit);
-		}
+		HandlingUnit hu = persistOrMerge(handlingUnit);
 
-		Location lo = locationService.getById(location.getLocationId());
-		if (lo == null) {
-			lo = locationService.createOrUpdate(location);
-		}
-		else {
-			lo = em.merge(location);
-		}
+		Location lo = persistOrMerge(location);
 		
 		locationService.checkDimensionLimitExceeds(lo, hu);
 		
@@ -394,21 +346,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 	{
 		LOG.trace("--> dropTo({}, {})", locationId, handlingUnitId);
 		
-		Location location;
-		if (locationId == null) {
-			location = null;
-		}
-		else {
-			location = locationService.getById(locationId);
-		}
+		Location location = initLocation(locationId);
 		
-		HandlingUnit handlingUnit;
-		if (handlingUnitId == null) {
-			handlingUnit = null;
-		}
-		else {
-			handlingUnit = getById(handlingUnitId);
-		}
+		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
 				
 		dropTo(location, handlingUnit);
 		
@@ -423,21 +363,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 
 		checkIllegalArgument(base, BASE_IS_NULL_MSG);
 		
-		HandlingUnit hu = getById(handlingUnit.getId());
-		if (hu == null) {
-			hu = createOrUpdate(handlingUnit);
-		}
-		else {
-			hu = em.merge(handlingUnit);
-		}
+		HandlingUnit hu = persistOrMerge(handlingUnit);
 		
-		HandlingUnit ba = getById(base.getId());
-		if (ba == null) {
-			ba = createOrUpdate(base);
-		}
-		else {
-			ba = em.merge(base);
-		}
+		HandlingUnit ba = persistOrMerge(base);
 				
 		hu.setBaseHU(ba);
 		boolean ret = ba.getContains().add(hu);
@@ -456,21 +384,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit assign(final String handlingUnitId, final String baseId) {
 		LOG.trace("--> assign() hu={} base={}", handlingUnitId, baseId);
 		
-		HandlingUnit handlingUnit;
-		if (handlingUnitId == null) {
-			handlingUnit = null;
-		}
-		else {
-			handlingUnit = getById(handlingUnitId);
-		}
+		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
 		
-		HandlingUnit base;
-		if (baseId == null) {
-			base = null;
-		}
-		else {
-			base = getById(baseId);
-		}
+		HandlingUnit base = initHandlingUnit(baseId);
 		
 		base = assign(handlingUnit, base);
 		
@@ -487,21 +403,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 
 		checkIllegalArgument(base, BASE_IS_NULL_MSG);
 		
-		HandlingUnit hu = getById(handlingUnit.getId());
-		if (hu == null) {
-			hu = createOrUpdate(handlingUnit);
-		}
-		else {
-			hu = em.merge(handlingUnit);
-		}
+		HandlingUnit hu = persistOrMerge(handlingUnit);
 		
-		HandlingUnit ba = getById(base.getId());
-		if (ba == null) {
-			ba = createOrUpdate(base);
-		}
-		else {
-			ba = em.merge(base);
-		}
+		HandlingUnit ba = persistOrMerge(base);
 		
 		hu.setBaseHU(null);
 		boolean ret = ba.getContains().remove(hu);
@@ -525,21 +429,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit remove(final String handlingUnitId, final String baseId) {
 		LOG.trace("--> remove() hu={} base={}", handlingUnitId, baseId);
 		
-		HandlingUnit handlingUnit;
-		if (handlingUnitId == null) {
-			handlingUnit = null;
-		}
-		else {
-			handlingUnit = getById(handlingUnitId);
-		}
+		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
 		
-		HandlingUnit base;
-		if (baseId == null) {
-			base = null;
-		}
-		else {
-			base = getById(baseId);
-		}
+		HandlingUnit base = initHandlingUnit(baseId);
 		
 		base = remove(handlingUnit, base);
 		
@@ -556,21 +448,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 
 		checkIllegalArgument(destHandlingUnit, HU_IS_NULL_MSG);
 		
-		HandlingUnit hu = getById(handlingUnit.getId());
-		if (hu == null) {
-			hu = createOrUpdate(handlingUnit);
-		}
-		else {
-			hu = em.merge(handlingUnit);
-		}
+		HandlingUnit hu = persistOrMerge(handlingUnit);
 		
-		HandlingUnit dest = getById(destHandlingUnit.getId());
-		if (dest == null) {
-			dest = createOrUpdate(destHandlingUnit);
-		}
-		else {
-			dest = em.merge(destHandlingUnit);
-		}
+		HandlingUnit dest = persistOrMerge(destHandlingUnit);
 		
 		if (hu.getBaseHU() != null) {
 			LOG.info("Remove {} from base {}", hu.getId(), hu);
@@ -591,21 +471,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public HandlingUnit move(final String handlingUnitId, final String baseId) {
 		LOG.trace("--> move() hu={} base={}", handlingUnitId, baseId);
 
-		HandlingUnit handlingUnit;
-		if (handlingUnitId == null) {
-			handlingUnit = null;
-		}
-		else {
-			handlingUnit = getById(handlingUnitId);
-		}
+		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
 		
-		HandlingUnit base;
-		if (baseId == null) {
-			base = null;
-		}
-		else {
-			base = getById(baseId);
-		}
+		HandlingUnit base = initHandlingUnit(baseId);
 		
 		HandlingUnit hu = move(handlingUnit, base);
 		
@@ -620,13 +488,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 
 		checkIllegalArgument(base, BASE_IS_NULL_MSG);
 
-		HandlingUnit ba = getById(base.getId());
-		if (ba == null) {
-			ba = createOrUpdate(base);
-		}
-		else {
-			ba = em.merge(base);
-		}
+		HandlingUnit ba = persistOrMerge(base);
 		
 		Set<HandlingUnit> ret;			
 		Set<HandlingUnit> huList = new HashSet<>(); 
@@ -661,13 +523,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	public Set<HandlingUnit> free(final String baseId) {
 		LOG.trace("--> free() base={}", baseId);
 
-		HandlingUnit base;
-		if (baseId == null) {
-			base = null;
-		}
-		else {
-			base = getById(baseId);
-		}
+		HandlingUnit base = initHandlingUnit(baseId);
 		
 		Set<HandlingUnit> huSet = free(base);
 		
@@ -745,5 +601,57 @@ public class HandlingUnitBean implements HandlingUnitService {
 		}
 		
 		return ret;
+	}
+	
+	private Location persistOrMerge(final Location location) {
+		Location lo = locationService.getById(location.getLocationId());
+		
+		if (lo == null) {
+			lo = locationService.createOrUpdate(location);
+		}
+		else {
+			lo = em.merge(location);
+		}
+
+		return lo;
+	}
+	
+	private HandlingUnit persistOrMerge(final HandlingUnit handlingUnit) {
+		HandlingUnit hu = getById(handlingUnit.getId());
+		
+		if (hu == null) {
+			hu = createOrUpdate(handlingUnit);
+		}
+		else {
+			hu = em.merge(handlingUnit);
+		}
+		
+		return hu;
+	}
+	
+	private Location initLocation(String locationId) {
+		Location location;
+		
+		if (locationId == null) {
+			location = null;
+		}
+		else {
+			location = locationService.getById(locationId);
+		}
+		
+		return location;
+	}
+	
+	private HandlingUnit initHandlingUnit(String handlingUnitId) {
+		HandlingUnit handlingUnit;
+		
+		if (handlingUnitId == null) {
+			handlingUnit = null;
+		}
+		else {
+			handlingUnit = getById(handlingUnitId);
+		}
+		
+		return handlingUnit;
 	}
 }
