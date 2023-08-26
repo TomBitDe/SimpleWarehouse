@@ -34,7 +34,7 @@ import org.apache.logging.log4j.Logger;
 @NamedQuery(name = "findAllLocationWithErrorStatus", query = "select l.location from LocationStatus l where l.errorStatus = ?1", lockMode = NONE) 
 @NamedQuery(name = "findAllLocationWithLtosStatus", query = "select l.location from LocationStatus l where l.ltosStatus = ?1", lockMode = NONE) 
 @NamedQuery(name = "findAllLocationWithLockStatus", query = "select l.location from LocationStatus l where l.lockStatus = ?1", lockMode = NONE) 
-public class LocationStatus extends EntityBase implements Serializable {
+public class LocationStatus implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(LocationStatus.class);
     
@@ -132,7 +132,7 @@ public class LocationStatus extends EntityBase implements Serializable {
     public LocationStatus(Location location, String user) {
     	this(location);
     	
-    	this.setUpdateUserId(user);
+    	location.setUpdateUserId(user);
     	
     	setStatusesDefaults();
     }

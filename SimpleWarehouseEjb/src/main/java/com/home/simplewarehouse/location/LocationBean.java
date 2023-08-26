@@ -21,7 +21,6 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.model.LogicalPosition;
 import com.home.simplewarehouse.model.Position;
 import com.home.simplewarehouse.model.WidthCategory;
@@ -57,13 +56,11 @@ public class LocationBean implements LocationService {
 	
 	@Override
 	public Location createOrUpdate(final Location location) {
-		LOG.trace("--> create");
-
+		LOG.trace("--> createOrUpdate");
+		
 		if (getById(location.getLocationId()) == null) {
 			if (location.getLocationStatus() == null) {
-				LocationStatus locationStatus = new LocationStatus(location);
-				locationStatus.setLocation(location);
-				location.setLocationStatus(locationStatus);
+				throw new IllegalArgumentException();
 			}
 
 			if (location.getDimension() == null) {

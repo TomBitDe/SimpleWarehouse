@@ -64,26 +64,26 @@ public class Location extends EntityBase implements Serializable {
 	/**
 	 * The associated LocationStatus
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	private LocationStatus locationStatus;
 	/**
 	 * The associated Dimension
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	private Dimension dimension;
 	/**
 	 * The associated Position
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	private Position position;
 	/**
 	 * The associated HandlingUnits
 	 */
 	@OneToMany(mappedBy = "location", cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.REFRESH }, fetch = FetchType.EAGER)
+			CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
 	private void initAssociated() {
@@ -189,13 +189,21 @@ public class Location extends EntityBase implements Serializable {
 		return locationStatus;
 	}
 
+	private void setLocationStatus(LocationStatus ls) {
+		this.locationStatus = ls;
+	}
+	
 	/**
-	 * Sets the Location status for this locationService
+	 * Sets the Location status values for this Location
 	 * 
-	 * @param locationStatus the Location status
+	 * @param e the ErrorStatus
+	 * @param lt the LtosStatus
+	 * @param lo the LockStatus
 	 */
-	public void setLocationStatus(LocationStatus locationStatus) {
-		this.locationStatus = locationStatus;
+	public void setLocationStatus(ErrorStatus e, LtosStatus lt, LockStatus lo) {
+		this.getLocationStatus().setErrorStatus(e);
+		this.getLocationStatus().setLtosStatus(lt);
+		this.getLocationStatus().setLockStatus(lo);
 	}
 
 	/**

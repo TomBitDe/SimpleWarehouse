@@ -33,9 +33,12 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.AbsolutPosition;
 import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
+import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LockStatus;
 import com.home.simplewarehouse.model.LogicalPosition;
+import com.home.simplewarehouse.model.LtosStatus;
 import com.home.simplewarehouse.model.RelativPosition;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
@@ -174,7 +177,7 @@ public class LocationBeanTest {
 		
 		expLocation = new Location("C");
 		expLocation.setDimension(null);
-		expLocation.setLocationStatus(null);
+		//expLocation.setLocationStatus(null);
 		expLocation.setPosition(null);
 
 		location = locationService.createOrUpdate(expLocation);
@@ -328,10 +331,39 @@ public class LocationBeanTest {
 	}
 	
 	/**
+	 * Test modify location
+	 */
+	@Test
+	@InSequence(5)
+	public void modifyLocation() {
+		LOG.info("--- Test modifyLocation");
+		
+		assumeTrue(locationService.getAll().isEmpty());
+		
+		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		
+		assertNotNull(locA);
+
+		//locA.setLocationStatus(new LocationStatus(locA, ErrorStatus.ERROR, LtosStatus.YES,
+		//		LockStatus.LOCKED, "Updated"));
+
+		locA.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+		locA.getLocationStatus().setLtosStatus(LtosStatus.YES);
+		locA.getLocationStatus().setLockStatus(LockStatus.LOCKED);
+		
+		locA = locationService.createOrUpdate(locA);
+		
+		assertNotNull(locA);
+		assertEquals(ErrorStatus.ERROR, locA.getLocationStatus().getErrorStatus());
+		assertEquals(LtosStatus.YES,  locA.getLocationStatus().getLtosStatus());
+		assertEquals(LockStatus.LOCKED,  locA.getLocationStatus().getLockStatus());
+	}
+	
+	/**
 	 * Test getAll method
 	 */
 	@Test
-	@InSequence(3)
+	@InSequence(8)
 	public void getAll() {
 		LOG.info("--- Test getAll");
 		
@@ -379,7 +411,7 @@ public class LocationBeanTest {
 	 * Test delete a location with handling units on it
 	 */
 	@Test
-	@InSequence(4)
+	@InSequence(11)
 	public void deleteLocationWithHandlingUnits() {
 		LOG.info("--- Test deleteLocationWithHandlingUnits");
 		
@@ -454,7 +486,7 @@ public class LocationBeanTest {
 	 * Test delete a location with one single handling unit on it
 	 */
 	@Test
-	@InSequence(5)
+	@InSequence(14)
 	public void deleteLocationWithOneHandlingUnit() {
 		LOG.info("--- Test deleteLocationWithOneHandlingUnit");
 		
@@ -516,7 +548,7 @@ public class LocationBeanTest {
 	 * Test get all locations with free capacity
 	 */
 	@Test
-	@InSequence(8)
+	@InSequence(17)
 	public void getAllWithFreeCapacity() {
 		LOG.info("--- Test getAllWithFreeCapacity");
 		
@@ -559,7 +591,7 @@ public class LocationBeanTest {
 	 * Test get handling units on a location
 	 */
 	@Test
-	@InSequence(8)
+	@InSequence(20)
 	public void getHandlingUnits() {
 		LOG.info("--- Test getHandlingUnits");
 		
@@ -624,7 +656,7 @@ public class LocationBeanTest {
 	 * Test get available picks on a location
 	 */
 	@Test
-	@InSequence(11)
+	@InSequence(23)
 	public void getAvailablePicks() {
 		LOG.info("--- Test getAvailablePicks");
 		
@@ -682,7 +714,7 @@ public class LocationBeanTest {
 	 * Test get all full locations
 	 */
 	@Test
-	@InSequence(14)
+	@InSequence(26)
 	public void getAllFull() {
 		LOG.info("--- Test getAllFull");
 		
