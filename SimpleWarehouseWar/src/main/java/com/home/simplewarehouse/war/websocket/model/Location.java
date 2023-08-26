@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.war.websocket.model;
 
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,8 +24,8 @@ public class Location {
     public Location() {
     	super();
 
-    	LOG.debug("--> Location");
-    	LOG.debug("<-- Location");
+    	LOG.trace("--> Location");
+    	LOG.trace("<-- Location");
     }
 
 	/**
@@ -97,5 +98,30 @@ public class Location {
 	 */
 	public void setHandlingUnitIds(Set<String> handlingUnitIds) {
 		this.handlingUnitIds = handlingUnitIds;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(id, version);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Location other = (Location) obj;
+		return Objects.equals(id, other.id) && version == other.version;
+	}
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("Location [id=").append(id).append(", type=").append(type).append(", version=").append(version)
+				.append(", handlingUnitIds=").append(handlingUnitIds).append("]");
+		return builder.toString();
 	}
 }

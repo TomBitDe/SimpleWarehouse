@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.war.websocket;
 
 import java.io.StringReader;
+import java.util.Collections;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.inject.Inject;
@@ -26,22 +27,22 @@ import com.home.simplewarehouse.war.websocket.model.Location;
  */
 @ApplicationScoped
 @ServerEndpoint("/actions")
-public class DeviceWebSocketServer {
-	private static final Logger LOG = LogManager.getLogger(DeviceWebSocketServer.class);
+public class LocationWebSocketServer {
+	private static final Logger LOG = LogManager.getLogger(LocationWebSocketServer.class);
 	
 	private static final String ACTION = "action";
 
     @Inject
-    private DeviceSessionHandler sessionHandler;
+    private LocationSessionHandler sessionHandler;
     
     /**
      * Not needed but done
      */
-    public DeviceWebSocketServer() {
+    public LocationWebSocketServer() {
     	super();
     	
-    	LOG.trace("--> DeviceWebSocketServer");
-    	LOG.trace("<-- DeviceWebSocketServer");
+    	LOG.trace("--> LocationWebSocketServer");
+    	LOG.trace("<-- LocationWebSocketServer");
     }
 
     /**
@@ -51,11 +52,11 @@ public class DeviceWebSocketServer {
      */
 	@OnOpen
 	public void open(Session session) {
-		LOG.debug("--> open");
+		LOG.trace("--> open");
 
 		sessionHandler.addSession(session);
 
-		LOG.debug("<-- open");
+		LOG.trace("<-- open");
 	}
 
 	/**
@@ -65,11 +66,11 @@ public class DeviceWebSocketServer {
 	 */
 	@OnClose
 	public void close(Session session) {
-		LOG.debug("--> close");
+		LOG.trace("--> close");
 
 		sessionHandler.removeSession(session);
 
-		LOG.debug("<-- close");
+		LOG.trace("<-- close");
 	}
 
 	/**
@@ -90,7 +91,7 @@ public class DeviceWebSocketServer {
 	 */
 	@OnMessage
 	public void handleMessage(String message, Session session) {
-		LOG.debug("--> handleMessage");
+		LOG.trace("--> handleMessage");
 
         try (JsonReader reader = Json.createReader(new StringReader(message))) {
             JsonObject jsonMessage = reader.readObject();
@@ -101,6 +102,8 @@ public class DeviceWebSocketServer {
             	Location location = new Location();
             	location.setId(jsonMessage.getString("id"));
             	location.setType(jsonMessage.getString("type"));
+            	location.setVersion(0);
+            	location.setHandlingUnitIds(Collections.emptySet());
                 sessionHandler.addLocation(location);
             }
 
@@ -110,6 +113,6 @@ public class DeviceWebSocketServer {
             }
         }
 
-        LOG.debug("<-- handleMessage");
+        LOG.trace("<-- handleMessage");
 	}
 }
