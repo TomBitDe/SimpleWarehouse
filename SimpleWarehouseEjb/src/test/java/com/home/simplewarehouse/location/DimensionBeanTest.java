@@ -2,7 +2,6 @@ package com.home.simplewarehouse.location;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -27,7 +26,6 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.Dimension;
-import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
@@ -133,8 +131,6 @@ public class DimensionBeanTest {
 		// Now check the corresponding Dimension
 		assertEquals(expLocation.getLocationId(), dimension.getLocation().getLocationId());
 		assertEquals(expLocation.getDimension().getMaxCapacity(), dimension.getMaxCapacity());
-		assertEquals(EntityBase.USER_DEFAULT, dimension.getUpdateUserId());
-		assertNotNull(dimension.getUpdateTimestamp());
 		
 		// This one has not been created
 		assertNull(dimensionService.getById("B"));
@@ -181,8 +177,7 @@ public class DimensionBeanTest {
 		// With Dimension DEFAULTS
 		Location location = new Location("A");
 		// Now change
-		Dimension changed = new Dimension(location, 5, 900, HeightCategory.MIDDLE, LengthCategory.SHORT, WidthCategory.NARROW, "Test");
-		location.setDimension(changed);
+		location.setDimension(5, 900, HeightCategory.MIDDLE, LengthCategory.SHORT, WidthCategory.NARROW);
 		
 		Location expLocation = locationService.createOrUpdate(location);
 
@@ -192,7 +187,6 @@ public class DimensionBeanTest {
 		assertEquals(HeightCategory.MIDDLE, expLocation.getDimension().getMaxHeight());
 		assertEquals(LengthCategory.SHORT, expLocation.getDimension().getMaxLength());
 		assertEquals(WidthCategory.NARROW, expLocation.getDimension().getMaxWidth());
-		assertEquals("Test", expLocation.getDimension().getUpdateUserId());
 		
 		// Change again
 		location = expLocation;
@@ -201,7 +195,6 @@ public class DimensionBeanTest {
 		location.getDimension().setMaxHeight(null);
 		location.getDimension().setMaxLength(null);
 		location.getDimension().setMaxWidth(null);
-		location.getDimension().setUpdateUserId(null);
 		
 		expLocation = locationService.createOrUpdate(location);
 
@@ -211,7 +204,6 @@ public class DimensionBeanTest {
 		assertEquals(HeightCategory.NOT_RELEVANT, expLocation.getDimension().getMaxHeight());
 		assertEquals(LengthCategory.NOT_RELEVANT, expLocation.getDimension().getMaxLength());
 		assertEquals(WidthCategory.NOT_RELEVANT, expLocation.getDimension().getMaxWidth());
-		assertEquals("System", expLocation.getDimension().getUpdateUserId());
 	}
 	
 	/**

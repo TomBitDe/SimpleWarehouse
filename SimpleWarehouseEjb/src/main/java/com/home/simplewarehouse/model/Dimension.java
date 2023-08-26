@@ -37,7 +37,7 @@ import org.apache.logging.log4j.Logger;
 @Entity
 @Table(name="DIMENSION")
 @NamedQuery(name = "findAllDimensions", query = "select d from Dimension d", lockMode = NONE)
-public class Dimension extends EntityBase implements Serializable {
+public class Dimension implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Dimension.class);
     
@@ -155,7 +155,7 @@ public class Dimension extends EntityBase implements Serializable {
     public Dimension(Location location, String user) {
     	this(location);
     	
-    	this.setUpdateUserId(user);
+    	location.setUpdateUserId(user);
     }
     
     /**

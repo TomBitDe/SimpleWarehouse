@@ -15,7 +15,6 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.HeightCategory;
@@ -64,9 +63,7 @@ public class LocationBean implements LocationService {
 			}
 
 			if (location.getDimension() == null) {
-				Dimension dimension = new Dimension(location);
-				dimension.setLocation(location);
-				location.setDimension(dimension);
+				throw new IllegalArgumentException();
 			}
 			
 			if (location.getPosition() == null) {

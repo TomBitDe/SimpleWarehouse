@@ -220,8 +220,26 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param dimension the Dimension to assign
 	 */
-	public void setDimension(Dimension dimension) {
+	private void setDimension(Dimension dimension) {
 		this.dimension = dimension;
+	}
+	
+	/**
+	 * Assigns the Dimension to this Location
+	 * 
+	 * @param maxCapacity the maximum capacity of the Location
+	 * @param maxWeight the maximum weight allowed for the Location
+	 * @param maxHeight the maximum height allowed for the Location
+	 * @param maxLength the maximum length allowed for the Location
+	 * @param maxWidth the maximum width allowed for the Location
+	 */
+	public void setDimension(int maxCapacity, int maxWeight, HeightCategory maxHeight
+			, LengthCategory maxLength, WidthCategory maxWidth) {
+		this.getDimension().setMaxCapacity(maxCapacity);
+		this.getDimension().setMaxWeight(maxWeight);
+		this.getDimension().setMaxHeight(maxHeight);
+		this.getDimension().setMaxLength(maxLength);
+		this.getDimension().setMaxWidth(maxWidth);
 	}
 
 	/**

@@ -31,7 +31,6 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.AbsolutPosition;
-import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -176,7 +175,7 @@ public class LocationBeanTest {
 		assertNull(locationService.getById("B"));
 		
 		expLocation = new Location("C");
-		expLocation.setDimension(null);
+		//expLocation.setDimension(null);
 		//expLocation.setLocationStatus(null);
 		expLocation.setPosition(null);
 
@@ -571,9 +570,7 @@ public class LocationBeanTest {
 
 		// Now make location B full
 		Location location = locationService.getById("B");
-		Dimension dim = location.getDimension();
-		dim.setMaxCapacity(1);
-		location.setDimension(dim);
+		location.getDimension().setMaxCapacity(1);;
 		location = locationService.createOrUpdate(location);
 		
 		try {
@@ -662,10 +659,9 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.createOrUpdate(new Location("A"));
+		Location locA = locationService.createOrUpdate(new Location("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
-		Location locA = locationService.getById("A");
 		
 		// Drop to make a relation
 		try {
@@ -720,15 +716,15 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.createOrUpdate(new Location("A"));
+		Location locA = locationService.createOrUpdate(new Location("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
-		Location locA = locationService.getById("A");
 		
 		assertTrue(locationService.getAllFull().isEmpty());
 		
 		locA.getDimension().setMaxCapacity(2);
-		locA.setDimension(locA.getDimension());
+		
+		locA = locationService.createOrUpdate(locA);
 		
 		// Drop to make a relation
 		try {
