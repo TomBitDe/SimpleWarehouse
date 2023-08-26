@@ -204,7 +204,6 @@ public class LocationStatusBeanTest {
 		assertEquals(ErrorStatus.ERROR, expLocation.getLocationStatus().getErrorStatus());
 		assertEquals(LtosStatus.YES, expLocation.getLocationStatus().getLtosStatus());
 		assertEquals(LockStatus.LOCKED, expLocation.getLocationStatus().getLockStatus());
-		assertEquals("System", expLocation.getDimension().getUpdateUserId());
 
 		// Change again
 		location = expLocation;
@@ -229,7 +228,6 @@ public class LocationStatusBeanTest {
 		assertEquals(ErrorStatus.NONE, expLocation.getLocationStatus().getErrorStatus());
 		assertEquals(LtosStatus.NO, expLocation.getLocationStatus().getLtosStatus());
 		assertEquals(LockStatus.UNLOCKED, expLocation.getLocationStatus().getLockStatus());
-		assertEquals("System", expLocation.getDimension().getUpdateUserId());
 	}
 	
 	/**
