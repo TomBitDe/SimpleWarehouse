@@ -21,14 +21,14 @@ import javax.ws.rs.core.Response;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.HandlingUnit;
-import com.home.simplewarehouse.rest.standardservices.StandardServices;
+import com.home.simplewarehouse.rest.standardservices.StandardRestServices;
 
 /**
  * RESTful Handling Unit service.
  */
 @Path("/HandlingUnitRestService")
 @Stateless
-public class HandlingUnitRestService extends StandardServices {
+public class HandlingUnitRestService extends StandardRestServices {
 	@EJB
 	HandlingUnitService handlingUnitService;
 	
