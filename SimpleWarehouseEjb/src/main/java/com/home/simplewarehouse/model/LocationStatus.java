@@ -133,8 +133,6 @@ public class LocationStatus implements Serializable {
     	this(location);
     	
     	location.setUpdateUserId(user);
-    	
-    	setStatusesDefaults();
     }
     
     /**
