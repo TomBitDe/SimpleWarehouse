@@ -340,9 +340,6 @@ public class LocationBeanTest {
 		
 		assertNotNull(locA);
 
-		//locA.setLocationStatus(new LocationStatus(locA, ErrorStatus.ERROR, LtosStatus.YES,
-		//		LockStatus.LOCKED, "Updated"));
-
 		locA.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 		locA.getLocationStatus().setLtosStatus(LtosStatus.YES);
 		locA.getLocationStatus().setLockStatus(LockStatus.LOCKED);
