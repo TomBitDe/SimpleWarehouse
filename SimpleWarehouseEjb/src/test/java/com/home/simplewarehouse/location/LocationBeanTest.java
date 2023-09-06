@@ -31,14 +31,19 @@ import org.junit.runner.RunWith;
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.AbsolutPosition;
+import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.HeightCategory;
+import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.model.LockStatus;
 import com.home.simplewarehouse.model.LogicalPosition;
 import com.home.simplewarehouse.model.LtosStatus;
 import com.home.simplewarehouse.model.RelativPosition;
+import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -339,6 +344,14 @@ public class LocationBeanTest {
 		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
 		
 		assertNotNull(locA);
+		assertEquals(LocationStatus.ERROR_STATUS_DEFAULT, locA.getLocationStatus().getErrorStatus());
+		assertEquals(LocationStatus.LTOS_STATUS_DEFAULT,  locA.getLocationStatus().getLtosStatus());
+		assertEquals(LocationStatus.LOCK_STATUS_DEFAULT,  locA.getLocationStatus().getLockStatus());
+		assertEquals(Dimension.CAPACITY_DEFAULT, locA.getDimension().getMaxCapacity());
+		assertEquals(Dimension.WEIGHT_DEFAULT, locA.getDimension().getMaxWeight());
+		assertEquals(Dimension.HEIGHT_DEFAULT, locA.getDimension().getMaxHeight());
+		assertEquals(Dimension.LENGTH_DEFAULT, locA.getDimension().getMaxLength());
+		assertEquals(Dimension.WIDTH_DEFAULT, locA.getDimension().getMaxWidth());
 
 		locA.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
 		locA.getLocationStatus().setLtosStatus(LtosStatus.YES);
@@ -350,6 +363,23 @@ public class LocationBeanTest {
 		assertEquals(ErrorStatus.ERROR, locA.getLocationStatus().getErrorStatus());
 		assertEquals(LtosStatus.YES,  locA.getLocationStatus().getLtosStatus());
 		assertEquals(LockStatus.LOCKED,  locA.getLocationStatus().getLockStatus());
+		
+		locA.getDimension().setMaxCapacity(4);
+		locA.getDimension().setMaxWeight(555);
+		locA.getDimension().setMaxHeight(HeightCategory.MIDDLE);
+		locA.getDimension().setMaxLength(LengthCategory.SHORT);
+		locA.getDimension().setMaxWidth(WidthCategory.NARROW);
+		
+		locA = locationService.createOrUpdate(locA);
+		
+		assertNotNull(locA);
+		assertEquals(4, locA.getDimension().getMaxCapacity());
+		assertEquals(555, locA.getDimension().getMaxWeight());
+		assertEquals(HeightCategory.MIDDLE, locA.getDimension().getMaxHeight());
+		assertEquals(LengthCategory.SHORT, locA.getDimension().getMaxLength());
+		assertEquals(WidthCategory.NARROW, locA.getDimension().getMaxWidth());
+		
+		// TODO: Positions
 	}
 	
 	/**

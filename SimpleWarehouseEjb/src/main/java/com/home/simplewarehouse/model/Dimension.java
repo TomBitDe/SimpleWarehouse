@@ -52,9 +52,9 @@ public class Dimension implements Serializable {
      */
     public static final int WEIGHT_DEFAULT = 0;
     
-    private static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
-    private static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
-    private static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
+    public static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
+    public static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
+    public static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
     
     /**
      * The location id
