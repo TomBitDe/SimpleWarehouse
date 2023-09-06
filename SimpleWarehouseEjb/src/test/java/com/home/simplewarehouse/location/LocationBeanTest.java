@@ -175,9 +175,6 @@ public class LocationBeanTest {
 		assertNull(locationService.getById("B"));
 		
 		expLocation = new Location("C");
-		//expLocation.setDimension(null);
-		//expLocation.setLocationStatus(null);
-		expLocation.setPosition(null);
 
 		location = locationService.createOrUpdate(expLocation);
 		

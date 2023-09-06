@@ -70,6 +70,8 @@ public class AbsolutPosition extends Position {
     	setxCoord(x);
     	setyCoord(y);
     	setzCoord(z);
+    	
+    	location.setPosition(this);
     }
     
 	/**

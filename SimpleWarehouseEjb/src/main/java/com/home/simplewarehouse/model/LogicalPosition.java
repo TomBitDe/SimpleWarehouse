@@ -69,6 +69,8 @@ public class LogicalPosition extends Position {
 		
 		setPositionId(positionId);
 		
+		location.setPosition(this);
+		
 		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
 	}
 	

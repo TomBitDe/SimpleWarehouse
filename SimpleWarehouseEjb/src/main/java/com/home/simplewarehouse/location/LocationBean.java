@@ -20,8 +20,6 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.model.LogicalPosition;
-import com.home.simplewarehouse.model.Position;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -67,9 +65,7 @@ public class LocationBean implements LocationService {
 			}
 			
 			if (location.getPosition() == null) {
-				Position position = new LogicalPosition(location);
-				position.setLocation(location);
-				location.setPosition(position);
+				throw new IllegalArgumentException();
 			}
 
 			// No need to em.persist(locationStatusService) because it is done by cascade =

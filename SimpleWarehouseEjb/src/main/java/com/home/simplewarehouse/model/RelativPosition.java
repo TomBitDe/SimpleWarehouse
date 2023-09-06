@@ -66,10 +66,12 @@ public class RelativPosition extends Position {
      */
     public RelativPosition(Location location, int x, int y, int z) {
     	super(location);
-
+    	
     	setxCoord(x);
     	setyCoord(y);
     	setzCoord(z);
+    	
+    	location.setPosition(this);
     }
     
 	/**
