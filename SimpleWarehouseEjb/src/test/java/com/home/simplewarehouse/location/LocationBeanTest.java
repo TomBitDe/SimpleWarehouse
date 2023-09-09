@@ -407,7 +407,20 @@ public class LocationBeanTest {
 		assertEquals(0, locA.getDimension().getMaxWeight());
 		assertEquals(HeightCategory.LOW, locA.getDimension().getMaxHeight());
 		assertEquals(LengthCategory.NOT_RELEVANT, locA.getDimension().getMaxLength());
-		assertEquals(WidthCategory.WIDE, locA.getDimension().getMaxWidth());
+		assertEquals(WidthCategory.WIDE, locA.getDimension().getMaxWidth());		
+	}
+	
+	/**
+	 * Test modify location position values
+	 */
+	@Test
+	@InSequence(6)
+	public void modifyLocationPositionValues() {
+		LOG.info("--- Test modifyLocationPositionValues");
+		
+		assumeTrue(locationService.getAll().isEmpty());
+		
+		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
 		
 		// LogicalPosition
 		assertTrue(locA.getPosition() instanceof LogicalPosition);
@@ -480,6 +493,71 @@ public class LocationBeanTest {
 		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getxCoord(), 0.0f);
 		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
 		assertEquals(1.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
+	}
+	
+	/**
+	 * Test modify location position
+	 */
+	@Test
+	@InSequence(7)
+	public void modifyLocationPosition() {
+		LOG.info("--- Test modifyLocationPosition");
+		
+		assumeTrue(locationService.getAll().isEmpty());
+		
+		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		
+		// LogicalPosition
+		assertTrue(locA.getPosition() instanceof LogicalPosition);
+
+		// TODO: setPosition
+/*
+		// Change to RelativPosition with DEFAULT values
+		locA.setPosition(new RelativPosition());
+		
+		locA = locationService.createOrUpdate(locA);
+
+		assertNotNull(locA);		
+		assertTrue(locA.getPosition() instanceof RelativPosition);
+		// Check the DEFAULT values for changed Position class
+		assertEquals(0, ((RelativPosition) locA.getPosition()).getxCoord());
+		assertEquals(0, ((RelativPosition) locA.getPosition()).getyCoord());
+		assertEquals(0, ((RelativPosition) locA.getPosition()).getzCoord());
+
+		// Change to RelativPosition with given values
+		locA.setPosition(new RelativPosition(3, 3, 3));
+		
+		locA = locationService.createOrUpdate(locA);
+
+		assertNotNull(locA);		
+		assertTrue(locA.getPosition() instanceof RelativPosition);
+		assertEquals(3, ((RelativPosition) locA.getPosition()).getxCoord());
+		assertEquals(3, ((RelativPosition) locA.getPosition()).getyCoord());
+		assertEquals(3, ((RelativPosition) locA.getPosition()).getzCoord());
+
+		// Change to AbsolutPosition with DEFAULT values
+		locA.setPosition(new AbsolutPosition());
+		
+		locA = locationService.createOrUpdate(locA);
+
+		assertNotNull(locA);		
+		assertTrue(locA.getPosition() instanceof AbsolutPosition);
+		// Check the DEFAULT values
+		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getxCoord(), 0.0f);
+		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getyCoord(), 0.0f);
+		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getzCoord(), 0.0f);
+		
+		// Change to AbsolutPosition with given values
+		locA.setPosition(new AbsolutPosition(3.1f, 0.5f, 2.9f));
+		
+		locA = locationService.createOrUpdate(locA);
+
+		assertNotNull(locA);		
+		assertTrue(locA.getPosition() instanceof AbsolutPosition);
+		assertEquals(3.1f, ((AbsolutPosition) locA.getPosition()).getxCoord(), 0.0f);
+		assertEquals(0.5f, ((AbsolutPosition) locA.getPosition()).getyCoord(), 0.0f);
+		assertEquals(2.9f, ((AbsolutPosition) locA.getPosition()).getzCoord(), 0.0f);
+*/
 	}
 	
 	/**

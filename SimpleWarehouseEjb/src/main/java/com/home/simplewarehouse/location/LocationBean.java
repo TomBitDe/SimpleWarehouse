@@ -55,7 +55,9 @@ public class LocationBean implements LocationService {
 	public Location createOrUpdate(final Location location) {
 		LOG.trace("--> createOrUpdate");
 		
-		if (getById(location.getLocationId()) == null) {
+		Location saved = getById(location.getLocationId());
+		
+		if (saved == null) {
 			if (location.getLocationStatus() == null) {
 				throw new IllegalArgumentException();
 			}
@@ -73,7 +75,14 @@ public class LocationBean implements LocationService {
 			em.persist(location);
 		}
 		else {
-			em.merge(location);
+			if (positionHasSameClass(location, saved)) {
+				em.merge(location);
+			}
+			else {
+				// TODO: Class of Position changed
+				delete(saved);
+				em.persist(location);
+			}
 		}
 		em.flush();
 
@@ -508,5 +517,9 @@ public class LocationBean implements LocationService {
 		final TypedQuery<Number> query = em.createQuery("SELECT COUNT(l) FROM Location l", Number.class);
 
 		return query.getSingleResult().intValue();
+	}
+	
+	private boolean positionHasSameClass(Location a, Location b) {
+		return a.getPosition().getClass().equals(b.getPosition().getClass());
 	}
 }
