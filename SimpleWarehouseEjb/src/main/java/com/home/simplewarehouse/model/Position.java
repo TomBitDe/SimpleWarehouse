@@ -58,7 +58,7 @@ public abstract class Position implements Serializable {
 	/**
 	 * Default constructor
 	 */
-	public Position() {
+	protected Position() {
 		super();
 		LOG.trace("--> Position()");
 		LOG.trace("<-- Position()");

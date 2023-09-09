@@ -79,7 +79,6 @@ public class LocationBean implements LocationService {
 				em.merge(location);
 			}
 			else {
-				// TODO: Class of Position changed
 				delete(saved);
 				em.persist(location);
 			}
