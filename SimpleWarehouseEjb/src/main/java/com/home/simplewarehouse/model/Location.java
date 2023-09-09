@@ -87,18 +87,6 @@ public class Location extends EntityBase implements Serializable {
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
 	private void initAssociated() {
-		Dimension dim = new Dimension();
-		dim.setLocation(this);
-		this.setDimension(dim);
-		LocationStatus ls = new LocationStatus();
-		ls.setLocation(this);
-		this.setLocationStatus(ls);
-		Position pos = new LogicalPosition();
-		pos.setLocation(this);
-		this.setPosition(pos);
-	}
-
-	private void initAssociated(String id) {
 		Dimension dim = new Dimension(this);
 		this.setDimension(dim);
 		LocationStatus ls = new LocationStatus(this);
@@ -123,7 +111,7 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id) {
 		super();
 		this.locationId = id;
-		initAssociated(id);
+		initAssociated();
 	}
 
 	/**
@@ -135,7 +123,7 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id, String user) {
 		super(user);
 		this.locationId = id;
-		initAssociated(id);
+		initAssociated();
 	}
 
 	/**
@@ -148,7 +136,7 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
-		initAssociated(id);
+		initAssociated();
 	}
 
 	/**
@@ -256,7 +244,7 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param position the Position to assign
 	 */
-	public void setPosition(Position position) {
+	protected void setPosition(Position position) {
 		this.position = position;
 	}
 	
