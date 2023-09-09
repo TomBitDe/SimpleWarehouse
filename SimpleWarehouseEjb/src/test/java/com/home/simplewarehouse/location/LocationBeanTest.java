@@ -409,7 +409,6 @@ public class LocationBeanTest {
 		assertEquals(LengthCategory.NOT_RELEVANT, locA.getDimension().getMaxLength());
 		assertEquals(WidthCategory.WIDE, locA.getDimension().getMaxWidth());
 		
-		// TODO: Positions
 		// LogicalPosition
 		assertTrue(locA.getPosition() instanceof LogicalPosition);
 		
