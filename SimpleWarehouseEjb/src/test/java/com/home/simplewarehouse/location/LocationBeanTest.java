@@ -511,7 +511,6 @@ public class LocationBeanTest {
 		assertTrue(locA.getPosition() instanceof LogicalPosition);
 
 		// TODO: setPosition
-/*
 		// Change to RelativPosition with DEFAULT values
 		locA.setPosition(new RelativPosition());
 		
@@ -557,7 +556,6 @@ public class LocationBeanTest {
 		assertEquals(3.1f, ((AbsolutPosition) locA.getPosition()).getxCoord(), 0.0f);
 		assertEquals(0.5f, ((AbsolutPosition) locA.getPosition()).getyCoord(), 0.0f);
 		assertEquals(2.9f, ((AbsolutPosition) locA.getPosition()).getzCoord(), 0.0f);
-*/
 	}
 	
 	/**

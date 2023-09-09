@@ -21,7 +21,7 @@ public interface LocationService {
 	 * 
 	 * @return the Location created
 	 */
-	public Location createOrUpdate(final Location location);
+	public Location createOrUpdate(Location location);
 	/**
 	 * Delete a Location and remove
 	 * 

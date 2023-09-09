@@ -52,7 +52,7 @@ public class LocationBean implements LocationService {
 	}
 	
 	@Override
-	public Location createOrUpdate(final Location location) {
+	public Location createOrUpdate(Location location) {
 		LOG.trace("--> createOrUpdate");
 		
 		Location saved = getById(location.getLocationId());
