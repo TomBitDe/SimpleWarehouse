@@ -68,9 +68,8 @@ public class LocationBean implements LocationService {
 				throw new IllegalArgumentException();
 			}
 
-			// No need to em.persist(locationStatusService) because it is done by cascade =
-			// CascadeType.ALL
-			// Same for dimensionService
+			// No need to em.persist(locationStatus) because it is done by cascade = CascadeType.ALL
+			// Same for dimension
 			em.persist(location);
 		}
 		else {
