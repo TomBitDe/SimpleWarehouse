@@ -224,8 +224,7 @@ public class LocationBeanTest {
 		
 		LOG.info(location);
 
-		expLocation = new Location("F");
-		new AbsolutPosition(expLocation, 1.25f, 3.12f, 1.01f);
+		expLocation = new Location(new AbsolutPosition(1.25f, 3.12f, 1.01f), "F");
 
 		location = locationService.createOrUpdate(expLocation);
 		

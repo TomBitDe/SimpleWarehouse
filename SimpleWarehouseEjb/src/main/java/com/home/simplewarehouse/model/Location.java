@@ -86,21 +86,27 @@ public class Location extends EntityBase implements Serializable {
 			CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
-	private void initAssociated() {
+	private void initAssociated(Position pos) {
 		Dimension dim = new Dimension(this);
 		this.setDimension(dim);
 		LocationStatus ls = new LocationStatus(this);
 		this.setLocationStatus(ls);
-		Position pos = new LogicalPosition(this);
+		
+		if (pos == null) {
+			pos = new LogicalPosition(this.getLocationId());
+		}
+
 		this.setPosition(pos);
+		pos.setLocation(this);
+		pos.setLocationId(this.getLocationId());
 	}
 
 	/**
-	 * Default Random Location
+	 * Default Random Location with default LogicalPosition
 	 */
 	public Location() {
 		super();
-		initAssociated();
+		initAssociated(null);
 	}
 
 	/**
@@ -111,7 +117,7 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id) {
 		super();
 		this.locationId = id;
-		initAssociated();
+		initAssociated(null);
 	}
 
 	/**
@@ -123,7 +129,7 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id, String user) {
 		super(user);
 		this.locationId = id;
-		initAssociated();
+		initAssociated(null);
 	}
 
 	/**
@@ -136,7 +142,56 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
-		initAssociated();
+		initAssociated(null);
+	}
+
+	/**
+	 * Default Random Location with specific Position
+	 * 
+	 * @param pos the given Position
+	 */
+	public Location(Position pos) {
+		super();
+		initAssociated(pos);
+	}
+
+	/**
+	 * Random Location with id
+	 * 
+	 * @param pos the given Position
+	 * @param id  the given id
+	 */
+	public Location(Position pos, String id) {
+		super();
+		this.locationId = id;
+		initAssociated(pos);
+	}
+
+	/**
+	 * Random Location with id and user
+	 * 
+	 * @param pos  the given Position
+	 * @param id   the given id
+	 * @param user the given user
+	 */
+	public Location(Position pos, String id, String user) {
+		super(user);
+		this.locationId = id;
+		initAssociated(pos);
+	}
+
+	/**
+	 * Random Location with id, user and timestamp
+	 * 
+	 * @param pos       the given Position
+	 * @param id        the given id
+	 * @param user      the given user
+	 * @param timestamp the given timestamp
+	 */
+	public Location(Position pos, String id, String user, Timestamp timestamp) {
+		super(user, timestamp);
+		this.locationId = id;
+		initAssociated(pos);
 	}
 
 	/**

@@ -52,8 +52,17 @@ public class Dimension implements Serializable {
      */
     public static final int WEIGHT_DEFAULT = 0;
     
+    /**
+     * Default height category
+     */
     public static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
+    /**
+     * Default length category
+     */
     public static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
+    /**
+     * Default width category
+     */
     public static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
     
     /**

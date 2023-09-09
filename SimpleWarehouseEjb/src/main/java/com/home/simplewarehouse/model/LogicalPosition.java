@@ -44,32 +44,14 @@ public class LogicalPosition extends Position {
 	}
 
 	/**
-	 * Constructor with location
+	 * Constructor with position id
 	 * 
-	 * @param location the given location
-	 */
-	public LogicalPosition(Location location) {
-		super(location);
-		LOG.trace("--> LogicalPosition({})", location);
-		
-		setPositionId(location.getLocationId());
-		
-		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
-	}
-
-	/**
-	 * Constructor with location and position id
-	 * 
-	 * @param location the location
 	 * @param positionId the position id
 	 */
-	public LogicalPosition(Location location, String positionId) {
-		super(location);
-		LOG.trace("--> LogicalPosition({}, {})", location, positionId);
+	public LogicalPosition(String positionId) {
+		LOG.trace("--> LogicalPosition({})", positionId);
 		
 		setPositionId(positionId);
-		
-		location.setPosition(this);
 		
 		LOG.trace(DEFAULT_LOG_TRACE_EXIT);
 	}
@@ -89,6 +71,23 @@ public class LogicalPosition extends Position {
      */
     public void setPositionId(String id) {
     	this.positionId = id;
+    }
+    
+    /**
+     * Get the coordinate value
+     * 
+     * @return the coordinate
+     */
+    public String getCoord() {
+    	return getPositionId();
+    }
+    
+    /**
+     * Sets the coordinate 
+     * @param positionId the position id
+     */
+    public void setCoord(String positionId) {
+    	setPositionId(positionId);
     }
     
 	@Override

@@ -5,7 +5,6 @@ import java.util.Objects;
 
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -32,8 +31,7 @@ import org.apache.logging.log4j.Logger;
 @Table(name="POSITION")
 @Inheritance(strategy=InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name="TYPE", discriminatorType=DiscriminatorType.STRING, length=20)
-@DiscriminatorValue("NONE")
-public class Position implements Serializable {
+public abstract class Position implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Position.class);
     
@@ -65,21 +63,6 @@ public class Position implements Serializable {
 		LOG.trace("--> Position()");
 		LOG.trace("<-- Position()");
 	}
-
-	/**
-	 * Default with location
-	 * 
-	 * @param location the location
-	 */
-	public Position(Location location) {
-		super();
-		LOG.trace("--> Position({})", location);
-
-		setLocationId(location.getLocationId());
-		setLocation(location);
-
-		LOG.trace("<-- Position()");
-	}
 	
 	/**
 	 * Gets the location id
@@ -95,7 +78,7 @@ public class Position implements Serializable {
 	 * 
 	 * @param locationId the location id
 	 */
-	private void setLocationId(String locationId) {
+	protected void setLocationId(String locationId) {
 		this.locationId = locationId;
 	}
 	
@@ -122,7 +105,7 @@ public class Position implements Serializable {
 	 * 
 	 * @param location the given Location
 	 */
-	public void setLocation(Location location) {
+	protected void setLocation(Location location) {
 		this.location = location;
 	}
 	
