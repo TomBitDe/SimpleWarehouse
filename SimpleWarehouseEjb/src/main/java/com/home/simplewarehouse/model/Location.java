@@ -301,6 +301,8 @@ public class Location extends EntityBase implements Serializable {
 	 */
 	protected void setPosition(Position position) {
 		this.position = position;
+		position.setLocation(this);
+		position.setLocationId(getLocationId());
 	}
 	
 	/**
