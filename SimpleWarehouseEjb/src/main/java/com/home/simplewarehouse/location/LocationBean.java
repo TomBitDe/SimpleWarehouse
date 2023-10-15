@@ -79,6 +79,7 @@ public class LocationBean implements LocationService {
 				em.merge(location);
 			}
 			else {
+				// This is experimental code
 				em.remove(saved); // Do not use delete because HandlingUnit link is needed
 				em.flush();
 				em.persist(location);
