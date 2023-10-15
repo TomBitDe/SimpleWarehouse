@@ -14,14 +14,4 @@ public class HandlingUnitNotOnLocationException extends Exception {
 	public HandlingUnitNotOnLocationException(String errorMessage) {
 		super(errorMessage);
 	}
-	
-	/**
-	 * Constructor with error message and error to use
-	 * 
-	 * @param errorMessage the error message content
-	 * @param err the error
-	 */
-	public HandlingUnitNotOnLocationException(String errorMessage, Throwable err) {
-	    super(errorMessage, err);
-	}
 }

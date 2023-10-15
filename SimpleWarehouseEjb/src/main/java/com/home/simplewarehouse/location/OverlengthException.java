@@ -14,14 +14,4 @@ public class OverlengthException extends DimensionException {
 	public OverlengthException(String errorMessage) {
 		super(errorMessage);
 	}
-	
-	/**
-	 * Constructor with error message and error to use
-	 * 
-	 * @param errorMessage the error message content
-	 * @param err the error
-	 */
-	public OverlengthException(String errorMessage, Throwable err) {
-	    super(errorMessage, err);
-	}
 }

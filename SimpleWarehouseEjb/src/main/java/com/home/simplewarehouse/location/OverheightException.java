@@ -14,14 +14,4 @@ public class OverheightException extends DimensionException {
 	public OverheightException(String errorMessage) {
 		super(errorMessage);
 	}
-	
-	/**
-	 * Constructor with error message and error to use
-	 * 
-	 * @param errorMessage the error message content
-	 * @param err the error
-	 */
-	public OverheightException(String errorMessage, Throwable err) {
-	    super(errorMessage, err);
-	}
 }

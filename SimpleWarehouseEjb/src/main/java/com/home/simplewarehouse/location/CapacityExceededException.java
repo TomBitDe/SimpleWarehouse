@@ -14,14 +14,4 @@ public class CapacityExceededException extends DimensionException {
 	public CapacityExceededException(String errorMessage) {
 		super(errorMessage);
 	}
-	
-	/**
-	 * Constructor with error message and error to use
-	 * 
-	 * @param errorMessage the error message content
-	 * @param err the error
-	 */
-	public CapacityExceededException(String errorMessage, Throwable err) {
-	    super(errorMessage, err);
-	}
 }
