@@ -64,55 +64,49 @@ public class Location extends EntityBase implements Serializable {
 	/**
 	 * The associated LocationStatus
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	private LocationStatus locationStatus;
 	/**
 	 * The associated Dimension
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	private Dimension dimension;
 	/**
 	 * The associated Position
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	private Position position;
 	/**
 	 * The associated HandlingUnits
 	 */
 	@OneToMany(mappedBy = "location", cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.REFRESH }, fetch = FetchType.EAGER)
+			CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 
-	private void initAssociated() {
-		Dimension dim = new Dimension();
-		dim.setLocation(this);
-		this.setDimension(dim);
-		LocationStatus ls = new LocationStatus();
-		ls.setLocation(this);
-		this.setLocationStatus(ls);
-		Position pos = new LogicalPosition();
-		pos.setLocation(this);
-		this.setPosition(pos);
-	}
-
-	private void initAssociated(String id) {
+	private void initAssociated(Position pos) {
 		Dimension dim = new Dimension(this);
 		this.setDimension(dim);
 		LocationStatus ls = new LocationStatus(this);
 		this.setLocationStatus(ls);
-		Position pos = new LogicalPosition(this);
+		
+		if (pos == null) {
+			pos = new LogicalPosition(this.getLocationId());
+		}
+
 		this.setPosition(pos);
+		pos.setLocation(this);
+		pos.setLocationId(this.getLocationId());
 	}
 
 	/**
-	 * Default Random Location
+	 * Default Random Location with default LogicalPosition
 	 */
 	public Location() {
 		super();
-		initAssociated();
+		initAssociated(null);
 	}
 
 	/**
@@ -123,7 +117,7 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id) {
 		super();
 		this.locationId = id;
-		initAssociated(id);
+		initAssociated(null);
 	}
 
 	/**
@@ -135,7 +129,7 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id, String user) {
 		super(user);
 		this.locationId = id;
-		initAssociated(id);
+		initAssociated(null);
 	}
 
 	/**
@@ -148,7 +142,56 @@ public class Location extends EntityBase implements Serializable {
 	public Location(String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
-		initAssociated(id);
+		initAssociated(null);
+	}
+
+	/**
+	 * Default Random Location with specific Position
+	 * 
+	 * @param pos the given Position
+	 */
+	public Location(Position pos) {
+		super();
+		initAssociated(pos);
+	}
+
+	/**
+	 * Random Location with id
+	 * 
+	 * @param pos the given Position
+	 * @param id  the given id
+	 */
+	public Location(Position pos, String id) {
+		super();
+		this.locationId = id;
+		initAssociated(pos);
+	}
+
+	/**
+	 * Random Location with id and user
+	 * 
+	 * @param pos  the given Position
+	 * @param id   the given id
+	 * @param user the given user
+	 */
+	public Location(Position pos, String id, String user) {
+		super(user);
+		this.locationId = id;
+		initAssociated(pos);
+	}
+
+	/**
+	 * Random Location with id, user and timestamp
+	 * 
+	 * @param pos       the given Position
+	 * @param id        the given id
+	 * @param user      the given user
+	 * @param timestamp the given timestamp
+	 */
+	public Location(Position pos, String id, String user, Timestamp timestamp) {
+		super(user, timestamp);
+		this.locationId = id;
+		initAssociated(pos);
 	}
 
 	/**
@@ -189,13 +232,21 @@ public class Location extends EntityBase implements Serializable {
 		return locationStatus;
 	}
 
+	private void setLocationStatus(LocationStatus ls) {
+		this.locationStatus = ls;
+	}
+	
 	/**
-	 * Sets the Location status for this locationService
+	 * Sets the Location status values for this Location
 	 * 
-	 * @param locationStatus the Location status
+	 * @param e the ErrorStatus
+	 * @param lt the LtosStatus
+	 * @param lo the LockStatus
 	 */
-	public void setLocationStatus(LocationStatus locationStatus) {
-		this.locationStatus = locationStatus;
+	public void setLocationStatus(ErrorStatus e, LtosStatus lt, LockStatus lo) {
+		this.getLocationStatus().setErrorStatus(e);
+		this.getLocationStatus().setLtosStatus(lt);
+		this.getLocationStatus().setLockStatus(lo);
 	}
 
 	/**
@@ -212,8 +263,26 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param dimension the Dimension to assign
 	 */
-	public void setDimension(Dimension dimension) {
+	private void setDimension(Dimension dimension) {
 		this.dimension = dimension;
+	}
+	
+	/**
+	 * Assigns the Dimension to this Location
+	 * 
+	 * @param maxCapacity the maximum capacity of the Location
+	 * @param maxWeight the maximum weight allowed for the Location
+	 * @param maxHeight the maximum height allowed for the Location
+	 * @param maxLength the maximum length allowed for the Location
+	 * @param maxWidth the maximum width allowed for the Location
+	 */
+	public void setDimension(int maxCapacity, int maxWeight, HeightCategory maxHeight
+			, LengthCategory maxLength, WidthCategory maxWidth) {
+		this.getDimension().setMaxCapacity(maxCapacity);
+		this.getDimension().setMaxWeight(maxWeight);
+		this.getDimension().setMaxHeight(maxHeight);
+		this.getDimension().setMaxLength(maxLength);
+		this.getDimension().setMaxWidth(maxWidth);
 	}
 
 	/**
@@ -230,14 +299,12 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param position the Position to assign
 	 */
-	public void setPosition(Position position) {
+	protected void setPosition(Position position) {
 		this.position = position;
-
-		if (position != null) {
-			position.setLocation(this);
-		}
+		position.setLocation(this);
+		position.setLocationId(getLocationId());
 	}
-
+	
 	/**
 	 * Gets all HandlingUnits located on this Location
 	 * 

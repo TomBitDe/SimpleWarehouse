@@ -2,7 +2,6 @@ package com.home.simplewarehouse.location;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -26,7 +25,6 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
-import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
@@ -136,8 +134,6 @@ public class LocationStatusBeanTest {
 		assertEquals(LocationStatus.ERROR_STATUS_DEFAULT, locationStatus.getErrorStatus());
 		assertEquals(LocationStatus.LTOS_STATUS_DEFAULT, locationStatus.getLtosStatus());
 		assertEquals(LocationStatus.LOCK_STATUS_DEFAULT, locationStatus.getLockStatus());
-		assertEquals(EntityBase.USER_DEFAULT, locationStatus.getUpdateUserId());
-		assertNotNull(locationStatus.getUpdateTimestamp());
 		
 		// This one has not been created
 	    // MANDATORY reread
@@ -187,8 +183,7 @@ public class LocationStatusBeanTest {
 		// With Dimension DEFAULTS
 		Location location = new Location("A");
 		// Now change
-		LocationStatus changed = new LocationStatus(location, ErrorStatus.NONE, LtosStatus.YES, LockStatus.DROP_LOCKED, "Test");
-		location.setLocationStatus(changed);
+		location.setLocationStatus(ErrorStatus.NONE, LtosStatus.YES, LockStatus.DROP_LOCKED);
 		
 		Location expLocation = locationService.createOrUpdate(location);
 
@@ -196,14 +191,12 @@ public class LocationStatusBeanTest {
 		assertEquals(ErrorStatus.NONE, expLocation.getLocationStatus().getErrorStatus());
 		assertEquals(LtosStatus.YES, expLocation.getLocationStatus().getLtosStatus());
 		assertEquals(LockStatus.DROP_LOCKED, expLocation.getLocationStatus().getLockStatus());
-		assertEquals("Test", expLocation.getLocationStatus().getUpdateUserId());
 		
 		// Change again
 		location = expLocation;
 		location.getLocationStatus().setErrorStatus(null);;
 		location.getLocationStatus().setLtosStatus(null);
 		location.getLocationStatus().setLockStatus(null);
-		location.getLocationStatus().setUpdateUserId(null);
 		
 		expLocation = locationService.createOrUpdate(location);
 
@@ -211,14 +204,12 @@ public class LocationStatusBeanTest {
 		assertEquals(ErrorStatus.ERROR, expLocation.getLocationStatus().getErrorStatus());
 		assertEquals(LtosStatus.YES, expLocation.getLocationStatus().getLtosStatus());
 		assertEquals(LockStatus.LOCKED, expLocation.getLocationStatus().getLockStatus());
-		assertEquals("System", expLocation.getDimension().getUpdateUserId());
 
 		// Change again
 		location = expLocation;
 		location.getLocationStatus().setErrorStatus(ErrorStatus.NONE);;
 		location.getLocationStatus().setLtosStatus(LtosStatus.NO);
 		location.getLocationStatus().setLockStatus(LockStatus.PICK_LOCKED);
-		location.getLocationStatus().setUpdateUserId("Changer");
 		
 		expLocation = locationService.createOrUpdate(location);
 
@@ -226,11 +217,10 @@ public class LocationStatusBeanTest {
 		assertEquals(ErrorStatus.NONE, expLocation.getLocationStatus().getErrorStatus());
 		assertEquals(LtosStatus.NO, expLocation.getLocationStatus().getLtosStatus());
 		assertEquals(LockStatus.PICK_LOCKED, expLocation.getLocationStatus().getLockStatus());
-		assertEquals("Changer", expLocation.getLocationStatus().getUpdateUserId());
 
 		location = new Location("B");
 		// Change again
-		location.setLocationStatus(new LocationStatus(location, null, null, null, null));
+		location.setLocationStatus(ErrorStatus.NONE, LtosStatus.NO, LockStatus.UNLOCKED);
 		
 		expLocation = locationService.createOrUpdate(location);
 
@@ -238,7 +228,6 @@ public class LocationStatusBeanTest {
 		assertEquals(ErrorStatus.NONE, expLocation.getLocationStatus().getErrorStatus());
 		assertEquals(LtosStatus.NO, expLocation.getLocationStatus().getLtosStatus());
 		assertEquals(LockStatus.UNLOCKED, expLocation.getLocationStatus().getLockStatus());
-		assertEquals("System", expLocation.getDimension().getUpdateUserId());
 	}
 	
 	/**

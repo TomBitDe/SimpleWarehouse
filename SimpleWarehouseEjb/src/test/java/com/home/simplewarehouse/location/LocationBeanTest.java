@@ -33,10 +33,17 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.AbsolutPosition;
 import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
+import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.model.HeightCategory;
+import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LocationStatus;
+import com.home.simplewarehouse.model.LockStatus;
 import com.home.simplewarehouse.model.LogicalPosition;
+import com.home.simplewarehouse.model.LtosStatus;
 import com.home.simplewarehouse.model.RelativPosition;
+import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -141,7 +148,18 @@ public class LocationBeanTest {
 		}
 
 		try {
-			location = locationService.createOrUpdate(new Location(null));
+			location = locationService.createOrUpdate(new Location((String) null));
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info(ejbex.getMessage());
+		}
+
+		assertNull(location);
+		
+		try {
+			location = locationService.createOrUpdate(new Location(new LogicalPosition()));
 
 			Assert.fail("Exception expected");
 		}
@@ -173,9 +191,6 @@ public class LocationBeanTest {
 		assertNull(locationService.getById("B"));
 		
 		expLocation = new Location("C");
-		expLocation.setDimension(null);
-		expLocation.setLocationStatus(null);
-		expLocation.setPosition(null);
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -188,8 +203,7 @@ public class LocationBeanTest {
 				
 		LOG.info(location);
 
-		expLocation = new Location("D");
-		new LogicalPosition(expLocation, "X");
+		expLocation = new Location(new LogicalPosition("X"), "D");
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -200,8 +214,7 @@ public class LocationBeanTest {
 		
 		LOG.info(location);
 
-		expLocation = new Location("E");
-		new RelativPosition(expLocation, 1, 1, 1);
+		expLocation = new Location(new RelativPosition(1, 1, 1), "E");
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -211,8 +224,7 @@ public class LocationBeanTest {
 		
 		LOG.info(location);
 
-		expLocation = new Location("F");
-		new AbsolutPosition(expLocation, 1.25f, 3.12f, 1.01f);
+		expLocation = new Location(new AbsolutPosition(1.25f, 3.12f, 1.01f), "F");
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -239,7 +251,7 @@ public class LocationBeanTest {
 		
 		assertEquals("A", location.getLocationId());
 		
-		// Delete the locationService
+		// Delete the location
 		locationService.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
@@ -252,7 +264,7 @@ public class LocationBeanTest {
 		assertNotNull(location.getUpdateTimestamp());
 		LOG.info("Location created: " + location);
 
-		// Delete the locationService
+		// Delete the location
 		locationService.delete(location);
 		LOG.info("Location deleted: " + location.getLocationId());
 		
@@ -328,10 +340,271 @@ public class LocationBeanTest {
 	}
 	
 	/**
+	 * Test modify location
+	 */
+	@Test
+	@InSequence(5)
+	public void modifyLocation() {
+		LOG.info("--- Test modifyLocation");
+		
+		assumeTrue(locationService.getAll().isEmpty());
+		
+		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		
+		assertNotNull(locA);
+		assertEquals(LocationStatus.ERROR_STATUS_DEFAULT, locA.getLocationStatus().getErrorStatus());
+		assertEquals(LocationStatus.LTOS_STATUS_DEFAULT,  locA.getLocationStatus().getLtosStatus());
+		assertEquals(LocationStatus.LOCK_STATUS_DEFAULT,  locA.getLocationStatus().getLockStatus());
+		assertEquals(Dimension.CAPACITY_DEFAULT, locA.getDimension().getMaxCapacity());
+		assertEquals(Dimension.WEIGHT_DEFAULT, locA.getDimension().getMaxWeight());
+		assertEquals(Dimension.HEIGHT_DEFAULT, locA.getDimension().getMaxHeight());
+		assertEquals(Dimension.LENGTH_DEFAULT, locA.getDimension().getMaxLength());
+		assertEquals(Dimension.WIDTH_DEFAULT, locA.getDimension().getMaxWidth());
+
+		// LocationStatus modification
+		locA.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+		locA.getLocationStatus().setLtosStatus(LtosStatus.YES);
+		locA.getLocationStatus().setLockStatus(LockStatus.LOCKED);
+		
+		locA = locationService.createOrUpdate(locA);
+		
+		assertNotNull(locA);
+		assertEquals(ErrorStatus.ERROR, locA.getLocationStatus().getErrorStatus());
+		assertEquals(LtosStatus.YES,  locA.getLocationStatus().getLtosStatus());
+		assertEquals(LockStatus.LOCKED,  locA.getLocationStatus().getLockStatus());
+		
+		// Easy way
+		locA.setLocationStatus(ErrorStatus.NONE, LtosStatus.NO, LockStatus.PICK_LOCKED);
+		
+		locA = locationService.createOrUpdate(locA);
+		
+		assertNotNull(locA);
+		assertEquals(ErrorStatus.NONE, locA.getLocationStatus().getErrorStatus());
+		assertEquals(LtosStatus.NO,  locA.getLocationStatus().getLtosStatus());
+		assertEquals(LockStatus.PICK_LOCKED,  locA.getLocationStatus().getLockStatus());
+
+		// Dimension modification
+		locA.getDimension().setMaxCapacity(4);
+		locA.getDimension().setMaxWeight(555);
+		locA.getDimension().setMaxHeight(HeightCategory.MIDDLE);
+		locA.getDimension().setMaxLength(LengthCategory.SHORT);
+		locA.getDimension().setMaxWidth(WidthCategory.NARROW);
+		
+		locA = locationService.createOrUpdate(locA);
+		
+		assertNotNull(locA);
+		assertEquals(4, locA.getDimension().getMaxCapacity());
+		assertEquals(555, locA.getDimension().getMaxWeight());
+		assertEquals(HeightCategory.MIDDLE, locA.getDimension().getMaxHeight());
+		assertEquals(LengthCategory.SHORT, locA.getDimension().getMaxLength());
+		assertEquals(WidthCategory.NARROW, locA.getDimension().getMaxWidth());
+		
+		// Easy way
+		locA.setDimension(0, 0, HeightCategory.LOW, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE);
+		
+		assertNotNull(locA);
+		assertEquals(0, locA.getDimension().getMaxCapacity());
+		assertEquals(0, locA.getDimension().getMaxWeight());
+		assertEquals(HeightCategory.LOW, locA.getDimension().getMaxHeight());
+		assertEquals(LengthCategory.NOT_RELEVANT, locA.getDimension().getMaxLength());
+		assertEquals(WidthCategory.WIDE, locA.getDimension().getMaxWidth());		
+	}
+	
+	/**
+	 * Test modify location position values
+	 */
+	@Test
+	@InSequence(6)
+	public void modifyLocationPositionValues() {
+		LOG.info("--- Test modifyLocationPositionValues");
+		
+		assumeTrue(locationService.getAll().isEmpty());
+		
+		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		
+		// LogicalPosition
+		assertTrue(locA.getPosition() instanceof LogicalPosition);
+		
+		((LogicalPosition) locA.getPosition()).setCoord("V");
+		
+		locA = locationService.createOrUpdate(locA);
+		
+		assertNotNull(locA);
+		assertEquals("V", ((LogicalPosition) locA.getPosition()).getCoord());
+		
+		// RelativePosition
+		Location locB = locationService.createOrUpdate(new Location(new RelativPosition(), "B"));
+		
+		assertNotNull(locB);
+		// Check the DEFAULT values
+		assertEquals(0, ((RelativPosition) locB.getPosition()).getxCoord());
+		assertEquals(0, ((RelativPosition) locB.getPosition()).getyCoord());
+		assertEquals(0, ((RelativPosition) locB.getPosition()).getzCoord());
+		
+		// Modify
+		((RelativPosition) locB.getPosition()).setxCoord(4);
+		((RelativPosition) locB.getPosition()).setyCoord(5);
+		((RelativPosition) locB.getPosition()).setzCoord(6);
+		
+		locB = locationService.createOrUpdate(locB);
+		
+		assertNotNull(locB);
+		assertEquals(4, ((RelativPosition) locB.getPosition()).getxCoord());
+		assertEquals(5, ((RelativPosition) locB.getPosition()).getyCoord());
+		assertEquals(6, ((RelativPosition) locB.getPosition()).getzCoord());
+		
+		// Easy way
+		((RelativPosition) locB.getPosition()).setCoord(9, 9, 9);
+		
+		locB = locationService.createOrUpdate(locB);
+
+		assertNotNull(locB);
+		assertEquals(9, ((RelativPosition) locB.getPosition()).getxCoord());
+		assertEquals(9, ((RelativPosition) locB.getPosition()).getyCoord());
+		assertEquals(9, ((RelativPosition) locB.getPosition()).getzCoord());
+
+		// AbsolutePosition
+		Location locD = locationService.createOrUpdate(new Location(new AbsolutPosition(), "D"));
+		
+		assertNotNull(locD);
+		// Check the DEFAULT values
+		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getxCoord(), 0.0f);
+		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
+		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
+		
+		// Modify
+		((AbsolutPosition) locD.getPosition()).setxCoord(8.0f);
+		((AbsolutPosition) locD.getPosition()).setyCoord(9.0f);
+		((AbsolutPosition) locD.getPosition()).setzCoord(10.0f);
+		
+		locD = locationService.createOrUpdate(locD);
+		
+		assertNotNull(locD);
+		assertEquals(8.0f, ((AbsolutPosition) locD.getPosition()).getxCoord(), 0.0f);
+		assertEquals(9.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
+		assertEquals(10.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
+		
+		// Easy way
+		((AbsolutPosition) locD.getPosition()).setCoord(2.0f, 2.0f, 1.0f);
+		
+		locD = locationService.createOrUpdate(locD);
+
+		assertNotNull(locD);
+		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getxCoord(), 0.0f);
+		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
+		assertEquals(1.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
+	}
+	
+	/**
+	 * Test modify location position class
+	 */
+	@org.junit.Ignore // modifying the class is currently not possible !!!
+	@Test
+	@InSequence(7)
+	public void modifyLocationPosition() {
+		LOG.info("--- Test modifyLocationPosition");
+		
+		assumeTrue(locationService.getAll().isEmpty());
+		
+		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		
+		// LogicalPosition
+		assertTrue(locA.getPosition() instanceof LogicalPosition);
+
+		// Change to RelativPosition with DEFAULT values
+		//locA.setPosition(new RelativPosition());
+		
+		locA = locationService.createOrUpdate(locA);
+
+		assertNotNull(locA);		
+		assertTrue(locA.getPosition() instanceof RelativPosition);
+		// Check the DEFAULT values for changed Position class
+		assertEquals(0, ((RelativPosition) locA.getPosition()).getxCoord());
+		assertEquals(0, ((RelativPosition) locA.getPosition()).getyCoord());
+		assertEquals(0, ((RelativPosition) locA.getPosition()).getzCoord());
+
+		// Change to RelativPosition with given values
+		//locA.setPosition(new RelativPosition(3, 3, 3));
+		
+		locA = locationService.createOrUpdate(locA);
+
+		assertNotNull(locA);		
+		assertTrue(locA.getPosition() instanceof RelativPosition);
+		assertEquals(3, ((RelativPosition) locA.getPosition()).getxCoord());
+		assertEquals(3, ((RelativPosition) locA.getPosition()).getyCoord());
+		assertEquals(3, ((RelativPosition) locA.getPosition()).getzCoord());
+
+		// Change to AbsolutPosition with DEFAULT values
+		//locA.setPosition(new AbsolutPosition());
+		
+		locA = locationService.createOrUpdate(locA);
+
+		assertNotNull(locA);		
+		assertTrue(locA.getPosition() instanceof AbsolutPosition);
+		// Check the DEFAULT values
+		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getxCoord(), 0.0f);
+		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getyCoord(), 0.0f);
+		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getzCoord(), 0.0f);
+		
+		// Change to AbsolutPosition with given values
+		//locA.setPosition(new AbsolutPosition(3.1f, 0.5f, 2.9f));
+		
+		locA = locationService.createOrUpdate(locA);
+
+		assertNotNull(locA);		
+		assertTrue(locA.getPosition() instanceof AbsolutPosition);
+		assertEquals(3.1f, ((AbsolutPosition) locA.getPosition()).getxCoord(), 0.0f);
+		assertEquals(0.5f, ((AbsolutPosition) locA.getPosition()).getyCoord(), 0.0f);
+		assertEquals(2.9f, ((AbsolutPosition) locA.getPosition()).getzCoord(), 0.0f);
+		
+		// Now a Location with HandlingUnits
+		// Drop to make a relation
+		try {
+			handlingUnitService.dropTo(locA, new HandlingUnit("8", "Test"));
+		
+			// MANDATORY reread
+			locA = locationService.getById("A");
+			assertNotNull(locA);	
+			assertFalse(locA.getHandlingUnits().isEmpty());
+			assertEquals(1, locA.getHandlingUnits().size());
+
+			LOG.info("1 HandlingUnit dropped to " + locA.getLocationId() + "   " + locA);
+
+			LOG.info("Sample hU8");
+			// MANDATORY reread
+			HandlingUnit hU8 = handlingUnitService.getById("8");
+			LOG.info(hU8);
+		
+			// MANDATORY reread
+			locA = locationService.getById("A");
+			
+			// Change to RelativPosition with given values
+			//locA.setPosition(new RelativPosition(3, 3, 3));	
+			
+			locA = locationService.createOrUpdate(locA);
+			
+			// MANDATORY reread
+			hU8 = handlingUnitService.getById("8");
+		
+			assertNotNull(hU8);
+		    assertEquals(locA, hU8.getLocation());
+		    assertTrue(locA.getHandlingUnits().contains(hU8));
+		
+			LOG.info("Sample hU8 is still on location locA");
+			LOG.info(locA);
+			LOG.info(hU8);
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);			
+		}
+		
+	}
+	
+	/**
 	 * Test getAll method
 	 */
 	@Test
-	@InSequence(3)
+	@InSequence(8)
 	public void getAll() {
 		LOG.info("--- Test getAll");
 		
@@ -379,7 +652,7 @@ public class LocationBeanTest {
 	 * Test delete a location with handling units on it
 	 */
 	@Test
-	@InSequence(4)
+	@InSequence(11)
 	public void deleteLocationWithHandlingUnits() {
 		LOG.info("--- Test deleteLocationWithHandlingUnits");
 		
@@ -454,7 +727,7 @@ public class LocationBeanTest {
 	 * Test delete a location with one single handling unit on it
 	 */
 	@Test
-	@InSequence(5)
+	@InSequence(14)
 	public void deleteLocationWithOneHandlingUnit() {
 		LOG.info("--- Test deleteLocationWithOneHandlingUnit");
 		
@@ -504,7 +777,7 @@ public class LocationBeanTest {
 		
 			assertNull(hU8.getLocation());
 		
-			LOG.info("Sample hU1 has no longer a location");
+			LOG.info("Sample hU8 has no longer a location");
 			LOG.info(hU8);
 		}
 		catch (DimensionException dimex) {
@@ -516,7 +789,7 @@ public class LocationBeanTest {
 	 * Test get all locations with free capacity
 	 */
 	@Test
-	@InSequence(8)
+	@InSequence(17)
 	public void getAllWithFreeCapacity() {
 		LOG.info("--- Test getAllWithFreeCapacity");
 		
@@ -539,9 +812,7 @@ public class LocationBeanTest {
 
 		// Now make location B full
 		Location location = locationService.getById("B");
-		Dimension dim = location.getDimension();
-		dim.setMaxCapacity(1);
-		location.setDimension(dim);
+		location.getDimension().setMaxCapacity(1);;
 		location = locationService.createOrUpdate(location);
 		
 		try {
@@ -559,7 +830,7 @@ public class LocationBeanTest {
 	 * Test get handling units on a location
 	 */
 	@Test
-	@InSequence(8)
+	@InSequence(20)
 	public void getHandlingUnits() {
 		LOG.info("--- Test getHandlingUnits");
 		
@@ -624,16 +895,15 @@ public class LocationBeanTest {
 	 * Test get available picks on a location
 	 */
 	@Test
-	@InSequence(11)
+	@InSequence(23)
 	public void getAvailablePicks() {
 		LOG.info("--- Test getAvailablePicks");
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.createOrUpdate(new Location("A"));
+		Location locA = locationService.createOrUpdate(new Location("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
-		Location locA = locationService.getById("A");
 		
 		// Drop to make a relation
 		try {
@@ -682,21 +952,21 @@ public class LocationBeanTest {
 	 * Test get all full locations
 	 */
 	@Test
-	@InSequence(14)
+	@InSequence(26)
 	public void getAllFull() {
 		LOG.info("--- Test getAllFull");
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.createOrUpdate(new Location("A"));
+		Location locA = locationService.createOrUpdate(new Location("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
-		Location locA = locationService.getById("A");
 		
 		assertTrue(locationService.getAllFull().isEmpty());
 		
 		locA.getDimension().setMaxCapacity(2);
-		locA.setDimension(locA.getDimension());
+		
+		locA = locationService.createOrUpdate(locA);
 		
 		// Drop to make a relation
 		try {

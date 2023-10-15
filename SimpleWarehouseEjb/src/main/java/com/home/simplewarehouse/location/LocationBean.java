@@ -15,15 +15,11 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.model.LocationStatus;
-import com.home.simplewarehouse.model.LogicalPosition;
-import com.home.simplewarehouse.model.Position;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -56,35 +52,38 @@ public class LocationBean implements LocationService {
 	}
 	
 	@Override
-	public Location createOrUpdate(final Location location) {
-		LOG.trace("--> create");
-
-		if (getById(location.getLocationId()) == null) {
+	public Location createOrUpdate(Location location) {
+		LOG.trace("--> createOrUpdate");
+		
+		Location saved = getById(location.getLocationId());
+		
+		if (saved == null) {
 			if (location.getLocationStatus() == null) {
-				LocationStatus locationStatus = new LocationStatus(location);
-				locationStatus.setLocation(location);
-				location.setLocationStatus(locationStatus);
+				throw new IllegalArgumentException();
 			}
 
 			if (location.getDimension() == null) {
-				Dimension dimension = new Dimension(location);
-				dimension.setLocation(location);
-				location.setDimension(dimension);
+				throw new IllegalArgumentException();
 			}
 			
 			if (location.getPosition() == null) {
-				Position position = new LogicalPosition(location);
-				position.setLocation(location);
-				location.setPosition(position);
+				throw new IllegalArgumentException();
 			}
 
-			// No need to em.persist(locationStatusService) because it is done by cascade =
-			// CascadeType.ALL
-			// Same for dimensionService
+			// No need to em.persist(locationStatus) because it is done by cascade = CascadeType.ALL
+			// Same for dimension
 			em.persist(location);
 		}
 		else {
-			em.merge(location);
+			if (positionHasSameClass(location, saved)) {
+				em.merge(location);
+			}
+			else {
+				// This is experimental code
+				em.remove(saved); // Do not use delete because HandlingUnit link is needed
+				em.flush();
+				em.persist(location);
+			}
 		}
 		em.flush();
 
@@ -519,5 +518,9 @@ public class LocationBean implements LocationService {
 		final TypedQuery<Number> query = em.createQuery("SELECT COUNT(l) FROM Location l", Number.class);
 
 		return query.getSingleResult().intValue();
+	}
+	
+	private boolean positionHasSameClass(Location a, Location b) {
+		return a.getPosition().getClass().equals(b.getPosition().getClass());
 	}
 }

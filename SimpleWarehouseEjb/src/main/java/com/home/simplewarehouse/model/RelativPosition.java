@@ -48,25 +48,13 @@ public class RelativPosition extends Position {
     }
 
     /**
-     * Relative Position with location
-     * 
-     * @param location the given location
-     */
-    public RelativPosition(Location location) {
-    	super(location);
-    }
-    
-    /**
      * Relative Position with coordinates
      * 
-     * @param location the given location
      * @param x the given x coordinate
      * @param y the given y coordinate
      * @param z the given z coordinate
      */
-    public RelativPosition(Location location, int x, int y, int z) {
-    	super(location);
-
+    public RelativPosition(int x, int y, int z) {
     	setxCoord(x);
     	setyCoord(y);
     	setzCoord(z);
@@ -124,6 +112,19 @@ public class RelativPosition extends Position {
 	 */
 	public void setzCoord(int zCoord) {
 		this.zCoord = zCoord;
+	}
+	
+	/**
+	 * Sets the coordinates of the Position
+	 * 
+	 * @param x the x coordinate 
+	 * @param y the y coordinate 
+	 * @param z the z coordinate 
+	 */
+	public void setCoord(int x, int y, int z) {
+		setxCoord(x);
+		setyCoord(y);
+		setzCoord(z);
 	}
 	
 	@Override

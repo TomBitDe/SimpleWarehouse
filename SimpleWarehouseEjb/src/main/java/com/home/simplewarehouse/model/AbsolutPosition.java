@@ -48,25 +48,13 @@ public class AbsolutPosition extends Position {
     }
 
     /**
-     * Absolute Position with location
+     * Absolute Position with coordinates
      * 
-     * @param location the given location
-     */
-    public AbsolutPosition(Location location) {
-    	super(location);
-    }
-    
-    /**
-     * Absolute Position with location and coordinates
-     * 
-     * @param location the given location
      * @param x the given x coordinate
      * @param y the given y coordinate
      * @param z the given z coordinate
      */
-    public AbsolutPosition(Location location, float x, float y, float z) {
-    	super(location);
-    	
+    public AbsolutPosition(float x, float y, float z) {
     	setxCoord(x);
     	setyCoord(y);
     	setzCoord(z);
@@ -126,6 +114,19 @@ public class AbsolutPosition extends Position {
 		this.zCoord = zCoord;
 	}
 
+	/**
+	 * Sets the coordinates of the Position
+	 * 
+	 * @param x the x coordinate 
+	 * @param y the y coordinate 
+	 * @param z the z coordinate 
+	 */
+	public void setCoord(float x, float y, float z) {
+    	setxCoord(x);
+    	setyCoord(y);
+    	setzCoord(z);
+    }
+    
 	@Override
 	public int hashCode() {
 		final int prime = 31;
