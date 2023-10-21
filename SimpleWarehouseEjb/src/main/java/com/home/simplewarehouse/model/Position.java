@@ -134,8 +134,6 @@ public abstract class Position implements Serializable {
 		    .append(getLocationId())
 		    .append(", version=")
 		    .append(getVersion())
-		    .append(", ")
-			.append(super.toString())
 			.append("]");
 		
 		return builder.toString();

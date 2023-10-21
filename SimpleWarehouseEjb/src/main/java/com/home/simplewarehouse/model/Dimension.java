@@ -464,8 +464,6 @@ public class Dimension extends EntityBase implements Serializable {
 		    .append(getMaxWidth())
 		    .append(", version=")
 		    .append(getVersion())
-		    .append(", ")
-			.append(super.toString())
 			.append("]");
 		
 		return builder.toString();
