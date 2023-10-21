@@ -37,7 +37,7 @@ import org.apache.logging.log4j.Logger;
 @Entity
 @Table(name="DIMENSION")
 @NamedQuery(name = "findAllDimensions", query = "select d from Dimension d", lockMode = NONE)
-public class Dimension extends EntityBase implements Serializable {
+public class Dimension implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Dimension.class);
     
@@ -157,24 +157,11 @@ public class Dimension extends EntityBase implements Serializable {
     /**
      * Create this Dimension
      * 
-     * @param location the given Location 
-     * @param user the given user
-     */
-    public Dimension(Location location, String user) {
-    	this(location);
-    	
-    	this.setUpdateUserId(user);
-    }
-    
-    /**
-     * Create this Dimension
-     * 
      * @param location the given Location
      * @param maxCapacity the given maximum capacity
-     * @param user the given user
      */
-	public Dimension(Location location, int maxCapacity, String user) {
-    	this(location, user);
+	public Dimension(Location location, int maxCapacity) {
+    	this(location);
 		
     	setMaxCapacity(maxCapacity);
     }
@@ -185,10 +172,9 @@ public class Dimension extends EntityBase implements Serializable {
      * @param location the given Location 
      * @param maxCapacity the given maximum capacity
      * @param maxWeight the given maximum weight
-     * @param user the given user
      */
-	public Dimension(Location location, int maxCapacity, int maxWeight, String user) {
-    	this(location, maxCapacity, user);
+	public Dimension(Location location, int maxCapacity, int maxWeight) {
+    	this(location, maxCapacity);
 		
     	setMaxWeight(maxWeight);
 	}
@@ -202,8 +188,8 @@ public class Dimension extends EntityBase implements Serializable {
      * @param maxHeight the given maximum height
      * @param user the given user
      */
-	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight, String user) {
-    	this(location, maxCapacity, maxWeight, user);
+	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight) {
+    	this(location, maxCapacity, maxWeight);
 		
     	setMaxHeight(maxHeight);
 	}
@@ -216,11 +202,10 @@ public class Dimension extends EntityBase implements Serializable {
      * @param maxWeight the given maximum weight
      * @param maxHeight the given maximum height
      * @param maxLength the given maximum length
-     * @param user the given user
      */
 	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight
-			, LengthCategory maxLength, String user) {
-    	this(location, maxCapacity, maxWeight, maxHeight, user);
+			, LengthCategory maxLength) {
+    	this(location, maxCapacity, maxWeight, maxHeight);
 		
     	setMaxLength(maxLength);
 	}
@@ -234,11 +219,10 @@ public class Dimension extends EntityBase implements Serializable {
      * @param maxHeight the given maximum height
      * @param maxLength the given maximum length
      * @param maxWidth the given maximum width
-     * @param user the given user
      */
 	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight
-			, LengthCategory maxLength, WidthCategory maxWidth, String user) {
-    	this(location, maxCapacity, maxWeight, maxHeight, maxLength, user);
+			, LengthCategory maxLength, WidthCategory maxWidth) {
+    	this(location, maxCapacity, maxWeight, maxHeight, maxLength);
 
     	setMaxWidth(maxWidth);
 	}
