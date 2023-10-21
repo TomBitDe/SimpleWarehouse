@@ -28,8 +28,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.DimensionBean;
 import com.home.simplewarehouse.location.DimensionException;
@@ -47,7 +47,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test pick use cases for a RANDOM access locationService.
+ * Test pick use cases for a RANDOM access location.
  */
 @RunWith(Arquillian.class)
 public class RandomAccessPickUseCasesTest {
@@ -230,14 +230,14 @@ public class RandomAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * All preconditions are fulfilled:<br>
-	 * - locationService is filled with related handlingUnitService<br>
-	 * - locationService is in "normal" state<br>
+	 * - location is filled with related handlingUnit<br>
+	 * - location is in "normal" state<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - no exception is raised<br>
-	 * - the handlingUnitService is not connected to the locationService<br>
-	 * - the locationService no longer contains the handlingUnitService<br> 
-	 * - the locationService is not in ERROR<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the location no longer contains the handlingUnit<br> 
+	 * - the location is not in ERROR<br>
 	 */
 	@Test
 	@InSequence(1)
@@ -271,7 +271,7 @@ public class RandomAccessPickUseCasesTest {
 		// Check hu1 is not linked to lA
 		assertNull(hu1.getLocation());
 
-		// Check if locationService is in ERROR
+		// Check if location is in ERROR
 		assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 
 		LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu1, lA);
@@ -297,13 +297,13 @@ public class RandomAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * Preconditions not fulfilled:<br>
-	 * - locationService is NOT filled with related handlingUnitService<br>
+	 * - location is NOT filled with related handlingUnit<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - a LocationIsEmptyException is raised<br>
-	 * - the handlingUnitService is not connected to the locationService<br>
-	 * - the locationService does not contain the handlingUnitService<br> 
-	 * - the locationService is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
      * <br>
 	 * TODO: what should happen with the unit?<br>
 	 */
@@ -328,7 +328,7 @@ public class RandomAccessPickUseCasesTest {
 			// Check hu1 is not linked to lA
 			assertNull(hu1.getLocation());
 
-			// Check if locationService is not in ERROR
+			// Check if location is not in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", hu1, lA);
@@ -341,7 +341,7 @@ public class RandomAccessPickUseCasesTest {
 
 	/**
 	 * Exceptional case<br>
-	 * Location is filled with other handlingUnitService but not the requested one<br>
+	 * Location is filled with other handlingUnit but not the requested one<br>
 	 * <br>
      * <pre>{@code
      * 
@@ -358,14 +358,14 @@ public class RandomAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * Preconditions not fulfilled:<br>
-	 * - locationService is NOT filled with related handlingUnitService<br>
+	 * - location is NOT filled with related handlingUnit<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - a HandlingUnitNotOnLocationException is raised<br>
-	 * - the handlingUnitService is not connected to the locationService<br>
-	 * - the locationService does not contain the handlingUnitService<br> 
-	 * - the locationService is SET in ERROR because is was NOT EMPTY before and needs check<br>
-	 * - the locationService is still filled with the other handlingUnitService<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is SET in ERROR because is was NOT EMPTY before and needs check<br>
+	 * - the location is still filled with the other handlingUnit<br>
      * <br>
 	 * TODO: what should happen with the unit?<br>
 	 */
@@ -422,7 +422,7 @@ public class RandomAccessPickUseCasesTest {
 
 	/**
 	 * Exceptional case<br>
-	 * Requested locationService is EMPTY. HandlingUnit is placed on other locationService but not the requested.<br>
+	 * Requested location is EMPTY. HandlingUnit is placed on other location but not the requested.<br>
 	 * <br>
      * <pre>{@code
      * 
@@ -445,16 +445,16 @@ public class RandomAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * Preconditions not fulfilled:<br>
-	 * - locationService is NOT filled with the handlingUnitService<br>
+	 * - location is NOT filled with the handlingUnit<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - a HandlingUnitNotOnLocationException is raised<br>
-	 * - the handlingUnitService is not connected to the locationService<br>
-	 * - the handlingUnitService is still connected to the OTHER locationService<br>
-	 * - the locationService does not contain the handlingUnitService<br> 
-	 * - the locationService is not in ERROR because is was EMPTY before and needs no check<br>
-	 * - the OTHER locationService is still filled with the handlingUnitService<br>
-	 * - the OTHER locationService is SET in ERROR because is was NOT EMPTY before and needs check<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the handlingUnit is still connected to the OTHER location<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is not in ERROR because is was EMPTY before and needs no check<br>
+	 * - the OTHER location is still filled with the handlingUnit<br>
+	 * - the OTHER location is SET in ERROR because is was NOT EMPTY before and needs check<br>
      * <br>
 	 */
 	@Test
@@ -506,8 +506,8 @@ public class RandomAccessPickUseCasesTest {
 	
 	/**
 	 * Exceptional case<br>
-	 * Requested locationService is FILLED with other HandlingUnit. Requested HandlingUnit is placed
-	 * on other locationService.<br>
+	 * Requested location is FILLED with other HandlingUnit. Requested HandlingUnit is placed
+	 * on other location.<br>
 	 * <br>
      * <pre>{@code
      * 
@@ -530,16 +530,16 @@ public class RandomAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * Preconditions not fulfilled:<br>
-	 * - locationService is NOT filled with the handlingUnitService<br>
+	 * - location is NOT filled with the handlingUnit<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - a HandlingUnitNotOnLocationException is raised<br>
-	 * - the handlingUnitService is not connected to the locationService<br>
-	 * - the handlingUnitService is still connected to the OTHER locationService<br>
-	 * - the locationService does not contain the handlingUnitService<br> 
-	 * - the locationService is SET in ERROR because is was NOT EMPTY before and needs check<br>
-	 * - the OTHER locationService is still filled with the handlingUnitService<br>
-	 * - the OTHER locationService is SET in ERROR because is was NOT EMPTY before and needs check<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the handlingUnit is still connected to the OTHER location<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is SET in ERROR because is was NOT EMPTY before and needs check<br>
+	 * - the OTHER location is still filled with the handlingUnit<br>
+	 * - the OTHER location is SET in ERROR because is was NOT EMPTY before and needs check<br>
      * <br>
 	 */
 	@Test

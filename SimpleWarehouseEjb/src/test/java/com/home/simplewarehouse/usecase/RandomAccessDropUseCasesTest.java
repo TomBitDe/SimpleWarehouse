@@ -44,7 +44,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test drop use cases for a RANDOM access locationService.
+ * Test drop use cases for a RANDOM access location.
  */
 @RunWith(Arquillian.class)
 public class RandomAccessDropUseCasesTest {
@@ -226,15 +226,15 @@ public class RandomAccessDropUseCasesTest {
      * }</pre>
 	 * <br>
 	 * All preconditions are fulfilled:<br>
-	 * - locationService is EMPTY<br>
-	 * - locationService is in "normal" status<br>
+	 * - location is EMPTY<br>
+	 * - location is in "normal" status<br>
 	 * <br>
 	 * Expected is that after dropTo:<br>
 	 * - no exception is raised<br>
-	 * - the locationService is no longer EMPTY<br> 
-	 * - the locationService contains the handlingUnitService<br>
-	 * - the locationService is still in "normal" status<br>
-	 * - the handlingUnitService is connected to the locationService<br>
+	 * - the location is no longer EMPTY<br> 
+	 * - the location contains the handlingUnit<br>
+	 * - the location is still in "normal" status<br>
+	 * - the handlingUnit is connected to the location<br>
 	 */
 	@Test
 	@InSequence(1)
@@ -251,13 +251,13 @@ public class RandomAccessDropUseCasesTest {
 			lA = reRead(lA);
 			hu1 = reRead(hu1);
 
-			// Check locationService is no longer EMPTY
+			// Check location is no longer EMPTY
 			assertFalse(lA.getHandlingUnits().isEmpty());
 
 			// Check lA contains hu1
 			assertTrue(lA.getHandlingUnits().contains(hu1));
 
-			// Check if locationService is in status NONE
+			// Check if location is in status NONE
 			assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
 
 			// Check hu1 is linked to lA
@@ -287,13 +287,13 @@ public class RandomAccessDropUseCasesTest {
      * }</pre>
 	 * <br>
 	 * All preconditions are fulfilled:<br>
-	 * - locationService is EMPTY<br>
-	 * - locationService is in "normal" status<br>
+	 * - location is EMPTY<br>
+	 * - location is in "normal" status<br>
 	 * <br>
 	 * Expected is that after dropTo:<br>
 	 * - no exception is raised<br>
-	 * - the locationService is still EMPTY<br> 
-	 * - the locationService is still in "normal" status<br>
+	 * - the location is still EMPTY<br> 
+	 * - the location is still in "normal" status<br>
 	 */
 	@Test
 	@InSequence(2)
@@ -309,10 +309,10 @@ public class RandomAccessDropUseCasesTest {
 			// MANDATORY read because of dropTo
 			lA = reRead(lA);
 
-			// Check locationService is still EMPTY
+			// Check location is still EMPTY
 			assertTrue(lA.getHandlingUnits().isEmpty());
 
-			// Check if locationService is in status NONE
+			// Check if location is in status NONE
 			assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
 
 			LOG.info("Expected:\n\tEMPTY \n\t{}", lA);
@@ -326,7 +326,7 @@ public class RandomAccessDropUseCasesTest {
 	/**
 	 * Exceptional case<br>
 	 * <br>
-	 * Double drop handlingUnitService to same Location<br>
+	 * Double drop handlingUnit to same Location<br>
 	 * <br>
      * <pre>{@code
      * 
@@ -341,20 +341,20 @@ public class RandomAccessDropUseCasesTest {
      * }</pre>
 	 * <br>
 	 * Preconditions fulfilled:<br>
-	 * - locationService is EMPTY<br>
-	 * - locationService is in "normal" status<br>
+	 * - location is EMPTY<br>
+	 * - location is in "normal" status<br>
 	 * <br>
 	 * Expected is that after second dropTo:<br>
 	 * - no exception is raised<br>
-	 * - the locationService contains the handlingUnitService<br> 
-	 * - the locationService is in "normal" status because double drop on the same locationService needs no check<br>
-	 * - the handlingUnitService is connected to the locationService<br>
+	 * - the location contains the handlingUnit<br> 
+	 * - the location is in "normal" status because double drop on the same location needs no check<br>
+	 * - the handlingUnit is connected to the location<br>
      * <br>
 	 */
 	@Test
 	@InSequence(10)
 	public void doubleDropToSameLocation() {
-		// Prepare handling unit and a locationService
+		// Prepare handling unit and a location
 		HandlingUnit hu2 = prepareUnitAndCheck("2");
 		
 		Location lA = prepareLocationAndCheck("A");
@@ -369,7 +369,7 @@ public class RandomAccessDropUseCasesTest {
 			LOG.info("First drop: " + hu2);
 			LOG.info("First drop: " + lA);
 
-			// Now drop again to same locationService
+			// Now drop again to same location
 			unitLocal.dropTo(lA, hu2);
 
 			// MANDATORY reread
@@ -378,13 +378,13 @@ public class RandomAccessDropUseCasesTest {
 			LOG.info("Second drop: " + hu2);
 			LOG.info("Second drop: " + lA);
 
-			// Check the locationService
+			// Check the location
 			assertNotNull(lA);
 			assertFalse(lA.getHandlingUnits().isEmpty());
 			assertTrue(lA.getHandlingUnits().contains(hu2));
 			assertEquals(1, lA.getHandlingUnits().size());
 
-			// Check if locationService is in "normal" status
+			// Check if location is in "normal" status
 			assertEquals(ErrorStatus.NONE, lA.getLocationStatus().getErrorStatus());
 
 			LOG.info(lA);
@@ -403,7 +403,7 @@ public class RandomAccessDropUseCasesTest {
 	/**
 	 * Exceptional case<br>
 	 * <br>
-	 * Double drop handlingUnitService first time on locationService, second time on OTHER locationService<br>
+	 * Double drop handlingUnit first time on location, second time on OTHER location<br>
 	 * <br>
      * <pre>{@code
      * 
@@ -426,20 +426,20 @@ public class RandomAccessDropUseCasesTest {
      * }</pre>
 	 * <br>
 	 * Preconditions fulfilled:<br>
-	 * - locationService is EMPTY<br>
-	 * - locationService is in "normal" status<br>
-	 * - OTHER locationService is EMPTY<br>
-	 * - OTHER locationService is in "normal" status<br>
+	 * - location is EMPTY<br>
+	 * - location is in "normal" status<br>
+	 * - OTHER location is EMPTY<br>
+	 * - OTHER location is in "normal" status<br>
 	 * <br>
 	 * Expected is that after second dropTo:<br>
 	 * - no exception is raised<br>
-	 * - the locationService does not contain the handlingUnitService<br> 
-	 * - the locationService is EMPTY now<br>
-	 * - the locationService is in ERROR because is was FILLED before and needs check now<br>
-	 * - the OTHER locationService is filled with the handlingUnitService<br>
-	 * - the OTHER locationService is in "normal" status because is was EMPTY before and needs NO check<br>
-	 * - the handlingUnitService is not connected to the locationService any longer<br>
-	 * - the handlingUnitService is connected to the OTHER locationService<br>
+	 * - the location does not contain the handlingUnit<br> 
+	 * - the location is EMPTY now<br>
+	 * - the location is in ERROR because is was FILLED before and needs check now<br>
+	 * - the OTHER location is filled with the handlingUnit<br>
+	 * - the OTHER location is in "normal" status because is was EMPTY before and needs NO check<br>
+	 * - the handlingUnit is not connected to the location any longer<br>
+	 * - the handlingUnit is connected to the OTHER location<br>
      * <br>
 	 */
 	@Test
@@ -467,7 +467,7 @@ public class RandomAccessDropUseCasesTest {
 			LOG.info("First drop: " + lA);
 			LOG.info("First drop: " + lB);
 
-			// Now drop again to other locationService
+			// Now drop again to other location
 			unitLocal.dropTo(lB, hu2);
 
 			// MANDATORY reread

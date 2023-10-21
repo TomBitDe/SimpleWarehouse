@@ -46,7 +46,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
 /**
- * Test pick use cases for a LIFO access locationService.
+ * Test pick use cases for a LIFO access location.
  */
 @RunWith(Arquillian.class)
 public class LifoAccessPickUseCasesTest {
@@ -230,15 +230,15 @@ public class LifoAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * All preconditions are fulfilled:<br>
-	 * - locationService is filled with related handlingUnitService<br>
-	 * - locationService is in "normal" state<br>
+	 * - location is filled with related handlingUnit<br>
+	 * - location is in "normal" state<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - no exception is raised<br>
 	 * - last in first out<br>
-	 * - the handlingUnitService is not connected to the locationService<br>
-	 * - the locationService no longer contains the handlingUnitService<br> 
-	 * - the locationService is not in ERROR<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the location no longer contains the handlingUnit<br> 
+	 * - the location is not in ERROR<br>
 	 */
 	@Test
 	@InSequence(1)
@@ -283,7 +283,7 @@ public class LifoAccessPickUseCasesTest {
 			assertNull(picked.getLocation());
 			assertNull(picked.getLocaPos());
 
-			// Check if locationService is in ERROR
+			// Check if location is in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", picked, lA);
@@ -313,15 +313,15 @@ public class LifoAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * All preconditions are fulfilled:<br>
-	 * - locationService is filled with related handlingUnitService<br>
-	 * - locationService is in "normal" state<br>
+	 * - location is filled with related handlingUnit<br>
+	 * - location is in "normal" state<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - no exception is raised<br>
 	 * - last in first out<br>
-	 * - the handlingUnitService is not connected to the locationService<br>
-	 * - the locationService no longer contains the handlingUnitService<br> 
-	 * - the locationService is not in ERROR<br>
+	 * - the handlingUnit is not connected to the location<br>
+	 * - the location no longer contains the handlingUnit<br> 
+	 * - the location is not in ERROR<br>
 	 */
 	@Test
 	@InSequence(3)
@@ -368,7 +368,7 @@ public class LifoAccessPickUseCasesTest {
 			assertNull(picked.getLocation());
 			assertNull(picked.getLocaPos());
 
-			// Check if locationService is in ERROR
+			// Check if location is in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 
 			picked = unitLocal.pickFrom(lA);
@@ -387,7 +387,7 @@ public class LifoAccessPickUseCasesTest {
 			lA = reRead(lA);
 			assertEquals("2", picked.getId());
 			
-			// Check if locationService is in ERROR
+			// Check if location is in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			LOG.info("Location is NOT in ERROR as expected:\n\t{}", lA.getLocationStatus());
 		}
@@ -415,12 +415,12 @@ public class LifoAccessPickUseCasesTest {
      * }</pre>
 	 * <br>
 	 * Preconditions not fulfilled:<br>
-	 * - LIFO is NOT filled with any handlingUnitService<br>
+	 * - LIFO is NOT filled with any handlingUnit<br>
 	 * <br>
 	 * Expected is that after pickFrom:<br>
 	 * - a LocationIsEmptyException is raised<br>
-	 * - the locationService does not contain any handlingUnitService<br> 
-	 * - the locationService is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
+	 * - the location does not contain any handlingUnit<br> 
+	 * - the location is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
      * <br>
 	 */
 	@Test
@@ -443,7 +443,7 @@ public class LifoAccessPickUseCasesTest {
 			// Check picked is null
 			assertNull(picked);
 
-			// Check if locationService is not in ERROR
+			// Check if location is not in ERROR
 			assertNotEquals(ErrorStatus.ERROR, lA.getLocationStatus().getErrorStatus());
 			
 			LOG.info("Expected:\n\t{}\n\tis not on\n\t{}", picked, lA);
