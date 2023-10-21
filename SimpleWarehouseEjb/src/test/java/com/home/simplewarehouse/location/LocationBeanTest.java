@@ -431,6 +431,8 @@ public class LocationBeanTest {
 		
 		assertNotNull(locA);
 		assertEquals("V", ((LogicalPosition) locA.getPosition()).getCoord());
+
+		LOG.info("LocA: " + locA);
 		
 		// RelativePosition
 		Location locB = locationService.createOrUpdate(new Location(new RelativPosition(), "B"));
@@ -463,6 +465,8 @@ public class LocationBeanTest {
 		assertEquals(9, ((RelativPosition) locB.getPosition()).getyCoord());
 		assertEquals(9, ((RelativPosition) locB.getPosition()).getzCoord());
 
+		LOG.info("LocB: " + locB);
+
 		// AbsolutePosition
 		Location locD = locationService.createOrUpdate(new Location(new AbsolutPosition(), "D"));
 		
@@ -493,6 +497,8 @@ public class LocationBeanTest {
 		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getxCoord(), 0.0f);
 		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
 		assertEquals(1.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
+
+		LOG.info("LocD: " + locD);
 	}
 	
 	/**
