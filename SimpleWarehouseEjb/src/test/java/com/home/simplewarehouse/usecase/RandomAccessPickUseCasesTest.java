@@ -304,8 +304,8 @@ public class RandomAccessPickUseCasesTest {
 	 * - the handlingUnit is not connected to the location<br>
 	 * - the location does not contain the handlingUnit<br> 
 	 * - the location is NOT in ERROR because is was EMPTY before and is ready for further actions<br>
+	 * - the handlingUnit still exists without any error<br>
      * <br>
-	 * TODO: what should happen with the unit?<br>
 	 */
 	@Test
 	@InSequence(10)
@@ -363,11 +363,11 @@ public class RandomAccessPickUseCasesTest {
 	 * Expected is that after pickFrom:<br>
 	 * - a HandlingUnitNotOnLocationException is raised<br>
 	 * - the handlingUnit is not connected to the location<br>
+	 * - the handlingUnit still exists without any error<br>
 	 * - the location does not contain the handlingUnit<br> 
 	 * - the location is SET in ERROR because is was NOT EMPTY before and needs check<br>
 	 * - the location is still filled with the other handlingUnit<br>
      * <br>
-	 * TODO: what should happen with the unit?<br>
 	 */
 	@Test
 	@InSequence(12)
