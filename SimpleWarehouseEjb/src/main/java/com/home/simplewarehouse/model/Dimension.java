@@ -51,17 +51,16 @@ public class Dimension implements Serializable {
      * Default weight value
      */
     public static final int WEIGHT_DEFAULT = 0;
-    
     /**
-     * Default height category
+     * Default height value
      */
     public static final HeightCategory HEIGHT_DEFAULT = HeightCategory.NOT_RELEVANT;
     /**
-     * Default length category
+     * Default length value
      */
     public static final LengthCategory LENGTH_DEFAULT = LengthCategory.NOT_RELEVANT;
     /**
-     * Default width category
+     * Default width value
      */
     public static final WidthCategory WIDTH_DEFAULT = WidthCategory.NOT_RELEVANT;
     
@@ -158,24 +157,11 @@ public class Dimension implements Serializable {
     /**
      * Create this Dimension
      * 
-     * @param location the given Location 
-     * @param user the given user
-     */
-    public Dimension(Location location, String user) {
-    	this(location);
-    	
-    	location.setUpdateUserId(user);
-    }
-    
-    /**
-     * Create this Dimension
-     * 
      * @param location the given Location
      * @param maxCapacity the given maximum capacity
-     * @param user the given user
      */
-	public Dimension(Location location, int maxCapacity, String user) {
-    	this(location, user);
+	public Dimension(Location location, int maxCapacity) {
+    	this(location);
 		
     	setMaxCapacity(maxCapacity);
     }
@@ -186,10 +172,9 @@ public class Dimension implements Serializable {
      * @param location the given Location 
      * @param maxCapacity the given maximum capacity
      * @param maxWeight the given maximum weight
-     * @param user the given user
      */
-	public Dimension(Location location, int maxCapacity, int maxWeight, String user) {
-    	this(location, maxCapacity, user);
+	public Dimension(Location location, int maxCapacity, int maxWeight) {
+    	this(location, maxCapacity);
 		
     	setMaxWeight(maxWeight);
 	}
@@ -203,8 +188,8 @@ public class Dimension implements Serializable {
      * @param maxHeight the given maximum height
      * @param user the given user
      */
-	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight, String user) {
-    	this(location, maxCapacity, maxWeight, user);
+	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight) {
+    	this(location, maxCapacity, maxWeight);
 		
     	setMaxHeight(maxHeight);
 	}
@@ -217,11 +202,10 @@ public class Dimension implements Serializable {
      * @param maxWeight the given maximum weight
      * @param maxHeight the given maximum height
      * @param maxLength the given maximum length
-     * @param user the given user
      */
 	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight
-			, LengthCategory maxLength, String user) {
-    	this(location, maxCapacity, maxWeight, maxHeight, user);
+			, LengthCategory maxLength) {
+    	this(location, maxCapacity, maxWeight, maxHeight);
 		
     	setMaxLength(maxLength);
 	}
@@ -235,11 +219,10 @@ public class Dimension implements Serializable {
      * @param maxHeight the given maximum height
      * @param maxLength the given maximum length
      * @param maxWidth the given maximum width
-     * @param user the given user
      */
 	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight
-			, LengthCategory maxLength, WidthCategory maxWidth, String user) {
-    	this(location, maxCapacity, maxWeight, maxHeight, maxLength, user);
+			, LengthCategory maxLength, WidthCategory maxWidth) {
+    	this(location, maxCapacity, maxWeight, maxHeight, maxLength);
 
     	setMaxWidth(maxWidth);
 	}
@@ -277,7 +260,7 @@ public class Dimension implements Serializable {
 	 * Sets the maximum capacity
 	 * 
 	 * @param maxCapacity the maximum capacity. A value less than zero is not allowed and sets
-	 * maxCapacity to {@value CAPACITY_DEFAULT}
+	 * maxCapacity to {@link #CAPACITY_DEFAULT}
 	 */
 	public void setMaxCapacity(int maxCapacity) {
     	if (maxCapacity < 0) {
@@ -303,7 +286,7 @@ public class Dimension implements Serializable {
 	 * Sets the maximum weight
 	 * 
 	 * @param maxWeight the maximum weight. A value less than zero is not allowed and sets
-	 * maxWeight to {@value WEIGHT_DEFAULT}
+	 * maxWeight to {@link #WEIGHT_DEFAULT}
 	 */
 	public void setMaxWeight(int maxWeight) {
     	if (maxWeight < 0) {
@@ -329,7 +312,7 @@ public class Dimension implements Serializable {
 	 * Sets the maximum height
 	 * 
 	 * @param maxHeight the maximum height. A value of {@code null} is not allowed and sets
-	 * maxHeight to {@link HEIGHT_DEFAULT}
+	 * maxHeight to {@link #HEIGHT_DEFAULT}
 	 */
 	public void setMaxHeight(HeightCategory maxHeight) {
     	if (maxHeight == null) {
@@ -355,7 +338,7 @@ public class Dimension implements Serializable {
 	 * Sets the maximum length
 	 * 
 	 * @param maxLength the maximum length. A value of {@code null} is not allowed and sets
-	 * maxLength to {@link LENGTH_DEFAULT}
+	 * maxLength to {@link #LENGTH_DEFAULT}
 	 */
 	public void setMaxLength(LengthCategory maxLength) {
     	if (maxLength == null) {
@@ -381,7 +364,7 @@ public class Dimension implements Serializable {
 	 * Sets the maximum width
 	 * 
 	 * @param maxWidth the maximum width. A value of {@code null} is not allowed and sets
-	 * maxWidth to {@link WIDTH_DEFAULT}
+	 * maxWidth to {@link #WIDTH_DEFAULT}
 	 */
 	public void setMaxWidth(WidthCategory maxWidth) {
     	if (maxWidth == null) {
@@ -465,8 +448,6 @@ public class Dimension implements Serializable {
 		    .append(getMaxWidth())
 		    .append(", version=")
 		    .append(getVersion())
-		    .append(", ")
-			.append(super.toString())
 			.append("]");
 		
 		return builder.toString();

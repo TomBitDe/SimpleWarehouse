@@ -10,11 +10,11 @@ import javax.ws.rs.core.Response;
 /**
  * Standard services for all REST. 
  */
-public class StandardServices {
+public class StandardRestServices {
 	/**
 	 * Mandatory default constructor
 	 */
-	public StandardServices() {
+	public StandardRestServices() {
 		super();
 	}
 

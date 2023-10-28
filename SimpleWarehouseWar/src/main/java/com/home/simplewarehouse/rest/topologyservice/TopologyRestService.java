@@ -10,7 +10,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
-import com.home.simplewarehouse.rest.standardservices.StandardServices;
+import com.home.simplewarehouse.rest.standardservices.StandardRestServices;
 import com.home.simplewarehouse.topology.SampleWarehouseService;
 
 /**
@@ -18,7 +18,7 @@ import com.home.simplewarehouse.topology.SampleWarehouseService;
  */
 @Path("/TopologyRestService")
 @Stateless
-public class TopologyRestService extends StandardServices {
+public class TopologyRestService extends StandardRestServices {
 	@EJB
 	SampleWarehouseService sampleWarehouseService;
 	

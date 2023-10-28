@@ -115,10 +115,9 @@ public class LogicalPosition extends Position {
 		StringBuilder builder = new StringBuilder();
 		
 		builder.append("LogicalPosition [")
-		    .append("positionId=")
+	        .append(super.toString())
+		    .append(", positionId=")
 		    .append(getPositionId())
-		    .append(", ")
-			.append(super.toString())
 			.append("]");
 		
 		return builder.toString();

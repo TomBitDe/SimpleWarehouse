@@ -329,8 +329,6 @@ public class LocationStatus implements Serializable {
 		    .append(getLockStatus())
 		    .append(", version=")
 		    .append(getVersion())
-		    .append(", ")
-			.append(super.toString())
 			.append("]");
 		
 		return builder.toString();

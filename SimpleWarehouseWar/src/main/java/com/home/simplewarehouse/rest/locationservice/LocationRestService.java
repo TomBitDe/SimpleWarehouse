@@ -18,14 +18,14 @@ import javax.ws.rs.core.Response;
 
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.rest.standardservices.StandardServices;
+import com.home.simplewarehouse.rest.standardservices.StandardRestServices;
 
 /**
  * RESTful Location handling service.
  */
 @Path("/LocationRestService")
 @Stateless
-public class LocationRestService extends StandardServices {
+public class LocationRestService extends StandardRestServices {
 	@EJB
 	LocationService locationService;
 

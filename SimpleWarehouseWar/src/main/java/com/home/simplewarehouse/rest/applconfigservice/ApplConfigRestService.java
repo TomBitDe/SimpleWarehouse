@@ -19,14 +19,14 @@ import javax.ws.rs.core.Response;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigService;
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
-import com.home.simplewarehouse.rest.standardservices.StandardServices;
+import com.home.simplewarehouse.rest.standardservices.StandardRestServices;
 
 /**
  * RESTful Application configuration data service.
  */
 @Path("/ApplConfigRestService")
 @Stateless
-public class ApplConfigRestService extends StandardServices {
+public class ApplConfigRestService extends StandardRestServices {
 	@EJB
 	ApplConfigService applConfigService;
 

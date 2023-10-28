@@ -450,7 +450,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
 	/**
 	 * Only needed for JAXB
 	 * 
-	 * @return the Location ids of this Handling Unit
+	 * @return the Location id of this Handling Unit
 	 */
 	public String getLocationId() {
 		if (this.location != null && this.location.getLocationId() != null) {
