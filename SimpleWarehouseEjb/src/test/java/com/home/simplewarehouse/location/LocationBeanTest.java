@@ -714,7 +714,7 @@ public class LocationBeanTest {
 			assertNull(hU2.getLocation());
 			assertNull(hU5.getLocation());
 
-			LOG.info("Sample hU2 and hU5 have no longer a locationService");
+			LOG.info("Sample hU2 and hU5 have no longer a location");
 			LOG.info(hU2);
 			LOG.info(hU5);
 		}
