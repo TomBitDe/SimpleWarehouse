@@ -370,7 +370,7 @@ public class HandlingUnitTest {
 
 			LOG.info(hU1);
 
-			// Handling Unit is on locationService now
+			// Handling Unit is on location now
 			assertEquals(lOA, hU1.getLocation());
 
 			assertFalse(lOA.getHandlingUnits().isEmpty());
@@ -393,7 +393,7 @@ public class HandlingUnitTest {
 
 			LOG.info(hU2);
 
-			// Handling Unit is on locationService now
+			// Handling Unit is on location now
 			assertEquals(lOB, hU2.getLocation());
 
 			assertFalse(lOB.getHandlingUnits().isEmpty());
@@ -422,7 +422,7 @@ public class HandlingUnitTest {
 		
 		HandlingUnit hu1 = new HandlingUnit("1");
 		
-		// Check invalid drop to locationService null
+		// Check invalid drop to location null
 		try {
 			handlingUnitService.dropTo(null, hu1);
 
@@ -460,7 +460,7 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		assertTrue(locationService.getAll().isEmpty());
 		
-		// Check invalid drop to handlingUnitService null
+		// Check invalid drop to handlingUnit null
 		try {
 			handlingUnitService.dropTo(new Location("A"), null);
 
@@ -633,8 +633,8 @@ public class HandlingUnitTest {
 	/**
 	 * Test pickFrom a location that does not contain the handling unit
 	 * 
-	 * @throws LocationIsEmptyException in case the locationService is EMPTY
-	 * @throws HandlingUnitNotOnLocationException in case the handling unit is not on that locationService
+	 * @throws LocationIsEmptyException in case the location is EMPTY
+	 * @throws HandlingUnitNotOnLocationException in case the handling unit is not on that location
 	 */
 	@Test
 	@InSequence(18)
@@ -699,7 +699,7 @@ public class HandlingUnitTest {
 			HandlingUnit hU1 = handlingUnitService.getById("1");
 			HandlingUnit hU2 = handlingUnitService.getById("2");
 			
-			// Now delete a handling unit that is related to a locationService
+			// Now delete a handling unit that is related to a location
 			LOG.info("Delete: " + hU1);
 			handlingUnitService.delete(hU1);
 			
@@ -711,7 +711,7 @@ public class HandlingUnitTest {
 		    // MANDATORY reread
 			lOA = locationService.getById("A");
 			
-			// Check the locationService
+			// Check the location
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertTrue(lOA.getHandlingUnits().contains(hU2));
@@ -745,7 +745,7 @@ public class HandlingUnitTest {
 			LOG.info("First drop: " + hU2);
 			LOG.info("First drop: " + lOA);
 
-			// Now drop again to same locationService
+			// Now drop again to same location
 			handlingUnitService.dropTo(lOA, hU2);
 
 			// MANDATORY reread
@@ -754,7 +754,7 @@ public class HandlingUnitTest {
 			LOG.info("Second drop: " + hU2);
 			LOG.info("Second drop: " + lOA);
 
-			// Check the locationService
+			// Check the location
 			assertNotNull(lOA);
 			assertFalse(lOA.getHandlingUnits().isEmpty());
 			assertTrue(lOA.getHandlingUnits().contains(hU2));
@@ -793,7 +793,7 @@ public class HandlingUnitTest {
 			LOG.info("First drop: " + hU2);
 			LOG.info("First drop: " + lOA);
 
-			// Now drop again to other locationService
+			// Now drop again to other location
 			handlingUnitService.dropTo(new Location("B"), hU2);
 
 			// MANDATORY reread
@@ -841,7 +841,7 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare a locationService
+		// Prepare a location
 		locationService.createOrUpdate(new Location("A"));		
 		Location lOA = locationService.getById("A");
 		
@@ -896,7 +896,7 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare handling unit and a locationService
+		// Prepare handling unit and a location
 		locationService.createOrUpdate(new Location("A"));
 		Location lOA = locationService.getById("A");
 		
@@ -1073,7 +1073,7 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare handling unit and a locationService
+		// Prepare handling unit and a location
 		HandlingUnit hU1 = handlingUnitService.createOrUpdate(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.NARROW));
 		HandlingUnit hU2 = handlingUnitService.createOrUpdate(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.MIDDLE));
 		HandlingUnit hU3 = handlingUnitService.createOrUpdate(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE));
@@ -1161,7 +1161,7 @@ public class HandlingUnitTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		assertTrue(locationService.getAll().isEmpty());
 
-		// Prepare handling unit and a locationService
+		// Prepare handling unit and a location
 		HandlingUnit hU1 = handlingUnitService.createOrUpdate(new HandlingUnit("1", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.SHORT));
 		HandlingUnit hU2 = handlingUnitService.createOrUpdate(new HandlingUnit("2", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.MIDDLE));
 		HandlingUnit hU3 = handlingUnitService.createOrUpdate(new HandlingUnit("3", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.LONG));
