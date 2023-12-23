@@ -53,3 +53,12 @@ p {
 .commandLink:hover {
 	color: #ff0080;
 }
+
+.link {
+    color: #ffffff;
+    background-color: #400080;
+    margin: auto;
+}
+.link:hover {
+	color: #ffff00;
+}

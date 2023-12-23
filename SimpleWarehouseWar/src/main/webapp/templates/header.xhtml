@@ -1,0 +1,27 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns = "http://www.w3.org/1999/xhtml"   
+   xmlns:ui = "http://java.sun.com/jsf/facelets"
+   xmlns:h="http://java.sun.com/jsf/html">
+   
+   <body>
+      <ui:composition> 
+		<h:outputText value="Specification:" />
+		<h:outputText value="#{environBean.specTitle}" style="font-weight: bold;"/>
+        <h:outputText value="&#160;"></h:outputText>
+
+		<h:outputText value="Version:" />
+		<h:outputText value="#{environBean.specVersion}" style="font-weight: bold;" />
+        <h:outputText value="&#160;&#160;"></h:outputText>
+
+		<h:outputText value="Implementation:" />
+		<h:outputText value="#{environBean.implTitle}" style="font-weight: bold;"/>
+        <h:outputText value="&#160;"></h:outputText>
+
+		<h:outputText value="Version:" />
+		<h:outputText value="#{environBean.implVersion}" style="font-weight: bold;"/>
+      </ui:composition>	
+   </body>
+</html>
