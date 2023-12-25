@@ -16,6 +16,14 @@ curl -v -X PUT -i http://localhost:8080/war/resources/HandlingUnitRestService/En
 curl -v -X PUT -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/8
 curl -v -X PUT -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/9
 curl -v -X PUT -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/10
+
+curl -v -X POST -i http://localhost:8080/war/resources/HandlingUnitRestService/Drop/C/3
+curl -v -X POST -i http://localhost:8080/war/resources/HandlingUnitRestService/Drop/E/5
+curl -v -X POST -i http://localhost:8080/war/resources/HandlingUnitRestService/Drop/E/6
+curl -v -X POST -i http://localhost:8080/war/resources/HandlingUnitRestService/Drop/E/7
+curl -v -X POST -i http://localhost:8080/war/resources/HandlingUnitRestService/Drop/F/10
+curl -v -X POST -i http://localhost:8080/war/resources/HandlingUnitRestService/Drop/F/9
+
 echo=
 echo ----------------------------------------------------------------------
 
