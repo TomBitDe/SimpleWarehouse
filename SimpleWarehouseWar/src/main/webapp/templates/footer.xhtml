@@ -8,11 +8,11 @@
    
    <body>
      <ui:composition> 
-	   <h:outputText value="CDI injection support:" />
+	   <h:outputText value="#{text['cdi_injection_support']}:" />
 	   <h:outputText value="#{environBean.facesContextValue}" style="font-weight: bold;"/>
        <h:outputText value="&#160;&#160;"></h:outputText>
 
-	   <h:outputText value="Running on:" />
+	   <h:outputText value="#{text['running_on']}:" />
 	   <h:outputText value="#{application.serverInfo}" style="font-weight: bold;"/>
      </ui:composition>	
    </body>

@@ -6,6 +6,18 @@
     xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-facesconfig_2_3.xsd"
     version="2.3">   
 
+   <application>
+      <locale-config>
+         <default-locale>de</default-locale>
+         <supported-locale>en</supported-locale>
+      </locale-config>
+      
+      <resource-bundle>
+         <base-name>i18n.text</base-name>
+         <var>text</var>
+      </resource-bundle>
+   </application>
+   
    <navigation-rule>
       <from-view-id>home.xhtml</from-view-id>
       <navigation-case>
