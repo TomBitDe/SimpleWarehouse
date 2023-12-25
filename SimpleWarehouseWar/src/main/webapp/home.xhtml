@@ -33,6 +33,7 @@
                    <h:panelGrid style="height: 300px;  display: block" >
 			        
 			           <h3><h:outputText value="#{text['handling_units']}" /></h3>
+			           
         			   <h:dataTable value="#{simpleHandlingUnitBean.simpleHandlingUnits}"
 		        	       var="simpleHandlingUnit" styleClass="commonTable"
 				           headerClass="commonTableHeader"
@@ -43,6 +44,7 @@
                                #{simpleHandlingUnit.id}
                            </h:column>
 				       </h:dataTable>
+				       
                    </h:panelGrid>
                 </h:panelGrid>
 			</h:form>
