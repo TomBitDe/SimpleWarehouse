@@ -2,7 +2,7 @@ package com.home.simplewarehouse.views;
 
 import java.io.Serializable;
 
-public class SimpleHandlingUnit implements Serializable{
+public class SimpleHandlingUnit implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
