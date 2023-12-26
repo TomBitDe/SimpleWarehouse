@@ -53,5 +53,4 @@ public class SimpleLocationBean implements Serializable {
             }
         }
     }
-
 }

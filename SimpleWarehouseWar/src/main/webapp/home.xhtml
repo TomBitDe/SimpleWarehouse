@@ -43,7 +43,7 @@
 				       <!-- JavaScript for the selection -->
                        <h:outputScript>
                            <![CDATA[
-                             // Funktion zur Auswahl der Zeile
+                             // Function for selecting a row
                              function selectRow(row) {
                                row.classList.toggle("selected");
                                var checkbox = row.querySelector("input[type='checkbox']");
@@ -83,20 +83,37 @@
 			           <h3><h:outputText value="#{text['handling_units']}" /></h3>
 			           
  				       <div style="overflow: auto;">
-        			   <h:dataTable id="hu" value="#{simpleHandlingUnitBean.simpleHandlingUnits}"
-		        	       var="simpleHandlingUnit" styleClass="commonTable"
+        			   <h:dataTable id="hu" value="#{simpleHandlingUnitBean.items}"
+		        	       var="item" styleClass="commonTable"
 				           headerClass="commonTableHeader"
 					       rowClasses="commonTableOddRow, commonTableEvenRow">
 
+                           <h:column>
+                               <h:selectBooleanCheckbox value="#{item.selected}" />
+                           </h:column>
+                           
 					       <h:column>
 						       <f:facet name="header">#{text['handling_unit_id']}</f:facet>    				
-                               <h:outputText value="#{simpleHandlingUnit.id}" />
+                               <h:outputText value="#{item.id}" />
                            </h:column>
 				       </h:dataTable>
                        </div>
 				       
-                   </h:panelGrid>
-                </h:panelGrid>
+				       <!-- JavaScript for the selection -->
+                       <h:outputScript>
+                           <![CDATA[
+                             // Function for selecting a row
+                             function selectRow(row) {
+                               row.classList.toggle("selected");
+                               var checkbox = row.querySelector("input[type='checkbox']");
+                               checkbox.checked = !checkbox.checked;
+                             }
+                           ]]>
+                       </h:outputScript>
+				       
+                       <!-- Button for action -->
+                       <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}" />                   </h:panelGrid>
+                  </h:panelGrid>
 			</h:form>
 
 		</ui:define>

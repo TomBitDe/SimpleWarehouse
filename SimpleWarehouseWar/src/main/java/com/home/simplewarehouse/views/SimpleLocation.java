@@ -1,6 +1,10 @@
 package com.home.simplewarehouse.views;
 
-public class SimpleLocation {
+import java.io.Serializable;
+
+public class SimpleLocation implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	private String locationId;
 	private boolean selected;
 	
