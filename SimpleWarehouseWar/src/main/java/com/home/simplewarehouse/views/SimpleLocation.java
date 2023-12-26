@@ -2,10 +2,12 @@ package com.home.simplewarehouse.views;
 
 public class SimpleLocation {
 	private String locationId;
+	private boolean selected;
 	
-	public SimpleLocation(String locationId) {
+	public SimpleLocation(String locationId, boolean selected) {
 		super();
 		this.locationId = locationId;
+		this.selected = selected;
 	}
 
 	public String getLocationId() {
@@ -14,5 +16,13 @@ public class SimpleLocation {
 
 	public void setLocationId(String locationId) {
 		this.locationId = locationId;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 }

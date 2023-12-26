@@ -21,20 +21,37 @@ public class SimpleLocationBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LogManager.getLogger(SimpleLocationBean.class);
 
-	@EJB
+    @EJB
 	LocationService locationService;
 	
-	public List<SimpleLocation> getSimpleLocations() {
-		List<SimpleLocation> ret = new ArrayList<>();
+    private List<SimpleLocation> items;
+
+	public void setItems(List<SimpleLocation> items) {
+		this.items = items;
+	}
+
+	public List<SimpleLocation> getItems() {
+		items = new ArrayList<>();
 		
 		List<Location> locations = locationService.getAll();
 		
 		for (Location location : locations) {
-            ret.add(new SimpleLocation(location.getLocationId()));
+			items.add(new SimpleLocation(location.getLocationId(), false));
 		}
 		
-		LOG.debug("Found [{}] locations", ret.size());
+		LOG.debug("Found [{}] locations", items.size());
 		
-		return ret;
+		return items;
 	}
+	
+    public void deleteSelected() {
+        // Process the selected rows
+        for (SimpleLocation item : items) {
+            if (item.isSelected()) {
+                // This row has to be processed
+            	locationService.delete(item.getLocationId());
+            }
+        }
+    }
+
 }

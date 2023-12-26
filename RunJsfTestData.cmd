@@ -7,6 +7,14 @@ curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/
 curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/G
 curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/H
 curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/J
+curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/K
+curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/L
+REM curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/M
+REM curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/N
+REM curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/O
+REM curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/P
+REM curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/Q
+REM curl -v -X PUT -i http://localhost:8080/war/resources/LocationRestService/Entry/R
 
 curl -v -X PUT -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/3
 curl -v -X PUT -i http://localhost:8080/war/resources/HandlingUnitRestService/Entry/4
@@ -33,7 +41,5 @@ echo ----------------------------------------------------------------------
 curl -v -X GET -i http://localhost:8080/war/resources/HandlingUnitRestService/Count
 echo=
 echo ----------------------------------------------------------------------
-
-
 
 pause
