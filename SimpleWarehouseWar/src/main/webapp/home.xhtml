@@ -18,9 +18,10 @@
 					<f:ajax execute="@form" render="loc" />
 					<f:ajax execute="@form" render="loc_hu" />
 					<f:ajax execute="@form" render="hu" />
+					<f:ajax execute="@form" render="loc_menu" />
 				  </h:commandButton>
 				  
-				  <h:messages showDetail="true" /> 
+				  <h:message showDetail="true" /> 
 				</h:panelGrid>
 				
 				<h:panelGrid id="panelQualification" columns="3" >
@@ -136,12 +137,18 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="2">
+				       <h:panelGrid columns="4">
                          <!-- Buttons for action -->
                          <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}"
                                           styleClass="button" />
 					     <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}"
 					                      styleClass="button" />
+					     <h:commandButton value="#{text['drop']}" action="#{simpleHandlingUnitBean.dropSelected}"
+					                      styleClass="button" />
+						 <h:selectOneMenu id="loc_menu" value="#{simpleHandlingUnitBean.selectedDestination}" >
+						     <f:selectItem itemLabel=" " />
+						     <f:selectItems value="#{simpleHandlingUnitBean.destinations}" />
+						 </h:selectOneMenu>
 					   </h:panelGrid>
 					</h:panelGrid>
                   </h:panelGrid>

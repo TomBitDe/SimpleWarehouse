@@ -14,7 +14,12 @@ import org.apache.logging.log4j.Logger;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
+import com.home.simplewarehouse.location.CapacityExceededException;
 import com.home.simplewarehouse.location.LocationService;
+import com.home.simplewarehouse.location.OverheightException;
+import com.home.simplewarehouse.location.OverlengthException;
+import com.home.simplewarehouse.location.OverwidthException;
+import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.views.SimpleHandlingUnit;
@@ -32,6 +37,10 @@ public class SimpleHandlingUnitBean implements Serializable {
 	LocationService locationService;
 	
     private List<SimpleHandlingUnit> items;
+    
+    private List<String> destinations;
+    
+    private String selectedDestination = "";
 
 	public void setItems(List<SimpleHandlingUnit> items) {
 		this.items = items;
@@ -51,7 +60,33 @@ public class SimpleHandlingUnitBean implements Serializable {
 		return items;
 	}
 	
-    public void deleteSelected() {
+	public void setDestinations(List<String> destinations) {
+		this.destinations = destinations;
+	}
+
+	public List<String> getDestinations() {
+		destinations = new ArrayList<>();
+ 		
+		List<Location> locations = locationService.getAll();
+		
+		for (Location location : locations) {
+			destinations.add(location.getLocationId());
+		}
+		
+		LOG.debug("Set [{}] destinations", destinations.size());
+		
+		return destinations;
+	}
+	
+    public String getSelectedDestination() {
+		return selectedDestination;
+	}
+
+	public void setSelectedDestination(String selectedDestination) {
+		this.selectedDestination = selectedDestination;
+	}
+
+	public void deleteSelected() {
         // Process the selected rows
         for (SimpleHandlingUnit item : items) {
             if (item.isSelected()) {
@@ -81,14 +116,21 @@ public class SimpleHandlingUnitBean implements Serializable {
         }
     }
     
-    // TODO
     public void dropSelected() {
-        // Process the selected rows
-        for (SimpleHandlingUnit item : items) {
-            if (item.isSelected()) {
-                // This row has to be processed
-    	
-            }
-        }
+		if (selectedDestination != null && !selectedDestination.isEmpty()) {
+			// Process the selected rows
+			for (SimpleHandlingUnit item : items) {
+				if (item.isSelected()) {
+					// This row has to be processed
+            	    try {
+						handlingUnitService.dropTo(selectedDestination, item.getId());
+						LOG.info("Item {} dropped on {}", item.getId(), selectedDestination);
+					}
+            	    catch (CapacityExceededException | WeightExceededException | OverheightException | OverlengthException | OverwidthException e) {
+						LOG.error("Item {} drop on {} failed; reason {}", item.getId(), selectedDestination, e.getMessage());
+					}
+				}
+			}
+		}
     }
 }
