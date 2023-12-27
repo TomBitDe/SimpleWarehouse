@@ -131,11 +131,13 @@
                            ]]>
                        </h:outputScript>
 				       
-                       <!-- Button for action -->
-                       <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}"
-                                        styleClass="button" />
-					   <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}"
-					                    styleClass="button" />
+				       <h:panelGrid columns="2">
+                         <!-- Buttons for action -->
+                         <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}"
+                                          styleClass="button" />
+					     <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}"
+					                      styleClass="button" />
+					   </h:panelGrid>
 					</h:panelGrid>
                   </h:panelGrid>
 			</h:form>
