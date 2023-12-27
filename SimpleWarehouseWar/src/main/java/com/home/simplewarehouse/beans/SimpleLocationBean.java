@@ -50,6 +50,7 @@ public class SimpleLocationBean implements Serializable {
             if (item.isSelected()) {
                 // This row has to be processed
             	locationService.delete(item.getLocationId());
+            	LOG.info("Deleted item {}", item.getLocationId());
             }
         }
     }

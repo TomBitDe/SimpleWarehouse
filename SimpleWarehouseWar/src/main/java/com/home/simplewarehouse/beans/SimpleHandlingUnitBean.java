@@ -57,6 +57,7 @@ public class SimpleHandlingUnitBean implements Serializable {
             if (item.isSelected()) {
                 // This row has to be processed
             	handlingUnitService.delete(item.getId());
+            	LOG.info("Deleted item {}", item.getId());
             }
         }
     }
@@ -70,13 +71,24 @@ public class SimpleHandlingUnitBean implements Serializable {
             	for (Location location : locations) {
             	    try {
 						handlingUnitService.pickFrom(location, handlingUnitService.getById(item.getId()));
+						LOG.info("Item {} picked from {}", item.getId(), location.getLocationId());
 					}
             	    catch (LocationIsEmptyException | HandlingUnitNotOnLocationException e) {
-						LOG.error("HandlingUnit pick failed; reason {}", e.getMessage());
+						LOG.error("Item pick {} failed; reason {}", item.getId(), e.getMessage());
 					}
             	}
             }
         }
     }
-
+    
+    // TODO
+    public void dropSelected() {
+        // Process the selected rows
+        for (SimpleHandlingUnit item : items) {
+            if (item.isSelected()) {
+                // This row has to be processed
+    	
+            }
+        }
+    }
 }

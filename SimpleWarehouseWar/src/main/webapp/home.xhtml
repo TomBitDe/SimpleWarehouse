@@ -112,7 +112,9 @@
                        </h:outputScript>
 				       
                        <!-- Button for action -->
-                       <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}" />                   </h:panelGrid>
+                       <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}" />
+					   <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}" />
+					</h:panelGrid>
                   </h:panelGrid>
 			</h:form>
 
