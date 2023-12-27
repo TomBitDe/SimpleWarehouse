@@ -5,11 +5,10 @@ import java.io.Serializable;
 /**
  * Simplified view on HandingUnit with selection.
  */
-public class SimpleHandlingUnit implements Serializable {
+public class SimpleHandlingUnit extends SelectableView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	private String id;
-    private boolean selected;
 
     /**
      * Constructor is mandatory
@@ -18,9 +17,8 @@ public class SimpleHandlingUnit implements Serializable {
      * @param selected the selection flag
      */
 	public SimpleHandlingUnit(String id, boolean selected) {
-		super();
+		super(selected);
 		this.id = id;
-		this.selected = selected;
 	}
 
 	/**
@@ -39,23 +37,5 @@ public class SimpleHandlingUnit implements Serializable {
 	 */
 	public void setId(String id) {
 		this.id = id;
-	}
-
-	/**
-	 * Gets the selection status
-	 * 
-	 * @return the selection status
-	 */
-	public boolean isSelected() {
-		return selected;
-	}
-
-	/**
-	 * Sets the selection status
-	 * 
-	 * @param selected the status
-	 */
-	public void setSelected(boolean selected) {
-		this.selected = selected;
 	}
 }
