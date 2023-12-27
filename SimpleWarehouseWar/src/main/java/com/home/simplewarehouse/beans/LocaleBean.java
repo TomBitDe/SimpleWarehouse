@@ -14,6 +14,9 @@ import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Bean class for JSF locale handling. 
+ */
 @Named
 @SessionScoped
 public class LocaleBean implements Serializable {
@@ -29,19 +32,37 @@ public class LocaleBean implements Serializable {
 		countries.put("German", Locale.GERMAN);
 	}
 
+	/**
+	 * Initialize locale
+	 */
     @PostConstruct
     public void init() {
         locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
     }
 
+    /**
+     * Gets the locale
+     * 
+     * @return the locale
+     */
     public Locale getLocale() {
         return locale;
     }
 
+    /**
+     * Gets the language
+     * 
+     * @return the language
+     */
     public String getLanguage() {
         return locale.getLanguage();
     }
 
+    /**
+     * Sets the language
+     * 
+     * @param language the language to use
+     */
     public void setLanguage(String language) {
         locale = new Locale(language);
         
@@ -50,11 +71,20 @@ public class LocaleBean implements Serializable {
         FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
     }
 
+    /**
+     * Gets the countries
+     * 
+     * @return the countries
+     */
 	public Map<String, Object> getCountries() {
 		return countries;
 	}
 
-	// value change event listener
+	/**
+	 * Value change event listener
+	 * 
+	 * @param e the event
+	 */
 	public void localeChanged(ValueChangeEvent e) {
 		if (e.getNewValue() != null) {
 			String newLocaleValue = e.getNewValue().toString();
@@ -66,4 +96,5 @@ public class LocaleBean implements Serializable {
 				}
 			}
 		}
-	}}
+	}
+}

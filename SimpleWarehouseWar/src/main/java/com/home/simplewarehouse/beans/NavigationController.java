@@ -7,6 +7,9 @@ import javax.faces.annotation.ManagedProperty;
 import javax.inject.Inject;
 import javax.inject.Named;  
 
+/**
+ * JSF navigation controller (example).
+ */
 @Named
 @RequestScoped
 public class NavigationController implements Serializable {  

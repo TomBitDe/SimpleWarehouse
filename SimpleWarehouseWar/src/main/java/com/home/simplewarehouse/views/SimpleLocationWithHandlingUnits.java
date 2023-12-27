@@ -2,6 +2,9 @@ package com.home.simplewarehouse.views;
 
 import java.io.Serializable;
 
+/**
+ * Simplified view on Locations containing HandingUnits with selection.
+ */
 public class SimpleLocationWithHandlingUnits implements Serializable {
 	private static final long serialVersionUID = 1L;
 
