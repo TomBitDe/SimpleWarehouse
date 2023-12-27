@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.LinkedHashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
 import javax.enterprise.context.SessionScoped;
@@ -97,4 +98,16 @@ public class LocaleBean implements Serializable {
 			}
 		}
 	}
+	
+	/**
+	 * Gets a text for the current locale
+	 * 
+	 * @param key the key to reference the text
+	 * 
+	 * @return the text
+	 */
+    public String getText(String key) {
+        ResourceBundle bundle = ResourceBundle.getBundle("text", locale);
+        return bundle.getString(key);
+    }
 }

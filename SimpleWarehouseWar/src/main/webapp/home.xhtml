@@ -13,11 +13,16 @@
 			<h2><h:outputText value="#{text['simplewarehouse']}" /></h2>
 
 			<h:form>
-				<h:commandButton value="#{text['refresh']}" styleClass="button">
+			    <h:panelGrid columns="2">
+				  <h:commandButton value="#{text['refresh']}" styleClass="button">
 					<f:ajax execute="@form" render="loc" />
 					<f:ajax execute="@form" render="loc_hu" />
 					<f:ajax execute="@form" render="hu" />
-				</h:commandButton>
+				  </h:commandButton>
+				  
+				  <h:messages showDetail="true" /> 
+				</h:panelGrid>
+				
 				<h:panelGrid id="panelQualification" columns="3" >
                    <h:panelGrid style="height: 300px; display: block">
                    

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -23,7 +24,10 @@ public class SimpleLocationBean implements Serializable {
 
     @EJB
 	LocationService locationService;
-	
+    
+    @Inject
+    private LocaleBean localeBean;
+
     private List<SimpleLocation> items;
 
 	public void setItems(List<SimpleLocation> items) {
@@ -45,13 +49,35 @@ public class SimpleLocationBean implements Serializable {
 	}
 	
     public void deleteSelected() {
-        // Process the selected rows
-        for (SimpleLocation item : items) {
-            if (item.isSelected()) {
-                // This row has to be processed
-            	locationService.delete(item.getLocationId());
-            	LOG.info("Deleted item {}", item.getLocationId());
-            }
-        }
+/*
+		if (items.isEmpty()) {
+			String summary = localeBean.getText("warning");
+			String detail = localeBean.getText("no_selection");
+			FacesContext.getCurrentInstance().addMessage(null,
+					new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
+		}
+		else {
+*/
+			int cnt=0;
+
+			// Process the selected rows
+			for (SimpleLocation item : items) {
+				if (item.isSelected()) {
+					// This row has to be processed
+					locationService.delete(item.getLocationId());
+					LOG.info("Deleted item {}", item.getLocationId());
+					
+					++cnt;
+				}
+			}
+/*			
+			if (cnt == 0) {
+				String summary = localeBean.getText("warning");
+				String detail = localeBean.getText("no_selection");
+				FacesContext.getCurrentInstance().addMessage(null,
+						new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
+			}
+		}
+*/
     }
 }
