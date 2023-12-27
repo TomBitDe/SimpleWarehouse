@@ -7,11 +7,13 @@ public class SimpleLocationWithHandlingUnits implements Serializable {
 
 	private String locationId;
 	private String handlingUnits;
+	private boolean selected;
 	
-	public SimpleLocationWithHandlingUnits(String locationId, String handlingUnits) {
+	public SimpleLocationWithHandlingUnits(String locationId, String handlingUnits, boolean selected) {
 		super();
 		this.locationId = locationId;
 		this.handlingUnits = handlingUnits;
+		this.selected = selected;
 	}
 
 	public String getLocationId() {
@@ -28,5 +30,13 @@ public class SimpleLocationWithHandlingUnits implements Serializable {
 
 	public void setHandlingUnits(String handlingUnits) {
 		this.handlingUnits = handlingUnits;
+	}
+
+	public boolean isSelected() {
+		return selected;
+	}
+
+	public void setSelected(boolean selected) {
+		this.selected = selected;
 	}
 }

@@ -12,6 +12,9 @@ import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
@@ -26,8 +29,17 @@ public class SimpleLocationWithHandlingUnitsBean implements Serializable {
 	@EJB
 	LocationService locationService;
 	
-	public List<SimpleLocationWithHandlingUnits> getSimpleLocationWithHandlingUnits() {
-		List<SimpleLocationWithHandlingUnits> ret = new ArrayList<>();
+	@EJB
+	HandlingUnitService handlingUnitService;
+	
+    private List<SimpleLocationWithHandlingUnits> items;
+
+	public void setItems(List<SimpleLocationWithHandlingUnits> items) {
+		this.items = items;
+	}
+
+	public List<SimpleLocationWithHandlingUnits> getItems() {
+		items = new ArrayList<>();
 		
 		List<Location> locations = locationService.getAll();
 		
@@ -41,12 +53,40 @@ public class SimpleLocationWithHandlingUnitsBean implements Serializable {
 				}
 				hus = hus.substring(0, hus.lastIndexOf(','));
 				
-				ret.add(new SimpleLocationWithHandlingUnits(location.getLocationId(), hus));
+				items.add(new SimpleLocationWithHandlingUnits(location.getLocationId(), hus, false));
 			}
 		}
 		
-		LOG.debug("Found [{}] locations", ret.size());
+		LOG.debug("Found [{}] locations", items.size());
 		
-		return ret;
+		return items;
 	}
+	
+    public void emptySelected() {
+        // Process the selected rows
+        for (SimpleLocationWithHandlingUnits item : items) {
+            if (item.isSelected()) {
+                // This row has to be processed
+				Set<HandlingUnit> handlingUnits = locationService.getById(item.getLocationId()).getHandlingUnits();
+            	
+				// Prepare handlingunit pick from item
+            	for (HandlingUnit hu : handlingUnits) {
+            		try {
+						handlingUnitService.pickFrom(item.getLocationId(), hu.getId());
+						LOG.info("Handlingunit {} picked from item {}", hu.getId(), item.getLocationId());
+					}
+            	    catch (LocationIsEmptyException | HandlingUnitNotOnLocationException e) {
+						LOG.error("Handlingunit pick {} failed; reason {}", hu.getId(), e.getMessage());
+            	    }
+            	}
+            	
+            	if (locationService.getById(item.getLocationId()).getHandlingUnits().isEmpty()) {
+            		LOG.info("Emptied item {}", item.getLocationId());
+            	}
+            	else {
+            		LOG.error("Item {} NOT empty!", item.getLocationId());
+            	}
+            }
+        }
+    }
 }
