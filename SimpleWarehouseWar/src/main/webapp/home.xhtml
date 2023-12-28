@@ -58,9 +58,13 @@
                            ]]>
                        </h:outputScript>
 				       
-                       <!-- Button for action -->
-                       <h:commandButton value="#{text['delete']}" action="#{simpleLocationBean.deleteSelected}"
-                                        styleClass="button" />
+				       <h:panelGrid columns="2">
+                           <!-- Buttons for action -->
+                           <h:commandButton value="#{text['delete']}" action="#{simpleLocationBean.deleteSelected}"
+                                            styleClass="button" />
+                           <h:commandButton value="#{text['add']}" action="#{simpleLocationBean.addDefault}"
+                                            styleClass="button" />
+                       </h:panelGrid>
                    </h:panelGrid>
 
                    <h:panelGrid style="height: 300px; display: block">

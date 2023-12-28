@@ -2,6 +2,7 @@ package com.home.simplewarehouse.beans;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.ejb.EJB;
@@ -21,6 +22,12 @@ import com.home.simplewarehouse.views.SimpleLocation;
 public class SimpleLocationBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LogManager.getLogger(SimpleLocationBean.class);
+	
+	private static final String START_ID = "A";
+	private static final String END_ID = "Z";
+	
+	private static final List<String> GENERATED_IDS = new ArrayList<>(Arrays.asList(START_ID, "B", "C", "D", "E", "F", "G", "H"
+			, "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", END_ID));
 
     @EJB
 	LocationService locationService;
@@ -46,6 +53,36 @@ public class SimpleLocationBean implements Serializable {
 		LOG.debug("Found [{}] locations", items.size());
 		
 		return items;
+	}
+	
+	public void addDefault() {
+		List<Location> locations = locationService.getAll();
+		List<String> existing = new ArrayList<>();
+		
+		for (Location location : locations) {
+			existing.add(location.getLocationId());
+		}
+		
+		List<String> ids = validIds(GENERATED_IDS, existing);
+		
+		if (! ids.isEmpty()) {
+			locationService.createOrUpdate(new Location(ids.get(0)));
+		}
+		else {
+			LOG.info("No ID available to add a DEFAULT location");
+		}
+	}
+	
+	private List<String> validIds(final List<String> base, List<String> existing) {
+		List<String> ret = new ArrayList<>();
+		
+		for (String elem : base) {
+			if (! existing.contains(elem)) {
+				ret.add(elem);
+			}
+		}
+		
+		return ret;
 	}
 	
     public void deleteSelected() {
