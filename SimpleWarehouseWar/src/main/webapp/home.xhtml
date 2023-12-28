@@ -104,9 +104,11 @@
                            ]]>
                        </h:outputScript>
 				       
-                       <!-- Button for action -->
-                       <h:commandButton value="#{text['empty']}" action="#{simpleLocationWithHandlingUnitsBean.emptySelected}"
-                                        styleClass="button" />
+				       <h:panelGrid columns="1">
+                           <!-- Button for action -->
+                           <h:commandButton value="#{text['empty']}" action="#{simpleLocationWithHandlingUnitsBean.emptySelected}"
+                                            styleClass="button" />
+                       </h:panelGrid>
                    </h:panelGrid>
                    <h:panelGrid style="height: 300px;  display: block">
 			        
@@ -141,9 +143,11 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="4">
+				       <h:panelGrid columns="5">
                          <!-- Buttons for action -->
                          <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}"
+                                          styleClass="button" />
+                         <h:commandButton value="#{text['add']}" action="#{simpleHandlingUnitBean.addDefault}"
                                           styleClass="button" />
 					     <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}"
 					                      styleClass="button" />

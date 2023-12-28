@@ -30,6 +30,9 @@ public class SimpleHandlingUnitBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LogManager.getLogger(SimpleHandlingUnitBean.class);
 
+	private static final String START_ID = "1";
+	private static final String END_ID = "50";
+	
 	@EJB
 	HandlingUnitService handlingUnitService;
 	
@@ -96,6 +99,22 @@ public class SimpleHandlingUnitBean implements Serializable {
             }
         }
     }
+	
+	public void addDefault() {
+		List<HandlingUnit> hus = handlingUnitService.getAll();
+		List<String> existing = new ArrayList<>();
+		
+		for (HandlingUnit hu : hus) {
+			existing.add(hu.getId());
+		}
+		
+		for (int idx = Integer.parseInt(START_ID); idx <= Integer.valueOf(END_ID); idx++) {
+			if (! existing.contains(String.valueOf(idx))) {
+				handlingUnitService.createOrUpdate(new HandlingUnit(String.valueOf(idx)));
+				break;
+			}
+		}
+	}
     
     public void pickSelected() {
         // Process the selected rows
