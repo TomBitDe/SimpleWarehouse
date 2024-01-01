@@ -24,8 +24,21 @@ public class LocaleBean implements Serializable {
     private static final long serialVersionUID = -2786895465419133453L;
 	private static final Logger LOG = LogManager.getLogger(LocaleBean.class);
 
+	/**
+	 * The used locale
+	 */
     private Locale locale;
     
+	/**
+	 * Default constructor not mandatory
+	 */
+    public LocaleBean() {
+    	super();
+    }
+    
+    /**
+     * The supported locale definition
+     */
     private static Map<String,Object> countries;
 	static {
 		countries = new LinkedHashMap<>();

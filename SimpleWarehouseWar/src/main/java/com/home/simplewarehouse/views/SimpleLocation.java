@@ -8,6 +8,9 @@ import java.io.Serializable;
 public class SimpleLocation extends SelectableView implements Serializable {
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * The locations id
+	 */
 	private String locationId;
 	
 	/**

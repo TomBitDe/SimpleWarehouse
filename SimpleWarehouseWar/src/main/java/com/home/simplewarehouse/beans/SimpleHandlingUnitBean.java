@@ -24,6 +24,9 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.views.SimpleHandlingUnit;
 
+/**
+ * Provides a simplified representation on HandlingUnit and implements basic actions.
+ */
 @Named
 @RequestScoped
 public class SimpleHandlingUnitBean implements Serializable {
@@ -33,22 +36,50 @@ public class SimpleHandlingUnitBean implements Serializable {
 	private static final String START_ID = "1";
 	private static final String END_ID = "50";
 	
+	/**
+	 * The handling unit service
+	 */
 	@EJB
-	HandlingUnitService handlingUnitService;
-	
+	private HandlingUnitService handlingUnitService;
+	/**
+	 * The location service
+	 */
 	@EJB
-	LocationService locationService;
-	
+	private LocationService locationService;
+	/**
+	 * The handlingunit items
+	 */
     private List<SimpleHandlingUnit> items;
-    
+    /**
+     * The current destinations
+     */
     private List<String> destinations;
-    
+    /**
+     * The selected destinations
+     */
     private String selectedDestination = "";
+    
+	/**
+	 * Default constructor not mandatory
+	 */
+    public SimpleHandlingUnitBean() {
+    	super();
+    }
 
+    /**
+     * Sets the HandlingUnists
+     * 
+     * @param items the handlingunit items
+     */
 	public void setItems(List<SimpleHandlingUnit> items) {
 		this.items = items;
 	}
 
+	/**
+	 * Gets the handlingunit items
+	 * 
+	 * @return the items
+	 */
 	public List<SimpleHandlingUnit> getItems() {
 		items = new ArrayList<>();
 		
@@ -63,10 +94,20 @@ public class SimpleHandlingUnitBean implements Serializable {
 		return items;
 	}
 	
+	/**
+	 * Sets the destinations
+	 * 
+	 * @param destinations the destinations
+	 */
 	public void setDestinations(List<String> destinations) {
 		this.destinations = destinations;
 	}
 
+	/**
+	 * Gets the destionations
+	 * 
+	 * @return the destinations
+	 */
 	public List<String> getDestinations() {
 		destinations = new ArrayList<>();
  		
@@ -81,14 +122,27 @@ public class SimpleHandlingUnitBean implements Serializable {
 		return destinations;
 	}
 	
+	/**
+	 * Gets the selected destination
+	 * 
+	 * @return the destination
+	 */
     public String getSelectedDestination() {
 		return selectedDestination;
 	}
 
+    /**
+     * Sets the selected destination
+     * 
+     * @param selectedDestination the selected destination
+     */
 	public void setSelectedDestination(String selectedDestination) {
 		this.selectedDestination = selectedDestination;
 	}
 
+	/**
+	 * Deletes the selected item
+	 */
 	public void deleteSelected() {
         // Process the selected rows
         for (SimpleHandlingUnit item : items) {
@@ -100,6 +154,9 @@ public class SimpleHandlingUnitBean implements Serializable {
         }
     }
 	
+	/**
+	 * Adds an Item with DEFAULT values
+	 */
 	public void addDefault() {
 		List<HandlingUnit> hus = handlingUnitService.getAll();
 		List<String> existing = new ArrayList<>();
@@ -116,6 +173,9 @@ public class SimpleHandlingUnitBean implements Serializable {
 		}
 	}
     
+	/**
+	 * Picks the selected item
+	 */
     public void pickSelected() {
         // Process the selected rows
         for (SimpleHandlingUnit item : items) {
@@ -135,6 +195,9 @@ public class SimpleHandlingUnitBean implements Serializable {
         }
     }
     
+    /**
+     * Drops the selected item
+     */
     public void dropSelected() {
 		if (selectedDestination != null && !selectedDestination.isEmpty()) {
 			// Process the selected rows

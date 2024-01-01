@@ -20,24 +20,51 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.views.SimpleLocationWithHandlingUnits;
 
+/**
+ * Provides a simplified representation on Locations containing HandlingUnits and implements basic actions.
+ */
 @Named
 @RequestScoped
 public class SimpleLocationWithHandlingUnitsBean implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LogManager.getLogger(SimpleLocationWithHandlingUnitsBean.class);
 
+	/**
+	 * The location service
+	 */
 	@EJB
-	LocationService locationService;
-	
+	private LocationService locationService;
+	/**
+	 * THe handling unit service
+	 */
 	@EJB
-	HandlingUnitService handlingUnitService;
-	
+	private HandlingUnitService handlingUnitService;
+	/**
+	 * The location items containing handling units
+	 */
     private List<SimpleLocationWithHandlingUnits> items;
 
+	/**
+	 * Default constructor not mandatory
+	 */
+    public SimpleLocationWithHandlingUnitsBean() {
+    	super();
+    }
+
+    /**
+     * Sets the items
+     * 
+     * @param items the items
+     */
 	public void setItems(List<SimpleLocationWithHandlingUnits> items) {
 		this.items = items;
 	}
 
+	/**
+	 * Gets the items to show
+	 * 
+	 * @return the items
+	 */
 	public List<SimpleLocationWithHandlingUnits> getItems() {
 		items = new ArrayList<>();
 		
@@ -62,6 +89,9 @@ public class SimpleLocationWithHandlingUnitsBean implements Serializable {
 		return items;
 	}
 	
+	/**
+	 * Empties the selected locations form all handlingunits
+	 */
     public void emptySelected() {
         // Process the selected rows
         for (SimpleLocationWithHandlingUnits item : items) {

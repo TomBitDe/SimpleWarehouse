@@ -15,9 +15,19 @@ import javax.inject.Named;
 public class NavigationController implements Serializable {  
    private static final long serialVersionUID = 1L;
    
+   /**
+    * The current page id for navigation
+    */
    @Inject
    @ManagedProperty("#{param.pageId}") 
    private String pageId;  
+   
+	/**
+	 * Default constructor not mandatory
+	 */
+   public NavigationController() {
+	   super();
+   }
    
    /**
     * Move to page 1

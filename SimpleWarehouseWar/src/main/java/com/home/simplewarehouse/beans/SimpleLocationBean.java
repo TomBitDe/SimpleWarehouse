@@ -17,6 +17,9 @@ import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.views.SimpleLocation;
 
+/**
+ * Provides a simplified representation on Location and implements basic actions.
+ */
 @Named
 @RequestScoped
 public class SimpleLocationBean implements Serializable {
@@ -29,18 +32,42 @@ public class SimpleLocationBean implements Serializable {
 	private static final List<String> GENERATED_IDS = new ArrayList<>(Arrays.asList(START_ID, "B", "C", "D", "E", "F", "G", "H"
 			, "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", END_ID));
 
+	/**
+	 * The location service
+	 */
     @EJB
-	LocationService locationService;
-    
+	private LocationService locationService;
+    /**
+     * The locale bean
+     */
     @Inject
     private LocaleBean localeBean;
-
+    /**
+     * The location items
+     */
     private List<SimpleLocation> items;
+    
+	/**
+	 * Default constructor not mandatory
+	 */
+    public SimpleLocationBean() {
+    	super();
+    }
 
+    /**
+     * Sets the items
+     * 
+     * @param items the items
+     */
 	public void setItems(List<SimpleLocation> items) {
 		this.items = items;
 	}
 
+	/**
+	 * Gets the items to show
+	 * 
+	 * @return the items
+	 */
 	public List<SimpleLocation> getItems() {
 		items = new ArrayList<>();
 		
@@ -55,6 +82,9 @@ public class SimpleLocationBean implements Serializable {
 		return items;
 	}
 	
+	/**
+	 * Adds a location with DEFAULT values
+	 */
 	public void addDefault() {
 		List<Location> locations = locationService.getAll();
 		List<String> existing = new ArrayList<>();
@@ -73,6 +103,14 @@ public class SimpleLocationBean implements Serializable {
 		}
 	}
 	
+	/**
+	 * Provides valid ids sorted out from base compared with existing
+	 * 
+	 * @param base the complete amount of foreseen ids 
+	 * @param existing all the already existing / used ids
+	 * 
+	 * @return the ids that can be used for the next action
+	 */
 	private List<String> validIds(final List<String> base, List<String> existing) {
 		List<String> ret = new ArrayList<>();
 		
@@ -85,6 +123,9 @@ public class SimpleLocationBean implements Serializable {
 		return ret;
 	}
 	
+	/**
+	 * Deletes the selected item
+	 */
     public void deleteSelected() {
 /*
 		if (items.isEmpty()) {
@@ -95,7 +136,7 @@ public class SimpleLocationBean implements Serializable {
 		}
 		else {
 */
-			int cnt=0;
+			int cnt = 0;
 
 			// Process the selected rows
 			for (SimpleLocation item : items) {

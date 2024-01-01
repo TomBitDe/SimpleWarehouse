@@ -20,12 +20,27 @@ public class EnvironBean implements Serializable {
 	private static final long serialVersionUID = 1L;	
 	private static final Logger LOG = LogManager.getLogger(EnvironBean.class);
 
+	/**
+	 * The used faces context
+	 */
 	@Inject
     private FacesContext facesContext;
 
+	/**
+	 * The specification title
+	 */
     private String specTitle;
+    /**
+     * The specification version
+     */
     private String specVersion;
+    /**
+     * The implementation title
+     */
     private String implTitle;
+    /**
+     * The implementation version
+     */
     private String implVersion;
     
 	/**
