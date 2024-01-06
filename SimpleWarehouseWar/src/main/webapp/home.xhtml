@@ -151,7 +151,7 @@
 					     
 					     <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}" styleClass="button" id="pick_hu"/><h:commandButton value="#{text['drop']}" action="#{simpleHandlingUnitBean.dropSelected}"
 					                      styleClass="button" id="drop_hu"/>
-						 <h:selectOneMenu id="loc_menu" value="#{simpleHandlingUnitBean.selectedDestination}" >
+						 <h:selectOneMenu id="loc_menu" value="#{simpleHandlingUnitBean.selectedDestination}" style="width: 75px; ">
 						     <f:selectItem itemLabel=" " />
 						     <f:selectItems value="#{simpleHandlingUnitBean.destinations}" />
 						 </h:selectOneMenu>
