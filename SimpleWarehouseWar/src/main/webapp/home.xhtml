@@ -27,7 +27,7 @@
 				<h:panelGrid id="panelQualification" columns="3" >
                    <h:panelGrid style="height: 300px; display: block">
                    
-			           <h3><h:outputText value="#{text['locations']}" /></h3>
+			           <h:outputText value="#{text['locations']}" styleClass="commmonTableHeadLine" />
         			   
  				       <div style="overflow: auto;">
         			   <h:dataTable id="loc" value="#{simpleLocationBean.items}"
@@ -69,8 +69,7 @@
 
                    <h:panelGrid style="height: 300px; display: block">
 			        
-			           <h3><h:outputText value="#{text['location_with_handling_units']}" /></h3>
-			           
+			           <h:outputText value="#{text['location_with_handling_units']}" styleClass="commmonTableHeadLine" />
  				       <div style="overflow: auto;">
         			   <h:dataTable id="loc_hu" value="#{simpleLocationWithHandlingUnitsBean.items}"
 		        	       var="item" styleClass="commonTable"
@@ -112,7 +111,7 @@
                    </h:panelGrid>
                    <h:panelGrid style="height: 300px;  display: block">
 			        
-			           <h3><h:outputText value="#{text['handling_units']}" /></h3>
+			           <h:outputText value="#{text['handling_units']}"  styleClass="commmonTableHeadLine" />
 			           
  				       <div style="overflow: auto;">
         			   <h:dataTable id="hu" value="#{simpleHandlingUnitBean.items}"

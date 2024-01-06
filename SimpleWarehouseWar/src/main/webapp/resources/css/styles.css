@@ -68,6 +68,11 @@ p {
    border:1px solid #000000;
 }
 
+.commmonTableHeadLine {
+   text-align:left;
+   font-weight: bold;
+}
+
 .commonTableHeader {
    text-align:center;
    background:none repeat scroll 0 0 #B5B5B5;
