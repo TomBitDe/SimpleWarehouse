@@ -35,7 +35,7 @@ public class SimpleLocationWithHandlingUnitsBean implements Serializable {
 	@EJB
 	private LocationService locationService;
 	/**
-	 * THe handling unit service
+	 * The handling unit service
 	 */
 	@EJB
 	private HandlingUnitService handlingUnitService;
