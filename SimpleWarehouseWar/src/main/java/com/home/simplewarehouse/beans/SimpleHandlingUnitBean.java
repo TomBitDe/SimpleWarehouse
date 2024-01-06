@@ -55,7 +55,7 @@ public class SimpleHandlingUnitBean implements Serializable {
      */
     private List<String> destinations;
     /**
-     * The selected destinations
+     * The selected destination
      */
     private String selectedDestination = "";
     
