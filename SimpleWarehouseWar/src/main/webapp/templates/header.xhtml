@@ -1,0 +1,36 @@
+<?xml version = "1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+<html xmlns = "http://www.w3.org/1999/xhtml"   
+   xmlns:f = "http://java.sun.com/jsf/core"
+   xmlns:ui = "http://java.sun.com/jsf/facelets"
+   xmlns:h = "http://java.sun.com/jsf/html">
+   
+   <body>
+      <ui:composition> 
+		<h:outputText value="#{text['specification']}:" />
+		<h:outputText value="#{environBean.specTitle}" style="font-weight: bold;"/>
+
+        <h:outputText value="&#160;"></h:outputText>
+		<h:outputText value="#{text['version']}:" />
+		<h:outputText value="#{environBean.specVersion}" style="font-weight: bold;" />
+
+        <h:outputText value="&#160;&#160;"></h:outputText>
+		<h:outputText value="#{text['implementation']}:" />
+		<h:outputText value="#{environBean.implTitle}" style="font-weight: bold;"/>
+
+        <h:outputText value="&#160;"></h:outputText>
+		<h:outputText value="#{text['version']}:" />
+		<h:outputText value="#{environBean.implVersion}" style="font-weight: bold;"/>
+		
+<!--
+        <h:outputText value="&#160;&#160;"></h:outputText>
+        <h:selectOneMenu value = "#{localeBean.locale}" onchange = "submit()"
+           valueChangeListener = "#{localeBean.localeChanged}">
+           <f:selectItems value = "#{localeBean.countries}" /> 
+        </h:selectOneMenu>
+-->		
+      </ui:composition>	
+   </body>
+</html>

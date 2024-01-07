@@ -1,0 +1,116 @@
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 80%;
+    background-color: #ffff80;
+}
+
+wrapper {
+    width: 960px;
+    margin: auto;
+    text-align: left;
+    color: #d9d9d9;
+}
+
+p {
+    text-align: left;
+}
+
+.col-1 {
+	text-align: right;
+}
+
+.col-2 {
+	font-weight: bold;
+}
+
+.button {
+    display: inline;
+    color: #fff;
+    background-color: #f2791d;
+    padding: 8px;
+    margin: auto;
+    border-radius: 8px;
+    -moz-border-radius: 8px;
+    -webkit-border-radius: 8px;
+    box-shadow: none;
+    border: none;
+}
+
+.button:hover {
+    background-color: #ffb15e;
+}
+.button a, a:visited, a:hover, a:active {
+    color: #fff;
+    text-decoration: none;
+}
+
+.commandLink {
+    color: #000000;
+    background-color: #80ff80;
+    padding: 8px;
+    margin: auto;
+}
+.commandLink:hover {
+	color: #ff0080;
+}
+
+.link {
+    color: #ffffff;
+    background-color: #400080;
+    margin: auto;
+}
+.link:hover {
+	color: #ffff00;
+}
+
+.commonTable {   
+   border-collapse:collapse;
+   border:1px solid #000000;
+}
+
+.commmonTableHeadLine {
+   text-align:left;
+   font-weight: bold;
+}
+
+.commonTableHeader {
+   text-align:center;
+   background:none repeat scroll 0 0 #B5B5B5;
+   border-bottom:1px solid #000000;  
+   padding:2px;
+}
+
+.commonTableOddRow {
+   text-align:center;
+   background:none repeat scroll 0 0 #ffffff;	
+}
+
+.commonTableEvenRow {
+   text-align:center;
+   background:none repeat scroll 0 0 #D3D3D3;
+}
+
+.commonTable tr.selected {
+    background-color: #ff80c0;
+}
+
+.overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+}
+
+.popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: #fff;
+            padding: 20px;
+            border: 1px solid #ccc;
+}

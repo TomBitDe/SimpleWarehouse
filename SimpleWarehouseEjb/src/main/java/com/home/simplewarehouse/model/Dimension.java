@@ -186,7 +186,6 @@ public class Dimension implements Serializable {
      * @param maxCapacity the given maximum capacity
      * @param maxWeight the given maximum weight
      * @param maxHeight the given maximum height
-     * @param user the given user
      */
 	public Dimension(Location location, int maxCapacity, int maxWeight, HeightCategory maxHeight) {
     	this(location, maxCapacity, maxWeight);
