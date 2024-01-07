@@ -24,7 +24,8 @@
 					<f:ajax execute="@form" render="dest_menu" />					
 				  </h:commandButton>
 				  
-				  <h:messages showDetail="true" /> 
+				  <h:messages globalOnly="true" showDetail="true" redisplay="false" 
+				      infoClass="info" warningClass="warning" errorClass="error" fatalClass="fatal" /> 
 				</h:panelGrid>
 				
 				<h:panelGrid id="panelQualification" columns="4" >

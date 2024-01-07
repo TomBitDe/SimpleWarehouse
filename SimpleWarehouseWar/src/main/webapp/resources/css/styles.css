@@ -15,6 +15,26 @@ p {
     text-align: left;
 }
 
+.info {
+    color: black;
+	font-size: 150%;
+}
+.warning {
+	color: blue;
+	font-weight: bold;
+	font-size: 150%;
+}
+.error {
+    color: red;
+    font-weight: bold;
+	font-size: 150%;
+}
+.fatal {
+	color: #ff0080;
+	font-weight: bold;
+	font-size: 150%;
+}
+
 .col-1 {
 	text-align: right;
 }

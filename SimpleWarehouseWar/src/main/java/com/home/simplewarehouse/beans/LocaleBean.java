@@ -95,7 +95,7 @@ public class LocaleBean implements Serializable {
 	}
 
 	/**
-	 * Value change event listener
+	 * Locale changed event listener
 	 * 
 	 * @param e the event
 	 */
@@ -113,14 +113,18 @@ public class LocaleBean implements Serializable {
 	}
 	
 	/**
-	 * Gets a text for the current locale
+	 * Gets a text for the given key taking the current locale into account
 	 * 
 	 * @param key the key to reference the text
 	 * 
 	 * @return the text
 	 */
     public String getText(String key) {
-        ResourceBundle bundle = ResourceBundle.getBundle("text", locale);
-        return bundle.getString(key);
+        FacesContext context = FacesContext.getCurrentInstance();
+        
+        // See <var>text</var> in faces-config.xml; same value required
+        ResourceBundle text = context.getApplication().evaluateExpressionGet(context, "#{text}", ResourceBundle.class);
+        
+        return text.getString(key);
     }
 }
