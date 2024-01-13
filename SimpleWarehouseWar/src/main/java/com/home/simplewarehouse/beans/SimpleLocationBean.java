@@ -131,7 +131,7 @@ public class SimpleLocationBean implements Serializable {
     public void deleteSelected() {
 		if (items.isEmpty()) {
 			String summary = localeBean.getText("warning");
-			String detail = localeBean.getText("no_selection");
+			String detail = localeBean.getText("no_items");
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
 		}

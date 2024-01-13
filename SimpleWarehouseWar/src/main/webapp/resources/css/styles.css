@@ -15,22 +15,22 @@ p {
     text-align: left;
 }
 
-.info {
-    color: black;
+.info-message {
+    color: green;
 	font-size: 150%;
 }
-.warning {
+.warning-message {
 	color: blue;
 	font-weight: bold;
 	font-size: 150%;
 }
-.error {
+.error-message {
     color: red;
     font-weight: bold;
 	font-size: 150%;
 }
-.fatal {
-	color: #ff0080;
+.fatal-message {
+	color: purple;
 	font-weight: bold;
 	font-size: 150%;
 }

@@ -1,9 +1,14 @@
 <?xml version='1.0' encoding='UTF-8' ?>
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml"
+<html lang="de" xml:lang="de" 
+    xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<head>
+  <title>Simple Warehouse</title>
+</head>
 
 <h:body>
 	<ui:composition template="templates/common.xhtml">
@@ -15,17 +20,26 @@
 			<h:form>
 			    <h:panelGrid columns="2">
 				  <h:commandButton value="#{text['refresh']}" styleClass="button">
+					<!-- DO NOT USE THIS; WILL NOT WORK
+					<f:ajax render="@form" />
+					-->					
 					<f:ajax execute="@form" render="loc" />
 					<f:ajax execute="@form" render="loc_hu" />
 					<f:ajax execute="@form" render="hu" />
 					<f:ajax execute="@form" render="loc_menu" />
 					<f:ajax execute="@form" render="hu_hu" />
 					<f:ajax execute="@form" render="orig_menu" />
-					<f:ajax execute="@form" render="dest_menu" />					
+					<f:ajax execute="@form" render="dest_menu" />
 				  </h:commandButton>
 				  
-				  <h:messages globalOnly="true" showDetail="true" redisplay="false" 
-				      infoClass="info" warningClass="warning" errorClass="error" fatalClass="fatal" /> 
+				  <h:messages id="customMessages" globalOnly="false" showDetail="true"
+				      infoStyle="color: black;" warnStyle="color: blue; font-weight: bold; font-size: 150%;" 
+				      errorStyle="color: red; font-weight: bold; font-size: 150%;"
+				      fatalStyle="color: purple; font-weight: bold; font-size: 150%;" />
+				      <!-- THIS DOES NOT WORK; DON'T KNOW WHY
+				      infoClass="info-message" warningClass="warning-message"
+				      errorClass="error-message" fatalClass="fatal-message" />
+				      -->
 				</h:panelGrid>
 				
 				<h:panelGrid id="panelQualification" columns="4" >
