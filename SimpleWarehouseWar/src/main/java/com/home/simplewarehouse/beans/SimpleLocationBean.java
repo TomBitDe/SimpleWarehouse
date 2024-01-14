@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.application.FacesMessage;
+import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
 
@@ -127,15 +129,13 @@ public class SimpleLocationBean implements Serializable {
 	 * Deletes the selected item
 	 */
     public void deleteSelected() {
-/*
 		if (items.isEmpty()) {
 			String summary = localeBean.getText("warning");
-			String detail = localeBean.getText("no_selection");
+			String detail = localeBean.getText("no_items");
 			FacesContext.getCurrentInstance().addMessage(null,
 					new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
 		}
 		else {
-*/
 			int cnt = 0;
 
 			// Process the selected rows
@@ -148,7 +148,7 @@ public class SimpleLocationBean implements Serializable {
 					++cnt;
 				}
 			}
-/*			
+
 			if (cnt == 0) {
 				String summary = localeBean.getText("warning");
 				String detail = localeBean.getText("no_selection");
@@ -156,6 +156,5 @@ public class SimpleLocationBean implements Serializable {
 						new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
 			}
 		}
-*/
     }
 }

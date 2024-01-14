@@ -1,25 +1,24 @@
 package com.home.simplewarehouse.beans;
 
 import java.io.Serializable;
-import java.util.LinkedHashMap;
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.annotation.PostConstruct;
-import javax.enterprise.context.SessionScoped;
+import javax.enterprise.context.RequestScoped;
 import javax.faces.context.FacesContext;
-import javax.faces.event.ValueChangeEvent;
 import javax.inject.Named;
+import javax.servlet.http.HttpServletRequest;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * Bean class for JSF locale handling. 
+ * Bean class for JSF locale handling.
+ * Locale switching can be done by browser settings.
  */
 @Named
-@SessionScoped
+@RequestScoped
 public class LocaleBean implements Serializable {
     private static final long serialVersionUID = -2786895465419133453L;
 	private static final Logger LOG = LogManager.getLogger(LocaleBean.class);
@@ -28,6 +27,10 @@ public class LocaleBean implements Serializable {
 	 * The used locale
 	 */
     private Locale locale;
+    /**
+     * The browsers locale
+     */
+    private Locale browserLocale;
     
 	/**
 	 * Default constructor not mandatory
@@ -36,22 +39,18 @@ public class LocaleBean implements Serializable {
     	super();
     }
     
-    /**
-     * The supported locale definition
-     */
-    private static Map<String,Object> countries;
-	static {
-		countries = new LinkedHashMap<>();
-		countries.put("English", Locale.ENGLISH);
-		countries.put("German", Locale.GERMAN);
-	}
-
 	/**
-	 * Initialize locale
+	 * Initialize locale and browserLocale
 	 */
     @PostConstruct
     public void init() {
-        locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+        this.locale = FacesContext.getCurrentInstance().getViewRoot().getLocale();
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        HttpServletRequest request = (HttpServletRequest) facesContext.getExternalContext().getRequest();
+        this.browserLocale = request.getLocale();
+        
+        LOG.info("Browser locale={} Application locale={}", this.browserLocale, this.locale);
     }
 
     /**
@@ -62,65 +61,38 @@ public class LocaleBean implements Serializable {
     public Locale getLocale() {
         return locale;
     }
-
+    
     /**
-     * Gets the language
+     * Sets the locale
      * 
-     * @return the language
+     * @param locale the locale
      */
-    public String getLanguage() {
-        return locale.getLanguage();
+    public void setLocale(Locale locale) {
+    	this.locale = locale;
     }
 
     /**
-     * Sets the language
+     * Gets the browsers locale
      * 
-     * @param language the language to use
+     * @return the browsers locale
      */
-    public void setLanguage(String language) {
-        locale = new Locale(language);
-        
-        LOG.info("RootView = {}", FacesContext.getCurrentInstance().getViewRoot().getId());
-
-        FacesContext.getCurrentInstance().getViewRoot().setLocale(locale);
-    }
-
-    /**
-     * Gets the countries
-     * 
-     * @return the countries
-     */
-	public Map<String, Object> getCountries() {
-		return countries;
-	}
-
-	/**
-	 * Value change event listener
-	 * 
-	 * @param e the event
-	 */
-	public void localeChanged(ValueChangeEvent e) {
-		if (e.getNewValue() != null) {
-			String newLocaleValue = e.getNewValue().toString();
-
-			for (Map.Entry<String, Object> entry : countries.entrySet()) {
-
-				if (entry.getValue().toString().equals(newLocaleValue)) {
-					FacesContext.getCurrentInstance().getViewRoot().setLocale((Locale) entry.getValue());
-				}
-			}
-		}
+    public Locale getBrowserLocale() {
+		return browserLocale;
 	}
 	
 	/**
-	 * Gets a text for the current locale
+	 * Gets a text for the given key taking the current locale into account
 	 * 
 	 * @param key the key to reference the text
 	 * 
 	 * @return the text
 	 */
     public String getText(String key) {
-        ResourceBundle bundle = ResourceBundle.getBundle("text", locale);
-        return bundle.getString(key);
+        FacesContext context = FacesContext.getCurrentInstance();
+        
+        // See <var>text</var> in faces-config.xml; same value required
+        ResourceBundle text = context.getApplication().evaluateExpressionGet(context, "#{text}", ResourceBundle.class);
+        
+        return text.getString(key);
     }
 }

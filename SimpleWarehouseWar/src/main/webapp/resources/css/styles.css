@@ -15,6 +15,26 @@ p {
     text-align: left;
 }
 
+.info-message {
+    color: green;
+	font-size: 150%;
+}
+.warning-message {
+	color: blue;
+	font-weight: bold;
+	font-size: 150%;
+}
+.error-message {
+    color: red;
+    font-weight: bold;
+	font-size: 150%;
+}
+.fatal-message {
+	color: purple;
+	font-weight: bold;
+	font-size: 150%;
+}
+
 .col-1 {
 	text-align: right;
 }
