@@ -24,13 +24,27 @@
 		<h:outputText value="#{text['version']}:" />
 		<h:outputText value="#{environBean.implVersion}" style="font-weight: bold;"/>
 		
+        <h:outputText value="&#160;&#160;"></h:outputText>
+		<h:outputText value="#{text['browser_locale']}:" />
+		<h:outputText value="#{localeBean.browserLocale.language}" style="font-weight: bold;"/>
+        <h:outputText value="&#160;&#160;"></h:outputText>
+		<h:outputText value="#{text['locale_variant']}:" />
+		<h:outputText value="#{localeBean.browserLocale.variant}" style="font-weight: bold;"/>
+
+        <h:outputText value="&#160;&#160;"></h:outputText>
+		<h:outputText value="#{text['app_locale']}:" />
+		<h:outputText value="#{localeBean.locale.language}" style="font-weight: bold;"/>
+        <h:outputText value="&#160;&#160;"></h:outputText>
+		<h:outputText value="#{text['locale_variant']}:" />
+		<h:outputText value="#{localeBean.locale.variant}" style="font-weight: bold;"/>
+
 <!--
         <h:outputText value="&#160;&#160;"></h:outputText>
         <h:selectOneMenu value = "#{localeBean.locale}" onchange = "submit()"
            valueChangeListener = "#{localeBean.localeChanged}">
-           <f:selectItems value = "#{localeBean.countries}" /> 
+           <f:selectItems value = "#{localeBean.availableLanguages}" /> 
         </h:selectOneMenu>
--->		
+-->
       </ui:composition>	
    </body>
 </html>
