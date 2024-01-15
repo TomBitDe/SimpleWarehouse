@@ -41,6 +41,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	private static final String LOCATION_IS_NULL_MSG = "Location is null";
 	private static final String HU_IS_NULL_MSG = "HandlingUnit is null";
 	private static final String BASE_IS_NULL_MSG = "Base is null";
+	private static final String HU_ID_BASE_ID_ARE_EQUAL = "HandlingUnit ID and Base ID are equal; nothing to do";
 	
 	private static final String END_PICK_FROM = "<-- pickFrom()";
 	
@@ -366,6 +367,20 @@ public class HandlingUnitBean implements HandlingUnitService {
 		HandlingUnit hu = persistOrMerge(handlingUnit);
 		
 		HandlingUnit ba = persistOrMerge(base);
+		
+		if (hu.getId().equals(ba.getId())) {
+			LOG.info(HU_ID_BASE_ID_ARE_EQUAL);
+			LOG.trace("<-- assign() base={}", ba);
+			
+			return ba;
+		}
+		
+		if (hu.getContains().contains(ba)) {
+			LOG.info("Invalid assign because {} contains {}", hu.getId(), ba.getId());
+			LOG.trace("<-- assign() base={}", ba);
+			
+			return ba;
+		}
 				
 		hu.setBaseHU(ba);
 		boolean ret = ba.getContains().add(hu);
@@ -407,6 +422,13 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit ba = persistOrMerge(base);
 		
+		if (hu.getId().equals(ba.getId())) {
+			LOG.info(HU_ID_BASE_ID_ARE_EQUAL);
+			LOG.trace("<-- remove() base={}", ba);
+			
+			return ba;
+		}
+
 		hu.setBaseHU(null);
 		boolean ret = ba.getContains().remove(hu);
 		if (ret) {
@@ -452,6 +474,12 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		HandlingUnit dest = persistOrMerge(destHandlingUnit);
 		
+		if (hu.getId().equals(dest.getId())) {
+			LOG.info(HU_ID_BASE_ID_ARE_EQUAL);
+			
+			return getById(hu.getId());
+		}
+
 		if (hu.getBaseHU() != null) {
 			LOG.info("Remove {} from base {}", hu.getId(), hu);
 			HandlingUnit base = remove(hu, hu.getBaseHU());
