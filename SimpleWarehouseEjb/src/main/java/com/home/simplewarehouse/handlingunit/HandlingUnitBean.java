@@ -44,6 +44,8 @@ public class HandlingUnitBean implements HandlingUnitService {
 	private static final String HU_ID_BASE_ID_ARE_EQUAL = "HandlingUnit ID and Base ID are equal; nothing to do";
 	
 	private static final String END_PICK_FROM = "<-- pickFrom()";
+	private static final String END_ASSIGN_BASE = "<-- assign() base={}";
+	private static final String END_REMOVE_BASE = "<-- remove() base={}";
 	
 	@PersistenceContext
 	private EntityManager em;
@@ -357,6 +359,21 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 	
 	@Override
+	public HandlingUnit assign(final String handlingUnitId, final String baseId) {
+		LOG.trace("--> assign() hu={} base={}", handlingUnitId, baseId);
+		
+		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
+		
+		HandlingUnit base = initHandlingUnit(baseId);
+		
+		base = assign(handlingUnit, base);
+		
+		LOG.trace(END_ASSIGN_BASE, base);
+		
+		return base;
+	}
+	
+	@Override
 	public HandlingUnit assign(final HandlingUnit handlingUnit, final HandlingUnit base) {
 		LOG.trace("--> assign() hu={} base={}", handlingUnit, base);
 
@@ -370,16 +387,21 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		if (hu.getId().equals(ba.getId())) {
 			LOG.info(HU_ID_BASE_ID_ARE_EQUAL);
-			LOG.trace("<-- assign() base={}", ba);
+			LOG.trace(END_ASSIGN_BASE, ba);
 			
 			return ba;
 		}
 		
+		// Avoid a direct loop
 		if (hu.getContains().contains(ba)) {
 			LOG.info("Invalid assign because {} contains {}", hu.getId(), ba.getId());
-			LOG.trace("<-- assign() base={}", ba);
+			LOG.trace(END_ASSIGN_BASE, ba);
 			
 			return ba;
+		}
+		
+		if (hu.getBaseHU() != null) {
+			remove(hu, hu.getBaseHU());
 		}
 				
 		hu.setBaseHU(ba);
@@ -388,7 +410,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		ba.setContains(ba.getContains());
 		
-		LOG.trace("<-- assign() base={}", ba);
+		LOG.trace(END_ASSIGN_BASE, ba);
 		
 		em.flush();
 		
@@ -396,16 +418,16 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
-	public HandlingUnit assign(final String handlingUnitId, final String baseId) {
-		LOG.trace("--> assign() hu={} base={}", handlingUnitId, baseId);
+	public HandlingUnit remove(final String handlingUnitId, final String baseId) {
+		LOG.trace("--> remove() hu={} base={}", handlingUnitId, baseId);
 		
 		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
 		
 		HandlingUnit base = initHandlingUnit(baseId);
 		
-		base = assign(handlingUnit, base);
+		base = remove(handlingUnit, base);
 		
-		LOG.trace("<-- assign() base={}", base);
+		LOG.trace(END_REMOVE_BASE, base);
 		
 		return base;
 	}
@@ -424,7 +446,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		if (hu.getId().equals(ba.getId())) {
 			LOG.info(HU_ID_BASE_ID_ARE_EQUAL);
-			LOG.trace("<-- remove() base={}", ba);
+			LOG.trace(END_REMOVE_BASE, ba);
 			
 			return ba;
 		}
@@ -440,7 +462,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		ba.setContains(ba.getContains());
 		
-		LOG.trace("<-- remove() base={}", ba);
+		LOG.trace(END_REMOVE_BASE, ba);
 		
 		em.flush();
 		
@@ -448,18 +470,18 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 	
 	@Override
-	public HandlingUnit remove(final String handlingUnitId, final String baseId) {
-		LOG.trace("--> remove() hu={} base={}", handlingUnitId, baseId);
-		
+	public HandlingUnit move(final String handlingUnitId, final String baseId) {
+		LOG.trace("--> move() hu={} base={}", handlingUnitId, baseId);
+
 		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
 		
 		HandlingUnit base = initHandlingUnit(baseId);
 		
-		base = remove(handlingUnit, base);
+		HandlingUnit hu = move(handlingUnit, base);
 		
-		LOG.trace("<-- remove() base={}", base);
+		LOG.trace("<-- move() hu={}", hu);
 		
-		return base;
+		return hu;
 	}
 	
 	@Override
@@ -496,18 +518,16 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
-	public HandlingUnit move(final String handlingUnitId, final String baseId) {
-		LOG.trace("--> move() hu={} base={}", handlingUnitId, baseId);
+	public Set<HandlingUnit> free(final String baseId) {
+		LOG.trace("--> free() base={}", baseId);
 
-		HandlingUnit handlingUnit = initHandlingUnit(handlingUnitId);
-		
 		HandlingUnit base = initHandlingUnit(baseId);
 		
-		HandlingUnit hu = move(handlingUnit, base);
+		Set<HandlingUnit> huSet = free(base);
 		
-		LOG.trace("<-- move() hu={}", hu);
+		LOG.trace("<-- free() {}", huSet);
 		
-		return hu;
+		return huSet;
 	}
 	
 	@Override
@@ -547,19 +567,6 @@ public class HandlingUnitBean implements HandlingUnitService {
 		return ret;
 	}
 
-	@Override
-	public Set<HandlingUnit> free(final String baseId) {
-		LOG.trace("--> free() base={}", baseId);
-
-		HandlingUnit base = initHandlingUnit(baseId);
-		
-		Set<HandlingUnit> huSet = free(base);
-		
-		LOG.trace("<-- free() {}", huSet);
-		
-		return huSet;
-	}
-	
 	@Override
 	public Set<HandlingUnit> flatContains(HandlingUnit base) {
 		final Set<HandlingUnit> onBase = new HashSet<>(base.getContains());
