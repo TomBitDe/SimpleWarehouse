@@ -15,6 +15,22 @@ p {
     text-align: left;
 }
 
+.custom1Header {
+	color: black;
+	font-weight: bold;
+	font-size: 150%;
+}
+
+.customMenuPanel {
+	padding: 10px;
+	border-style: hidden;
+	border-width: 2px;
+	border-radius: 5px;
+	border-color: green;
+	border-collapse: separate;
+	border-spacing: 5px;
+}
+
 .info-message {
     color: green;
 	font-size: 150%;

@@ -15,10 +15,19 @@
 
 		<ui:define name="content">
 
-			<h2><h:outputText value="#{text['simplewarehouse']}" /></h2>
+			<h:outputText value="#{text['simplewarehouse']}" styleClass="custom1Header" />
 
 			<h:form>
-			    <h:panelGrid columns="2">
+			    <h:panelGrid id="customMenu" columns="10" styleClass="customMenuPanel">
+				    <h:commandLink action="#{navigationController.moveToPage('home')}"
+				    	value="#{text['menu_home']}" styleClass="commandLink">
+				    </h:commandLink>
+				    <h:commandLink action="#{navigationController.moveToPage('page1')}"
+					    value="#{text['menu_page1']}" styleClass="commandLink">
+				    </h:commandLink>
+				</h:panelGrid>
+			
+			    <h:panelGrid columns="2" >
 				  <h:commandButton value="#{text['refresh']}" styleClass="button">
 					<!-- DO NOT USE THIS; WILL NOT WORK
 					<f:ajax render="@form" />
