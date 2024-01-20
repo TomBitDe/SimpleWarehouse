@@ -326,16 +326,6 @@ public class HandlingUnitComposingTest {
 		
 		HandlingUnit hu9 = handlingUnitService.move(new HandlingUnit("9"), new HandlingUnit("8"));
 		assertNotNull(hu9);
-
-		// Now some edge cases
-		try {
-			handlingUnitService.move((String) null, (String) null);
-
-			Assert.fail("Exception expected");
-		}
-		catch (EJBException ex) {
-			assertTrue("Exception is: " + ex.getMessage(), true);
-		}
 	}
 	
 	/**
@@ -392,6 +382,22 @@ public class HandlingUnitComposingTest {
 		
 		try {
 			freed = handlingUnitService.free((String)null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue("Exception is: " + ex.getMessage(), true);
+		}
+	}
+
+	/**
+	 * Some edge cases to test
+	 */
+	@Test
+	@InSequence(21)
+	public void edgeCases() {
+		try {
+			handlingUnitService.move((String) null, (String) null);
 
 			Assert.fail("Exception expected");
 		}
