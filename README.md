@@ -10,5 +10,6 @@ Release notes:
 - Release-0.9.2.0 contains full handling unit support (handling unit on other handing unit).
 - Release-0.9.3.0 contains remote interface support.
 - Release-0.9.4.0 contains REST support for location and handling unit.
-- Release-0.9.5.2 contains Simple JSF interface for locations and handling units.
-- Release-0.9.7.0 contains Bugfixes for operations on handling units.
+- Release-0.9.5.2 contains a simple JSF interface for locations and handling units.
+- Release-0.9.7.0 contains bugfixes for operations on handling units.
+- Release-0.9.8.0 contains more JSF.
