@@ -94,6 +94,10 @@ public class HandlingUnitBean implements HandlingUnitService {
 			
 			free(hu);
 			
+			if (hu.getBaseHU() != null) {
+				hu.getBaseHU().getContains().remove(hu);
+			}
+			
 			em.remove(hu);
 			em.flush();
 
@@ -401,7 +405,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		}
 		
 		if (hu.getBaseHU() != null) {
-			remove(hu, hu.getBaseHU());
+			persistOrMerge(remove(hu, hu.getBaseHU()));			
 		}
 				
 		hu.setBaseHU(ba);
@@ -554,11 +558,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		ba.setContains(ba.getContains());
 		
-		if (ba.getBaseHU() != null) {
-		    ba.getBaseHU().getContains().remove(ba);
-		}
-		
-		LOG.info("free result is: {}", base);
+		LOG.info("free result is: {}", ba);
 		
 		LOG.trace("<-- free() {}", ret);
 		
