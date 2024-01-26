@@ -11,8 +11,21 @@
          
          <ui:define name = "content">
             <h:outputText value="#{text['page1_header']}" styleClass="custom1Header" />
-            <h2>Page1 content</h2>
-            <h:link value="#{text['back_home']}" outcome = "home" styleClass = "link"/>
+            
+			<h:form>
+			    <h:panelGrid id="customMenu" columns="10" styleClass="customMenuPanel">
+				    <h:commandLink action="#{navigationController.moveToPage('home')}"
+					    value="#{text['back_home']}" styleClass="commandLink">
+				    </h:commandLink>
+				</h:panelGrid>
+				
+				<h:panelGrid id="multiLinePanel" columns="1" >
+				    <h:inputTextarea  id="jndiOutput" rows="20" cols="160" value="#{jndiContextBean.servletOutput}"
+				        readonly="true" escape="false" >
+				    </h:inputTextarea >
+				</h:panelGrid>
+				
+            </h:form>
          </ui:define> 
          
       </ui:composition> 
