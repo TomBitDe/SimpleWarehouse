@@ -14,12 +14,25 @@ import javax.naming.NamingException;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+/**
+ * Bean class provides the Jndi context to display by JSF.
+ */
 @Named
 public class JndiContextBean {
 	private static final Logger LOG = LogManager.getLogger(JndiContextBean.class);
 	
-	private String servletOutput;
+	private String context;
+	
+	/**
+	 * Default constructor is not mandatory
+	 */
+	public JndiContextBean() {
+		super();
+	}
 
+	/**
+	 * Initialize the jndi content
+	 */
     @PostConstruct
     public void init() {
     	StringWriter out = new StringWriter();
@@ -34,20 +47,30 @@ public class JndiContextBean {
 	        
 	        writer.flush();
 	        
-	        servletOutput = out.toString();
+	        context = out.toString();
         }
 		catch (NamingException ex) {
 			LOG.error(ex.getLocalizedMessage());
-			servletOutput = ex.getLocalizedMessage();
+			context = ex.getLocalizedMessage();
 		}
     }
 
-	public String getServletOutput() {
-		return servletOutput;
+    /**
+     * Gets the jndi context
+     * 
+     * @return the context
+     */
+	public String getContext() {
+		return context;
 	}
 
-	public void setServletOutput(String servletOutput) {
-		this.servletOutput = servletOutput;
+	/**
+	 * Sets the jndi context
+	 * 
+	 * @param val the value to set
+	 */
+	public void setContext(String val) {
+		this.context = val;
 	}
 
 	/**

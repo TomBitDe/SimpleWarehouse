@@ -30,7 +30,9 @@ public class NavigationController implements Serializable {
    }
    
    /**
-    * Move to page
+    * Move to page with faces-redirect=true
+    * 
+    * @param page the page to move to
     * 
     * @return the identifier
     */
