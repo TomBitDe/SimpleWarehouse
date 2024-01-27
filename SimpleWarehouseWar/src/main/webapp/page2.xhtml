@@ -6,12 +6,27 @@
    xmlns:h = "http://java.sun.com/jsf/html"
    xmlns:ui = "http://java.sun.com/jsf/facelets">
    
-   <h:body> 
+   <h:body>
+   
       <ui:composition template = "templates/common.xhtml">
-
+         
          <ui:define name = "content">
-            <h2>Page2 content</h2>
-            <h:link value = "Back To Home" outcome = "home" styleClass = "link"/>
+            <h:outputText value="#{text['page2_header']}" styleClass="custom1Header" />
+            
+			<h:form>
+			    <h:panelGrid id="customMenu" columns="10" styleClass="customMenuPanel">
+				    <h:commandLink action="#{navigationController.moveToPage('home')}"
+					    value="#{text['back_home']}" styleClass="commandLink">
+				    </h:commandLink>
+				</h:panelGrid>
+				
+				<h:panelGrid columns="2">
+                    <h:commandButton value="#{text['appl_config_ping']}" action="#{restCallsBean.fetchPingResultFromApplConfigRestService}" 
+                        styleClass="button" id="ping_appl_config" />
+                    <h:outputText value="#{restCallsBean.pingResult}" />
+                </h:panelGrid>
+				
+            </h:form>
          </ui:define> 
          
       </ui:composition> 
