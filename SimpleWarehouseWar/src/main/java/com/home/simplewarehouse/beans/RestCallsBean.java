@@ -1,5 +1,7 @@
 package com.home.simplewarehouse.beans;
 
+import java.io.Serializable;
+
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
 import javax.ws.rs.client.Client;
@@ -14,10 +16,11 @@ import org.apache.logging.log4j.Logger;
  */
 @Named
 @RequestScoped
-public class RestCallsBean {
+public class RestCallsBean implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LogManager.getLogger(RestCallsBean.class);
 	
-    private static final String APPL_CONFIG_REST_SERVICE_URL = "http://localhost:8080/war/resources/ApplConfigRestService/Ping";
+    private static final String APPL_CONFIG_REST_SERVICE_URL = "http://localhost:8080/war/resources/ApplConfigRestService";
     
     private String pingResult;
 
@@ -33,7 +36,7 @@ public class RestCallsBean {
 	 */
     public void fetchPingResultFromApplConfigRestService() {
         Client client = ClientBuilder.newClient();
-        pingResult = client.target(APPL_CONFIG_REST_SERVICE_URL)
+        pingResult = client.target(APPL_CONFIG_REST_SERVICE_URL + "/Ping")
                               .request(MediaType.TEXT_PLAIN)
                               .get(String.class);
         

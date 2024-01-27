@@ -20,10 +20,12 @@
 				    </h:commandLink>
 				</h:panelGrid>
 				
+				<h:outputText value="#{text['appl_config']}" styleClass="custom2Header" />
+				
 				<h:panelGrid columns="2">
                     <h:commandButton value="#{text['appl_config_ping']}" action="#{restCallsBean.fetchPingResultFromApplConfigRestService}" 
                         styleClass="button" id="ping_appl_config" />
-                    <h:outputText value="#{restCallsBean.pingResult}" />
+                    <h:outputText value="#{restCallsBean.pingResult}" styleClass="normal-message-bold" />
                 </h:panelGrid>
 				
             </h:form>
