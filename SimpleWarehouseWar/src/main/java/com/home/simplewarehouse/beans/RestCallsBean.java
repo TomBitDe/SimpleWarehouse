@@ -14,6 +14,8 @@ import javax.ws.rs.core.Response;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
+
 /**
  * Bean class that provides REST access (example). 
  */
@@ -26,13 +28,16 @@ public class RestCallsBean implements Serializable {
     private static final String APPL_CONFIG_REST_SERVICE_URL = "http://localhost:8080/war/resources/ApplConfigRestService";
     private static final String EXISTS_TIMER_1 = "/Exists/Timer1";
     private static final String EXISTS_TIMER_2 = "/Exists/Timer2";
+    private static final String ENTRY_TIMER_1 = "/Entry/Timer1";
+    private static final String ENTRY_TIMER_2 = "/Entry/Timer2";
     private static final String RESULT_FORMAT = "Result is [{}]";
     
-    private Form formData = new Form();
+    private transient Form formData = new Form();
     
     private String pingResult;
     private String refreshResult;
-    private Response timerCallResult;
+    private transient Response timerCallResult;
+
     private String key;
     private String value;
 
@@ -73,62 +78,42 @@ public class RestCallsBean implements Serializable {
      * Starts timer 1
      */
     public void startTimer1() {
-        Client client = ClientBuilder.newClient();
-        
-        String exists = client.target(APPL_CONFIG_REST_SERVICE_URL + EXISTS_TIMER_1)
-                .request(MediaType.APPLICATION_XML)
-                .get(String.class);
-
-        setFormData("Timer1", "UP");
-        
-        if (exists.equals("false")) {
-            timerCallResult = client.target(APPL_CONFIG_REST_SERVICE_URL + getFormData())
-                    .request(MediaType.APPLICATION_XML)
-                    .put(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED));
-        }
-        else {
-            timerCallResult = client.target(APPL_CONFIG_REST_SERVICE_URL + getFormData())
-                    .request(MediaType.APPLICATION_XML)
-                    .post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED));
-        }
-        
-        client.close();
-        
-        LOG.debug(RESULT_FORMAT, timerCallResult);
+    	startTimer(EXISTS_TIMER_1, "Timer1");
     }
     
     /**
      * Stops timer 1
      */
     public void stopTimer1() {
-        Client client = ClientBuilder.newClient();
-        
-        setFormData("Timer1", "DOWN");
-        
-        timerCallResult = client.target(APPL_CONFIG_REST_SERVICE_URL + getFormData())
-        		.request(MediaType.APPLICATION_XML)
-                .post(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED));
-        
-        client.close();
-        
-        LOG.debug(RESULT_FORMAT, timerCallResult);
+    	stopTimer("Timer1");
     }
     
     /**
      * Starts timer 2
      */
     public void startTimer2() {
-        Client client = ClientBuilder.newClient();
+    	startTimer(EXISTS_TIMER_2, "Timer2");
+    }
+    
+    /**
+     * Stops timer 2
+     */
+    public void stopTimer2() {
+    	stopTimer("Timer2");
+    }
 
-        String exists = client.target(APPL_CONFIG_REST_SERVICE_URL + EXISTS_TIMER_2)
+    private void startTimer(final String existsTimer, final String timerName) {
+        Client client = ClientBuilder.newClient();
+        
+        String exists = client.target(APPL_CONFIG_REST_SERVICE_URL + existsTimer)
                 .request(MediaType.APPLICATION_XML)
                 .get(String.class);
 
-        setFormData("Timer2", "UP");
+        setFormData(timerName, "UP");
         
         if (exists.equals("false")) {
             timerCallResult = client.target(APPL_CONFIG_REST_SERVICE_URL + getFormData())
-            		.request(MediaType.APPLICATION_XML)
+                    .request(MediaType.APPLICATION_XML)
                     .put(Entity.entity(formData, MediaType.APPLICATION_FORM_URLENCODED));
         }
         else {
@@ -142,13 +127,10 @@ public class RestCallsBean implements Serializable {
         LOG.debug(RESULT_FORMAT, timerCallResult);
     }
     
-    /**
-     * Stops timer 2
-     */
-    public void stopTimer2() {
+    private void stopTimer(final String timeName) {
         Client client = ClientBuilder.newClient();
         
-        setFormData("Timer2", "DOWN");
+        setFormData(timeName, "DOWN");
         
         timerCallResult = client.target(APPL_CONFIG_REST_SERVICE_URL + getFormData())
         		.request(MediaType.APPLICATION_XML)
@@ -158,7 +140,7 @@ public class RestCallsBean implements Serializable {
         
         LOG.debug(RESULT_FORMAT, timerCallResult);
     }
-
+    
     /**
      * Gets the ping result
      * 
@@ -186,6 +168,22 @@ public class RestCallsBean implements Serializable {
     	return timerCallResult;
     }
     
+    public String getTimer1Status() {
+    	String val;
+    	
+    	val = getTimerStatus(EXISTS_TIMER_1, ENTRY_TIMER_1, "Timer1");
+    	
+    	return val;
+    }
+    
+    public String getTimer2Status() {
+    	String val;
+    	
+    	val = getTimerStatus(EXISTS_TIMER_2, ENTRY_TIMER_2, "Timer2");
+    	
+    	return val;
+    }
+    
     private void setFormData(String key, String value) {
     	formData.param(key, value);
     	this.key = key;
@@ -194,5 +192,32 @@ public class RestCallsBean implements Serializable {
     
     private String getFormData() {
     	return "/Entry/" + key + "/" + value;
+    }
+    
+    private String getTimerStatus(final String existsTimer, final String entryTimer, final String timerName) {
+    	String status;
+    	
+        Client client = ClientBuilder.newClient();
+        
+        String exists = client.target(APPL_CONFIG_REST_SERVICE_URL + existsTimer)
+                .request(MediaType.APPLICATION_XML)
+                .get(String.class);
+
+        if (exists.equals("false")) {
+        	status = "DOWN";
+        }
+        else {
+            ApplConfig ret = client.target(APPL_CONFIG_REST_SERVICE_URL + entryTimer)
+                    .request(MediaType.APPLICATION_XML)
+                    .get(ApplConfig.class);
+            
+            status = ret.getParamVal();
+        }
+        
+        client.close();
+        
+        LOG.debug(RESULT_FORMAT, status);
+        
+        return status;
     }
 }

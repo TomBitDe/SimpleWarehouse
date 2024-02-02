@@ -34,21 +34,21 @@
 				
 				<h:outputText value="#{text['timer_config']}" styleClass="custom2Header" />
 				
-				<h:panelGrid columns="3">
+				<h:panelGrid columns="4">
     			    <h:outputText value="#{text['timer1']}" styleClass="custom2Header" />
+    			    <h:outputText value="#{restCallsBean.timer1Status}" styleClass="custom2Header" />
                     <h:commandButton value="#{text['timer_start']}" action="#{restCallsBean.startTimer1}" 
                         styleClass="button" id="start_timer_1" />
                     <h:commandButton value="#{text['timer_stop']}" action="#{restCallsBean.stopTimer1}" 
                         styleClass="button" id="stop_timer_1" />
 				    <h:outputText value="#{text['timer2']}" styleClass="custom2Header" />
+    			    <h:outputText value="#{restCallsBean.timer2Status}" styleClass="custom2Header" />
                     <h:commandButton value="#{text['timer_start']}" action="#{restCallsBean.startTimer2}" 
                         styleClass="button" id="start_timer_2" />
                     <h:commandButton value="#{text['timer_stop']}" action="#{restCallsBean.stopTimer2}" 
                         styleClass="button" id="stop_timer_2" />
                 </h:panelGrid>
 
-                <h:outputText value="#{restCallsBean.timerCallResult}" styleClass="normal-message-bold" />
-                
             </h:form>
          </ui:define> 
          
