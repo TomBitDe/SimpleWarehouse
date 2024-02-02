@@ -34,11 +34,26 @@ public class RestCallsBean implements Serializable {
     
     private transient Form formData = new Form();
     
+    /**
+     * The ping action result value
+     */
     private String pingResult;
+    /**
+     * The refresh action result value
+     */
     private String refreshResult;
+    /**
+     * The timer call result value
+     */
     private transient Response timerCallResult;
 
+    /**
+     * The access key content
+     */
     private String key;
+    /**
+     * The access keys value content
+     */
     private String value;
 
 	/**
@@ -168,6 +183,11 @@ public class RestCallsBean implements Serializable {
     	return timerCallResult;
     }
     
+    /**
+     * Gets the status of Timer1
+     * 
+     * @return the status
+     */
     public String getTimer1Status() {
     	String val;
     	
@@ -176,6 +196,11 @@ public class RestCallsBean implements Serializable {
     	return val;
     }
     
+    /**
+     * Gets the status of Timer2
+     * 
+     * @return the status
+     */
     public String getTimer2Status() {
     	String val;
     	
