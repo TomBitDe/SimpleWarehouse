@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.beans;
 
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.io.StringWriter;
 
 import javax.annotation.PostConstruct;
@@ -18,9 +19,13 @@ import org.apache.logging.log4j.Logger;
  * Bean class provides the Jndi context to display by JSF.
  */
 @Named
-public class JndiContextBean {
+public class JndiContextBean implements Serializable {
+	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LogManager.getLogger(JndiContextBean.class);
 	
+	/**
+	 * The JNDI context
+	 */
 	private String context;
 	
 	/**

@@ -21,6 +21,12 @@ p {
 	font-size: 150%;
 }
 
+.custom2Header {
+	color: black;
+	font-weight: bold;
+	font-size: 120%;
+}
+
 .customMenuPanel {
 	padding: 10px;
 	border-style: hidden;
@@ -29,6 +35,16 @@ p {
 	border-color: green;
 	border-collapse: separate;
 	border-spacing: 5px;
+}
+
+.normal-message {
+    color: green;
+	font-size: 120%;
+}
+.normal-message-bold {
+    color: green;
+	font-weight: bold;
+	font-size: 120%;
 }
 
 .info-message {

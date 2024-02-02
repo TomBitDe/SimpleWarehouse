@@ -63,3 +63,17 @@ echo=
 echo ----------------------------------------------------------------------
 
 pause
+
+curl -v -X PUT -i http://localhost:8080/war/resources/ApplConfigRestService/Entry/Timer1/UP
+echo=
+echo ----------------------------------------------------------------------
+
+curl -v -X GET -i http://localhost:8080/war/resources/ApplConfigRestService/Entry/Timer1
+echo=
+echo ----------------------------------------------------------------------
+
+curl -v -X POST -i http://localhost:8080/war/resources/ApplConfigRestService/Entry/Timer1/DOWN
+echo=
+echo ----------------------------------------------------------------------
+
+pause
