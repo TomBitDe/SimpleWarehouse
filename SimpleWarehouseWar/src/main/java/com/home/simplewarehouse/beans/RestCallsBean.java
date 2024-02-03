@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.beans;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.enterprise.context.RequestScoped;
 import javax.inject.Named;
@@ -8,6 +9,7 @@ import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.core.Form;
+import javax.ws.rs.core.GenericType;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
@@ -90,6 +92,25 @@ public class RestCallsBean implements Serializable {
     }
     
     /**
+     * Gets the current configured ApplConfig items
+     * 
+     * @return the items
+     */
+    public List<ApplConfig> getApplConfigItems() {
+        Client client = ClientBuilder.newClient();
+        
+        List<ApplConfig> applConfigItems = client.target(APPL_CONFIG_REST_SERVICE_URL + "/Content")
+				.request(MediaType.APPLICATION_XML)
+				.get(new GenericType<List<ApplConfig>>() {});            
+        
+        client.close();
+
+        LOG.debug(RESULT_FORMAT, applConfigItems);
+        
+        return applConfigItems;
+    }
+    
+    /**
      * Starts timer 1
      */
     public void startTimer1() {
@@ -117,6 +138,96 @@ public class RestCallsBean implements Serializable {
     	stopTimer("Timer2");
     }
 
+    /**
+     * Gets the ping result
+     * 
+     * @return the result
+     */
+    public String getPingResult() {
+    	return pingResult;
+    }
+    
+    /**
+     * Gets the refresh result
+     * 
+     * @return the result
+     */
+    public String getRefreshResult() {
+    	return refreshResult;
+    }
+
+	/**
+     * Gets the timer call result
+     * 
+     * @return the result
+     */
+    public Response getTimerCallResult() {
+    	return timerCallResult;
+    }
+    
+    /**
+     * Gets the status of Timer1
+     * 
+     * @return the status
+     */
+    public String getTimer1Status() {
+    	String val;
+    	
+    	val = getTimerStatus(EXISTS_TIMER_1, ENTRY_TIMER_1);
+    	
+    	return val;
+    }
+    
+    /**
+     * Gets the status of Timer2
+     * 
+     * @return the status
+     */
+    public String getTimer2Status() {
+    	String val;
+    	
+    	val = getTimerStatus(EXISTS_TIMER_2, ENTRY_TIMER_2);
+    	
+    	return val;
+    }
+    
+    private void setFormData(String key, String value) {
+    	formData.param(key, value);
+    	this.key = key;
+    	this.value = value;
+    }
+    
+    private String getFormData() {
+    	return "/Entry/" + key + "/" + value;
+    }
+    
+    private String getTimerStatus(final String existsTimer, final String entryTimer) {
+    	String status;
+    	
+        Client client = ClientBuilder.newClient();
+        
+        String exists = client.target(APPL_CONFIG_REST_SERVICE_URL + existsTimer)
+                .request(MediaType.APPLICATION_XML)
+                .get(String.class);
+
+        if (exists.equals("false")) {
+        	status = "DOWN";
+        }
+        else {
+            ApplConfig ret = client.target(APPL_CONFIG_REST_SERVICE_URL + entryTimer)
+                    .request(MediaType.APPLICATION_XML)
+                    .get(ApplConfig.class);
+            
+            status = ret.getParamVal();
+        }
+        
+        client.close();
+        
+        LOG.debug(RESULT_FORMAT, status);
+        
+        return status;
+    }
+    
     private void startTimer(final String existsTimer, final String timerName) {
         Client client = ClientBuilder.newClient();
         
@@ -154,95 +265,5 @@ public class RestCallsBean implements Serializable {
         client.close();
         
         LOG.debug(RESULT_FORMAT, timerCallResult);
-    }
-    
-    /**
-     * Gets the ping result
-     * 
-     * @return the result
-     */
-    public String getPingResult() {
-    	return pingResult;
-    }
-    
-    /**
-     * Gets the refresh result
-     * 
-     * @return the result
-     */
-    public String getRefreshResult() {
-    	return refreshResult;
-    }
-
-    /**
-     * Gets the timer call result
-     * 
-     * @return the result
-     */
-    public Response getTimerCallResult() {
-    	return timerCallResult;
-    }
-    
-    /**
-     * Gets the status of Timer1
-     * 
-     * @return the status
-     */
-    public String getTimer1Status() {
-    	String val;
-    	
-    	val = getTimerStatus(EXISTS_TIMER_1, ENTRY_TIMER_1, "Timer1");
-    	
-    	return val;
-    }
-    
-    /**
-     * Gets the status of Timer2
-     * 
-     * @return the status
-     */
-    public String getTimer2Status() {
-    	String val;
-    	
-    	val = getTimerStatus(EXISTS_TIMER_2, ENTRY_TIMER_2, "Timer2");
-    	
-    	return val;
-    }
-    
-    private void setFormData(String key, String value) {
-    	formData.param(key, value);
-    	this.key = key;
-    	this.value = value;
-    }
-    
-    private String getFormData() {
-    	return "/Entry/" + key + "/" + value;
-    }
-    
-    private String getTimerStatus(final String existsTimer, final String entryTimer, final String timerName) {
-    	String status;
-    	
-        Client client = ClientBuilder.newClient();
-        
-        String exists = client.target(APPL_CONFIG_REST_SERVICE_URL + existsTimer)
-                .request(MediaType.APPLICATION_XML)
-                .get(String.class);
-
-        if (exists.equals("false")) {
-        	status = "DOWN";
-        }
-        else {
-            ApplConfig ret = client.target(APPL_CONFIG_REST_SERVICE_URL + entryTimer)
-                    .request(MediaType.APPLICATION_XML)
-                    .get(ApplConfig.class);
-            
-            status = ret.getParamVal();
-        }
-        
-        client.close();
-        
-        LOG.debug(RESULT_FORMAT, status);
-        
-        return status;
-    }
+    }    
 }
