@@ -2,9 +2,11 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html xmlns = "http://www.w3.org/1999/xhtml"   
-   xmlns:h = "http://java.sun.com/jsf/html"
-   xmlns:ui = "http://java.sun.com/jsf/facelets">
+<html lang="en"
+    xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
    
    <h:body>
    
@@ -22,7 +24,7 @@
 				
 				<h:outputText value="#{text['appl_config']}" styleClass="custom2Header" />
 				
-				<h:panelGrid columns="4">
+				<h:panelGrid columns="2">
                     <h:commandButton value="#{text['appl_config_ping']}" action="#{restCallsBean.fetchPingResultFromApplConfigRestService}" 
                         styleClass="button" id="ping_appl_config" />
                     <h:outputText value="#{restCallsBean.pingResult}" styleClass="normal-message-bold" />
@@ -36,13 +38,13 @@
 				
 				<h:panelGrid columns="4">
     			    <h:outputText value="#{text['timer1']}" styleClass="custom2Header" />
-    			    <h:outputText value="#{restCallsBean.timer1Status}" styleClass="custom2Header" />
+    			    <h:outputText value="#{restCallsBean.timer1Status}" styleClass="normal-message-bold" />
                     <h:commandButton value="#{text['timer_start']}" action="#{restCallsBean.startTimer1}" 
                         styleClass="button" id="start_timer_1" />
                     <h:commandButton value="#{text['timer_stop']}" action="#{restCallsBean.stopTimer1}" 
                         styleClass="button" id="stop_timer_1" />
 				    <h:outputText value="#{text['timer2']}" styleClass="custom2Header" />
-    			    <h:outputText value="#{restCallsBean.timer2Status}" styleClass="custom2Header" />
+    			    <h:outputText value="#{restCallsBean.timer2Status}" styleClass="normal-message-bold" />
                     <h:commandButton value="#{text['timer_start']}" action="#{restCallsBean.startTimer2}" 
                         styleClass="button" id="start_timer_2" />
                     <h:commandButton value="#{text['timer_stop']}" action="#{restCallsBean.stopTimer2}" 
