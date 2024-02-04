@@ -17,6 +17,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
+import com.home.simplewarehouse.views.KeyValueSourceEntry;
 
 /**
  * Bean class that provides REST access (example). 
@@ -102,6 +103,44 @@ public class RestCallsBean implements Serializable {
         List<ApplConfig> applConfigItems = client.target(APPL_CONFIG_REST_SERVICE_URL + "/Content")
 				.request(MediaType.APPLICATION_XML)
 				.get(new GenericType<List<ApplConfig>>() {});            
+        
+        client.close();
+
+        LOG.debug(RESULT_FORMAT, applConfigItems);
+        
+        return applConfigItems;
+    }
+    
+    /**
+     * Gets the current configurations
+     * 
+     * @return the items
+     */
+    public List<KeyValueSourceEntry> getConfigurations() {
+        Client client = ClientBuilder.newClient();
+        
+        List<KeyValueSourceEntry> configuratorItems = client.target(APPL_CONFIG_REST_SERVICE_URL + "/Configuration")
+				.request(MediaType.APPLICATION_XML)
+				.get(new GenericType<List<KeyValueSourceEntry>>() {});            
+        
+        client.close();
+
+        LOG.debug(RESULT_FORMAT, configuratorItems);
+        
+        return configuratorItems;
+    }
+    
+    /**
+     * Gets the current configured ApplConfig items as text
+     * 
+     * @return the items
+     */
+    public String getApplConfigItemsAsText() {
+        Client client = ClientBuilder.newClient();
+        
+        String applConfigItems = client.target(APPL_CONFIG_REST_SERVICE_URL + "/TextContent")
+				.request(MediaType.TEXT_PLAIN)
+				.get(String.class);            
         
         client.close();
 

@@ -58,18 +58,22 @@
                     
                 <h:panelGroup style="top: auto; position: relative">
  				    <div style="overflow: auto;">
-        			<h:dataTable id="appl_config_table" value="#{restCallsBean.applConfigItems}"
+        			<h:dataTable id="configuration_table" value="#{restCallsBean.configurations}"
 		        	    var="item" styleClass="commonTable"
 				        headerClass="commonTableHeader"
 					    rowClasses="commonTableOddRow, commonTableEvenRow">
 
 					    <h:column>
 					        <f:facet name="header">#{text['config_key']}</f:facet>    				
-                            <h:outputText value="#{item.keyVal}" />
+                            <h:outputText value="#{item.key}" />
                         </h:column>
 					    <h:column>
 						    <f:facet name="header">#{text['config_value']}</f:facet>    				
-                            <h:outputText value="#{item.paramVal}" />
+                            <h:outputText value="#{item.value}" />
+                        </h:column>
+					    <h:column>
+						    <f:facet name="header">#{text['config_source']}</f:facet>    				
+                            <h:outputText value="#{item.source}" />
                         </h:column>
 				    </h:dataTable>
                     </div>

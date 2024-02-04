@@ -137,12 +137,12 @@ p {
 }
 
 .commonTableOddRow {
-   text-align:center;
+   text-align:left;
    background:none repeat scroll 0 0 #ffffff;	
 }
 
 .commonTableEvenRow {
-   text-align:center;
+   text-align:left;
    background:none repeat scroll 0 0 #D3D3D3;
 }
 
