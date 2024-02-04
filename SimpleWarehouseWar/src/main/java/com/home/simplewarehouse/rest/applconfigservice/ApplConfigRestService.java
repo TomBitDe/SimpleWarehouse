@@ -2,6 +2,7 @@ package com.home.simplewarehouse.rest.applconfigservice;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -18,8 +19,11 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.ApplConfigService;
+import com.home.simplewarehouse.patterns.singleton.simplecache.ValueSourceEntry;
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
 import com.home.simplewarehouse.rest.standardservices.StandardRestServices;
+import com.home.simplewarehouse.utils.configurator.base.Configurator;
+import com.home.simplewarehouse.views.KeyValueSourceEntry;
 
 /**
  * RESTful Application configuration data service.
@@ -29,6 +33,9 @@ import com.home.simplewarehouse.rest.standardservices.StandardRestServices;
 public class ApplConfigRestService extends StandardRestServices {
 	@EJB
 	ApplConfigService applConfigService;
+	
+	@EJB
+	Configurator configurator;
 
 	/**
 	 * Mandatory default constructor
@@ -54,6 +61,62 @@ public class ApplConfigRestService extends StandardRestServices {
             };
 
             return Response.ok(content).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
+    }
+
+	/**
+     * Get a string of all application configuration entries.
+     *
+     * @return the configuration list
+     */
+    @GET
+    @Path("/TextContent")
+    @Produces({MediaType.TEXT_PLAIN})
+    public Response getTextContent() {
+    	try {
+            String textContent = configurator.getConfiguration();
+
+            return Response.ok(textContent).build();
+    	}
+    	catch (Exception ex) {
+    		return Response.ok().entity(ex.getMessage()).build();
+    	}
+    }
+
+	/**
+     * Get a list of all application configuration entries.
+     *
+     * @return the configuration list
+     */
+    @GET
+    @Path("/Configuration")
+    @Produces({MediaType.APPLICATION_XML})
+    public Response getConfiguration() {
+    	try {
+    		Map<String, ValueSourceEntry> origin = configurator.getConfigurationMap();
+
+    		List<KeyValueSourceEntry> target = new ArrayList<>();
+    		
+    		for (Map.Entry<String, ValueSourceEntry> entry : origin.entrySet()) {
+                String key = entry.getKey();
+                ValueSourceEntry valueSourceEntry = entry.getValue();
+
+                // Access the elements
+                String value = valueSourceEntry.getValue();
+                String source = valueSourceEntry.getSource();
+
+                // Process all now
+                target.add(new KeyValueSourceEntry(key, value, source));
+            }
+    			
+            GenericEntity<List<KeyValueSourceEntry>> configuration
+                    = new GenericEntity<List<KeyValueSourceEntry>>(new ArrayList<>(target)) {
+            };
+
+            return Response.ok(configuration).build();
     	}
     	catch (Exception ex) {
     		return Response.ok().entity(ex.getMessage()).build();

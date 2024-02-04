@@ -115,9 +115,13 @@ p {
 	color: #ffff00;
 }
 
-.commonTable {   
+.commonTable {
    border-collapse:collapse;
    border:1px solid #000000;
+}
+.commonTable th, .commonTable td {
+   border: 1px solid black;
+   padding: 2px;
 }
 
 .commmonTableHeadLine {
@@ -133,12 +137,12 @@ p {
 }
 
 .commonTableOddRow {
-   text-align:center;
+   text-align:left;
    background:none repeat scroll 0 0 #ffffff;	
 }
 
 .commonTableEvenRow {
-   text-align:center;
+   text-align:left;
    background:none repeat scroll 0 0 #D3D3D3;
 }
 

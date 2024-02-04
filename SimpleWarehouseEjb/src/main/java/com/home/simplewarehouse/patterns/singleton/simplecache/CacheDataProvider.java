@@ -2,7 +2,7 @@ package com.home.simplewarehouse.patterns.singleton.simplecache;
 
 import java.util.Map;
 
-/** *
+/**
  * Cache Data Provider interface definition.
  */
 public interface CacheDataProvider {
