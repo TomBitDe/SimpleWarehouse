@@ -146,6 +146,20 @@ p {
    background:none repeat scroll 0 0 #D3D3D3;
 }
 
+.commonTableOddRowBreak {
+   text-align:left;
+   background:none repeat scroll 0 0 #ffffff;	
+   word-wrap: break-word; 
+   max-width: 80ch;
+}
+
+.commonTableEvenRowBreak {
+   text-align:left;
+   background:none repeat scroll 0 0 #D3D3D3;
+   word-wrap: break-word; 
+   max-width: 80ch;
+}
+
 .commonTable tr.selected {
     background-color: #ff80c0;
 }
