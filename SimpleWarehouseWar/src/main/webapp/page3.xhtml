@@ -26,10 +26,16 @@
                     <h:commandButton value="#{text['moni_clear']}" action="#{restCallsBean.clearMonitor}" 
                         styleClass="button" id="monitor_clear" />
                     <h:commandButton value="#{text['refresh']}" styleClass="button">
-					    <f:ajax execute="@form" render="num_Exceptions" />
-					    <f:ajax execute="@form" render="exceptions_table" />
+					    <f:ajax execute="@form" render="num_Exceptions exceptions_table" />
     				</h:commandButton>
                 </h:panelGrid>
+
+                <script>
+                    // Reload every 10 seconds
+                    setInterval(function() {
+                        location.reload();
+                    }, 10000); // 10000 Milliseconds = 10 Seconds
+                </script>  
 
 				<h:panelGrid columns="2">
     				<h:outputText value="#{text['moni_exceptions']}" styleClass="custom2Header" />
@@ -69,6 +75,6 @@
          </ui:define> 
          
       </ui:composition> 
-   
+
    </h:body> 
 </html>
