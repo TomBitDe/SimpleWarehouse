@@ -22,24 +22,28 @@
 				    </h:commandLink>
 				</h:panelGrid>
 				
-				<h:panelGrid columns="1">
+				<h:panelGrid columns="1" >
                     <h:commandButton value="#{text['moni_clear']}" action="#{restCallsBean.clearMonitor}" 
                         styleClass="button" id="monitor_clear" />
+                    <h:commandButton value="#{text['refresh']}" styleClass="button">
+					    <f:ajax execute="@form" render="num_Exceptions" />
+					    <f:ajax execute="@form" render="exceptions_table" />
+    				</h:commandButton>
                 </h:panelGrid>
 
-				<h:panelGrid columns="2" style="margin-right: 40px;">
+				<h:panelGrid columns="2">
     				<h:outputText value="#{text['moni_exceptions']}" styleClass="custom2Header" />
     				<h:outputText value="#{text['moni_slowest_methods']}" styleClass="custom2Header" />
 				
 				    <h:panelGroup>
-    				    <h:panelGrid columns="2">
+    				    <h:panelGrid columns="2" style="padding-right: 20px;">
                             <h:outputText value="#{text['moni_exception_count']}" styleClass="custom2Header" />
-                            <h:outputText value="#{restCallsBean.numberOfExceptions}" styleClass="normal-message-bold" />
+                            <h:outputText id="num_Exceptions" value="#{restCallsBean.numberOfExceptions}" styleClass="normal-message-bold" />
                         </h:panelGrid>
                     </h:panelGroup>
                     
                     <h:panelGroup style="top: auto; position: relative">
- 				    <div style="overflow: auto;">
+ 				    <div style="overflow: auto; hight: 100%; width: 100%;">
         			<h:dataTable id="exceptions_table" value="#{restCallsBean.slowestMethods}"
 		        	    var="item" styleClass="commonTable"
 				        headerClass="commonTableHeader"
@@ -49,12 +53,12 @@
                         <f:param name="max" value="50" />
 					    
 					    <h:column>
-					        <f:facet name="header">#{text['monitor_method_name']}</f:facet>    				
-                            <h:outputText value="#{item.methodName}" /> 
-                        </h:column>
-					    <h:column>
 					        <f:facet name="header">#{text['monitor_invocation_perf']}</f:facet>    				
                             <h:outputText value="#{item.invocationPerformance}" />
+                        </h:column>
+					    <h:column>
+					        <f:facet name="header">#{text['monitor_method_name']}</f:facet>    				
+                            <h:outputText value="#{item.methodName}" style="word-break: break-all; " />
                         </h:column>
 				    </h:dataTable>
                     </div>

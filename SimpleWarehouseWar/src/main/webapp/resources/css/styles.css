@@ -130,7 +130,7 @@ p {
 }
 
 .commonTableHeader {
-   text-align:center;
+   text-align:left;
    background:none repeat scroll 0 0 #B5B5B5;
    border-bottom:1px solid #000000;  
    padding:2px;
