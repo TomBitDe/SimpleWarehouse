@@ -24,6 +24,12 @@ public class ExceptionStatistics {
 	 */
 	public ExceptionStatistics() { /* JAXB... */ }
 	
+	/**
+	 * Create an exception statistics entry
+	 * 
+	 * @param exception the exception method
+	 * @param num the number of related exceptions
+	 */
 	public ExceptionStatistics(String exception, int num) {
 		super();
 		
@@ -31,18 +37,38 @@ public class ExceptionStatistics {
 		this.num = num;
 	}
 
+	/**
+	 * Gets the exception
+	 * 
+	 * @return the exception
+	 */
 	public String getException() {
 		return exception;
 	}
 
+	/**
+	 * Sets the exception
+	 * 
+	 * @param exception the exception
+	 */
 	public void setException(String exception) {
 		this.exception = exception;
 	}
 
+	/**
+	 * Gets the number of related exceptions
+	 * 
+	 * @return the number of related exceptions
+	 */
 	public Integer getNum() {
 		return num;
 	}
 
+	/**
+	 * Sets the number of related exceptions
+	 * 
+	 * @param num the number of related exceptions
+	 */
 	public void setNum(Integer num) {
 		this.num = num;
 	}
