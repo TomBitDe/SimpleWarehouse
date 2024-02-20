@@ -19,6 +19,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.ExceptionStatistics;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invocation;
 import com.home.simplewarehouse.views.KeyValueSourceEntry;
 
@@ -237,6 +238,9 @@ public class RestCallsBean implements Serializable {
     	return val;
     }
     
+    /**
+     * Clear all monitor entries
+     */
     public void clearMonitor() {
         Client client = ClientBuilder.newClient();
         
@@ -247,6 +251,11 @@ public class RestCallsBean implements Serializable {
         client.close();
     }
     
+    /**
+     * Gets the number of exceptions
+     * 
+     * @return the number of exceptions
+     */
     public String getNumberOfExceptions() {
         Client client = ClientBuilder.newClient();
         
@@ -259,7 +268,26 @@ public class RestCallsBean implements Serializable {
         LOG.debug(RESULT_FORMAT, count);
         
         return count;
-     }
+    }
+    
+    /**
+     * Gets the exception statistics list
+     * 
+     * @return the exception statistics
+     */
+    public List<ExceptionStatistics> getExceptionStatistics() {
+        Client client = ClientBuilder.newClient();
+        
+        List<ExceptionStatistics> exceptionItems = client.target(MONITOR_REST_SERVICE_URL + "/exceptionList")
+				.request(MediaType.APPLICATION_XML)
+				.get(new GenericType<List<ExceptionStatistics>>() {});            
+        
+        client.close();
+
+        LOG.debug(RESULT_FORMAT, exceptionItems);
+    	
+    	return exceptionItems;
+    }
     
     /**
      * Gets the 50 slowest methods

@@ -41,16 +41,35 @@
     				<h:outputText value="#{text['moni_exceptions']}" styleClass="custom2Header" />
     				<h:outputText value="#{text['moni_slowest_methods']}" styleClass="custom2Header" />
 				
-				    <h:panelGroup>
+				    <h:panelGroup align="top">
     				    <h:panelGrid columns="2" style="padding-right: 20px;">
-                            <h:outputText value="#{text['moni_exception_count']}" styleClass="custom2Header" />
+                            <h:outputText value="#{text['moni_exception_count']}" styleClass="custom2Header" style="vertical-align: top;" />
                             <h:outputText id="num_Exceptions" value="#{restCallsBean.numberOfExceptions}" styleClass="normal-message-bold" />
+                        </h:panelGrid>
+                        
+    				    <h:panelGrid columns="1" style="padding-right: 20px; vertical-align: top;">
+ 				            <div style="overflow: auto; hight: 100%; width: 100%;">
+        			        <h:dataTable id="exceptions_table" value="#{restCallsBean.exceptionStatistics}"
+		        	            var="entry" styleClass="commonTable"
+				                headerClass="commonTableHeader"
+					            rowClasses="commonTableOddRow, commonTableEvenRow">
+					    
+					            <h:column>
+					                <f:facet name="header">#{text['moni_exception_methode_count']}</f:facet>    				
+                                    <h:outputText value="#{entry.num}" />
+                                </h:column>
+					            <h:column>
+					                <f:facet name="header">#{text['moni_exception_method_name']}</f:facet>    				
+                                    <h:outputText value="#{entry.exception}" style="word-break: break-all; " />
+                                </h:column>
+				            </h:dataTable>
+                            </div>
                         </h:panelGrid>
                     </h:panelGroup>
                     
-                    <h:panelGroup style="top: auto; position: relative">
+                    <h:panelGroup align="top">
  				    <div style="overflow: auto; hight: 100%; width: 100%;">
-        			<h:dataTable id="exceptions_table" value="#{restCallsBean.slowestMethods}"
+        			<h:dataTable id="slowest_methods_table" value="#{restCallsBean.slowestMethods}"
 		        	    var="item" styleClass="commonTable"
 				        headerClass="commonTableHeader"
 					    rowClasses="commonTableOddRow, commonTableEvenRow">
