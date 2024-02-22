@@ -41,9 +41,9 @@
     				<h:outputText value="#{text['moni_exceptions']}" styleClass="custom2Header" />
     				<h:outputText value="#{text['moni_slowest_methods']}" styleClass="custom2Header" />
 				
-				    <h:panelGroup align="top">
-    				    <h:panelGrid columns="2" style="padding-right: 20px;">
-                            <h:outputText value="#{text['moni_exception_count']}" styleClass="custom2Header" style="vertical-align: top;" />
+				    <h:panelGroup>
+    				    <h:panelGrid columns="2" style="padding-right: 20px; ">
+                            <h:outputText value="#{text['moni_exception_count']}" styleClass="custom2Header" />
                             <h:outputText id="num_Exceptions" value="#{restCallsBean.numberOfExceptions}" styleClass="normal-message-bold" />
                         </h:panelGrid>
                         
@@ -67,7 +67,7 @@
                         </h:panelGrid>
                     </h:panelGroup>
                     
-                    <h:panelGroup align="top">
+                    <h:panelGroup>
  				    <div style="overflow: auto; hight: 100%; width: 100%;">
         			<h:dataTable id="slowest_methods_table" value="#{restCallsBean.slowestMethods}"
 		        	    var="item" styleClass="commonTable"
