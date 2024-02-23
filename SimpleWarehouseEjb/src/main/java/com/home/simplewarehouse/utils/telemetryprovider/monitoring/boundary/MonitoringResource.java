@@ -72,13 +72,6 @@ public class MonitoringResource implements MonitoringResourceMXBean {
     	super();
     }
 
-    /**
-     * Gets the slowest methods
-     * 
-     * @param maxResult maximum items in the List
-     * 
-     * @return a List of slowest methods
-     */
     @Override
 	@GET
     @Path("slowestMethods/{max}")
@@ -114,11 +107,6 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return diagnostics;
 	}
 
-	/**
-	 * Gets the Diagnostics as String
-	 * 
-	 * @return the Diagnostics
-	 */
 	@Override
 	@GET
 	@Path("diagnostics")
@@ -142,11 +130,6 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return message.toString();
 	}
 
-	/**
-	 * Gets the Exception Statistics as String
-	 * 
-	 * @return the Exception Statistics
-	 */
 	@Override
 	@GET
 	@Path("exceptionStatistics")
@@ -165,11 +148,7 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return message.toString();
 	}
 	
-	/**
-	 * Gets the Exception Statistics as List
-	 * 
-	 * @return the Exception Statistics
-	 */
+	@Override
 	@GET
 	@Path("exceptionList")
 	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
@@ -198,13 +177,6 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return statistics;
 	}
 
-	/**
-	 * Gets the Diagnostics for the given key
-	 * 
-	 * @param key the key to search for
-	 * 
-	 * @return the Diagnostics as String
-	 */
 	@Override
 	@GET
 	@Path("diagnostics/{key}")
