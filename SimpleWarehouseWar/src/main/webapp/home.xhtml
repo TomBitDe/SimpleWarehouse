@@ -14,7 +14,7 @@
 
 		<ui:define name="content">
 
-			<h:outputText value="#{text['simplewarehouse']}" styleClass="custom1Header" />
+			<h:outputText value="#{text['simplewarehouse']}" styleClass="custom1Header" style="padding-left: 5px;" />
 
 			<h:form>
 			    <h:panelGrid id="customMenu" columns="10" styleClass="customMenuPanel">
@@ -37,13 +37,7 @@
 					<!-- DO NOT USE THIS; WILL NOT WORK
 					<f:ajax render="@form" />
 					-->					
-					<f:ajax execute="@form" render="loc" />
-					<f:ajax execute="@form" render="loc_hu" />
-					<f:ajax execute="@form" render="hu" />
-					<f:ajax execute="@form" render="loc_menu" />
-					<f:ajax execute="@form" render="hu_hu" />
-					<f:ajax execute="@form" render="orig_menu" />
-					<f:ajax execute="@form" render="dest_menu" />
+					<f:ajax execute="@form" render="loc loc_hu hu loc_menu hu_hu orig_menu dest_menu" />
 				  </h:commandButton>
 				  
 				  <h:messages id="customMessages" globalOnly="false" showDetail="true"
