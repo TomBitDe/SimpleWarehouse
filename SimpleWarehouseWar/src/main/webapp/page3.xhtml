@@ -1,32 +1,32 @@
 <?xml version = "1.0" encoding = "UTF-8"?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
 <html lang="en"
     xmlns="http://www.w3.org/1999/xhtml"
-	xmlns:f="http://java.sun.com/jsf/core"
-	xmlns:h="http://java.sun.com/jsf/html"
-	xmlns:ui="http://java.sun.com/jsf/facelets">
-   
+    xmlns:f="http://java.sun.com/jsf/core"
+    xmlns:h="http://java.sun.com/jsf/html"
+    xmlns:ui="http://java.sun.com/jsf/facelets">
+
    <h:body>
-   
+
       <ui:composition template = "templates/common.xhtml">
-         
+
          <ui:define name = "content">
-            <h:outputText value="#{text['page3_header']}" styleClass="custom1Header" style="padding-left: 5px;"/>
-            
-			<h:form>
-			    <h:panelGrid id="customMenu" columns="10" styleClass="customMenuPanel">
-				    <h:commandLink action="#{navigationController.moveToPage('home')}"
-					    value="#{text['back_home']}" styleClass="commandLink" >
-				    </h:commandLink>
-				</h:panelGrid>
-				
-				<h:panelGrid columns="2" style="padding-left: 5px;" >
+            <h:outputText value="#{text['page3_header']}" styleClass="custom1Header" style="padding-left: 5px;" />
+
+            <h:form>
+                <h:panelGrid id="customMenu" columns="10" styleClass="customMenuPanel">
+                    <h:commandLink action="#{navigationController.moveToPage('home')}"
+                        value="#{text['back_home']}" styleClass="commandLink" >
+                    </h:commandLink>
+                </h:panelGrid>
+
+                <h:panelGrid columns="2" style="padding-left: 5px;" >
                     <h:commandButton value="#{text['refresh']}" styleClass="button">
-					    <f:ajax execute="@form" render="num_Exceptions exceptions_table slowest_methods_table" />
-    				</h:commandButton>
-                    <h:commandButton value="#{text['moni_clear']}" action="#{restCallsBean.clearMonitor}" 
+                        <f:ajax execute="@form" render="num_Exceptions exceptions_table slowest_methods_table" />
+                    </h:commandButton>
+                    <h:commandButton value="#{text['moni_clear']}" action="#{restCallsBean.clearMonitor}"
                         styleClass="button" id="monitor_clear" />
                 </h:panelGrid>
 
@@ -34,60 +34,64 @@
                     // Reload every 10 seconds
                     setInterval(function() {
                         location.reload();
-                    }, 10000); // 10000 Milliseconds = 10 Seconds
-                </script>  
+                    }, 10000); // 1000 Milliseconds = 1 Second
+                </script>
 
-				<h:panelGrid columns="1">
-    				<h:panelGrid columns="2" style="padding-left: 0px;" >
-                        <h:outputText value="#{text['moni_exception_count']}" styleClass="custom2Header" />
-                        <h:outputText id="num_Exceptions" value="#{restCallsBean.numberOfExceptions}" styleClass="normal-message-bold" />
-                    </h:panelGrid>
-                    
- 				    <div style="overflow-y: auto; height: 10%; width: 10%;">
-        			<h:dataTable id="exceptions_table" value="#{restCallsBean.exceptionStatistics}"
-		        	    var="entry" styleClass="commonTable"
-				        headerClass="commonTableHeader"
-					    rowClasses="commonTableOddRow, commonTableEvenRow">
-					
-					    <h:column>
-					        <f:facet name="header">#{text['moni_exception_methode_count']}</f:facet>    				
-                            <h:outputText value="#{entry.num}" />
-                        </h:column>
-					    <h:column>
-					        <f:facet name="header">#{text['moni_exception_method_name']}</f:facet>    				
-                            <h:outputText value="#{entry.exception}" style="word-break: break-all; " />
-                        </h:column>
-				    </h:dataTable>
-                    </div>
+                <h:panelGrid columns="2">
+                    <h:panelGrid >
+                        <h:panelGrid columns="2" style="padding-left: 0px;" >
+                            <h:outputText value="#{text['moni_exception_count']}" styleClass="custom2Header" />
+                            <h:outputText id="num_Exceptions" value="#{restCallsBean.numberOfExceptions}" styleClass="normal-message-bold" />
+                        </h:panelGrid>
 
-    				<h:panelGrid columns="1" style="padding-left: 0px;" >
-        				<h:outputText value="#{text['moni_slowest_methods']}" style="padding-left: 5px;" styleClass="custom2Header" />
+                        <h:panelGrid style="height: 60vh; display: grid; overflow-y: auto;">
+                            <h:dataTable id="exceptions_table" value="#{restCallsBean.exceptionStatistics}"
+                                var="entry" styleClass="commonTable"
+                                headerClass="commonTableHeader"
+                                rowClasses="commonTableOddRow, commonTableEvenRow">
+
+                                <h:column>
+                                    <f:facet name="header">#{text['moni_exception_methode_count']}</f:facet>
+                                    <h:outputText value="#{entry.num}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{text['moni_exception_method_name']}</f:facet>
+                                    <h:outputText value="#{entry.exception}" style="word-break: break-all; " />
+                                </h:column>
+                            </h:dataTable>
+                        </h:panelGrid>
                     </h:panelGrid>
-                    
- 				    <div style="overflow-y: auto; height: 10%; width: 10%;">
-        			<h:dataTable id="slowest_methods_table" value="#{restCallsBean.slowestMethods}"
-		        	    var="item" styleClass="commonTable"
-				        headerClass="commonTableHeader"
-					    rowClasses="commonTableOddRow, commonTableEvenRow">
-					
-					    <!-- Parameter for slowestMethods -->
-                        <f:param name="max" value="50" />
-					
-					    <h:column>
-					        <f:facet name="header">#{text['monitor_invocation_perf']}</f:facet>    				
-                            <h:outputText value="#{item.invocationPerformance}" />
-                        </h:column>
-					    <h:column>
-					        <f:facet name="header">#{text['monitor_method_name']}</f:facet>    				
-                            <h:outputText value="#{item.methodName}" style="word-break: break-all; " />
-                        </h:column>
-				    </h:dataTable>
-                    </div>
+
+                    <h:panelGrid >
+                        <h:panelGrid columns="1" style="padding-left: 0px;" >
+                            <h:outputText value="#{text['moni_slowest_methods']}" style="padding-left: 0px;" styleClass="custom2Header" />
+                        </h:panelGrid>
+
+                        <h:panelGrid style="height: 60vh; display: grid; overflow-y: auto;" >
+                            <h:dataTable id="slowest_methods_table" value="#{restCallsBean.slowestMethods}"
+                                var="item" styleClass="commonTable"
+                                headerClass="commonTableHeader"
+                                rowClasses="commonTableOddRow, commonTableEvenRow">
+
+                                <!-- Parameter for slowestMethods
+                                <f:param name="max" value="50" />
+                                -->
+                                <h:column>
+                                    <f:facet name="header">#{text['monitor_invocation_perf']}</f:facet>
+                                    <h:outputText value="#{item.invocationPerformance}" />
+                                </h:column>
+                                <h:column>
+                                    <f:facet name="header">#{text['monitor_method_name']}</f:facet>
+                                    <h:outputText value="#{item.methodName}" style="word-break: break-all; " />
+                                </h:column>
+                            </h:dataTable>
+                        </h:panelGrid>
+                    </h:panelGrid>
                 </h:panelGrid>
             </h:form>
-         </ui:define> 
-         
-      </ui:composition> 
+         </ui:define>
 
-   </h:body> 
+      </ui:composition>
+
+   </h:body>
 </html>
