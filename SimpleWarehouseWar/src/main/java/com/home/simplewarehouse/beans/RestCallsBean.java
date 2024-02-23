@@ -2,8 +2,10 @@ package com.home.simplewarehouse.beans;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -17,6 +19,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.ExceptionStatistics;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invocation;
 import com.home.simplewarehouse.views.KeyValueSourceEntry;
 
 /**
@@ -35,6 +39,10 @@ public class RestCallsBean implements Serializable {
     private static final String ENTRY_TIMER_2 = "/Entry/Timer2";
     private static final String RESULT_FORMAT = "Result is [{}]";
     
+    private static final String MONITOR_REST_SERVICE_URL = "http://localhost:8080/war/resources/monitoring";
+    
+    private static final int DEFAULT_MAX_RESULT = 50;
+
     private transient Form formData = new Form();
     
     /**
@@ -228,6 +236,96 @@ public class RestCallsBean implements Serializable {
     	val = getTimerStatus(EXISTS_TIMER_2, ENTRY_TIMER_2);
     	
     	return val;
+    }
+    
+    /**
+     * Clear all monitor entries
+     */
+    public void clearMonitor() {
+        Client client = ClientBuilder.newClient();
+        
+        client.target(MONITOR_REST_SERVICE_URL + "/clear")
+				.request(MediaType.TEXT_PLAIN)
+				.delete();            
+        
+        client.close();
+    }
+    
+    /**
+     * Gets the number of exceptions
+     * 
+     * @return the number of exceptions
+     */
+    public String getNumberOfExceptions() {
+        Client client = ClientBuilder.newClient();
+        
+        String count = client.target(MONITOR_REST_SERVICE_URL + "/exceptionCount")
+                .request(MediaType.TEXT_PLAIN)
+                .get(String.class);
+
+        client.close();
+        
+        LOG.debug(RESULT_FORMAT, count);
+        
+        return count;
+    }
+    
+    /**
+     * Gets the exception statistics list
+     * 
+     * @return the exception statistics
+     */
+    public List<ExceptionStatistics> getExceptionStatistics() {
+        Client client = ClientBuilder.newClient();
+        
+        List<ExceptionStatistics> exceptionItems = client.target(MONITOR_REST_SERVICE_URL + "/exceptionList")
+				.request(MediaType.APPLICATION_XML)
+				.get(new GenericType<List<ExceptionStatistics>>() {});            
+        
+        client.close();
+
+        LOG.debug(RESULT_FORMAT, exceptionItems);
+    	
+    	return exceptionItems;
+    }
+    
+    /**
+     * Gets the 50 slowest methods
+     * 
+     * @return the items
+     */
+    public List<Invocation> getSlowestMethods() {
+        Client client = ClientBuilder.newClient();
+        
+        FacesContext facesContext = FacesContext.getCurrentInstance();
+        Map<String, String> requestParams = facesContext.getExternalContext().getRequestParameterMap();
+        String maxParam = requestParams.get("max");
+        
+        int maxResult;
+        
+		if (maxParam != null) {
+
+			maxResult = Integer.parseInt(maxParam);
+			if (maxResult <= 0) {
+				maxResult = DEFAULT_MAX_RESULT;
+			}
+		} 
+		else {
+			maxResult = DEFAULT_MAX_RESULT;
+		}
+
+        String endpoint = MONITOR_REST_SERVICE_URL + "/slowestMethods";
+        endpoint += "/" + maxResult;
+        
+        List<Invocation> items = client.target(endpoint)
+				.request(MediaType.APPLICATION_XML)
+				.get(new GenericType<List<Invocation>>() {});            
+        
+        client.close();
+
+        LOG.debug(RESULT_FORMAT, items);
+        
+        return items;
     }
     
     private void setFormData(String key, String value) {

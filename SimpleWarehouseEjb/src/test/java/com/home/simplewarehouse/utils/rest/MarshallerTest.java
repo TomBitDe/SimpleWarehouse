@@ -44,6 +44,7 @@ import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.ExceptionStatistics;
 
 /**
  * Test for Entity marshalling.
@@ -172,6 +173,27 @@ public class MarshallerTest {
 
 			jaxbMarshaller.marshal(config, fos);
 			jaxbMarshaller.marshal(config, System.out);
+		}
+		catch (Exception ex) {
+			handleException(ex);
+        }
+	}
+	
+	/**
+	 * Test ExceptionStatistics entry
+	 */
+	@Test
+	@InSequence(1)
+	public void marshallExceptionStatistics()
+	{
+		ExceptionStatistics entry = new ExceptionStatistics("KeyValue_1", 329);
+        
+		try {
+			JAXBContext jaxbContext = JAXBContext.newInstance(ExceptionStatistics.class);
+			Marshaller jaxbMarshaller = defineMarshaller(jaxbContext);
+
+			jaxbMarshaller.marshal(entry, fos);
+			jaxbMarshaller.marshal(entry, System.out);
 		}
 		catch (Exception ex) {
 			handleException(ex);

@@ -130,7 +130,7 @@ p {
 }
 
 .commonTableHeader {
-   text-align:center;
+   text-align:left;
    background:none repeat scroll 0 0 #B5B5B5;
    border-bottom:1px solid #000000;  
    padding:2px;
@@ -144,6 +144,20 @@ p {
 .commonTableEvenRow {
    text-align:left;
    background:none repeat scroll 0 0 #D3D3D3;
+}
+
+.commonTableOddRowBreak {
+   text-align:left;
+   background:none repeat scroll 0 0 #ffffff;	
+   word-wrap: break-word; 
+   max-width: 80ch;
+}
+
+.commonTableEvenRowBreak {
+   text-align:left;
+   background:none repeat scroll 0 0 #D3D3D3;
+   word-wrap: break-word; 
+   max-width: 80ch;
 }
 
 .commonTable tr.selected {

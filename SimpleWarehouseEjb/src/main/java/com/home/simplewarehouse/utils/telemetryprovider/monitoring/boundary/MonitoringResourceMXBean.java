@@ -3,6 +3,7 @@ package com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary;
 import java.util.List;
 import java.util.Map;
 
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.ExceptionStatistics;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invocation;
 
 /**
@@ -11,6 +12,7 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invoca
 public interface MonitoringResourceMXBean {
 	/**
 	 * Gets a list of the slowest methods
+	 * 
 	 * @return the list
 	 */
 	List<Invocation> getSlowestMethods();
@@ -24,6 +26,7 @@ public interface MonitoringResourceMXBean {
     List<Invocation> getSlowestMethods(int maxResult);
 	/**
 	 * Provide diagnostics data
+	 * 
 	 * @return the data
 	 */
 	Map<String, String> getDiagnostics();
@@ -37,6 +40,7 @@ public interface MonitoringResourceMXBean {
 	String getDiagnosticsForKey(String key);
 	/**
 	 * Provide an exception statistics
+	 * 
 	 * @return the data
 	 */
 	Map<String, Integer> getExceptionStatistics();
@@ -47,17 +51,26 @@ public interface MonitoringResourceMXBean {
 	 */
 	String getExceptionStatisticsAsString();
 	/**
+	 * Gets the Exception Statistics as List
+	 * 
+	 * @return the Exception Statistics
+	 */
+	List<ExceptionStatistics> getExceptionStatisticsAsList();
+	/**
 	 * Provide an exception statistics as a String
+	 * 
 	 * @return the data
 	 */
 	String getDiagnosticsAsString();
 	/**
 	 * Gets the number of exceptions
+	 * 
 	 * @return the count
 	 */
 	String getNumberOfExceptions();
 	/**
 	 * Gets the exceptions
+	 * 
 	 * @return the exceptions
 	 */
 	String getExceptions();

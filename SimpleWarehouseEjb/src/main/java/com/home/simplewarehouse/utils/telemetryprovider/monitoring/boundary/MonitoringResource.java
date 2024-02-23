@@ -40,6 +40,7 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Diagnostics;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.ExceptionStatistics;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invocation;
 
 /**
@@ -71,14 +72,8 @@ public class MonitoringResource implements MonitoringResourceMXBean {
     	super();
     }
 
-    /**
-     * Gets the slowest methods
-     * 
-     * @param maxResult maximum items in the List
-     * 
-     * @return a List of slowest methods
-     */
-    @GET
+    @Override
+	@GET
     @Path("slowestMethods/{max}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public List<Invocation> getSlowestMethods(@QueryParam("max") @DefaultValue("50") int maxResult) {
@@ -112,11 +107,7 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return diagnostics;
 	}
 
-	/**
-	 * Gets the Diagnostics as String
-	 * 
-	 * @return the Diagnostics
-	 */
+	@Override
 	@GET
 	@Path("diagnostics")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -139,11 +130,7 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return message.toString();
 	}
 
-	/**
-	 * Gets the Exception Statistics as String
-	 * 
-	 * @return the Exception Statistics
-	 */
+	@Override
 	@GET
 	@Path("exceptionStatistics")
 	@Produces(MediaType.TEXT_PLAIN)
@@ -160,6 +147,24 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 
 		return message.toString();
 	}
+	
+	@Override
+	@GET
+	@Path("exceptionList")
+	@Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+	public List<ExceptionStatistics> getExceptionStatisticsAsList() {
+    	List<ExceptionStatistics> list = new ArrayList<>();
+
+		Set<Entry<String, AtomicInteger>> entrySet = exceptionStatistics.entrySet();
+		for (Entry<String, AtomicInteger> entry : entrySet) {
+			ExceptionStatistics statisticsEntry = new ExceptionStatistics(entry.getKey(),
+					entry.getValue().get());
+			
+			list.add(statisticsEntry);
+		}
+		
+    	return list;
+	}
 
 	@Override
 	public Map<String, Integer> getExceptionStatistics() {
@@ -172,13 +177,7 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 		return statistics;
 	}
 
-	/**
-	 * Gets the Diagnostics for the given key
-	 * 
-	 * @param key the key to search for
-	 * 
-	 * @return the Diagnostics as String
-	 */
+	@Override
 	@GET
 	@Path("diagnostics/{key}")
 	@Produces(MediaType.TEXT_PLAIN)

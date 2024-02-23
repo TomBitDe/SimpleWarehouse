@@ -8,7 +8,7 @@ import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
- * the Invocation class as XML element. 
+ * The Invocation class as XML element. 
  */
 @XmlRootElement
 @XmlAccessorType(XmlAccessType.FIELD)
