@@ -55,7 +55,7 @@
                    
 			           <h:outputText value="#{text['locations']}" styleClass="commmonTableHeadLine" />
         			   
- 				       <h:panelGrid style="height: 30vh; display: grid; overflow-y: auto;">
+ 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
         			   <h:dataTable id="loc" value="#{simpleLocationBean.items}"
 		        	       var="item" styleClass="commonTable"
 				           headerClass="commonTableHeader"
@@ -84,7 +84,7 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="2" style="height: 30vh; display: grid;">
+				       <h:panelGrid columns="2" style="height: 25vh; display: grid;">
                            <!-- Buttons for action -->
                            <h:commandButton value="#{text['delete']}" action="#{simpleLocationBean.deleteSelected}"
                                             styleClass="button" id="del_lo"/>
@@ -96,7 +96,7 @@
                    <h:panelGrid style="width: 100%;" >
 			        
 			           <h:outputText value="#{text['location_with_handling_units']}" styleClass="commmonTableHeadLine" />
- 				       <h:panelGrid style="height: 30vh; display: grid; overflow-y: auto;">
+ 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
         			   <h:dataTable id="loc_hu" value="#{simpleLocationWithHandlingUnitsBean.items}"
 		        	       var="item" styleClass="commonTable"
 				           headerClass="commonTableHeader"
@@ -129,7 +129,7 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="1" style="height: 30vh; display: grid;">
+				       <h:panelGrid columns="1" style="height: 25vh; display: grid;">
                            <!-- Button for action -->
                            <h:commandButton value="#{text['empty']}" action="#{simpleLocationWithHandlingUnitsBean.emptySelected}"
                                             styleClass="button" id="empty_lo"/>
@@ -140,7 +140,7 @@
 			        
 			           <h:outputText value="#{text['handling_units']}"  styleClass="commmonTableHeadLine" />
 			           
- 				       <h:panelGrid style="height: 30vh; width: 100%; display: grid; overflow-y: auto;">
+ 				       <h:panelGrid style="height: 40vh; width: 100%; display: grid; overflow-y: auto;">
         			   <h:dataTable id="hu" value="#{simpleHandlingUnitBean.items}"
 		        	       var="item" styleClass="commonTable"
 				           headerClass="commonTableHeader"
@@ -169,7 +169,7 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="3" rows="2" style="height: 30vh; display: grid;">
+				       <h:panelGrid columns="3" rows="2" style="height: 25vh; display: grid;">
                          <!-- Buttons for action -->
                          <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}"
                                           styleClass="button" id="del_hu"/>
@@ -188,7 +188,7 @@
 					<h:panelGrid style="width: 100%;" >
 			        
 			           <h:outputText value="#{text['container_handling_units']}" styleClass="commmonTableHeadLine" />
- 				       <h:panelGrid style="height: 30vh; display: grid; overflow-y: auto;">
+ 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
         			   <h:dataTable id="hu_hu" value="#{simpleContainerHandlingUnitsBean.items}"
 		        	       var="item" styleClass="commonTable"
 				           headerClass="commonTableHeader"
@@ -221,7 +221,7 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="1" rows="2" style="height: 30vh; display: grid;">
+				       <h:panelGrid columns="1" rows="2" style="height: 25vh; display: grid;">
                            <!-- Button for action -->
                            <h:commandButton value="#{text['free']}" action="#{simpleContainerHandlingUnitsBean.freeSelected}"
                                             styleClass="button" id="free_base"/>
