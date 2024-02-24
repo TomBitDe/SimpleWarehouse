@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -18,6 +20,7 @@ import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.utils.FacesMessageProxy;
 import com.home.simplewarehouse.views.SimpleLocationWithHandlingUnits;
 
 /**
@@ -39,6 +42,11 @@ public class SimpleLocationWithHandlingUnitsBean implements Serializable {
 	 */
 	@EJB
 	private HandlingUnitService handlingUnitService;
+    /**
+     * The locale bean
+     */
+    @Inject
+    private LocaleBean localeBean;
 	/**
 	 * The location items containing handling units
 	 */
@@ -93,30 +101,46 @@ public class SimpleLocationWithHandlingUnitsBean implements Serializable {
 	 * Empties the selected locations form all handlingunits
 	 */
     public void emptySelected() {
+		if (items.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_items"));
+			
+			return;
+		}
+
+		int cnt = 0;
+
         // Process the selected rows
         for (SimpleLocationWithHandlingUnits item : items) {
             if (item.isSelected()) {
                 // This row has to be processed
-				Set<HandlingUnit> handlingUnits = locationService.getById(item.getLocationId()).getHandlingUnits();
+            	Set<HandlingUnit> handlingUnits = locationService.getById(item.getLocationId()).getHandlingUnits();
             	
 				// Prepare handlingunit pick from item
             	for (HandlingUnit hu : handlingUnits) {
-            		try {
-						handlingUnitService.pickFrom(item.getLocationId(), hu.getId());
-						LOG.info("Handlingunit {} picked from item {}", hu.getId(), item.getLocationId());
-					}
+            	    try {
+					    handlingUnitService.pickFrom(item.getLocationId(), hu.getId());
+					    LOG.info("Handlingunit {} picked from item {}", hu.getId(), item.getLocationId());
+				    }
             	    catch (LocationIsEmptyException | HandlingUnitNotOnLocationException e) {
-						LOG.error("Handlingunit pick {} failed; reason {}", hu.getId(), e.getMessage());
+					    LOG.error("Handlingunit pick {} failed; reason {}", hu.getId(), e.getMessage());
             	    }
             	}
             	
             	if (locationService.getById(item.getLocationId()).getHandlingUnits().isEmpty()) {
-            		LOG.info("Emptied item {}", item.getLocationId());
+            	    LOG.info("Emptied item {}", item.getLocationId());
             	}
             	else {
-            		LOG.error("Item {} NOT empty!", item.getLocationId());
+            	    LOG.error("Item {} NOT empty!", item.getLocationId());
             	}
-            }
-        }
+            	
+            	++cnt;       	
+                }
+            }   
+        
+		    if (cnt == 0) {
+				FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+						localeBean.getText("warning"), localeBean.getText("no_selection"));
+		    }
     }
 }

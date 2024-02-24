@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
-import javax.faces.application.FacesMessage;
 import javax.faces.context.FacesContext;
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -17,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.utils.FacesMessageProxy;
 import com.home.simplewarehouse.views.SimpleLocation;
 
 /**
@@ -130,31 +130,28 @@ public class SimpleLocationBean implements Serializable {
 	 */
     public void deleteSelected() {
 		if (items.isEmpty()) {
-			String summary = localeBean.getText("warning");
-			String detail = localeBean.getText("no_items");
-			FacesContext.getCurrentInstance().addMessage(null,
-					new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_items"));
+			
+			return;
 		}
-		else {
-			int cnt = 0;
+		
+		int cnt = 0;
 
-			// Process the selected rows
-			for (SimpleLocation item : items) {
-				if (item.isSelected()) {
-					// This row has to be processed
-					locationService.delete(item.getLocationId());
-					LOG.info("Deleted item {}", item.getLocationId());
+		// Process the selected rows
+		for (SimpleLocation item : items) {
+			if (item.isSelected()) {
+				// This row has to be processed
+				locationService.delete(item.getLocationId());
+				LOG.info("Deleted item {}", item.getLocationId());
 					
-					++cnt;
-				}
+				++cnt;
 			}
+		}
 
-			if (cnt == 0) {
-				String summary = localeBean.getText("warning");
-				String detail = localeBean.getText("no_selection");
-				FacesContext.getCurrentInstance().addMessage(null,
-						new FacesMessage(FacesMessage.SEVERITY_WARN, summary, detail));
-			}
+		if (cnt == 0) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_selection"));
 		}
     }
 }
