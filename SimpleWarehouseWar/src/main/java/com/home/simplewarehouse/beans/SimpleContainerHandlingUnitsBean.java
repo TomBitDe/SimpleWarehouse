@@ -218,6 +218,7 @@ public class SimpleContainerHandlingUnitsBean implements Serializable {
             	handlingUnitService.free(item.getBaseId());
             	
 				LOG.info("Handlingunit {} freed", item.getBaseId());
+				
 				++cnt;
 			}
 		}

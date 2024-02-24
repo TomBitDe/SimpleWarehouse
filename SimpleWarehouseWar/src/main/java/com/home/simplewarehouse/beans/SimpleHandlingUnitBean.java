@@ -155,25 +155,26 @@ public class SimpleHandlingUnitBean implements Serializable {
 		if (items.isEmpty()) {
 			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
 					localeBean.getText("warning"), localeBean.getText("no_items"));
-		}
-		else {
-			int cnt = 0;
 			
-            // Process the selected rows
-            for (SimpleHandlingUnit item : items) {
-                if (item.isSelected()) {
-                    // This row has to be processed
-            	    handlingUnitService.delete(item.getId());
-            	    LOG.info("Deleted item {}", item.getId());
+			return;
+		}
+
+		int cnt = 0;
+			
+        // Process the selected rows
+        for (SimpleHandlingUnit item : items) {
+            if (item.isSelected()) {
+                // This row has to be processed
+          	    handlingUnitService.delete(item.getId());
+          	    LOG.info("Deleted item {}", item.getId());
             	    
-            	    ++cnt;
-                }
+           	    ++cnt;
             }
+        }
             
-			if (cnt == 0) {
-				FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
-						localeBean.getText("warning"), localeBean.getText("no_selection"));
-			}
+		if (cnt == 0) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_selection"));
 		}
     }
 	
@@ -221,9 +222,9 @@ public class SimpleHandlingUnitBean implements Serializable {
             	    catch (LocationIsEmptyException | HandlingUnitNotOnLocationException e) {
 						LOG.error("Item pick {} failed; reason {}", item.getId(), e.getMessage());
 					}
-            	    
-            	    ++cnt;
             	}
+
+				++cnt;
             }
         }
         
@@ -237,34 +238,44 @@ public class SimpleHandlingUnitBean implements Serializable {
      * Drops the selected item
      */
     public void dropSelected() {
-		if (selectedDestination != null && !selectedDestination.isEmpty()) {
-			int cnt = 0;
+		if (selectedDestination == null || selectedDestination.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_combobox_location_selected"));
 			
-			// Process the selected rows
-			for (SimpleHandlingUnit item : items) {
-				if (item.isSelected()) {
-					// This row has to be processed
-					++cnt;
+			return;
+		}
+		
+		if (items.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_items"));
+			
+			return;
+		}
+		
+		int cnt = 0;
+			
+		// Process the selected rows
+		for (SimpleHandlingUnit item : items) {
+			if (item.isSelected()) {
+				// This row has to be processed
+				++cnt;
 					
-            	    try {
-						handlingUnitService.dropTo(selectedDestination, item.getId());
-						LOG.info("Item {} dropped on {}", item.getId(), selectedDestination);
-					}
-            	    catch (CapacityExceededException | WeightExceededException | OverheightException | OverlengthException | OverwidthException e) {
-						LOG.error("Item {} drop on {} failed; reason {}", item.getId(), selectedDestination, e.getMessage());
-					}
+           	    try {
+					handlingUnitService.dropTo(selectedDestination, item.getId());
+					LOG.info("Item {} dropped on {}", item.getId(), selectedDestination);
+				}
+           	    catch (CapacityExceededException | WeightExceededException | OverheightException | OverlengthException | OverwidthException e) {
+					LOG.error("Item {} drop on {} failed; reason {}", item.getId(), selectedDestination, e.getMessage());
+
+					FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+							localeBean.getText("error"), localeBean.getText("drop_exception_happend"));
 				}
 			}
-			
-			if (cnt == 0) {
-				FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
-						localeBean.getText("warning"), localeBean.getText("no_selection"));
-			}
 		}
-		else {
+			
+		if (cnt == 0) {
 			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
-					localeBean.getText("warning"), localeBean.getText("no_destination_selected"));
-
+					localeBean.getText("warning"), localeBean.getText("no_selection"));
 		}
     }
 }
