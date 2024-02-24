@@ -14,9 +14,9 @@ import javax.inject.Named;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.jsfutils.FacesMessageProxy;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
-import com.home.simplewarehouse.utils.FacesMessageProxy;
 import com.home.simplewarehouse.views.SimpleLocation;
 
 /**
