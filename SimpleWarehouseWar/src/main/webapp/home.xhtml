@@ -32,7 +32,7 @@
 				    </h:commandLink>
 				</h:panelGrid>
 			
-			    <h:panelGrid columns="2" >
+			    <h:panelGrid columns="2" style="padding-left: 5px;">
 				  <h:commandButton value="#{text['refresh']}" styleClass="button">
 					<!-- DO NOT USE THIS; WILL NOT WORK
 					<f:ajax render="@form" />
@@ -51,13 +51,13 @@
 				</h:panelGrid>
 				
 				<h:panelGrid id="panelQualification" columns="4" >
-                   <h:panelGrid style="height: 300px; display: block">
+                   <h:panelGrid style="width: 100%;">
                    
 			           <h:outputText value="#{text['locations']}" styleClass="commmonTableHeadLine" />
         			   
- 				       <div style="overflow: auto;">
+ 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
         			   <h:dataTable id="loc" value="#{simpleLocationBean.items}"
-		        	       var="item" styleClass="commonTable"
+		        	       var="item" styleClass="commonTable" style="width: 160%;"
 				           headerClass="commonTableHeader"
 					       rowClasses="commonTableOddRow, commonTableEvenRow">
 					       
@@ -70,7 +70,7 @@
                                <h:outputText value="#{item.locationId}" />
                            </h:column>
 				       </h:dataTable>
-                       </div>
+                       </h:panelGrid>
 				       
 				       <!-- JavaScript for the selection -->
                        <h:outputScript>
@@ -84,7 +84,7 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="2">
+				       <h:panelGrid columns="2" style="height: 25vh; display: grid;">
                            <!-- Buttons for action -->
                            <h:commandButton value="#{text['delete']}" action="#{simpleLocationBean.deleteSelected}"
                                             styleClass="button" id="del_lo"/>
@@ -93,12 +93,12 @@
                        </h:panelGrid>
                    </h:panelGrid>
 
-                   <h:panelGrid style="height: 300px; display: block">
+                   <h:panelGrid style="width: 100%;" >
 			        
 			           <h:outputText value="#{text['location_with_handling_units']}" styleClass="commmonTableHeadLine" />
- 				       <div style="overflow: auto;">
+ 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
         			   <h:dataTable id="loc_hu" value="#{simpleLocationWithHandlingUnitsBean.items}"
-		        	       var="item" styleClass="commonTable"
+		        	       var="item" styleClass="commonTable" style="width: 102%;"
 				           headerClass="commonTableHeader"
 					       rowClasses="commonTableOddRow, commonTableEvenRow">
 
@@ -112,10 +112,10 @@
                            </h:column>
 					       <h:column>
 						       <f:facet name="header">#{text['handling_units']}</f:facet>    				
-                               <h:outputText value="#{item.handlingUnits}" />
+                               <h:outputText value="#{item.handlingUnits}" style="word-break: break-all; " />
                            </h:column>
 				       </h:dataTable>
-                       </div>
+                       </h:panelGrid>
 				       
 				       <!-- JavaScript for the selection -->
                        <h:outputScript>
@@ -129,20 +129,20 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="1">
+				       <h:panelGrid columns="1" style="height: 25vh; display: grid;">
                            <!-- Button for action -->
                            <h:commandButton value="#{text['empty']}" action="#{simpleLocationWithHandlingUnitsBean.emptySelected}"
                                             styleClass="button" id="empty_lo"/>
                        </h:panelGrid>
                    </h:panelGrid>
 
-                   <h:panelGrid style="height: 300px;  display: block">
+                   <h:panelGrid style="width: 100%;" >
 			        
 			           <h:outputText value="#{text['handling_units']}"  styleClass="commmonTableHeadLine" />
 			           
- 				       <div style="overflow: auto;">
+ 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
         			   <h:dataTable id="hu" value="#{simpleHandlingUnitBean.items}"
-		        	       var="item" styleClass="commonTable"
+		        	       var="item" styleClass="commonTable" style="width: 135%;"
 				           headerClass="commonTableHeader"
 					       rowClasses="commonTableOddRow, commonTableEvenRow">
 
@@ -155,7 +155,7 @@
                                <h:outputText value="#{item.id}" />
                            </h:column>
 				       </h:dataTable>
-                       </div>
+                       </h:panelGrid>
 				       
 				       <!-- JavaScript for the selection -->
                        <h:outputScript>
@@ -169,7 +169,7 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="3" rows="2">
+				       <h:panelGrid columns="3" rows="2" style="height: 25vh; display: grid;">
                          <!-- Buttons for action -->
                          <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}"
                                           styleClass="button" id="del_hu"/>
@@ -185,12 +185,12 @@
 					   </h:panelGrid>
 					</h:panelGrid>
 					
-					<h:panelGrid style="height: 300px; display: block">
+					<h:panelGrid style="width: 100%;" >
 			        
 			           <h:outputText value="#{text['container_handling_units']}" styleClass="commmonTableHeadLine" />
- 				       <div style="overflow: auto;">
+ 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
         			   <h:dataTable id="hu_hu" value="#{simpleContainerHandlingUnitsBean.items}"
-		        	       var="item" styleClass="commonTable"
+		        	       var="item" styleClass="commonTable" style="width: 113%;"
 				           headerClass="commonTableHeader"
 					       rowClasses="commonTableOddRow, commonTableEvenRow">
 
@@ -204,10 +204,10 @@
                            </h:column>
 					       <h:column>
 						       <f:facet name="header">#{text['flat_handling_units']}</f:facet>    				
-                               <h:outputText value="#{item.handlingUnits}" />
+                               <h:outputText value="#{item.handlingUnits}" style="word-break: break-all; " />
                            </h:column>
 				       </h:dataTable>
-                       </div>
+                       </h:panelGrid>
 				       
 				       <!-- JavaScript for the selection -->
                        <h:outputScript>
@@ -221,7 +221,7 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="1" rows="2">
+				       <h:panelGrid columns="1" rows="2" style="height: 25vh; display: grid;">
                            <!-- Button for action -->
                            <h:commandButton value="#{text['free']}" action="#{simpleContainerHandlingUnitsBean.freeSelected}"
                                             styleClass="button" id="free_base"/>

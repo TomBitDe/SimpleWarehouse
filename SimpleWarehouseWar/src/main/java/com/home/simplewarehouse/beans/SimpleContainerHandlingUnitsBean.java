@@ -7,6 +7,8 @@ import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -14,6 +16,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.model.HandlingUnit;
+import com.home.simplewarehouse.utils.FacesMessageProxy;
 import com.home.simplewarehouse.views.SimpleContainerHandlingUnits;
 
 /**
@@ -30,6 +33,11 @@ public class SimpleContainerHandlingUnitsBean implements Serializable {
 	 */
 	@EJB
 	private HandlingUnitService handlingUnitService;
+    /**
+     * The locale bean
+     */
+    @Inject
+    private LocaleBean localeBean;
 	/**
 	 * The handlingunit items containing handling units
 	 */
@@ -194,15 +202,31 @@ public class SimpleContainerHandlingUnitsBean implements Serializable {
 	 * Frees the selected base handlingunit form all composition handlingunits
 	 */
     public void freeSelected() {
+		if (items.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_items"));
+			
+			return;
+		}
+
+		int cnt = 0;
+
         // Process the selected rows
         for (SimpleContainerHandlingUnits item : items) {
             if (item.isSelected()) {
                 // This row has to be processed
-				handlingUnitService.free(item.getBaseId());
+            	handlingUnitService.free(item.getBaseId());
             	
 				LOG.info("Handlingunit {} freed", item.getBaseId());
-            }
-        }
+				
+				++cnt;
+			}
+		}
+
+		if (cnt == 0) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_selection"));
+		}
     }
 
 	/**
@@ -240,16 +264,28 @@ public class SimpleContainerHandlingUnitsBean implements Serializable {
     private boolean selectionValid() {
     	if (selectedOrigin == null || selectedOrigin.isEmpty()) {
 			LOG.warn("Invalid origin [{}] selection!", selectedOrigin);
+			
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_origin_selected"));
+
 			return false;
     	}
     	
     	if (selectedDestination == null || selectedDestination.isEmpty()) {
 			LOG.warn("Invalid destination [{}] selection!", selectedDestination);
+			
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_destination_selected"));
+
 			return false;
     	}
     	
     	if (selectedOrigin.equals(selectedDestination)) {
 			LOG.warn("Invalid equal origin {} destination {} selection!", selectedOrigin, selectedDestination);
+			
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("origin_equals_destination"));
+
 			return false;
     	}
     	

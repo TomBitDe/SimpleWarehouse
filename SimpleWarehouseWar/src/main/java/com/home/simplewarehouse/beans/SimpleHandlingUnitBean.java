@@ -6,6 +6,8 @@ import java.util.List;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
+import javax.faces.context.FacesContext;
+import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.logging.log4j.LogManager;
@@ -22,6 +24,7 @@ import com.home.simplewarehouse.location.OverwidthException;
 import com.home.simplewarehouse.location.WeightExceededException;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.utils.FacesMessageProxy;
 import com.home.simplewarehouse.views.SimpleHandlingUnit;
 
 /**
@@ -46,6 +49,11 @@ public class SimpleHandlingUnitBean implements Serializable {
 	 */
 	@EJB
 	private LocationService locationService;
+    /**
+     * The locale bean
+     */
+    @Inject
+    private LocaleBean localeBean;
 	/**
 	 * The handlingunit items
 	 */
@@ -144,14 +152,30 @@ public class SimpleHandlingUnitBean implements Serializable {
 	 * Deletes the selected item
 	 */
 	public void deleteSelected() {
+		if (items.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_items"));
+			
+			return;
+		}
+
+		int cnt = 0;
+			
         // Process the selected rows
         for (SimpleHandlingUnit item : items) {
             if (item.isSelected()) {
                 // This row has to be processed
-            	handlingUnitService.delete(item.getId());
-            	LOG.info("Deleted item {}", item.getId());
+          	    handlingUnitService.delete(item.getId());
+          	    LOG.info("Deleted item {}", item.getId());
+            	    
+           	    ++cnt;
             }
         }
+            
+		if (cnt == 0) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_selection"));
+		}
     }
 	
 	/**
@@ -177,6 +201,14 @@ public class SimpleHandlingUnitBean implements Serializable {
 	 * Picks the selected item
 	 */
     public void pickSelected() {
+		if (items.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_items"));
+			return;
+		}
+		
+    	int cnt = 0;
+    	
         // Process the selected rows
         for (SimpleHandlingUnit item : items) {
             if (item.isSelected()) {
@@ -191,28 +223,59 @@ public class SimpleHandlingUnitBean implements Serializable {
 						LOG.error("Item pick {} failed; reason {}", item.getId(), e.getMessage());
 					}
             	}
+
+				++cnt;
             }
         }
+        
+		if (cnt == 0) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_selection"));
+		}
     }
     
     /**
      * Drops the selected item
      */
     public void dropSelected() {
-		if (selectedDestination != null && !selectedDestination.isEmpty()) {
-			// Process the selected rows
-			for (SimpleHandlingUnit item : items) {
-				if (item.isSelected()) {
-					// This row has to be processed
-            	    try {
-						handlingUnitService.dropTo(selectedDestination, item.getId());
-						LOG.info("Item {} dropped on {}", item.getId(), selectedDestination);
-					}
-            	    catch (CapacityExceededException | WeightExceededException | OverheightException | OverlengthException | OverwidthException e) {
-						LOG.error("Item {} drop on {} failed; reason {}", item.getId(), selectedDestination, e.getMessage());
-					}
+		if (selectedDestination == null || selectedDestination.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_combobox_location_selected"));
+			
+			return;
+		}
+		
+		if (items.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_items"));
+			
+			return;
+		}
+		
+		int cnt = 0;
+			
+		// Process the selected rows
+		for (SimpleHandlingUnit item : items) {
+			if (item.isSelected()) {
+				// This row has to be processed
+				++cnt;
+					
+           	    try {
+					handlingUnitService.dropTo(selectedDestination, item.getId());
+					LOG.info("Item {} dropped on {}", item.getId(), selectedDestination);
+				}
+           	    catch (CapacityExceededException | WeightExceededException | OverheightException | OverlengthException | OverwidthException e) {
+					LOG.error("Item {} drop on {} failed; reason {}", item.getId(), selectedDestination, e.getMessage());
+
+					FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+							localeBean.getText("error"), localeBean.getText("drop_exception_happend"));
 				}
 			}
+		}
+			
+		if (cnt == 0) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_selection"));
 		}
     }
 }
