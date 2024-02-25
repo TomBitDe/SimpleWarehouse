@@ -54,7 +54,7 @@ public class TimerOtherSessionsBean extends AbstractTimerSession {
 
 		this.setLastAutomaticTimeout(new Date());
 
-		// Only when configuration for key Timer2 is UP
+		// Only when configuration for key Other is UP
 		if (configurator.getEntry("Other", "DOWN").equals("UP")) {
 			// Add the session beans here
 			

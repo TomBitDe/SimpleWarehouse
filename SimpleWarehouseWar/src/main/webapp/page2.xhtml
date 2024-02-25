@@ -52,6 +52,12 @@
                                 styleClass="button" id="start_timer_2" />
                             <h:commandButton value="#{text['timer_stop']}" action="#{restCallsBean.stopTimer2}" 
                                 styleClass="button" id="stop_timer_2" />
+				            <h:outputText value="#{text['timer3']}" styleClass="custom2Header" />
+    			            <h:outputText value="#{restCallsBean.timer3Status}" styleClass="normal-message-bold" />
+                            <h:commandButton value="#{text['timer_start']}" action="#{restCallsBean.startTimer3}" 
+                                styleClass="button" id="start_timer_3" />
+                            <h:commandButton value="#{text['timer_stop']}" action="#{restCallsBean.stopTimer3}" 
+                                styleClass="button" id="stop_timer_3" />
                         </h:panelGrid>
                     </h:panelGrid>
                 </h:panelGroup>

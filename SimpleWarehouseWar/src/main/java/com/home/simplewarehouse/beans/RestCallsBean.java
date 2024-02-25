@@ -35,8 +35,10 @@ public class RestCallsBean implements Serializable {
     private static final String APPL_CONFIG_REST_SERVICE_URL = "http://localhost:8080/war/resources/ApplConfigRestService";
     private static final String EXISTS_TIMER_1 = "/Exists/Timer1";
     private static final String EXISTS_TIMER_2 = "/Exists/Timer2";
+    private static final String EXISTS_TIMER_3 = "/Exists/Timer3";
     private static final String ENTRY_TIMER_1 = "/Entry/Timer1";
     private static final String ENTRY_TIMER_2 = "/Entry/Timer2";
+    private static final String ENTRY_TIMER_3 = "/Entry/Timer3";
     private static final String RESULT_FORMAT = "Result is [{}]";
     
     private static final String MONITOR_REST_SERVICE_URL = "http://localhost:8080/war/resources/monitoring";
@@ -186,6 +188,20 @@ public class RestCallsBean implements Serializable {
     }
 
     /**
+     * Starts timer 3
+     */
+    public void startTimer3() {
+    	startTimer(EXISTS_TIMER_3, "Timer3");
+    }
+    
+    /**
+     * Stops timer 3
+     */
+    public void stopTimer3() {
+    	stopTimer("Timer3");
+    }
+
+    /**
      * Gets the ping result
      * 
      * @return the result
@@ -234,6 +250,19 @@ public class RestCallsBean implements Serializable {
     	String val;
     	
     	val = getTimerStatus(EXISTS_TIMER_2, ENTRY_TIMER_2);
+    	
+    	return val;
+    }
+    
+    /**
+     * Gets the status of Timer3
+     * 
+     * @return the status
+     */
+    public String getTimer3Status() {
+    	String val;
+    	
+    	val = getTimerStatus(EXISTS_TIMER_3, ENTRY_TIMER_3);
     	
     	return val;
     }
