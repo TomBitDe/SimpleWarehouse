@@ -45,7 +45,13 @@ public class PickDropRandomLocationTest {
 	DropPickRandomLocationLocal2 dropPickRandomLocationLocal2;
 
 	@EJB
+	DropPickRandomLocationLocal3 dropPickRandomLocationLocal3;
+
+	@EJB
 	LocationService locationService;
+	
+	@EJB
+	HandlingUnitService handlingUnitService;
 	
 	/**
 	 * Configure the deployment.<br>
@@ -67,6 +73,7 @@ public class PickDropRandomLocationTest {
 						SampleWarehouseService.class, SampleWarehouseBean.class,
 						DropPickRandomLocationLocal1.class, DropPickRandomLocationBean1.class,
 						DropPickRandomLocationLocal2.class, DropPickRandomLocationBean2.class,
+						DropPickRandomLocationLocal3.class, DropPickRandomLocationBean3.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
 						LocationService.class, LocationBean.class,
 						PerformanceAuditor.class,
@@ -138,5 +145,20 @@ public class PickDropRandomLocationTest {
 		
 		// Just satisfy the test
 		assertNotNull(locationService.getAll());
+	}
+
+	/**
+	 * Call a scenario (only this is tested)
+	 */
+	@Test
+	@InSequence(0)
+	public void processScenario3() {
+		LOG.info("--- Test processScenario3");
+		
+		dropPickRandomLocationLocal3.processScenario();
+		
+		// Just satisfy the test
+		assertNotNull(locationService.getAll());
+		assertNotNull(handlingUnitService.getAll());
 	}
 }

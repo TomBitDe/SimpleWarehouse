@@ -83,6 +83,7 @@ public class Configurator implements ConfiguratorMXBean {
 	private static void setDefaults(Map<String, ValueSourceEntry> origin) {
 		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean1.secondsConfig", new ValueSourceEntry("*/5", SOURCE_DEFAULT));
 		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean2.secondsConfig", new ValueSourceEntry("*/8", SOURCE_DEFAULT));
+		origin.put("com.home.simplewarehouse.timed.TimerJpaSessionsBean3.secondsConfig", new ValueSourceEntry("*/6", SOURCE_DEFAULT));
 	}
 
 	/**

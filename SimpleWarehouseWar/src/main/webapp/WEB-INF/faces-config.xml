@@ -20,16 +20,21 @@
    </application>
    
    <navigation-rule>
-      <from-view-id>home.xhtml</from-view-id>
+      <from-view-id>/home.xhtml</from-view-id>
       <navigation-case>
          <from-action>#{navigationController.processPage1}</from-action>
          <from-outcome>page</from-outcome>
-         <to-view-id>page1.jsf</to-view-id>
+         <to-view-id>/page1.jsf</to-view-id>
       </navigation-case>
       <navigation-case>
          <from-action>#{navigationController.processPage2}</from-action>
          <from-outcome>page</from-outcome>
-         <to-view-id>page2.jsf</to-view-id>
+         <to-view-id>/page2.jsf</to-view-id>
+      </navigation-case>
+      <navigation-case>
+         <from-action>#{navigationController.processPage3}</from-action>
+         <from-outcome>page</from-outcome>
+         <to-view-id>/page3.jsf</to-view-id>
       </navigation-case>
    </navigation-rule>
 
