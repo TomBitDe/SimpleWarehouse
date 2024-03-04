@@ -31,12 +31,10 @@ import javax.management.MalformedObjectNameException;
 import javax.management.NotCompliantMBeanException;
 import javax.management.ObjectName;
 import javax.ws.rs.DELETE;
-import javax.ws.rs.DefaultValue;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
-import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Diagnostics;
@@ -53,6 +51,8 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invoca
 @ConcurrencyManagement(ConcurrencyManagementType.BEAN)
 public class MonitoringResource implements MonitoringResourceMXBean {
 
+	private static final int MAX_RESULT_DEFAULT = 50;
+	
     private MBeanServer platformMBeanServer;
     private ObjectName objectName = null;
 
@@ -76,11 +76,15 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 	@GET
     @Path("slowestMethods/{max}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
-    public List<Invocation> getSlowestMethods(@QueryParam("max") @DefaultValue("50") int maxResult) {
+    public List<Invocation> getSlowestMethods(@PathParam("max") int maxResult) {
     	List<Invocation> list = new ArrayList<>(methods.values());
 
     	Collections.sort(list);
     	Collections.reverse(list);
+    	if (maxResult <= 0) {
+    		maxResult = MAX_RESULT_DEFAULT;
+    	}
+    	
     	if (list.size() > maxResult) {
     		return list.subList(0, maxResult);
     	}
@@ -99,7 +103,7 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 
 	@Override
 	public List<Invocation> getSlowestMethods() {
-		return getSlowestMethods(50);
+		return getSlowestMethods(MAX_RESULT_DEFAULT);
 	}
 
 	@Override
