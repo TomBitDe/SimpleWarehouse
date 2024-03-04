@@ -26,23 +26,28 @@
                     <h:commandButton id="cb_Clear" value="#{text['moni_clear']}" action="#{restCallsBean.clearMonitor}"
                         styleClass="button" />
                     <h:commandButton id="cb_Refresh" value="#{text['refresh']}" styleClass="button">
-                        <!-- Parameter for slowestMethods -->
                         <f:ajax execute="@form" render="num_Exceptions exceptions_table slowest_methods_table" />
                     </h:commandButton>
 
                     <!-- Parameter for slowestMethods -->
                     <h:outputLabel for="inputField" value="#{text['moni_max_results_slowest']}"
                         styleClass="labelStyle" />
-                    <h:inputText id="inputField" value="#{restCallsBean.maxResults}"
-                        maxlength="4" size="4" styleClass="inputStyle" />
+                    <h:selectOneMenu id="inputField" value="#{restCallsBean.maxResults}" styleClass="inputStyle">
+                        <f:selectItem itemValue="5" itemLabel="5" />
+                        <f:selectItem itemValue="7" itemLabel="7" />
+                        <f:selectItem itemValue="10" itemLabel="10" />
+                        <f:selectItem itemValue="15" itemLabel="15" />
+                        <f:selectItem itemValue="20" itemLabel="20" />
+                        <f:selectItem itemValue="25" itemLabel="25" />
+                        <f:selectItem itemValue="30" itemLabel="30" />
+                        <f:selectItem itemValue="40" itemLabel="40" />
+                        <f:selectItem itemValue="50" itemLabel="50" />
+                        <f:selectItem itemValue="50" itemLabel="50" />
+                        <f:selectItem itemValue="75" itemLabel="75" />
+                        <f:selectItem itemValue="100" itemLabel="100" />
+                        <f:ajax execute="@this" render="num_Exceptions exceptions_table slowest_methods_table" />
+                    </h:selectOneMenu>
                 </h:panelGrid>
-
-                <script>
-                    // Reload every 10 seconds
-                    setInterval(function() {
-                        location.reload();
-                    }, 1000000); // 1000 Milliseconds = 1 Second
-                </script>
 
                 <h:panelGrid columns="2">
                     <h:panelGrid >
@@ -93,6 +98,7 @@
                     </h:panelGrid>
                 </h:panelGrid>
             </h:form>
+            
          </ui:define>
 
       </ui:composition>
