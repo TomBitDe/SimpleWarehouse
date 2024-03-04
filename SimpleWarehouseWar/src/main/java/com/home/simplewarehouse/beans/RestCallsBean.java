@@ -2,10 +2,8 @@ package com.home.simplewarehouse.beans;
 
 import java.io.Serializable;
 import java.util.List;
-import java.util.Map;
 
 import javax.enterprise.context.RequestScoped;
-import javax.faces.context.FacesContext;
 import javax.inject.Named;
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -43,11 +41,34 @@ public class RestCallsBean implements Serializable {
     
     private static final String MONITOR_REST_SERVICE_URL = "http://localhost:8080/war/resources/monitoring";
     
-    private static final int DEFAULT_MAX_RESULT = 50;
+    private static final int DEFAULT_MAX_ROWS = 50;
+    
+    /**
+     * Maximum rows for getting SlowestMethods
+     */
+    private String maxResults = String.valueOf(DEFAULT_MAX_ROWS);
 
     private transient Form formData = new Form();
     
     /**
+     * Gets the maximum results value
+     * 
+     * @return the maximum results
+     */
+    public String getMaxResults() {
+		return maxResults;
+	}
+
+    /**
+     * Sets the maximum results value
+     * 
+     * @param maxResults the maximum value
+     */
+	public void setMaxResults(String maxResults) {
+		this.maxResults = maxResults;
+	}
+
+	/**
      * The ping action result value
      */
     private String pingResult;
@@ -326,25 +347,21 @@ public class RestCallsBean implements Serializable {
     public List<Invocation> getSlowestMethods() {
         Client client = ClientBuilder.newClient();
         
-        FacesContext facesContext = FacesContext.getCurrentInstance();
-        Map<String, String> requestParams = facesContext.getExternalContext().getRequestParameterMap();
-        String maxParam = requestParams.get("max");
+        int maxRows;
         
-        int maxResult;
-        
-		if (maxParam != null) {
-
-			maxResult = Integer.parseInt(maxParam);
-			if (maxResult <= 0) {
-				maxResult = DEFAULT_MAX_RESULT;
+        try {
+        	maxRows = Integer.parseInt(getMaxResults());
+			if (maxRows <= 0) {
+				maxRows = DEFAULT_MAX_ROWS;
 			}
-		} 
-		else {
-			maxResult = DEFAULT_MAX_RESULT;
-		}
+        }
+        catch (NumberFormatException nfex) {
+        	maxRows = DEFAULT_MAX_ROWS;
+        }
+		setMaxResults(String.valueOf(maxRows));
 
         String endpoint = MONITOR_REST_SERVICE_URL + "/slowestMethods";
-        endpoint += "/" + maxResult;
+        endpoint += "/" + maxRows;
         
         List<Invocation> items = client.target(endpoint)
 				.request(MediaType.APPLICATION_XML)
