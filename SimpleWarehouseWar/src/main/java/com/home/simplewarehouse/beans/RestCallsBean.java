@@ -41,7 +41,7 @@ public class RestCallsBean implements Serializable {
     
     private static final String MONITOR_REST_SERVICE_URL = "http://localhost:8080/war/resources/monitoring";
     
-    private static final int DEFAULT_MAX_ROWS = 50;
+    private static final int DEFAULT_MAX_ROWS = 30;
     
     /**
      * Maximum rows for getting SlowestMethods
