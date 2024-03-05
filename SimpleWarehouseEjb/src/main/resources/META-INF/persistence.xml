@@ -5,6 +5,8 @@
                                  http://xmlns.jcp.org/xml/ns/persistence/persistence_2_2.xsd"
   			 version="2.2">
 	<persistence-unit name="SimpleWarehouse-PU" transaction-type="JTA">
+	    <!-- If you want to use the default H2 data source just comment out the jta-data-source -->
+		<jta-data-source>jdbc/__oracle12c</jta-data-source>
 		<class>com.home.simplewarehouse.model.HandlingUnit</class>
 		<class>com.home.simplewarehouse.model.Location</class>
 		<class>com.home.simplewarehouse.model.FifoLocation</class>
