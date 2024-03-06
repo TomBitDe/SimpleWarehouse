@@ -12,4 +12,4 @@ Release notes:
 - Release-0.9.4.0 contains REST support for location and handling unit.
 - Release-0.9.5.2 contains a simple JSF interface for locations and handling units.
 - Release-0.9.7.0 contains bugfixes for operations on handling units.
-- Release-0.9.8.0 contains more JSF.
+- Release-0.9.8.0 contains more JSF. Now a very basic browser UI is available.
