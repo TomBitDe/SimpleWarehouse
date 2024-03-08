@@ -13,3 +13,4 @@ Release notes:
 - Release-0.9.5.2 contains a simple JSF interface for locations and handling units.
 - Release-0.9.7.0 contains bugfixes for operations on handling units.
 - Release-0.9.8.0 contains more JSF. Now a very basic browser UI is available.
+- Release-0.9.9.0 contains refactoring to prepare final release.
