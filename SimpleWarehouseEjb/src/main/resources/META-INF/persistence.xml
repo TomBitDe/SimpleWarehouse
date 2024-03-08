@@ -9,6 +9,7 @@
 		<jta-data-source>jdbc/__oracle12c</jta-data-source>
 		<class>com.home.simplewarehouse.model.HandlingUnit</class>
 		<class>com.home.simplewarehouse.model.Location</class>
+		<class>com.home.simplewarehouse.model.RandomLocation</class>
 		<class>com.home.simplewarehouse.model.FifoLocation</class>
 		<class>com.home.simplewarehouse.model.LifoLocation</class>
 		<class>com.home.simplewarehouse.model.LocationStatus</class>

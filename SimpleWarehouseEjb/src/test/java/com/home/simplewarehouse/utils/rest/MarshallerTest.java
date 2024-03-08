@@ -41,6 +41,7 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
@@ -227,7 +228,7 @@ public class MarshallerTest {
 	@Test
 	@InSequence(6)
 	public void marshallDimension() {
-		Dimension dimension = new Dimension(new Location("Loc_1"));
+		Dimension dimension = new Dimension(new RandomLocation("Loc_1"));
 
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(Dimension.class);
@@ -247,7 +248,7 @@ public class MarshallerTest {
 	@Test
 	@InSequence(9)
 	public void marshallLocationStatus() {
-		LocationStatus locationStatus = new LocationStatus(new Location("Loc_1"));
+		LocationStatus locationStatus = new LocationStatus(new RandomLocation("Loc_1"));
 
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(LocationStatus.class);
@@ -268,7 +269,7 @@ public class MarshallerTest {
 	@InSequence(12)
 	public void marshallLocation()
 	{
-        Location location = new Location("Loc_1");
+        Location location = new RandomLocation("Loc_1");
         Set<HandlingUnit> placed = new HashSet<>();
         placed.add(new HandlingUnit("HU_A"));
         placed.add(new HandlingUnit("HU_B"));
@@ -337,7 +338,7 @@ public class MarshallerTest {
 			base = handlingUnitService.assign(new HandlingUnit("HU_B"), base);
 			base = handlingUnitService.assign(new HandlingUnit("HU_C"), base);
 			base = handlingUnitService.assign(new HandlingUnit("HU_D"), base);
-			handlingUnitService.dropTo(new Location("LOC_1"), base);
+			handlingUnitService.dropTo(new RandomLocation("LOC_1"), base);
 			
 			base = handlingUnitService.getById("HU_A");
 	        

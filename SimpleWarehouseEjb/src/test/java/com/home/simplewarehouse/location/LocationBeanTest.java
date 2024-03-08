@@ -42,6 +42,7 @@ import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.model.LockStatus;
 import com.home.simplewarehouse.model.LogicalPosition;
 import com.home.simplewarehouse.model.LtosStatus;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.RelativPosition;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -148,7 +149,7 @@ public class LocationBeanTest {
 		}
 
 		try {
-			location = locationService.createOrUpdate(new Location((String) null));
+			location = locationService.createOrUpdate(new RandomLocation((String) null));
 
 			Assert.fail("Exception expected");
 		}
@@ -159,7 +160,7 @@ public class LocationBeanTest {
 		assertNull(location);
 		
 		try {
-			location = locationService.createOrUpdate(new Location(new LogicalPosition()));
+			location = locationService.createOrUpdate(new RandomLocation(new LogicalPosition()));
 
 			Assert.fail("Exception expected");
 		}
@@ -169,7 +170,7 @@ public class LocationBeanTest {
 		
 		assertNull(location);
 		
-		Location expLocation = new Location("A");
+		Location expLocation = new RandomLocation("A");
 
 		location = locationService.createOrUpdate(expLocation);
 
@@ -190,7 +191,7 @@ public class LocationBeanTest {
 		
 		assertNull(locationService.getById("B"));
 		
-		expLocation = new Location("C");
+		expLocation = new RandomLocation("C");
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -203,7 +204,7 @@ public class LocationBeanTest {
 				
 		LOG.info(location);
 
-		expLocation = new Location(new LogicalPosition("X"), "D");
+		expLocation = new RandomLocation(new LogicalPosition("X"), "D");
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -214,7 +215,7 @@ public class LocationBeanTest {
 		
 		LOG.info(location);
 
-		expLocation = new Location(new RelativPosition(1, 1, 1), "E");
+		expLocation = new RandomLocation(new RelativPosition(1, 1, 1), "E");
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -224,7 +225,7 @@ public class LocationBeanTest {
 		
 		LOG.info(location);
 
-		expLocation = new Location(new AbsolutPosition(1.25f, 3.12f, 1.01f), "F");
+		expLocation = new RandomLocation(new AbsolutPosition(1.25f, 3.12f, 1.01f), "F");
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -245,7 +246,7 @@ public class LocationBeanTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    Location location = locationService.createOrUpdate(new Location("A"));
+	    Location location = locationService.createOrUpdate(new RandomLocation("A"));
 
 		LOG.info("Location getById: " + location);
 		
@@ -257,7 +258,7 @@ public class LocationBeanTest {
 		assertEquals("A", location.getLocationId());
 		LOG.info("Location deleted: " + location.getLocationId());
 		
-		location = locationService.createOrUpdate(new Location("A", "Test"));
+		location = locationService.createOrUpdate(new RandomLocation("A", "Test"));
 
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
@@ -270,7 +271,7 @@ public class LocationBeanTest {
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
-		location = locationService.createOrUpdate(new Location("A", "Test", ts));
+		location = locationService.createOrUpdate(new RandomLocation("A", "Test", ts));
 
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
@@ -288,7 +289,7 @@ public class LocationBeanTest {
 
 		assertTrue(locationService.getAll().isEmpty());
 		
-	    Location location = locationService.createOrUpdate(new Location("A"));
+	    Location location = locationService.createOrUpdate(new RandomLocation("A"));
 
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
@@ -312,7 +313,7 @@ public class LocationBeanTest {
 		assertTrue(true);
 
 		// Delete locationId null
-		location = locationService.createOrUpdate(new Location("A"));
+		location = locationService.createOrUpdate(new RandomLocation("A"));
 		assertNotNull(location);
 		location.setLocationId(null);
 		locationService.delete(location);
@@ -349,7 +350,7 @@ public class LocationBeanTest {
 		
 		assumeTrue(locationService.getAll().isEmpty());
 		
-		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		Location locA = locationService.createOrUpdate(new RandomLocation("A", "Test"));
 		
 		assertNotNull(locA);
 		assertEquals(LocationStatus.ERROR_STATUS_DEFAULT, locA.getLocationStatus().getErrorStatus());
@@ -420,7 +421,7 @@ public class LocationBeanTest {
 		
 		assumeTrue(locationService.getAll().isEmpty());
 		
-		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		Location locA = locationService.createOrUpdate(new RandomLocation("A", "Test"));
 		
 		// LogicalPosition
 		assertTrue(locA.getPosition() instanceof LogicalPosition);
@@ -435,7 +436,7 @@ public class LocationBeanTest {
 		LOG.info("LocA: " + locA);
 		
 		// RelativePosition
-		Location locB = locationService.createOrUpdate(new Location(new RelativPosition(), "B"));
+		Location locB = locationService.createOrUpdate(new RandomLocation(new RelativPosition(), "B"));
 		
 		assertNotNull(locB);
 		// Check the DEFAULT values
@@ -468,7 +469,7 @@ public class LocationBeanTest {
 		LOG.info("LocB: " + locB);
 
 		// AbsolutePosition
-		Location locD = locationService.createOrUpdate(new Location(new AbsolutPosition(), "D"));
+		Location locD = locationService.createOrUpdate(new RandomLocation(new AbsolutPosition(), "D"));
 		
 		assertNotNull(locD);
 		// Check the DEFAULT values
@@ -512,7 +513,7 @@ public class LocationBeanTest {
 		
 		assumeTrue(locationService.getAll().isEmpty());
 		
-		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		Location locA = locationService.createOrUpdate(new RandomLocation("A", "Test"));
 		
 		// LogicalPosition
 		assertTrue(locA.getPosition() instanceof LogicalPosition);
@@ -617,11 +618,11 @@ public class LocationBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		
 		// Prepare some locations; 5 locations
-		locationService.createOrUpdate(new Location("A", "Test"));
-		locationService.createOrUpdate(new Location("B", "Test"));
-		locationService.createOrUpdate(new Location("C", "Test"));
-		locationService.createOrUpdate(new Location("D", "Test"));
-		locationService.createOrUpdate(new Location("E", "Test"));
+		locationService.createOrUpdate(new RandomLocation("A", "Test"));
+		locationService.createOrUpdate(new RandomLocation("B", "Test"));
+		locationService.createOrUpdate(new RandomLocation("C", "Test"));
+		locationService.createOrUpdate(new RandomLocation("D", "Test"));
+		locationService.createOrUpdate(new RandomLocation("E", "Test"));
 
 		// Get them all and output
 		List<Location> locations = locationService.getAll();
@@ -666,7 +667,7 @@ public class LocationBeanTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a locationService
-		locationService.createOrUpdate(new Location("A", "Test"));
+		locationService.createOrUpdate(new RandomLocation("A", "Test"));
 		Location locA = locationService.getById("A");
 		LOG.info("Location prepared: " + locA);
 		
@@ -741,7 +742,7 @@ public class LocationBeanTest {
 		assertTrue(handlingUnitService.getAll().isEmpty());
 		
 		// Prepare a location
-		Location locA = locationService.createOrUpdate(new Location("A", "Test"));
+		Location locA = locationService.createOrUpdate(new RandomLocation("A", "Test"));
 		
 		// Test the special toString also
 		assumeTrue(locA.toString().contains("HandlingUnits RANDOM=[]"));
@@ -801,10 +802,10 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.createOrUpdate(new Location("A"));
-		locationService.createOrUpdate(new Location("B"));
-		locationService.createOrUpdate(new Location("C"));
-		locationService.createOrUpdate(new Location("D"));
+		locationService.createOrUpdate(new RandomLocation("A"));
+		locationService.createOrUpdate(new RandomLocation("B"));
+		locationService.createOrUpdate(new RandomLocation("C"));
+		locationService.createOrUpdate(new RandomLocation("D"));
 		
 
 		LOG.info("Locations created: " + locationService.getAll().size());
@@ -842,7 +843,7 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		locationService.createOrUpdate(new Location("A"));
+		locationService.createOrUpdate(new RandomLocation("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
 		Location locA = locationService.getById("A");
@@ -907,7 +908,7 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		Location locA = locationService.createOrUpdate(new Location("A"));
+		Location locA = locationService.createOrUpdate(new RandomLocation("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
 		
@@ -964,7 +965,7 @@ public class LocationBeanTest {
 		
 		assertTrue(locationService.getAll().isEmpty());
 
-		Location locA = locationService.createOrUpdate(new Location("A"));
+		Location locA = locationService.createOrUpdate(new RandomLocation("A"));
 
 		LOG.info("Locations created: " + locationService.getAll().size());
 		

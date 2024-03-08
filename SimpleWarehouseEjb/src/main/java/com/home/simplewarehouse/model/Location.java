@@ -14,7 +14,6 @@ import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.Id;
@@ -42,9 +41,8 @@ import org.apache.logging.log4j.Logger;
 @Table(name = "LOCATION")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "ACCESS_LIMIT", discriminatorType = DiscriminatorType.STRING, length = 20)
-@DiscriminatorValue("RANDOM")
 @NamedQuery(name = "findAllLocations", query = "select l from Location l", lockMode = NONE)
-public class Location extends EntityBase implements Serializable {
+public abstract class Location extends EntityBase implements Serializable {
 	private static final long serialVersionUID = 1L;
 	private static final Logger LOG = LogManager.getLogger(Location.class);
 
@@ -66,19 +64,19 @@ public class Location extends EntityBase implements Serializable {
 	 */
 	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
-	private LocationStatus locationStatus;
+	protected LocationStatus locationStatus;
 	/**
 	 * The associated Dimension
 	 */
 	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
-	private Dimension dimension;
+	protected Dimension dimension;
 	/**
 	 * The associated Position
 	 */
 	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
-	private Position position;
+	protected Position position;
 	/**
 	 * The associated HandlingUnits
 	 */
@@ -104,7 +102,7 @@ public class Location extends EntityBase implements Serializable {
 	/**
 	 * Default Random Location with default LogicalPosition
 	 */
-	public Location() {
+	protected Location() {
 		super();
 		initAssociated(null);
 	}
@@ -114,7 +112,7 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param id the given id
 	 */
-	public Location(String id) {
+	protected Location(String id) {
 		super();
 		this.locationId = id;
 		initAssociated(null);
@@ -126,7 +124,7 @@ public class Location extends EntityBase implements Serializable {
 	 * @param id   the given id
 	 * @param user the given user
 	 */
-	public Location(String id, String user) {
+	protected Location(String id, String user) {
 		super(user);
 		this.locationId = id;
 		initAssociated(null);
@@ -139,7 +137,7 @@ public class Location extends EntityBase implements Serializable {
 	 * @param user      the given user
 	 * @param timestamp the given timestamp
 	 */
-	public Location(String id, String user, Timestamp timestamp) {
+	protected Location(String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
 		initAssociated(null);
@@ -150,7 +148,7 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param pos the given Position
 	 */
-	public Location(Position pos) {
+	protected Location(Position pos) {
 		super();
 		initAssociated(pos);
 	}
@@ -161,7 +159,7 @@ public class Location extends EntityBase implements Serializable {
 	 * @param pos the given Position
 	 * @param id  the given id
 	 */
-	public Location(Position pos, String id) {
+	protected Location(Position pos, String id) {
 		super();
 		this.locationId = id;
 		initAssociated(pos);
@@ -174,7 +172,7 @@ public class Location extends EntityBase implements Serializable {
 	 * @param id   the given id
 	 * @param user the given user
 	 */
-	public Location(Position pos, String id, String user) {
+	protected Location(Position pos, String id, String user) {
 		super(user);
 		this.locationId = id;
 		initAssociated(pos);
@@ -188,7 +186,7 @@ public class Location extends EntityBase implements Serializable {
 	 * @param user      the given user
 	 * @param timestamp the given timestamp
 	 */
-	public Location(Position pos, String id, String user, Timestamp timestamp) {
+	protected Location(Position pos, String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
 		initAssociated(pos);
@@ -219,7 +217,7 @@ public class Location extends EntityBase implements Serializable {
 	 * 
 	 * @return the version number
 	 */
-	private int getVersion() {
+	protected int getVersion() {
 		return version;
 	}
 

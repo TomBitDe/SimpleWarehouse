@@ -42,6 +42,7 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
@@ -178,7 +179,7 @@ public class HandlingUnitTest {
 		HandlingUnit expHandlingUnit = new HandlingUnit("1");
 		
 		assertEquals(false, expHandlingUnit.equals(null));
-		assertEquals(false, expHandlingUnit.equals(new Location("A")));
+		assertEquals(false, expHandlingUnit.equals(new RandomLocation("A")));
 
 		HandlingUnit handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);
@@ -362,7 +363,7 @@ public class HandlingUnitTest {
 		
 		try {
 			// Now drop
-			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("1"));
+			handlingUnitService.dropTo(new RandomLocation("A"), new HandlingUnit("1"));
 
 			// MANDATORY reread
 			HandlingUnit hU1 = handlingUnitService.getById("1");
@@ -383,7 +384,7 @@ public class HandlingUnitTest {
 			
 			// Now by id
 			HandlingUnit hU2 = handlingUnitService.createOrUpdate(new HandlingUnit("2"));
-			Location lOB = locationService.createOrUpdate(new Location("B"));
+			Location lOB = locationService.createOrUpdate(new RandomLocation("B"));
 			
 			handlingUnitService.dropTo("B", "2");
 
@@ -462,7 +463,7 @@ public class HandlingUnitTest {
 		
 		// Check invalid drop to handlingUnit null
 		try {
-			handlingUnitService.dropTo(new Location("A"), null);
+			handlingUnitService.dropTo(new RandomLocation("A"), null);
 
 			assertTrue("No exception expected", true);
 		}
@@ -499,7 +500,7 @@ public class HandlingUnitTest {
 		
 		// To prepare the pick do a drop before
 		try {
-			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("1"));
+			handlingUnitService.dropTo(new RandomLocation("A"), new HandlingUnit("1"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
@@ -556,7 +557,7 @@ public class HandlingUnitTest {
 
 		// Now with ids
 		try {
-			handlingUnitService.dropTo(new Location("B"), new HandlingUnit("2"));
+			handlingUnitService.dropTo(new RandomLocation("B"), new HandlingUnit("2"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
@@ -620,7 +621,7 @@ public class HandlingUnitTest {
 		// Pick now
 		try {
 			LOG.info("Pick now");
-		    handlingUnitService.pickFrom(new Location("A"), new HandlingUnit("1"));
+		    handlingUnitService.pickFrom(new RandomLocation("A"), new HandlingUnit("1"));
 		    
 		    Assert.fail("Expected an LocationIsEmptyException to be thrown");
 		}
@@ -645,7 +646,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 				
 		try {
-			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("1"));
+			handlingUnitService.dropTo(new RandomLocation("A"), new HandlingUnit("1"));
 		}
 		catch (DimensionException dimex) {
 			Assert.fail("Not expected: " + dimex);
@@ -688,7 +689,7 @@ public class HandlingUnitTest {
 		
 		// Drop to make a relation
 		try {
-			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("1"));
+			handlingUnitService.dropTo(new RandomLocation("A"), new HandlingUnit("1"));
 		
 			// MANDATORY reread
 			lOA = locationService.getById("A");
@@ -737,7 +738,7 @@ public class HandlingUnitTest {
 
 		try {
 			// Drop to make a relation
-			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("2"));
+			handlingUnitService.dropTo(new RandomLocation("A"), new HandlingUnit("2"));
 
 			// MANDATORY reread
 			HandlingUnit hU2 = handlingUnitService.getById("2");
@@ -785,7 +786,7 @@ public class HandlingUnitTest {
 
 		try {
 			// Drop to make a relation
-			handlingUnitService.dropTo(new Location("A"), new HandlingUnit("2"));
+			handlingUnitService.dropTo(new RandomLocation("A"), new HandlingUnit("2"));
 
 			// MANDATORY reread
 			HandlingUnit hU2 = handlingUnitService.getById("2");
@@ -794,7 +795,7 @@ public class HandlingUnitTest {
 			LOG.info("First drop: " + lOA);
 
 			// Now drop again to other location
-			handlingUnitService.dropTo(new Location("B"), hU2);
+			handlingUnitService.dropTo(new RandomLocation("B"), hU2);
 
 			// MANDATORY reread
 			hU2 = handlingUnitService.getById("2");
@@ -842,7 +843,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare a location
-		locationService.createOrUpdate(new Location("A"));		
+		locationService.createOrUpdate(new RandomLocation("A"));		
 		Location lOA = locationService.getById("A");
 		
 		// Now set the capacity to limit
@@ -897,7 +898,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare handling unit and a location
-		locationService.createOrUpdate(new Location("A"));
+		locationService.createOrUpdate(new RandomLocation("A"));
 		Location lOA = locationService.getById("A");
 		
 		// Now set the weight to limit
@@ -952,7 +953,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare a location
-		Location lOA = locationService.createOrUpdate(new Location("A"));
+		Location lOA = locationService.createOrUpdate(new RandomLocation("A"));
 		
 		// Now set the height to limit
 		lOA.getDimension().setMaxHeight(HeightCategory.MIDDLE);
@@ -1080,7 +1081,7 @@ public class HandlingUnitTest {
 		HandlingUnit hU4 = handlingUnitService.createOrUpdate(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.TOO_WIDE));
 		HandlingUnit hU5 = handlingUnitService.createOrUpdate(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.NOT_RELEVANT, WidthCategory.UNKNOWN));
 		
-		locationService.createOrUpdate(new Location("A"));
+		locationService.createOrUpdate(new RandomLocation("A"));
 		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
@@ -1168,7 +1169,7 @@ public class HandlingUnitTest {
 		HandlingUnit hU4 = handlingUnitService.createOrUpdate(new HandlingUnit("4", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.TOO_LONG));
 		HandlingUnit hU5 = handlingUnitService.createOrUpdate(new HandlingUnit("5", 0, 0.0f, HeightCategory.NOT_RELEVANT, LengthCategory.UNKNOWN));
 		
-		locationService.createOrUpdate(new Location("A"));
+		locationService.createOrUpdate(new RandomLocation("A"));
 		Location lOA = locationService.getById("A");
 		
 		// Now set the height to limit
@@ -1236,7 +1237,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare a location
-		Location lOA = locationService.createOrUpdate(new Location("A"));
+		Location lOA = locationService.createOrUpdate(new RandomLocation("A"));
 		
 		// Now set the height to limit
 		lOA.getDimension().setMaxHeight(HeightCategory.HIGH);
@@ -1273,7 +1274,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare a location
-		Location lOA = locationService.createOrUpdate(new Location("A"));
+		Location lOA = locationService.createOrUpdate(new RandomLocation("A"));
 		
 		// Now set the length to limit
 		lOA.getDimension().setMaxLength(LengthCategory.LONG);
@@ -1332,7 +1333,7 @@ public class HandlingUnitTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		// Prepare a location
-		Location lOA = locationService.createOrUpdate(new Location("A"));
+		Location lOA = locationService.createOrUpdate(new RandomLocation("A"));
 		
 		// Now set the length to limit
 		lOA.getDimension().setMaxWidth(WidthCategory.WIDE);

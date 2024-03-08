@@ -15,6 +15,7 @@ import com.home.simplewarehouse.location.DimensionException;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.topology.SampleWarehouseService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -71,13 +72,13 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		HandlingUnit h3 = handlingUnitService.createOrUpdate(new HandlingUnit("3"));
 		HandlingUnit h4 = handlingUnitService.createOrUpdate(new HandlingUnit("4"));
 
-		Location lA = locationService.createOrUpdate(new Location("A"));
+		Location lA = locationService.createOrUpdate(new RandomLocation("A"));
 		LOG.debug(lA);
 		
-		Location lB = locationService.createOrUpdate(new Location("B"));
+		Location lB = locationService.createOrUpdate(new RandomLocation("B"));
 		LOG.debug(lB);
 		
-		Location lC = locationService.createOrUpdate(new Location("C"));
+		Location lC = locationService.createOrUpdate(new RandomLocation("C"));
 		LOG.debug(lC);
 		
 		try {

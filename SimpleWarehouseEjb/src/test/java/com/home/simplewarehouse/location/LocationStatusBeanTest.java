@@ -30,6 +30,7 @@ import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.model.LockStatus;
 import com.home.simplewarehouse.model.LtosStatus;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -121,7 +122,7 @@ public class LocationStatusBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		assertTrue(locationStatusService.getAll().isEmpty());
 		
-		Location expLocation = new Location("A");
+		Location expLocation = new RandomLocation("A");
 		
 		Location location = locationService.createOrUpdate(expLocation);
 		assertEquals(expLocation, location);
@@ -151,7 +152,7 @@ public class LocationStatusBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		assertTrue(locationStatusService.getAll().isEmpty());
 		
-		Location expLocation = new Location("A");
+		Location expLocation = new RandomLocation("A");
 		
 		locationService.createOrUpdate(expLocation);
 		assertEquals(expLocation, locationService.getById("A"));
@@ -181,7 +182,7 @@ public class LocationStatusBeanTest {
 		assertTrue(locationStatusService.getAll().isEmpty());
 		
 		// With Dimension DEFAULTS
-		Location location = new Location("A");
+		Location location = new RandomLocation("A");
 		// Now change
 		location.setLocationStatus(ErrorStatus.NONE, LtosStatus.YES, LockStatus.DROP_LOCKED);
 		
@@ -218,7 +219,7 @@ public class LocationStatusBeanTest {
 		assertEquals(LtosStatus.NO, expLocation.getLocationStatus().getLtosStatus());
 		assertEquals(LockStatus.PICK_LOCKED, expLocation.getLocationStatus().getLockStatus());
 
-		location = new Location("B");
+		location = new RandomLocation("B");
 		// Change again
 		location.setLocationStatus(ErrorStatus.NONE, LtosStatus.NO, LockStatus.UNLOCKED);
 		
@@ -242,13 +243,13 @@ public class LocationStatusBeanTest {
 		assertTrue(locationStatusService.getAll().isEmpty());
 		
 		// With Dimension DEFAULTS
-		Location location = new Location("A");
+		Location location = new RandomLocation("A");
 		
 		Location expLocation = locationService.createOrUpdate(location);
 		
 		assertEquals(expLocation.getLocationStatus(), location.getLocationStatus());
 		
-		expLocation = locationService.createOrUpdate(new Location("B"));
+		expLocation = locationService.createOrUpdate(new RandomLocation("B"));
 		
 		assertNotEquals(expLocation.getLocationStatus(), location.getLocationStatus());
 		assertNotEquals(expLocation.getLocationStatus(), null);

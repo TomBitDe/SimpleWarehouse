@@ -18,6 +18,7 @@ import javax.ws.rs.core.Response;
 
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.rest.standardservices.StandardRestServices;
 
 /**
@@ -146,7 +147,7 @@ public class LocationRestService extends StandardRestServices {
     @Produces({MediaType.APPLICATION_XML})
     public Response create(@PathParam("key") String key) {
     	try {
-        	Location location = locationService.createOrUpdate(new Location(key));
+        	Location location = locationService.createOrUpdate(new RandomLocation(key));
         	
         	return Response.ok().entity(location).build();
     	}

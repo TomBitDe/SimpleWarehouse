@@ -18,6 +18,7 @@ import com.home.simplewarehouse.model.FifoLocation;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
@@ -47,6 +48,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 	/**
 	 * Create sample Locations (Random, FiFo, LiFo) and HandlingUnits 
 	 */
+	@Override
 	public void initialize() {
 		LOG.trace("--> initialize()");
 		
@@ -59,7 +61,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		
 		// Random
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
-			locationList.add(new Location("" + c, SampleWarehouseBean.class.getSimpleName()));
+			locationList.add(new RandomLocation("" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		
 		// FiFo
@@ -89,6 +91,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 	/**
 	 * Delete all Locations and HandlingUnits
 	 */
+	@Override
 	public void cleanup() {
 		LOG.trace("--> cleanup()");
 		

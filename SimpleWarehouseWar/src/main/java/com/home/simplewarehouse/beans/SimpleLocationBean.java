@@ -17,6 +17,7 @@ import org.apache.logging.log4j.Logger;
 import com.home.simplewarehouse.jsfutils.FacesMessageProxy;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.views.SimpleLocation;
 
 /**
@@ -98,7 +99,7 @@ public class SimpleLocationBean implements Serializable {
 		List<String> ids = validIds(GENERATED_IDS, existing);
 		
 		if (! ids.isEmpty()) {
-			locationService.createOrUpdate(new Location(ids.get(0)));
+			locationService.createOrUpdate(new RandomLocation(ids.get(0)));
 		}
 		else {
 			LOG.info("No ID available to add a DEFAULT location");

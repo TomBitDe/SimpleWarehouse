@@ -38,6 +38,7 @@ import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -189,7 +190,7 @@ public class DropPickComposedHandlingUnitTest {
 		assertNotNull(hU4);
 
 		// Create a location
-		Location lOA = locationService.createOrUpdate(new Location("A"));
+		Location lOA = locationService.createOrUpdate(new RandomLocation("A"));
 		assertNotNull(lOA);
 		
 		// Now test the drop
@@ -276,7 +277,7 @@ public class DropPickComposedHandlingUnitTest {
 		assertNotNull(hU4);
 
 		// Create a location
-		Location lOA = locationService.createOrUpdate(new Location("A"));
+		Location lOA = locationService.createOrUpdate(new RandomLocation("A"));
 		assertNotNull(lOA);
 		
  		try {

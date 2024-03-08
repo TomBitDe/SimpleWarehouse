@@ -29,6 +29,7 @@ import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.HeightCategory;
 import com.home.simplewarehouse.model.LengthCategory;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
@@ -122,7 +123,7 @@ public class DimensionBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		assertTrue(dimensionService.getAll().isEmpty());
 		
-		Location expLocation = locationService.createOrUpdate(new Location("A"));
+		Location expLocation = locationService.createOrUpdate(new RandomLocation("A"));
 		assertEquals(expLocation, locationService.getById("A"));
 		
 		Dimension dimension = dimensionService.getById(expLocation.getLocationId());		
@@ -147,7 +148,7 @@ public class DimensionBeanTest {
 		assertTrue(locationService.getAll().isEmpty());
 		assertTrue(dimensionService.getAll().isEmpty());
 		
-		Location expLocation = locationService.createOrUpdate(new Location("A"));
+		Location expLocation = locationService.createOrUpdate(new RandomLocation("A"));
 
 		assertEquals(expLocation, locationService.getById("A"));
 		
@@ -175,7 +176,7 @@ public class DimensionBeanTest {
 		assertTrue(dimensionService.getAll().isEmpty());
 		
 		// With Dimension DEFAULTS
-		Location location = new Location("A");
+		Location location = new RandomLocation("A");
 		// Now change
 		location.setDimension(5, 900, HeightCategory.MIDDLE, LengthCategory.SHORT, WidthCategory.NARROW);
 		
@@ -218,13 +219,13 @@ public class DimensionBeanTest {
 		assertTrue(dimensionService.getAll().isEmpty());
 		
 		// With Dimension DEFAULTS
-		Location location = new Location("A");
+		Location location = new RandomLocation("A");
 		
 		Location expLocation = locationService.createOrUpdate(location);
 		
 		assertEquals(expLocation.getDimension(), location.getDimension());
 		
-		expLocation = locationService.createOrUpdate(new Location("B"));
+		expLocation = locationService.createOrUpdate(new RandomLocation("B"));
 		
 		assertNotEquals(expLocation.getDimension(), location.getDimension());
 		assertNotEquals(expLocation.getDimension(), null);
