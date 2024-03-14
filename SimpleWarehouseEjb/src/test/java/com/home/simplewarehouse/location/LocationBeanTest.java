@@ -623,13 +623,16 @@ public class LocationBeanTest {
 		locationService.createOrUpdate(new RandomLocation("C", "Test"));
 		locationService.createOrUpdate(new RandomLocation("D", "Test"));
 		locationService.createOrUpdate(new RandomLocation("E", "Test"));
+		locationService.createOrUpdate(new RandomLocation(new LogicalPosition("F"), "F", "Test"));
+		locationService.createOrUpdate(new RandomLocation(new LogicalPosition("G"), "G", "Test",
+				new Timestamp(System.currentTimeMillis())));
 
 		// Get them all and output
 		List<Location> locations = locationService.getAll();
 		locations.stream().forEach( l -> LOG.info(l.toString()) );
 
 		assertFalse(locations.isEmpty());
-		assertEquals(5, locations.size());
+		assertEquals(7, locations.size());
 		
 		locations = locationService.getAll(0, 3);
 		assertEquals(3, locations.size());
