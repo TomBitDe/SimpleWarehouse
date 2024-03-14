@@ -9,9 +9,6 @@ import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * Location with access limit RANDOM.
  */
@@ -21,7 +18,6 @@ import org.apache.logging.log4j.Logger;
 @DiscriminatorValue("RANDOM")
 public class RandomLocation extends Location {
 	private static final long serialVersionUID = 1L;
-	private static final Logger LOG = LogManager.getLogger(RandomLocation.class);
 
 	/**
 	 * Default Random Location with default LogicalPosition
