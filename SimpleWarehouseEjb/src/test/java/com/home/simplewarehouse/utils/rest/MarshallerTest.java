@@ -1,8 +1,12 @@
 package com.home.simplewarehouse.utils.rest;
 
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -167,6 +171,9 @@ public class MarshallerTest {
 	public void marshallApplConfig()
 	{
         ApplConfig config = new ApplConfig("KeyValue_1", "ParamValue_1");
+        assertFalse(config.equals(null));
+        assertFalse(config.equals(new ApplConfig("KeyValue_2", "ParamValue_2")));
+        assertTrue(config.equals(new ApplConfig("KeyValue_1", "ParamValue_1")));
         
 		try {
 			JAXBContext jaxbContext = JAXBContext.newInstance(ApplConfig.class);
@@ -339,6 +346,8 @@ public class MarshallerTest {
 			base = handlingUnitService.assign(new HandlingUnit("HU_C"), base);
 			base = handlingUnitService.assign(new HandlingUnit("HU_D"), base);
 			handlingUnitService.dropTo(new RandomLocation("LOC_1"), base);
+			base.setLocationId("LO_1"); // Only to increase coverage
+			base.setContainsId(new HashSet<>(Arrays.asList("B", "C", "D"))); // Only to increase coverage
 			
 			base = handlingUnitService.getById("HU_A");
 	        

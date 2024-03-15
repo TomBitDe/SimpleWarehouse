@@ -28,12 +28,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.model.EntityBase;
-import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.FifoLocation;
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
@@ -133,8 +133,10 @@ public class FifoLocationTest {
 		LOG.info("Fifo Location created: " + expLocation);
 
 		// MANDATORY reread
-		Location location = locationService.getById(expLocation.getLocationId());		
+		Location location = locationService.getById(expLocation.getLocationId());
 		LOG.info("FifoLocation getById: " + location);
+		
+		assertFalse(location.equals(null));
 		
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
@@ -208,7 +210,7 @@ public class FifoLocationTest {
 		LOG.info("Fifo Location deleted: " + location.getLocationId());
 		
 	    // MANDATORY reread
-		location = (FifoLocation) locationService.getById("A");
+		location = locationService.getById("A");
 		assertNull(location);
 	}
 	
@@ -337,7 +339,7 @@ public class FifoLocationTest {
 			handlingUnitService.dropTo(locA, new HandlingUnit("8", "Test"));
 
 			// MANDATORY reread
-			locA = (FifoLocation) locationService.getById("A");
+			locA = locationService.getById("A");
 			assertNotNull(locA);
 			assertFalse(locA.getHandlingUnits().isEmpty());
 			assertEquals(1, locA.getHandlingUnits().size());

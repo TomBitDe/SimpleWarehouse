@@ -29,8 +29,8 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
-import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.HandlingUnitNotOnLocationException;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.handlingunit.LocationIsEmptyException;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.HandlingUnit;
@@ -130,6 +130,8 @@ public class LifoLocationTest {
 		
 		Location expLocation = locationService.createOrUpdate(new LifoLocation("A"));
 		LOG.info("Lifo Location created: " + expLocation);
+		
+		assertFalse(expLocation.equals(null));
 
 		assertEquals(expLocation, locationService.getById("A"));
 		assertEquals(EntityBase.USER_DEFAULT, expLocation.getUpdateUserId());
