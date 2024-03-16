@@ -19,7 +19,6 @@ import org.apache.logging.log4j.Logger;
 @XmlRootElement(name = "LogicalPosition")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-//@Table(name="LOGICAL_POSITION")
 @DiscriminatorValue("LOGICAL")
 public class LogicalPosition extends Position {
     private static final long serialVersionUID = 1L;

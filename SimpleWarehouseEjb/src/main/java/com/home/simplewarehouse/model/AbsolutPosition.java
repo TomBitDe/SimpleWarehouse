@@ -16,7 +16,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "AbsolutPosition")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-//@Table(name="ABSOLUT_POSITION")
 @DiscriminatorValue("ABSOLUT")
 public class AbsolutPosition extends Position {
     private static final long serialVersionUID = 1L;

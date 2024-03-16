@@ -16,7 +16,6 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "RelativPosition")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-//@Table(name="RELATIV_POSITION")
 @DiscriminatorValue("RELATIV")
 public class RelativPosition extends Position {
     private static final long serialVersionUID = 1L;
