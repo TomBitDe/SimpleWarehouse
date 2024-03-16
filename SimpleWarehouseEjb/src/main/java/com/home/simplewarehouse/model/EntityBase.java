@@ -1,7 +1,6 @@
 package com.home.simplewarehouse.model;
 
 import java.sql.Timestamp;
-import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -120,24 +119,6 @@ public class EntityBase {
 		}
 	}
 	
-	@Override
-	public int hashCode() {
-		return Objects.hash(updateTimestamp, updateUserId);
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		EntityBase other = (EntityBase) obj;
-		return Objects.equals(updateTimestamp, other.updateTimestamp)
-				&& Objects.equals(updateUserId, other.updateUserId);
-	}
-
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
