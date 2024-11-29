@@ -41,7 +41,7 @@ public class ZoneBean implements ZoneService {
 	public Zone createOrUpdate(Zone zone) {
 		LOG.trace("--> create");
 		
-		if (zone == null || zone.getId() == null || zone.getId().isEmpty()) {
+		if (zone == null || zone.getId() == null || zone.getId().trim().isEmpty()) {
 			throw new IllegalArgumentException();
 		}
 		

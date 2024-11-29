@@ -116,7 +116,7 @@ public class ZoneBeanTest {
 			Assert.fail("Exception expected");
 		}
 		catch (EJBException ejbex) {
-			LOG.info(ejbex.getMessage());
+			LOG.info(ejbex.getCause().toString() + " : " + ejbex.getCause().getMessage());
 		}
 		
 		Zone expZone = new Zone("Cooler");
@@ -127,6 +127,7 @@ public class ZoneBeanTest {
 		assertEquals(Zone.RATING_DEFAULT, zone.getRating());
 		assertEquals(EntityBase.USER_DEFAULT, zone.getUpdateUserId());
 		assertNotNull(zone.getUpdateTimestamp());
+		LOG.info(zone);
 		
 		expZone = new Zone("Freezer", 5);
 		zone = zoneService.createOrUpdate(new Zone("Freezer", 5));
@@ -134,6 +135,7 @@ public class ZoneBeanTest {
 		assertNotNull(zone);
 		assertEquals(expZone.getId(), zone.getId());
 		assertEquals(expZone.getRating(), zone.getRating());		
+		LOG.info(zone);
 	}
 	
 	/**
@@ -150,6 +152,7 @@ public class ZoneBeanTest {
 		
 		assertNotNull(cooler);
 		assertEquals(Zone.RATING_DEFAULT, cooler.getRating());
+		LOG.info(cooler);
 
 		// Zone modification
 		cooler.setRating(5);
@@ -158,6 +161,7 @@ public class ZoneBeanTest {
 		
 		assertNotNull(cooler);
 		assertEquals(5, cooler.getRating());
+		LOG.info(cooler);
 	}
 
 	/**
@@ -173,10 +177,12 @@ public class ZoneBeanTest {
 		Zone cooler = zoneService.createOrUpdate(new Zone("Cooler"));
 		
 		assertNotNull(cooler);
+		LOG.info(cooler);
 
 		Zone freezer = zoneService.createOrUpdate(new Zone("Freezer"));
 		
 		assertNotNull(freezer);
+		LOG.info(freezer);
 		
 		// Zone delete
 		zoneService.delete("Cooler");

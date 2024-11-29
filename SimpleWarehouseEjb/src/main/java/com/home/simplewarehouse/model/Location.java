@@ -19,6 +19,8 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
@@ -83,8 +85,14 @@ public abstract class Location extends EntityBase implements Serializable {
 	@OneToMany(mappedBy = "location", cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
 			CascadeType.REFRESH }, fetch = FetchType.LAZY)
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
+	/**
+	 * The associated Zone
+	 */
+    @ManyToOne
+    @JoinColumn(name = "zone_id")
+    private Zone zone;
 
-	private void initAssociated(Position pos) {
+    private void initAssociated(Position pos) {
 		Dimension dim = new Dimension(this);
 		this.setDimension(dim);
 		LocationStatus ls = new LocationStatus(this);
@@ -97,6 +105,8 @@ public abstract class Location extends EntityBase implements Serializable {
 		this.setPosition(pos);
 		pos.setLocation(this);
 		pos.setLocationId(this.getLocationId());
+		
+		this.setZone(null);
 	}
 
 	/**
@@ -338,6 +348,24 @@ public abstract class Location extends EntityBase implements Serializable {
 	}
 
 	/**
+	 * Gets the Zone the Location belongs to
+	 * 
+	 * @return the Zone
+	 */
+    public Zone getZone() {
+        return zone;
+    }
+
+	/**
+	 * Sets the Zone the Location belongs to
+	 * 
+	 * @param the Zone
+	 */
+    public void setZone(Zone zone) {
+        this.zone = zone;
+    }
+
+    /**
 	 * Add this HandlingUnit to the Location
 	 * 
 	 * @param handlingUnit the HandlingUnit
@@ -453,7 +481,8 @@ public abstract class Location extends EntityBase implements Serializable {
 				.append(locationStatus).append(", " + System.lineSeparator() + '\t' + '\t').append(dimension)
 				.append(", " + System.lineSeparator() + '\t' + '\t').append(position)
 				.append(", " + System.lineSeparator() + '\t' + '\t').append("HandlingUnits ")
-				.append(toString(getHandlingUnits())).append(", " + System.lineSeparator() + '\t')
+				.append(toString(getHandlingUnits())).append(", " + System.lineSeparator() + '\t' + '\t')
+				.append("Zone=").append(zone == null ? "null" : zone.getId()).append(", " + System.lineSeparator() + '\t')
 				.append(super.toString()).append("]");
 
 		return builder.toString();
