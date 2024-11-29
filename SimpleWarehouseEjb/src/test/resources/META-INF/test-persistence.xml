@@ -16,6 +16,7 @@
 		<class>com.home.simplewarehouse.model.LogicalPosition</class>
 		<class>com.home.simplewarehouse.model.RelativPosition</class>
 		<class>com.home.simplewarehouse.model.AbsolutPosition</class>
+		<class>com.home.simplewarehouse.model.Zone</class>
 		<class>com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig</class>	
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="org.h2.Driver" />
@@ -38,6 +39,7 @@
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.HandlingUnit" value="SOFT" />
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Location" value="SOFT" />
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LocationStatus" value="SOFT" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Zone" value="SOFT" />
             
             <!-- Caching in Query-Level control -->
             <property name="eclipselink.query-results-cache" value="false" />
