@@ -31,6 +31,8 @@ import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test the Handling Unit bean for composing HandlingUnits.
@@ -61,6 +63,7 @@ public class HandlingUnitComposingUseCasesTest {
 				.addClasses(
 						HandlingUnitService.class, HandlingUnitBean.class,
 						LocationService.class, LocationBean.class,
+						ZoneService.class, ZoneBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);

@@ -33,6 +33,8 @@ import com.home.simplewarehouse.model.LtosStatus;
 import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test the LocationStatus bean.
@@ -60,6 +62,7 @@ public class LocationStatusBeanTest {
 						LocationStatusService.class, LocationStatusBean.class,
 						LocationService.class, LocationBean.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
+						ZoneService.class, ZoneBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);

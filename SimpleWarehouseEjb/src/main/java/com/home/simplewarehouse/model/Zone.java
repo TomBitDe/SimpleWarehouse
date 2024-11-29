@@ -62,7 +62,9 @@ public class Zone extends EntityBase implements Serializable {
 	/**
 	 * The associated Locations
 	 */
-    @OneToMany(mappedBy = "zone", cascade = CascadeType.ALL, orphanRemoval = false)
+    @OneToMany(mappedBy = "zone", 
+    		cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },
+    		orphanRemoval = false)
     private List<Location> locations = new ArrayList<>();
 
     /**

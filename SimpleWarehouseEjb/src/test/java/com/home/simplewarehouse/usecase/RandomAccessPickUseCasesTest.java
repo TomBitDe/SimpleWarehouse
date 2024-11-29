@@ -45,6 +45,8 @@ import com.home.simplewarehouse.topology.SampleWarehouseBean;
 import com.home.simplewarehouse.topology.SampleWarehouseService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test pick use cases for a RANDOM access location.
@@ -89,6 +91,7 @@ public class RandomAccessPickUseCasesTest {
 						LocationStatusService.class, LocationStatusBean.class,
 						LocationService.class, LocationBean.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
+						ZoneService.class, ZoneBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);

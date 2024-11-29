@@ -38,6 +38,8 @@ import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test the LIFO Location.
@@ -64,6 +66,7 @@ public class LifoLocationTest {
 				.addClasses(
 						LocationService.class, LocationBean.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
+						ZoneService.class, ZoneBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);

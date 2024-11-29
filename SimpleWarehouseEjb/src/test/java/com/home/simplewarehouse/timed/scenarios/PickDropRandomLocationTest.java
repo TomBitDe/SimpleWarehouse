@@ -27,6 +27,8 @@ import com.home.simplewarehouse.topology.SampleWarehouseBean;
 import com.home.simplewarehouse.topology.SampleWarehouseService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test the pick drop random locationService bean.
@@ -76,6 +78,7 @@ public class PickDropRandomLocationTest {
 						DropPickRandomLocationLocal3.class, DropPickRandomLocationBean3.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
 						LocationService.class, LocationBean.class,
+						ZoneService.class, ZoneBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);

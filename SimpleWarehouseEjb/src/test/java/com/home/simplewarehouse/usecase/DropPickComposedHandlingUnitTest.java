@@ -41,6 +41,8 @@ import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test the Handling Unit bean for composedHandlingUnits drop.
@@ -75,6 +77,7 @@ public class DropPickComposedHandlingUnitTest {
 						HandlingUnitService.class, HandlingUnitBean.class,
 						LocationService.class, LocationBean.class,
 						LocationStatusService.class, LocationStatusBean.class,
+						ZoneService.class, ZoneBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);

@@ -26,6 +26,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.home.simplewarehouse.location.LocationBean;
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -55,6 +57,7 @@ public class ZoneBeanTest {
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
 						ZoneService.class, ZoneBean.class,
+						LocationService.class, LocationBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);

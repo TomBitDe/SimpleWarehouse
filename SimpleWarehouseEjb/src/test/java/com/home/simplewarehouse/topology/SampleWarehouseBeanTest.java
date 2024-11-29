@@ -32,6 +32,8 @@ import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test the Sample Warehouse bean.
@@ -61,6 +63,7 @@ public class SampleWarehouseBeanTest {
 						DimensionService.class, DimensionBean.class,
 						LocationStatusService.class, LocationStatusBean.class,
 						LocationService.class, LocationBean.class,
+						ZoneService.class, ZoneBean.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class

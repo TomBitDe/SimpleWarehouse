@@ -2,6 +2,7 @@ package com.home.simplewarehouse.zone;
 
 import java.util.List;
 
+import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -13,6 +14,7 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -27,6 +29,9 @@ public class ZoneBean implements ZoneService {
 	
 	@PersistenceContext
 	private EntityManager em;
+	
+	@EJB
+	private LocationService locationService;
 
 	/**
 	 * Default constructor is mandatory
@@ -63,9 +68,10 @@ public class ZoneBean implements ZoneService {
 		LOG.trace("--> delete({})", zone);
 
 		if (zone != null && zone.getId() != null) {
-			Zone zo;
+			Zone zo = getById(zone.getId());
 			
-			zo = getById(zone.getId());
+			zo.getLocations().stream().forEach(l -> l.setZone(null));
+			em.flush();
 			
 			em.remove(zo);
 			em.flush();

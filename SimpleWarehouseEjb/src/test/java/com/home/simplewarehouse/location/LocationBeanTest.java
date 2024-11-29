@@ -47,6 +47,8 @@ import com.home.simplewarehouse.model.RelativPosition;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test the Location bean.
@@ -73,6 +75,7 @@ public class LocationBeanTest {
 				.addClasses(
 						LocationService.class, LocationBean.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
+						ZoneService.class, ZoneBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);

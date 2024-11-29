@@ -356,11 +356,11 @@ public abstract class Location extends EntityBase implements Serializable {
         return zone;
     }
 
-	/**
+    /**
 	 * Sets the Zone the Location belongs to
-	 * 
-	 * @param the Zone
-	 */
+
+     * @param zone the zone to assign
+     */
     public void setZone(Zone zone) {
         this.zone = zone;
     }

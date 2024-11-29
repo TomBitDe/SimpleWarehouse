@@ -33,6 +33,8 @@ import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
+import com.home.simplewarehouse.zone.ZoneBean;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Test the Dimension bean.
@@ -61,6 +63,7 @@ public class DimensionBeanTest {
 						LocationStatusService.class, LocationStatusBean.class,
 						LocationService.class, LocationBean.class,
 						HandlingUnitService.class, HandlingUnitBean.class,
+						ZoneService.class, ZoneBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
