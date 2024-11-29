@@ -33,6 +33,17 @@
             <property name="javax.persistence.schema-generation.create-database-schemas" value="true"></property>
             <property name="javax.persistence.schema-generation.scripts.create-target" value="aaaaaa.sql"></property>
             <property name="javax.persistence.schema-generation.scripts.drop-target" value="bbbbbb.sql"></property>
+
+            <!-- Cache-configuration for special Entities -->
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.HandlingUnit" value="SOFT" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Location" value="SOFT" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LocationStatus" value="SOFT" />
+            
+            <!-- Caching in Query-Level control -->
+            <property name="eclipselink.query-results-cache" value="false" />
+
+            <!-- Cache invalidate after changes -->
+            <property name="eclipselink.cache.coordination" value="INVALIDATE_CHANGED_OBJECTS" />
 		</properties>
 	</persistence-unit>
 </persistence>
