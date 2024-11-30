@@ -163,23 +163,29 @@ public class ZoneLocationsTest {
 		assumeFalse(zoneService.getAll().isEmpty());
 		assumeFalse(locationService.getAll().isEmpty());
 
+		Zone freezer = zoneService.getById("Freezer");
+		
+		Location locF = locationService.getById("LOCF");
+		
+		// Now add LOCF to Freezer
+		zoneService.addLocationTo(locF, freezer);
+
+		assertNotNull(freezer);
+		assertTrue(freezer.getLocations().contains(locF));
+		
+		assertEquals(freezer, locF.getZone());
+
+// -- Cooler two Locations
 		Zone cooler = zoneService.getById("Cooler");
 		List<Location> coolerLocations = new ArrayList<>();
 		coolerLocations.add(locationService.getById("LOCA"));
 		coolerLocations.add(locationService.getById("LOCB"));
-		cooler.setLocations(coolerLocations);
-		
+
+		// Now initialize Cooler to LOCA and LOCB
+		zoneService.initLocationsTo(coolerLocations, cooler);
+
 		Location locA = locationService.getById("LOCA");
 		Location locB = locationService.getById("LOCB");
-		
-		locA.setZone(cooler);
-		locB.setZone(cooler);
-		
-		// First zone than locations !!!
-		cooler = zoneService.createOrUpdate(cooler);
-		locA = locationService.createOrUpdate(locA);
-		locB = locationService.createOrUpdate(locB);
-
 		assertNotNull(cooler);
 		assertTrue(cooler.getLocations().contains(locA));
 		assertTrue(cooler.getLocations().contains(locB));

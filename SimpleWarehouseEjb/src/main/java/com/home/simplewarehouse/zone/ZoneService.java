@@ -63,7 +63,7 @@ public interface ZoneService {
 
 	public void setLocationsTo(List<Location> locations, Zone zone);
 	
-	public void assignLocationTo(Location location, Zone zone);
+	public void addLocationTo(Location location, Zone zone);
 	
-	public void assignLocationsTo(List<Location> locations, Zone zone);
+	public void initLocationsTo(List<Location> locations, Zone zone);
 }

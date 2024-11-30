@@ -187,7 +187,6 @@ public class ZoneBean implements ZoneService {
 		
 		location.setZone(zone);
 		em.merge(location);
-		location = locationService.getById(location.getLocationId());
 	}
 
 	@Override
@@ -196,19 +195,27 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void assignLocationTo(Location location, Zone zone) {
+	public void addLocationTo(Location location, Zone zone) {
 		checkParam(location, zone);
 
 		zone.getLocations().add(location);
 		location.setZone(zone);
 
-		zone = createOrUpdate(zone);
-		locationService.createOrUpdate(location);
+		em.merge(zone);
+		em.merge(location);
 	}
 
 	@Override
-	public void assignLocationsTo(List<Location> locations, Zone zone) {
-		locations.stream().forEach(l -> assignLocationTo(l, zone));
+	public void initLocationsTo(List<Location> locations, Zone zone) {
+		checkParam(locations, zone);
+		
+		zone.setLocations(locations);
+		
+		locations.stream().forEach(l -> l.setZone(zone));
+		
+		em.merge(zone);
+		
+		locations.stream().forEach(l -> em.merge(l));
     }
 
 	private void checkParam(Location location, Zone zone) {
@@ -227,5 +234,9 @@ public class ZoneBean implements ZoneService {
 		if (zone.getId() == null) {
 			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
 		}
+	}
+	
+	private void checkParam(List<Location> locations, Zone zone) {
+		locations.stream().forEach(l -> checkParam(l, zone));
 	}
 }
