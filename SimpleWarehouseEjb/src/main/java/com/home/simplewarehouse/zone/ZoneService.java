@@ -60,4 +60,10 @@ public interface ZoneService {
 	public int count();
 	
 	public void setLocationTo(Location location, Zone zone);
+
+	public void setLocationsTo(List<Location> locations, Zone zone);
+	
+	public void assignLocationTo(Location location, Zone zone);
+	
+	public void assignLocationsTo(List<Location> locations, Zone zone);
 }

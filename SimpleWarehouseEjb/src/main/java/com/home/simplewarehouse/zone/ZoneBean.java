@@ -50,7 +50,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public Zone createOrUpdate(Zone zone) {
+	public Zone createOrUpdate(final Zone zone) {
 		LOG.trace("--> create");
 		
 		if (zone == null || zone.getId() == null || zone.getId().trim().isEmpty()) {
@@ -67,8 +67,7 @@ public class ZoneBean implements ZoneService {
 
 		LOG.trace("<-- create");
 		
-		zone = getById(zone.getId());
-		return zone;
+		return getById(zone.getId());
 	}
 
 	@Override
@@ -172,21 +171,7 @@ public class ZoneBean implements ZoneService {
 	
 	@Override
 	public void setLocationTo(Location location, Zone zone) {
-		if (location == null) {
-			throw new IllegalArgumentException(LocationBean.LOCATION_IS_NULL);
-		}
-
-		if (location.getLocationId() == null) {
-			throw new IllegalArgumentException(LocationBean.LOCATION_ID_IS_NULL);
-		}
-		
-		if (zone == null) {
-			throw new IllegalArgumentException(ZONE_IS_NULL);
-		}
-
-		if (zone.getId() == null) {
-			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
-		}
+		checkParam(location, zone);
 		
 		if (location.getZone() != null) {
 		    Zone current = location.getZone();
@@ -203,5 +188,44 @@ public class ZoneBean implements ZoneService {
 		location.setZone(zone);
 		em.merge(location);
 		location = locationService.getById(location.getLocationId());
+	}
+
+	@Override
+	public void setLocationsTo(List<Location> locations, Zone zone) {
+		locations.stream().forEach(l -> setLocationTo(l, zone));
+	}
+
+	@Override
+	public void assignLocationTo(Location location, Zone zone) {
+		checkParam(location, zone);
+
+		zone.getLocations().add(location);
+		location.setZone(zone);
+
+		zone = createOrUpdate(zone);
+		locationService.createOrUpdate(location);
+	}
+
+	@Override
+	public void assignLocationsTo(List<Location> locations, Zone zone) {
+		locations.stream().forEach(l -> assignLocationTo(l, zone));
+    }
+
+	private void checkParam(Location location, Zone zone) {
+		if (location == null) {
+			throw new IllegalArgumentException(LocationBean.LOCATION_IS_NULL);
+		}
+
+		if (location.getLocationId() == null) {
+			throw new IllegalArgumentException(LocationBean.LOCATION_ID_IS_NULL);
+		}
+		
+		if (zone == null) {
+			throw new IllegalArgumentException(ZONE_IS_NULL);
+		}
+
+		if (zone.getId() == null) {
+			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
 	}
 }
