@@ -3,6 +3,7 @@ package com.home.simplewarehouse.zone;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -170,7 +171,7 @@ public class ZoneBean implements ZoneService {
 	}
 	
 	@Override
-	public void setLocationTo(Location location, Zone zone) {
+	public void moveLocationTo(Location location, Zone zone) {
 		checkParam(location, zone);
 		
 		if (location.getZone() != null) {
@@ -190,8 +191,8 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void setLocationsTo(List<Location> locations, Zone zone) {
-		locations.stream().forEach(l -> setLocationTo(l, zone));
+	public void moveLocationsTo(List<Location> locations, Zone zone) {
+		locations.stream().forEach(l -> moveLocationTo(l, zone));
 	}
 
 	@Override
@@ -206,7 +207,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void initLocationsTo(List<Location> locations, Zone zone) {
+	public void initZoneTo(Zone zone, List<Location> locations) {
 		checkParam(locations, zone);
 		
 		zone.setLocations(locations);
@@ -217,6 +218,22 @@ public class ZoneBean implements ZoneService {
 		
 		locations.stream().forEach(l -> em.merge(l));
     }
+
+	@Override
+	public void clear(Zone zone) {
+		checkZone(zone);
+		
+	    List<Location> safeList = new CopyOnWriteArrayList<>(zone.getLocations());
+	    
+	    zone.getLocations().clear();
+	    
+	    safeList.stream().forEach(loc -> loc.setZone(null));
+	}
+
+	@Override
+	public void clearAllZones() {
+		getAll().stream().forEach(this::delete);
+	}
 
 	private void checkParam(Location location, Zone zone) {
 		if (location == null) {
@@ -238,5 +255,15 @@ public class ZoneBean implements ZoneService {
 	
 	private void checkParam(List<Location> locations, Zone zone) {
 		locations.stream().forEach(l -> checkParam(l, zone));
+	}
+	
+	private void checkZone(Zone zone) {
+		if (zone == null) {
+			throw new IllegalArgumentException(ZONE_IS_NULL);
+		}
+
+		if (zone.getId() == null) {
+			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
 	}
 }

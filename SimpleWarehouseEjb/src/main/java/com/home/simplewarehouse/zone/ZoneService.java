@@ -59,11 +59,15 @@ public interface ZoneService {
 	 */
 	public int count();
 	
-	public void setLocationTo(Location location, Zone zone);
+	public void moveLocationTo(Location location, Zone zone);
 
-	public void setLocationsTo(List<Location> locations, Zone zone);
+	public void moveLocationsTo(List<Location> locations, Zone zone);
 	
 	public void addLocationTo(Location location, Zone zone);
 	
-	public void initLocationsTo(List<Location> locations, Zone zone);
+	public void initZoneTo(Zone zone, List<Location> locations);
+	
+	public void clear(Zone zone);
+
+	public void clearAllZones();
 }

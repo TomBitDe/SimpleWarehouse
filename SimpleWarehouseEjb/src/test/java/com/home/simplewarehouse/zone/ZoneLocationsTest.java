@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeFalse;
+import static org.junit.Assume.assumeNotNull;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -149,8 +150,7 @@ public class ZoneLocationsTest {
 		locations.stream().forEach(l -> locationService.delete(l));
 
 		// Cleanup zones
-		List<Zone> zones = zoneService.getAll();
-		zones.stream().forEach(z -> zoneService.delete(z));
+		zoneService.clearAllZones();
 		
 		LOG.trace("<-- afterTest()");
 	}
@@ -182,7 +182,7 @@ public class ZoneLocationsTest {
 		coolerLocations.add(locationService.getById("LOCB"));
 
 		// Now initialize Cooler to LOCA and LOCB
-		zoneService.initLocationsTo(coolerLocations, cooler);
+		zoneService.initZoneTo(cooler, coolerLocations);
 
 		Location locA = locationService.getById("LOCA");
 		Location locB = locationService.getById("LOCB");
@@ -289,7 +289,7 @@ public class ZoneLocationsTest {
 	
 	@Test
 	@InSequence(15)
-	public void modifyLocation() {
+	public void moveLocation() {
 		assumeFalse(zoneService.getAll().isEmpty());
 		assumeFalse(locationService.getAll().isEmpty());
 		
@@ -320,7 +320,7 @@ public class ZoneLocationsTest {
 		
 		// Now modify
 		Zone freezer = zoneService.getById("Freezer");
-		zoneService.setLocationTo(locA, freezer);
+		zoneService.moveLocationTo(locA, freezer);
 		
 		// Check
 		assertEquals(freezer, locA.getZone());
@@ -331,5 +331,21 @@ public class ZoneLocationsTest {
 		assertFalse(cooler.getLocations().contains(locA));
 		assertNotEquals(cooler, locA.getZone());
 		assertTrue(cooler.getLocations().contains(locB));
+	}
+
+	@Test
+	@InSequence(20)
+	public void clearZone() {
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+		
+		// Clear already empty zone
+		Zone bulk = zoneService.getById("Bulk");
+		assumeNotNull(bulk);
+		
+		zoneService.clear(bulk);
+		assertTrue(bulk.getLocations().isEmpty());
+		
+		// TODO: more cases here !
 	}
 }
