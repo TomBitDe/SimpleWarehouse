@@ -1,6 +1,8 @@
 package com.home.simplewarehouse.zone;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -25,11 +27,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
+import com.home.simplewarehouse.location.LocationStatusBean;
+import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.FifoLocation;
 import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -58,8 +65,11 @@ public class ZoneLocationsTest {
 				.addAsManifestResource(new File("src/test/resources/META-INF/test-glassfish-ejb-jar.xml"), "glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
-						ZoneService.class, ZoneBean.class,
-						LocationService.class, LocationBean.class,
+						ZoneService.class, ZoneBean.class, Zone.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
+						LocationService.class, LocationBean.class, Location.class,
+						LifoLocation.class, FifoLocation.class, RandomLocation.class,
+						LocationStatusService.class, LocationStatusBean.class, LocationStatus.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
@@ -165,17 +175,17 @@ public class ZoneLocationsTest {
 		locA.setZone(cooler);
 		locB.setZone(cooler);
 		
-		zoneService.createOrUpdate(cooler);
-		locationService.createOrUpdate(locA);
-		locationService.createOrUpdate(locB);
+		// First zone than locations !!!
+		cooler = zoneService.createOrUpdate(cooler);
+		locA = locationService.createOrUpdate(locA);
+		locB = locationService.createOrUpdate(locB);
 
-		cooler = zoneService.getById("Cooler");
 		assertNotNull(cooler);
-		assertTrue(cooler.getLocations().contains(locationService.getById("LOCA")));
-		assertTrue(cooler.getLocations().contains(locationService.getById("LOCB")));
+		assertTrue(cooler.getLocations().contains(locA));
+		assertTrue(cooler.getLocations().contains(locB));
 		
-		assertEquals(locationService.getById("LOCA").getZone(), cooler);
-		assertEquals(locationService.getById("LOCB").getZone(), cooler);		
+		assertEquals(cooler, locA.getZone());
+		assertEquals(cooler, locB.getZone());		
 	}
 	
 	/**
@@ -201,24 +211,119 @@ public class ZoneLocationsTest {
 		locA.setZone(cooler);
 		locB.setZone(cooler);
 		
-		zoneService.createOrUpdate(cooler);
-		locationService.createOrUpdate(locA);
-		locationService.createOrUpdate(locB);
+		cooler = zoneService.createOrUpdate(cooler);
+		locA = locationService.createOrUpdate(locA);
+		locB = locationService.createOrUpdate(locB);
 
-		cooler = zoneService.getById("Cooler");
 		assertNotNull(cooler);
-		assertTrue(cooler.getLocations().contains(locationService.getById("LOCA")));
-		assertTrue(cooler.getLocations().contains(locationService.getById("LOCB")));
+		assertTrue(cooler.getLocations().contains(locA));
+		assertTrue(cooler.getLocations().contains(locB));
 		
-		assertEquals(locationService.getById("LOCA").getZone(), cooler);
-		assertEquals(locationService.getById("LOCB").getZone(), cooler);
+		assertEquals(cooler, locA.getZone());
+		assertEquals(cooler, locB.getZone());
 		
 		// Now remove cooler
 		zoneService.delete(cooler);
 		
 		assertNull(zoneService.getById("Cooler"));
 		
+		// Location still exists but is not assigned to cooler any longer
 		assertNull(locationService.getById("LOCA").getZone());
 		assertNull(locationService.getById("LOCB").getZone());
+	}
+	
+	/**
+	 * Test remove location
+	 */
+	@Test
+	@InSequence(12)
+	public void removeLocation() {
+		LOG.info("--- Test removeLocation");
+		
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+		
+		Zone cooler = zoneService.getById("Cooler");
+		List<Location> coolerLocations = new ArrayList<>();
+		coolerLocations.add(locationService.getById("LOCA"));
+		coolerLocations.add(locationService.getById("LOCB"));
+		cooler.setLocations(coolerLocations);
+		
+		Location locA = locationService.getById("LOCA");
+		Location locB = locationService.getById("LOCB");
+		
+		locA.setZone(cooler);
+		locB.setZone(cooler);
+		
+		cooler = zoneService.createOrUpdate(cooler);
+		locationService.createOrUpdate(locA);
+		locationService.createOrUpdate(locB);
+
+		// Check
+		assertNotNull(cooler);
+		assertTrue(cooler.getLocations().contains(locationService.getById("LOCA")));
+		assertTrue(cooler.getLocations().contains(locationService.getById("LOCB")));
+		
+		assertEquals(cooler, locationService.getById("LOCA").getZone());
+		assertEquals(cooler, locationService.getById("LOCB").getZone());
+		LOG.info(cooler);
+		
+		// Now remove LOCA
+		locationService.delete("LOCA");
+		
+		assertNull(locationService.getById("LOCA"));
+
+		cooler = zoneService.getById("Cooler");
+		assertNotNull(cooler);
+		
+		assertTrue(cooler.getLocations().contains(locB));
+		assertEquals(1, cooler.getLocations().size());
+		LOG.info(cooler);
+	}
+	
+	@Test
+	@InSequence(15)
+	public void modifyLocation() {
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+		
+		// Prepare
+		Zone cooler = zoneService.getById("Cooler");
+		List<Location> coolerLocations = new ArrayList<>();
+		coolerLocations.add(locationService.getById("LOCA"));
+		coolerLocations.add(locationService.getById("LOCB"));
+		cooler.setLocations(coolerLocations);
+		
+		Location locA = locationService.getById("LOCA");
+		Location locB = locationService.getById("LOCB");
+		
+		locA.setZone(cooler);
+		locB.setZone(cooler);
+		
+		cooler = zoneService.createOrUpdate(cooler);
+		locA = locationService.createOrUpdate(locA);
+		locB = locationService.createOrUpdate(locB);
+
+		// Check prepare
+		assertNotNull(cooler);
+		assertTrue(cooler.getLocations().contains(locA));
+		assertTrue(cooler.getLocations().contains(locB));
+
+		assertEquals(cooler, locA.getZone());
+		assertTrue(cooler.getLocations().contains(locA));
+		
+		// Now modify
+		Zone freezer = zoneService.getById("Freezer");
+		zoneService.setLocationTo(locA, freezer);
+		
+		// Check
+		assertEquals(freezer, locA.getZone());
+		assertTrue(freezer.getLocations().contains(locA));
+		
+		// Reread is mandatory
+		cooler = zoneService.getById("Cooler");
+		assertFalse(cooler.getLocations().contains(locA));
+		assertNotEquals(cooler, locA.getZone());
+		assertTrue(cooler.getLocations().contains(locB));
 	}
 }

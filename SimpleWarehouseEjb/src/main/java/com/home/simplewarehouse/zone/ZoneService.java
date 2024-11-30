@@ -2,6 +2,7 @@ package com.home.simplewarehouse.zone;
 
 import java.util.List;
 
+import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Zone;
 
 /**
@@ -57,4 +58,6 @@ public interface ZoneService {
 	 * @return the number of Zone items
 	 */
 	public int count();
+	
+	public void setLocationTo(Location location, Zone zone);
 }

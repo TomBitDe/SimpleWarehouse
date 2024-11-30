@@ -1,6 +1,8 @@
 package com.home.simplewarehouse.zone;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -14,7 +16,9 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
+import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
@@ -27,6 +31,9 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 public class ZoneBean implements ZoneService {
 	private static final Logger LOG = LogManager.getLogger(ZoneBean.class);
 	
+	public static final String ZONE_IS_NULL = "zone is null";
+	public static final String ZONE_ID_IS_NULL = "zone id is null";
+
 	@PersistenceContext
 	private EntityManager em;
 	
@@ -60,7 +67,8 @@ public class ZoneBean implements ZoneService {
 
 		LOG.trace("<-- create");
 		
-		return getById(zone.getId());
+		zone = getById(zone.getId());
+		return zone;
 	}
 
 	@Override
@@ -70,8 +78,13 @@ public class ZoneBean implements ZoneService {
 		if (zone != null && zone.getId() != null) {
 			Zone zo = getById(zone.getId());
 			
-			zo.getLocations().stream().forEach(l -> l.setZone(null));
-			em.flush();
+			if (zo != null && !zo.getLocations().isEmpty()) {
+			    List<Location> locationsCopy = new ArrayList<>(zo.getLocations());
+			    locationsCopy.stream()
+			        .filter(Objects::nonNull)
+			        .forEach(l -> l.setZone(null));
+			    em.flush();
+			}
 			
 			em.remove(zo);
 			em.flush();
@@ -155,5 +168,40 @@ public class ZoneBean implements ZoneService {
 		final TypedQuery<Number> query = em.createQuery("SELECT COUNT(zo) FROM Zone zo", Number.class);
 
 		return query.getSingleResult().intValue();
+	}
+	
+	@Override
+	public void setLocationTo(Location location, Zone zone) {
+		if (location == null) {
+			throw new IllegalArgumentException(LocationBean.LOCATION_IS_NULL);
+		}
+
+		if (location.getLocationId() == null) {
+			throw new IllegalArgumentException(LocationBean.LOCATION_ID_IS_NULL);
+		}
+		
+		if (zone == null) {
+			throw new IllegalArgumentException(ZONE_IS_NULL);
+		}
+
+		if (zone.getId() == null) {
+			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
+		
+		if (location.getZone() != null) {
+		    Zone current = location.getZone();
+		    current.getLocations().remove(location);
+		    location.setZone(null);
+		    
+		    em.merge(current);
+		}
+		
+		zone.getLocations().add(location);
+		em.merge(zone);
+		zone = getById(zone.getId());
+		
+		location.setZone(zone);
+		em.merge(location);
+		location = locationService.getById(location.getLocationId());
 	}
 }

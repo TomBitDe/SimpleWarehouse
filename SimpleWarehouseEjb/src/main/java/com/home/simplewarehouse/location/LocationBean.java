@@ -35,8 +35,8 @@ import com.home.simplewarehouse.zone.ZoneService;
 public class LocationBean implements LocationService {
 	private static final Logger LOG = LogManager.getLogger(LocationBean.class);
 	
-	private static final String LOCATION_IS_NULL = "location is null";
-	private static final String LOCATION_ID_IS_NULL = "locationId is null";
+	public static final String LOCATION_IS_NULL = "location is null";
+	public static final String LOCATION_ID_IS_NULL = "locationId is null";
 	
 	private static final String HEIGHT_DOES_NOT_FIT = "Location has maximum height {}, heigth {} does not fit";
 	private static final String LENGTH_DOES_NOT_FIT = "Location has maximum length {}, length {} does not fit";

@@ -362,7 +362,7 @@ public abstract class Location extends EntityBase implements Serializable {
      * @param zone the zone to assign
      */
     public void setZone(Zone zone) {
-        this.zone = zone;
+        this.zone = zone;  
     }
 
     /**
