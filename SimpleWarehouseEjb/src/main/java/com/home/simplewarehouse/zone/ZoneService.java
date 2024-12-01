@@ -30,6 +30,10 @@ public interface ZoneService {
 	 */
 	public void delete(final String id);
 	/**
+	 * Delete all existing Zones
+	 */
+	public void deleteAll();
+	/**
 	 * Get a Zone by its id
 	 * 
 	 * @param id the id
@@ -58,16 +62,42 @@ public interface ZoneService {
 	 * @return the number of Zone items
 	 */
 	public int count();
-	
+	/**
+	 * Move a Location from its current Zone to the given Zone
+	 * 
+	 * @param location the Location to move
+	 * @param zone the destination Zone 
+	 */
 	public void moveLocationTo(Location location, Zone zone);
-
+	/**
+	 * Move a List of Locations from their current Zone to the given Zone
+	 * 
+	 * @param locations a List of Locations
+	 * @param zone
+	 */
 	public void moveLocationsTo(List<Location> locations, Zone zone);
-	
+	/**
+	 * Add a Location to a given Zone
+	 * 
+	 * @param location the Location to add 
+	 * @param zone the zone
+	 */
 	public void addLocationTo(Location location, Zone zone);
-	
-	public void initZoneTo(Zone zone, List<Location> locations);
-	
+	/**
+	 * Initialize a Zone with the given List of Locations
+	 * 
+	 * @param zone the Zone to initialize 
+	 * @param locations the List of Locations
+	 */
+	public void initZoneBy(Zone zone, List<Location> locations);
+	/**
+	 * Clear a given Zone from its Locations
+	 * 
+	 * @param zone the Zone to clear
+	 */
 	public void clear(Zone zone);
-
-	public void clearAllZones();
+	/**
+	 * Clear all existing Zones
+	 */
+	public void clearAll();
 }

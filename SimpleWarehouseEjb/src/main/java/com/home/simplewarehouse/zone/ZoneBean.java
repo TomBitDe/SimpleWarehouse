@@ -207,7 +207,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void initZoneTo(Zone zone, List<Location> locations) {
+	public void initZoneBy(Zone zone, List<Location> locations) {
 		checkParam(locations, zone);
 		
 		zone.setLocations(locations);
@@ -225,13 +225,22 @@ public class ZoneBean implements ZoneService {
 		
 	    List<Location> safeList = new CopyOnWriteArrayList<>(zone.getLocations());
 	    
-	    zone.getLocations().clear();
+	    zone.setLocations(new ArrayList<>());
+	    em.merge(zone);
 	    
-	    safeList.stream().forEach(loc -> loc.setZone(null));
+	    safeList.stream().forEach(loc -> {
+	    	loc.setZone(null);
+	    	em.merge(loc);
+	    });
 	}
 
 	@Override
-	public void clearAllZones() {
+	public void clearAll() {
+		getAll().stream().forEach(this::clear);
+	}
+
+	@Override
+	public void deleteAll() {
 		getAll().stream().forEach(this::delete);
 	}
 

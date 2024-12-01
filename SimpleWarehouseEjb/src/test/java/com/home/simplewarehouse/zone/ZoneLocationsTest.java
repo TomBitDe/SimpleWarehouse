@@ -150,7 +150,7 @@ public class ZoneLocationsTest {
 		locations.stream().forEach(l -> locationService.delete(l));
 
 		// Cleanup zones
-		zoneService.clearAllZones();
+		zoneService.deleteAll();
 		
 		LOG.trace("<-- afterTest()");
 	}
@@ -182,7 +182,7 @@ public class ZoneLocationsTest {
 		coolerLocations.add(locationService.getById("LOCB"));
 
 		// Now initialize Cooler to LOCA and LOCB
-		zoneService.initZoneTo(cooler, coolerLocations);
+		zoneService.initZoneBy(cooler, coolerLocations);
 
 		Location locA = locationService.getById("LOCA");
 		Location locB = locationService.getById("LOCB");
@@ -346,6 +346,92 @@ public class ZoneLocationsTest {
 		zoneService.clear(bulk);
 		assertTrue(bulk.getLocations().isEmpty());
 		
-		// TODO: more cases here !
+		// Clear zone with four Locations
+		List<Location> coolerLocations = new ArrayList<>();
+		coolerLocations.add(locationService.getById("LOCA"));
+		coolerLocations.add(locationService.getById("LOCB"));
+		coolerLocations.add(locationService.getById("LOCC"));
+		coolerLocations.add(locationService.getById("LOCD"));
+		zoneService.initZoneBy(zoneService.getById("Cooler"), coolerLocations);
+		
+		assertEquals(4, zoneService.getById("Cooler").getLocations().size());
+		
+		assertEquals(locationService.getById("LOCA").getZone(), zoneService.getById("Cooler"));
+		assertEquals(locationService.getById("LOCB").getZone(), zoneService.getById("Cooler"));
+		assertEquals(locationService.getById("LOCC").getZone(), zoneService.getById("Cooler"));
+		assertEquals(locationService.getById("LOCD").getZone(), zoneService.getById("Cooler"));
+		
+		Zone cooler = zoneService.getById("Cooler");
+		// Clear zone with content
+		zoneService.clear(cooler);
+		
+		cooler = zoneService.getById("Cooler");
+		// Check
+		assertTrue(cooler.getLocations().isEmpty());
+		assertNull(locationService.getById("LOCA").getZone());
+		assertNull(locationService.getById("LOCB").getZone());
+		assertNull(locationService.getById("LOCC").getZone());
+		assertNull(locationService.getById("LOCD").getZone());
+	}
+
+	@Test
+	@InSequence(22)
+	public void clearAllZones() {
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+
+		assumeNotNull(zoneService.getById("Cooler"));
+		assumeNotNull(zoneService.getById("Freezer"));
+		assumeNotNull(zoneService.getById("Bulk"));
+		
+		List<Location> coolerLocations = new ArrayList<>();
+		coolerLocations.add(locationService.getById("LOCA"));
+		coolerLocations.add(locationService.getById("LOCB"));
+		zoneService.initZoneBy(zoneService.getById("Cooler"), coolerLocations);
+
+		List<Location> freezerLocations = new ArrayList<>();
+		freezerLocations.add(locationService.getById("LOCC"));
+		freezerLocations.add(locationService.getById("LOCD"));
+		freezerLocations.add(locationService.getById("LOCE"));
+		zoneService.initZoneBy(zoneService.getById("Freezer"), freezerLocations);
+		
+		zoneService.addLocationTo(locationService.getById("LOCF"), zoneService.getById("Bulk"));
+		
+		zoneService.clearAll();
+		
+		assertFalse(zoneService.getAll().isEmpty());
+		assertNotNull(zoneService.getById("Cooler"));
+		assertNotNull(zoneService.getById("Freezer"));
+		assertNotNull(zoneService.getById("Bulk"));
+		assertNotNull(zoneService.getById("AutoStorage"));
+		assertNotNull(zoneService.getById("ManuStorage"));
+	}
+
+	@Test
+	@InSequence(25)
+	public void deleteAllZones() {
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+
+		assumeNotNull(zoneService.getById("Cooler"));
+		assumeNotNull(zoneService.getById("Freezer"));
+		assumeNotNull(zoneService.getById("Bulk"));
+		
+		List<Location> coolerLocations = new ArrayList<>();
+		coolerLocations.add(locationService.getById("LOCA"));
+		coolerLocations.add(locationService.getById("LOCB"));
+		zoneService.initZoneBy(zoneService.getById("Cooler"), coolerLocations);
+
+		List<Location> freezerLocations = new ArrayList<>();
+		freezerLocations.add(locationService.getById("LOCC"));
+		freezerLocations.add(locationService.getById("LOCD"));
+		freezerLocations.add(locationService.getById("LOCE"));
+		zoneService.initZoneBy(zoneService.getById("Freezer"), freezerLocations);
+		
+		zoneService.addLocationTo(locationService.getById("LOCF"), zoneService.getById("Bulk"));
+		
+		zoneService.deleteAll();
+		
+		assertTrue(zoneService.getAll().isEmpty());
 	}
 }
