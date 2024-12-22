@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import javax.ejb.EJB;
 import javax.ejb.Stateless;
 import javax.ejb.TransactionAttribute;
 import javax.ejb.TransactionAttributeType;
@@ -24,7 +23,6 @@ import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
-import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Bean class for Location usage. 
@@ -44,9 +42,6 @@ public class LocationBean implements LocationService {
 	
 	@PersistenceContext
 	private EntityManager em;
-	
-	@EJB
-	private ZoneService zoneService;
 	
 	/**
 	 * Default constructor is mandatory
@@ -112,10 +107,13 @@ public class LocationBean implements LocationService {
 				lo = location;
 			}
 			
-			if (lo.getZone() != null) {
-				Zone zo = lo.getZone();
-				zo.getLocations().remove(lo);
-				lo.setZone(null);
+			for (Zone zone: lo.getZones()) {
+				Set<Location> locs = zone.getLocations();
+				locs.remove(lo);
+				zone.setLocations(locs);
+				em.merge(zone);
+				lo.getZones().remove(zone);
+				em.merge(lo);
 				em.flush();
 			}
 			

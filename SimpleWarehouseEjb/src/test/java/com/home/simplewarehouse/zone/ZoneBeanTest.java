@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assume.assumeTrue;
 
 import java.io.File;
-import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.ejb.EJBException;
@@ -97,7 +97,7 @@ public class ZoneBeanTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup zones
-		List<Zone> zones = zoneService.getAll();
+		Set<Zone> zones = zoneService.getAll();
 		
 		zones.stream().forEach(z -> zoneService.delete(z));
 		

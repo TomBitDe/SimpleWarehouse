@@ -1,8 +1,10 @@
 package com.home.simplewarehouse.zone;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import javax.ejb.EJB;
@@ -82,7 +84,7 @@ public class ZoneBean implements ZoneService {
 			    List<Location> locationsCopy = new ArrayList<>(zo.getLocations());
 			    locationsCopy.stream()
 			        .filter(Objects::nonNull)
-			        .forEach(l -> l.setZone(null));
+			        .forEach(l -> l.setZones(null));
 			    em.flush();
 			}
 			
@@ -130,19 +132,21 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public List<Zone> getAll() {
+	public Set<Zone> getAll() {
 		LOG.trace("--> getAll()");
 
+		Set<Zone> zones = new HashSet<>();
+		
 		TypedQuery<Zone> query = em.createQuery("SELECT zo FROM Zone zo", Zone.class);
-		List<Zone> zone = query.getResultList();
+		zones.addAll(query.getResultList());
 
 		LOG.trace("<-- getAll()");
 
-		return zone;
+		return zones;
 	}
 
 	@Override
-	public List<Zone> getAll(int offset, int count) {
+	public Set<Zone> getAll(int offset, int count) {
 		LOG.trace("--> getAll({}, {})", offset, count);
 
         if (offset < 0) {
@@ -156,7 +160,8 @@ public class ZoneBean implements ZoneService {
         query.setFirstResult(offset);
         query.setMaxResults(count);
 
-        List<Zone> zones = query.getResultList();
+        Set<Zone> zones = new HashSet<>();
+        zones.addAll(query.getResultList());
 
 		LOG.trace("<-- getAll({}, {})", offset, count);
 
@@ -174,24 +179,31 @@ public class ZoneBean implements ZoneService {
 	public void moveLocationTo(Location location, Zone zone) {
 		checkParam(location, zone);
 		
-		if (location.getZone() != null) {
-		    Zone current = location.getZone();
-		    current.getLocations().remove(location);
-		    location.setZone(null);
+		// Remove from current
+		if (location.getZones() != null) {
+		    Set<Zone> current = location.getZones();
+		    current.stream().forEach(z -> z.getLocations().remove(location));
+		    location.setZones(current);
 		    
-		    em.merge(current);
+		    em.merge(location);
 		}
 		
+		// Add to destination zone
 		zone.getLocations().add(location);
 		em.merge(zone);
 		zone = getById(zone.getId());
 		
-		location.setZone(zone);
+		Set<Zone> temp = location.getZones();
+		temp.add(zone);
+		location.setZones(temp);
+		
 		em.merge(location);
+		
+		em.flush();
 	}
 
 	@Override
-	public void moveLocationsTo(List<Location> locations, Zone zone) {
+	public void moveLocationsTo(Set<Location> locations, Zone zone) {
 		locations.stream().forEach(l -> moveLocationTo(l, zone));
 	}
 
@@ -200,19 +212,23 @@ public class ZoneBean implements ZoneService {
 		checkParam(location, zone);
 
 		zone.getLocations().add(location);
-		location.setZone(zone);
+		location.getZones().add(zone);
 
 		em.merge(zone);
 		em.merge(location);
+		em.flush();
 	}
 
 	@Override
-	public void initZoneBy(Zone zone, List<Location> locations) {
+	public void initZoneBy(Zone zone, Set<Location> locations) {
 		checkParam(locations, zone);
 		
 		zone.setLocations(locations);
 		
-		locations.stream().forEach(l -> l.setZone(zone));
+		Set<Zone> temp = new HashSet<>();
+		temp.add(zone);
+		
+		locations.stream().forEach(l -> l.setZones(temp));
 		
 		em.merge(zone);
 		
@@ -225,11 +241,11 @@ public class ZoneBean implements ZoneService {
 		
 	    List<Location> safeList = new CopyOnWriteArrayList<>(zone.getLocations());
 	    
-	    zone.setLocations(new ArrayList<>());
+	    zone.setLocations(new HashSet<>());
 	    em.merge(zone);
 	    
 	    safeList.stream().forEach(loc -> {
-	    	loc.setZone(null);
+	    	loc.setZones(null);
 	    	em.merge(loc);
 	    });
 	}
@@ -262,7 +278,7 @@ public class ZoneBean implements ZoneService {
 		}
 	}
 	
-	private void checkParam(List<Location> locations, Zone zone) {
+	private void checkParam(Set<Location> locations, Zone zone) {
 		locations.stream().forEach(l -> checkParam(l, zone));
 	}
 	

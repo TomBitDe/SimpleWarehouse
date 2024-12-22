@@ -1,6 +1,6 @@
 package com.home.simplewarehouse.zone;
 
-import java.util.List;
+import java.util.Set;
 
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Zone;
@@ -42,20 +42,20 @@ public interface ZoneService {
 	 */
 	public Zone getById(final String id);
 	/**
-	 * Get a list of all Zone items
+	 * Get a set of all Zone items
 	 * 
 	 * @return the Zone list
 	 */
-	public List<Zone> getAll();
+	public Set<Zone> getAll();
 	/**
-	 * Get a list of all Zone items
+	 * Get a set of all Zone items
 	 * 
      * @param offset the position to start fetching
      * @param count  the number of fetches to do
      *
 	 * @return the Zone list based on offset and count
 	 */
-	public List<Zone> getAll(int offset, int count);
+	public Set<Zone> getAll(int offset, int count);
 	/**
 	 * Count the Zone items
 	 *
@@ -75,7 +75,7 @@ public interface ZoneService {
 	 * @param locations a List of Locations
 	 * @param zone
 	 */
-	public void moveLocationsTo(List<Location> locations, Zone zone);
+	public void moveLocationsTo(Set<Location> locations, Zone zone);
 	/**
 	 * Add a Location to a given Zone
 	 * 
@@ -89,7 +89,7 @@ public interface ZoneService {
 	 * @param zone the Zone to initialize 
 	 * @param locations the List of Locations
 	 */
-	public void initZoneBy(Zone zone, List<Location> locations);
+	public void initZoneBy(Zone zone, Set<Location> locations);
 	/**
 	 * Clear a given Zone from its Locations
 	 * 

@@ -3,18 +3,17 @@ package com.home.simplewarehouse.model;
 import static javax.persistence.LockModeType.NONE;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import javax.persistence.Basic;
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Version;
 import javax.xml.bind.annotation.XmlAccessType;
@@ -62,10 +61,8 @@ public class Zone extends EntityBase implements Serializable {
 	/**
 	 * The associated Locations
 	 */
-    @OneToMany(mappedBy = "zone", 
-    		cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH },
-    		orphanRemoval = false)
-    private List<Location> locations = new ArrayList<>();
+    @ManyToMany(mappedBy = "zones")
+    private Set<Location> locations = new HashSet<>();
 
     /**
      * Default constructor
@@ -150,7 +147,7 @@ public class Zone extends EntityBase implements Serializable {
 	 * 
 	 * @return the locations
 	 */
-    public List<Location> getLocations() {
+    public Set<Location> getLocations() {
         return locations;
     }
 
@@ -159,7 +156,7 @@ public class Zone extends EntityBase implements Serializable {
      * 
      * @param locations the locations
      */
-    public void setLocations(List<Location> locations) {
+    public void setLocations(Set<Location> locations) {
         this.locations = locations;
     }
     
