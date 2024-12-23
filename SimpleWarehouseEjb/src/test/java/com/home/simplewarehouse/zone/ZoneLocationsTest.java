@@ -293,7 +293,6 @@ public class ZoneLocationsTest {
 		LOG.info(cooler);
 	}
 	
-	@org.junit.Ignore
 	@Test
 	@InSequence(15)
 	public void moveLocation() {
@@ -331,7 +330,7 @@ public class ZoneLocationsTest {
 		
 		// Now modify
 		Zone freezer = zoneService.getById("Freezer");
-		zoneService.moveLocationTo(locA, freezer);
+		zoneService.moveLocation(locA, cooler, freezer);
 		
 		// Check
 		assertTrue(locA.getZones().contains(freezer));
@@ -341,6 +340,62 @@ public class ZoneLocationsTest {
 		cooler = zoneService.getById("Cooler");
 		assertFalse(cooler.getLocations().contains(locA));
 		assertTrue(cooler.getLocations().contains(locB));
+		assertFalse(locA.getZones().contains(cooler));
+	}
+
+	@Test
+	@InSequence(17)
+	public void moveLocations() {
+		LOG.info("--- Test moveLocations");
+
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+		
+		// Prepare
+		Zone cooler = zoneService.getById("Cooler");
+		Set<Location> coolerLocations = new HashSet<>();
+		coolerLocations.add(locationService.getById("LOCA"));
+		coolerLocations.add(locationService.getById("LOCB"));
+		cooler.setLocations(coolerLocations);
+		
+		Location locA = locationService.getById("LOCA");
+		Location locB = locationService.getById("LOCB");
+		
+		Set<Zone> A = new HashSet<>();
+		A.add(zoneService.getById("Cooler"));
+		locA.setZones(A);
+		locB.setZones(A);
+
+		cooler = zoneService.createOrUpdate(cooler);
+		locA = locationService.createOrUpdate(locA);
+		locB = locationService.createOrUpdate(locB);
+
+		// Check prepare
+		assertNotNull(cooler);
+		assertTrue(cooler.getLocations().contains(locA));
+		assertTrue(cooler.getLocations().contains(locB));
+
+		assertTrue(locA.getZones().contains(cooler));
+		assertTrue(cooler.getLocations().contains(locA));
+		
+		// Now modify
+		Zone freezer = zoneService.getById("Freezer");
+		Set<Location> locations = new HashSet<>();
+		locations.add(locA);
+		locations.add(locB);
+		zoneService.moveLocations(locations, cooler, freezer);
+		
+		// Check
+		assertTrue(locA.getZones().contains(freezer));
+		assertTrue(freezer.getLocations().contains(locA));
+		assertTrue(locB.getZones().contains(freezer));
+		assertTrue(freezer.getLocations().contains(locB));
+		
+		// Reread is mandatory
+		cooler = zoneService.getById("Cooler");
+		assertFalse(cooler.getLocations().contains(locA));
+		assertFalse(cooler.getLocations().contains(locB));
+		assertTrue(cooler.getLocations().isEmpty());
 		assertFalse(locA.getZones().contains(cooler));
 	}
 

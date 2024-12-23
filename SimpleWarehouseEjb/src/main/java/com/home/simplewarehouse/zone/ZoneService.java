@@ -63,19 +63,19 @@ public interface ZoneService {
 	 */
 	public int count();
 	/**
-	 * Move a Location from its current Zone to the given Zone
+	 * Move a Location from its current Zone to the destination Zone
 	 * 
 	 * @param location the Location to move
 	 * @param zone the destination Zone 
 	 */
-	public void moveLocationTo(Location location, Zone zone);
+	public void moveLocation(Location location, Zone current, Zone destination);
 	/**
-	 * Move a List of Locations from their current Zone to the given Zone
+	 * Move a List of Locations from their current Zone to the destination Zone
 	 * 
 	 * @param locations a List of Locations
 	 * @param zone
 	 */
-	public void moveLocationsTo(Set<Location> locations, Zone zone);
+	public void moveLocations(Set<Location> locations, Zone current, Zone destination);
 	/**
 	 * Add a Location to a given Zone
 	 * 

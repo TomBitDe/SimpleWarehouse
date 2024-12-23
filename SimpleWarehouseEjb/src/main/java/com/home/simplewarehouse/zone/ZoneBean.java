@@ -176,25 +176,25 @@ public class ZoneBean implements ZoneService {
 	}
 	
 	@Override
-	public void moveLocationTo(Location location, Zone zone) {
-		checkParam(location, zone);
+	public void moveLocation(Location location, Zone current, Zone destination) {
+		checkParam(location, current, destination);
 		
 		// Remove from current
 		if (location.getZones() != null) {
-		    Set<Zone> current = location.getZones();
-		    current.stream().forEach(z -> z.getLocations().remove(location));
-		    location.setZones(current);
+			location.getZones().remove(current);
 		    
 		    em.merge(location);
 		}
 		
+		current.getLocations().remove(location);
+		em.merge(current);
+		
 		// Add to destination zone
-		zone.getLocations().add(location);
-		em.merge(zone);
-		zone = getById(zone.getId());
+		destination.getLocations().add(location);
+		em.merge(destination);
 		
 		Set<Zone> temp = location.getZones();
-		temp.add(zone);
+		temp.add(destination);
 		location.setZones(temp);
 		
 		em.merge(location);
@@ -203,8 +203,8 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void moveLocationsTo(Set<Location> locations, Zone zone) {
-		locations.stream().forEach(l -> moveLocationTo(l, zone));
+	public void moveLocations(Set<Location> locations, Zone current, Zone destination) {
+		locations.stream().forEach(l -> moveLocation(l, current, destination));
 	}
 
 	@Override
@@ -278,6 +278,12 @@ public class ZoneBean implements ZoneService {
 		}
 	}
 	
+	private void checkParam(Location location, Zone current, Zone destination) {
+		checkParam(location, current);
+		
+		checkZone(destination);
+	}
+
 	private void checkParam(Set<Location> locations, Zone zone) {
 		locations.stream().forEach(l -> checkParam(l, zone));
 	}
