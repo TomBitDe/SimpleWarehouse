@@ -63,7 +63,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
-	public HandlingUnit createOrUpdate(final HandlingUnit handlingUnit) {
+	public HandlingUnit createOrUpdate(HandlingUnit handlingUnit) {
 		LOG.trace("--> create");
 		
 		if (getById(handlingUnit.getId()) == null) {
@@ -80,7 +80,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
-	public void delete(final HandlingUnit handlingUnit) {
+	public void delete(HandlingUnit handlingUnit) {
 		LOG.trace("--> delete({})", handlingUnit);
 
 		if (handlingUnit != null && handlingUnit.getId() != null) {
@@ -100,7 +100,8 @@ public class HandlingUnitBean implements HandlingUnitService {
 			
 			em.remove(hu);
 			em.flush();
-
+			em.clear();
+			
 			LOG.debug("deleted: {}", hu);
 		}
 		else {

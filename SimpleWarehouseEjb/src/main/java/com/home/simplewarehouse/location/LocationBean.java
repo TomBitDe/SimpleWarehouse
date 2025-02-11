@@ -94,7 +94,7 @@ public class LocationBean implements LocationService {
 	}
 
 	@Override
-	public void delete(final Location location) {
+	public void delete(Location location) {
 		LOG.trace("--> delete({})", location);
 
 		if (location != null && location.getLocationId() != null) {
@@ -127,6 +127,7 @@ public class LocationBean implements LocationService {
 			// Same for      dimensionService
 			em.remove(lo);
 			em.flush();
+			em.clear();
 
 			LOG.debug("deleted: {}", lo);
 		} 

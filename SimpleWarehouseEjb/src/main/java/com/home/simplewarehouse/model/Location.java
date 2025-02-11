@@ -65,31 +65,31 @@ public abstract class Location extends EntityBase implements Serializable {
 	/**
 	 * The associated LocationStatus
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	protected LocationStatus locationStatus;
 	/**
 	 * The associated Dimension
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	protected Dimension dimension;
 	/**
 	 * The associated Position
 	 */
-	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	@OneToOne(mappedBy = "location", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 	protected Position position;
 	/**
 	 * The associated HandlingUnits
 	 */
 	@OneToMany(mappedBy = "location", cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE,
-			CascadeType.REFRESH }, fetch = FetchType.LAZY)
+			CascadeType.REFRESH }, fetch = FetchType.EAGER)
 	private Set<HandlingUnit> handlingUnits = new HashSet<>();
 	/**
 	 * The associated Zone
 	 */
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
         name = "Location_Zone",
         joinColumns = @JoinColumn(name = "location_id"),

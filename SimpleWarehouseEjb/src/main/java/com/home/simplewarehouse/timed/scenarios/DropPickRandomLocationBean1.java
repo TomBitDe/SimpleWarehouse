@@ -72,13 +72,19 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		HandlingUnit h3 = handlingUnitService.createOrUpdate(new HandlingUnit("3"));
 		HandlingUnit h4 = handlingUnitService.createOrUpdate(new HandlingUnit("4"));
 
-		Location lA = locationService.createOrUpdate(new RandomLocation("A"));
+		Location lA = locationService.getById("A");
+		if (lA == null)
+		    lA = locationService.createOrUpdate(new RandomLocation("A"));
 		LOG.debug(lA);
 		
-		Location lB = locationService.createOrUpdate(new RandomLocation("B"));
+        Location lB = locationService.getById("B");
+        if (lB == null)
+		    lB = locationService.createOrUpdate(new RandomLocation("B"));
 		LOG.debug(lB);
 		
-		Location lC = locationService.createOrUpdate(new RandomLocation("C"));
+        Location lC = locationService.getById("C");
+        if (lC == null)
+		    lC = locationService.createOrUpdate(new RandomLocation("C"));
 		LOG.debug(lC);
 		
 		try {
@@ -97,7 +103,7 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 			LOG.error("Unexpected exception : {}", dimex.getMessage());
 		}
 		catch (Exception ex) {
-			LOG.error("Unexpected exception : {}", ex.getMessage());
+            LOG.error("Unexpected exception : {}", ex.getMessage());
 		}
 		
 		LOG.trace("<-- processScenario()");

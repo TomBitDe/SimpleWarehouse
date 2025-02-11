@@ -22,13 +22,13 @@ public interface HandlingUnitService {
 	 * 
 	 * @return the created HandlingUnit
 	 */
-	public HandlingUnit createOrUpdate(final HandlingUnit handlingUnit);
+	public HandlingUnit createOrUpdate(HandlingUnit handlingUnit);
 	/**
 	 * Delete a HandlingUnit and remove
 	 * 
 	 * @param handlingUnit the given HandlingUnit
 	 */
-	public void delete(final HandlingUnit handlingUnit);
+	public void delete(HandlingUnit handlingUnit);
 	/**
 	 * Delete a HandlingUnit by its id and remove
 	 * 

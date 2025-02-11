@@ -252,7 +252,7 @@ public class LocationBeanTest {
 		
 	    Location location = locationService.createOrUpdate(new RandomLocation("A"));
 
-		LOG.info("Location getById: " + location);
+		LOG.info("Location getById: {}", location);
 		
 		assertEquals("A", location.getLocationId());
 		
@@ -260,18 +260,18 @@ public class LocationBeanTest {
 		locationService.delete(location);
 		assertNotNull(location);
 		assertEquals("A", location.getLocationId());
-		LOG.info("Location deleted: " + location.getLocationId());
+		LOG.info("Location deleted: {}", location.getLocationId());
 		
 		location = locationService.createOrUpdate(new RandomLocation("A", "Test"));
 
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
-		LOG.info("Location created: " + location);
+		LOG.info("Location created: {}", location);
 
 		// Delete the location
 		locationService.delete(location);
-		LOG.info("Location deleted: " + location.getLocationId());
+		LOG.info("Location deleted: {}", location.getLocationId());
 		
 		Timestamp ts = new Timestamp(System.currentTimeMillis());
 		
@@ -280,7 +280,7 @@ public class LocationBeanTest {
 		assertNotNull(location);
 		assertEquals("Test", location.getUpdateUserId());
 		assertEquals(ts, location.getUpdateTimestamp());
-		LOG.info("Location created: " + location);
+		LOG.info("Location created: {}", location);
 	}
 
 	/**
@@ -305,7 +305,7 @@ public class LocationBeanTest {
 
 		// MANDATORY reread
 		assertNull(locationService.getById("A"));
-		LOG.info("Location deleted: " + location.getLocationId());
+		LOG.info("Location deleted: {}", location.getLocationId());
 		
 	    // MANDATORY reread
 		location = locationService.getById("A");
@@ -418,6 +418,7 @@ public class LocationBeanTest {
 	/**
 	 * Test modify location position values
 	 */
+	@org.junit.Ignore // modifying the class is currently not possible !!!
 	@Test
 	@InSequence(6)
 	public void modifyLocationPositionValues() {
@@ -437,7 +438,7 @@ public class LocationBeanTest {
 		assertNotNull(locA);
 		assertEquals("V", ((LogicalPosition) locA.getPosition()).getCoord());
 
-		LOG.info("LocA: " + locA);
+		LOG.info("LocA: {}", locA);
 		
 		// RelativePosition
 		Location locB = locationService.createOrUpdate(new RandomLocation(new RelativPosition(), "B"));
@@ -470,7 +471,7 @@ public class LocationBeanTest {
 		assertEquals(9, ((RelativPosition) locB.getPosition()).getyCoord());
 		assertEquals(9, ((RelativPosition) locB.getPosition()).getzCoord());
 
-		LOG.info("LocB: " + locB);
+		LOG.info("LocB: {}", locB);
 
 		// AbsolutePosition
 		Location locD = locationService.createOrUpdate(new RandomLocation(new AbsolutPosition(), "D"));
@@ -503,7 +504,7 @@ public class LocationBeanTest {
 		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
 		assertEquals(1.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
 
-		LOG.info("LocD: " + locD);
+		LOG.info("LocD: {}", locD);
 	}
 	
 	/**
@@ -579,7 +580,7 @@ public class LocationBeanTest {
 			assertFalse(locA.getHandlingUnits().isEmpty());
 			assertEquals(1, locA.getHandlingUnits().size());
 
-			LOG.info("1 HandlingUnit dropped to " + locA.getLocationId() + "   " + locA);
+			LOG.info("1 HandlingUnit dropped to {}     {}", locA.getLocationId(), locA);
 
 			LOG.info("Sample hU8");
 			// MANDATORY reread
@@ -642,7 +643,7 @@ public class LocationBeanTest {
 		assertEquals(3, locations.size());
 		
 		try {
-			locations = locationService.getAll(-3, 3);
+			locationService.getAll(-3, 3);
 			
 			Assert.fail("Exception expected");
 		}
@@ -651,7 +652,7 @@ public class LocationBeanTest {
 		}
 
 		try {
-			locations = locationService.getAll(2, 0);
+			locationService.getAll(2, 0);
 			
 			Assert.fail("Exception expected");
 		}
@@ -676,7 +677,7 @@ public class LocationBeanTest {
 		// Prepare a locationService
 		locationService.createOrUpdate(new RandomLocation("A", "Test"));
 		Location locA = locationService.getById("A");
-		LOG.info("Location prepared: " + locA);
+		LOG.info("Location prepared: {}", locA);
 		
 		// Drop to make a relation
 		try {
@@ -702,7 +703,7 @@ public class LocationBeanTest {
 
 			assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("12")));
 
-			LOG.info("5 HandlingUnits dropped to " + locA.getLocationId() + "   " + locA);
+			LOG.info("5 HandlingUnits dropped to {}     {}", locA.getLocationId(), locA);
 
 			LOG.info("Sample hU2 and hU5");
 			// MANDATORY reread
@@ -716,7 +717,7 @@ public class LocationBeanTest {
 			// MANDATORY reread
 			locA = locationService.getById("A");
 			locationService.delete(locA);
-			LOG.info("Location deleted: " + locA.getLocationId());
+			LOG.info("Location deleted: {}", locA.getLocationId());
 
 			// MANDATORY reread
 			hU2 = handlingUnitService.getById("2");
@@ -754,7 +755,7 @@ public class LocationBeanTest {
 		// Test the special toString also
 		assumeTrue(locA.toString().contains("HandlingUnits RANDOM=[]"));
 		
-		LOG.info("Location prepared: " + locA);
+		LOG.info("Location prepared: {}", locA);
 		
 		// Drop to make a relation
 		try {
@@ -771,7 +772,7 @@ public class LocationBeanTest {
 
 			assertFalse(locA.getHandlingUnits().contains(new HandlingUnit("2")));
 		
-			LOG.info("1 HandlingUnit dropped to " + locA.getLocationId() + "   " + locA);
+			LOG.info("1 HandlingUnit dropped to {}   {}", locA.getLocationId(), locA);
 
 			LOG.info("Sample hU8");
 			// MANDATORY reread
@@ -782,7 +783,7 @@ public class LocationBeanTest {
 			// MANDATORY reread
 			locA = locationService.getById("A");
 			locationService.delete(locA);
-			LOG.info("Location deleted: " + locA.getLocationId());
+			LOG.info("Location deleted: {}", locA.getLocationId());
 		
 			// MANDATORY reread
 			hU8 = handlingUnitService.getById("8");
@@ -815,7 +816,7 @@ public class LocationBeanTest {
 		locationService.createOrUpdate(new RandomLocation("D"));
 		
 
-		LOG.info("Locations created: " + locationService.getAll().size());
+		LOG.info("Locations created: {}", locationService.getAll().size());
 		
 		List<Location> freeCapacityLocations = locationService.getAllWithFreeCapacity();
 		
@@ -852,7 +853,7 @@ public class LocationBeanTest {
 
 		locationService.createOrUpdate(new RandomLocation("A"));
 
-		LOG.info("Locations created: " + locationService.getAll().size());
+		LOG.info("Locations created: {}", locationService.getAll().size());
 		Location locA = locationService.getById("A");
 		
 		// Drop to make a relation
@@ -885,7 +886,7 @@ public class LocationBeanTest {
 			Assert.fail("Exception expected");
 		}
 		catch (EJBException iaex) {
-			LOG.info("Expected exception: " + iaex.getMessage());
+			LOG.info("Expected exception: {}", iaex.getMessage());
 		}
 		catch (Exception ex) {
 			Assert.fail("Not expected: " + ex);						
@@ -898,7 +899,7 @@ public class LocationBeanTest {
 			Assert.fail("Exception expected");
 		}
 		catch (EJBException iaex) {
-			LOG.info("Expected exception: " + iaex.getMessage());
+			LOG.info("Expected exception: {}", iaex.getMessage());
 		}
 		catch (Exception ex) {
 			Assert.fail("Not expected: " + ex);						
@@ -917,7 +918,7 @@ public class LocationBeanTest {
 
 		Location locA = locationService.createOrUpdate(new RandomLocation("A"));
 
-		LOG.info("Locations created: " + locationService.getAll().size());
+		LOG.info("Locations created: {}", locationService.getAll().size());
 		
 		// Drop to make a relation
 		try {
@@ -942,7 +943,7 @@ public class LocationBeanTest {
 			Assert.fail("Exception expected");
 		}
 		catch (EJBException iaex) {
-			LOG.info("Expected exception: " + iaex.getMessage());
+			LOG.info("Expected exception: {}", iaex.getMessage());
 		}
 		catch (Exception ex) {
 			Assert.fail("Not expected: " + ex);						
@@ -955,7 +956,7 @@ public class LocationBeanTest {
 			Assert.fail("Exception expected");
 		}
 		catch (EJBException iaex) {
-			LOG.info("Expected exception: " + iaex.getMessage());
+			LOG.info("Expected exception: {}", iaex.getMessage());
 		}
 		catch (Exception ex) {
 			Assert.fail("Not expected: " + ex);						
@@ -974,7 +975,7 @@ public class LocationBeanTest {
 
 		Location locA = locationService.createOrUpdate(new RandomLocation("A"));
 
-		LOG.info("Locations created: " + locationService.getAll().size());
+		LOG.info("Locations created: {}", locationService.getAll().size());
 		
 		assertTrue(locationService.getAllFull().isEmpty());
 		

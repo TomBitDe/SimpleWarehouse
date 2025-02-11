@@ -36,11 +36,22 @@
             <property name="eclipselink.logging.parameters" value="true" />
 
             <!-- Cache-configuration for special Entities -->
+		    <!-- 
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.HandlingUnit" value="SOFT" />
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Location" value="SOFT" />
-            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LocationStatus" value="SOFT" />
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Zone" value="SOFT" />
-            
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LocationStatus" value="SOFT" />
+	    	<property name="eclipselink.cache.type.com.home.simplewarehouse.model.RandomLocation" value="SOFT" />
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.model.FifoLocation" value="SOFT" />
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LifoLocation" value="SOFT" />
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LocationStatus" value="SOFT" />
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Dimension" value="SOFT" />
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Position" value="SOFT" />
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LogicalPosition" value="SOFT" />
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.model.RelativPosition" value="SOFT" />
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.model.AbsolutPosition" value="SOFT" />
+            -->
+		    <property name="eclipselink.cache.type.com.home.simplewarehouse.patterns.singleton.simplecache.model.ApplConfig" value="FULL" />
             <!-- Caching in Query-Level control -->
             <property name="eclipselink.query-results-cache" value="false" />
 

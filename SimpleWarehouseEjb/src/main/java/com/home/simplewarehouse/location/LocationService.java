@@ -27,7 +27,7 @@ public interface LocationService {
 	 * 
 	 * @param location the given Location
 	 */
-	public void delete(final Location location);
+	public void delete(Location location);
 	/**
 	 * Delete a Location by its id and remove
 	 * 
