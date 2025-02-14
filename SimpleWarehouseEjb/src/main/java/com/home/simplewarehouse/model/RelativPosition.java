@@ -4,8 +4,9 @@ import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
-import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -16,28 +17,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "RelativPosition")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-@DiscriminatorValue("RELATIV")
+@Table(name = "RELATIV_POSITION")
+@PrimaryKeyJoinColumn(name = "LOCATION_ID")
 public class RelativPosition extends Position {
-    private static final long serialVersionUID = 1L;
-    
+	private static final long serialVersionUID = 233237933470941803L;
+	
 	/**
 	 * X coordinate in millimeter
 	 */
-	@Basic(optional = true)
-    @Column(name = "X_RELATIV", nullable = true)
-	int xCoord;
+	@Basic(optional = false)
+    @Column(name = "X_RELATIV", nullable = false)
+	int xCoord = 0;
 	/**
 	 * Y coordinate in millimeter
 	 */
-	@Basic(optional = true)
-    @Column(name = "Y_RELATIV", nullable = true)
-	int yCoord;
+	@Basic(optional = false)
+    @Column(name = "Y_RELATIV", nullable = false)
+	int yCoord = 0;
 	/**
 	 * Z coordinate in millimeter
 	 */
-	@Basic(optional = true)
-    @Column(name = "Z_RELATIV", nullable = true)
-	int zCoord;
+	@Basic(optional = false)
+    @Column(name = "Z_RELATIV", nullable = false)
+	int zCoord = 0;
 
     /**
      * Default Relative Position
@@ -54,9 +56,10 @@ public class RelativPosition extends Position {
      * @param z the given z coordinate
      */
     public RelativPosition(int x, int y, int z) {
-    	setxCoord(x);
-    	setyCoord(y);
-    	setzCoord(z);
+    	super();
+    	setXCoord(x);
+    	setYCoord(y);
+    	setZCoord(z);
     }
     
 	/**
@@ -64,7 +67,7 @@ public class RelativPosition extends Position {
 	 * 
 	 * @return the xCoord
 	 */
-	public int getxCoord() {
+	public int getXCoord() {
 		return xCoord;
 	}
 
@@ -73,7 +76,7 @@ public class RelativPosition extends Position {
 	 * 
 	 * @param xCoord the xCoord to set
 	 */
-	public void setxCoord(int xCoord) {
+	public void setXCoord(int xCoord) {
 		this.xCoord = xCoord;
 	}
 
@@ -82,7 +85,7 @@ public class RelativPosition extends Position {
 	 * 
 	 * @return the yCoord
 	 */
-	public int getyCoord() {
+	public int getYCoord() {
 		return yCoord;
 	}
 
@@ -91,7 +94,7 @@ public class RelativPosition extends Position {
 	 * 
 	 * @param yCoord the yCoord to set
 	 */
-	public void setyCoord(int yCoord) {
+	public void setYCoord(int yCoord) {
 		this.yCoord = yCoord;
 	}
 
@@ -100,7 +103,7 @@ public class RelativPosition extends Position {
 	 * 
 	 * @return the zCoord
 	 */
-	public int getzCoord() {
+	public int getZCoord() {
 		return zCoord;
 	}
 
@@ -109,7 +112,7 @@ public class RelativPosition extends Position {
 	 * 
 	 * @param zCoord the zCoord to set
 	 */
-	public void setzCoord(int zCoord) {
+	public void setZCoord(int zCoord) {
 		this.zCoord = zCoord;
 	}
 	
@@ -121,9 +124,9 @@ public class RelativPosition extends Position {
 	 * @param z the z coordinate 
 	 */
 	public void setCoord(int x, int y, int z) {
-		setxCoord(x);
-		setyCoord(y);
-		setzCoord(z);
+		setXCoord(x);
+		setYCoord(y);
+		setZCoord(z);
 	}
 	
 	@Override
@@ -151,9 +154,9 @@ public class RelativPosition extends Position {
 		StringBuilder builder = new StringBuilder();
 		builder.append("RelativPosition [ ")
 		    .append(super.toString())
-		    .append(", xCoord=").append(getxCoord())
-		    .append(", yCoord=").append(getyCoord())
-		    .append(", zCoord=").append(getzCoord())
+		    .append(", xCoord=").append(getXCoord())
+		    .append(", yCoord=").append(getYCoord())
+		    .append(", zCoord=").append(getZCoord())
 		    .append("]");
 
 		return builder.toString();

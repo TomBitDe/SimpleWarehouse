@@ -61,17 +61,20 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		
 		// Random
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
-			locationList.add(new RandomLocation("" + c, SampleWarehouseBean.class.getSimpleName()));
+			if (c != 'B')
+			    locationList.add(new RandomLocation("" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		
 		// FiFo
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
-			locationList.add(new FifoLocation("FIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
+			if (c != 'B')
+			    locationList.add(new FifoLocation("FIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		
 		// LiFo
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
-			locationList.add(new LifoLocation("LIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
+			if (c != 'B')
+			    locationList.add(new LifoLocation("LIFO_" + c, SampleWarehouseBean.class.getSimpleName()));
 		}
 		
 		locationList.forEach(l -> locationService.createOrUpdate(l));

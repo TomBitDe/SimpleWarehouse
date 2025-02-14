@@ -50,14 +50,10 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 	private void cleanup() {
 		LOG.trace("--> cleanup()");
 		
-		for (Location loc : locationService.getAll()) {
-			locationService.delete(loc);
-		}
+		handlingUnitService.getAll().stream().forEach(h -> handlingUnitService.delete(h));
 
-		for (HandlingUnit hu : handlingUnitService.getAll()) {
-			handlingUnitService.delete(hu);
-		}
-
+		locationService.getAll().stream().forEach(l -> locationService.delete(l));
+		
 		LOG.trace("<-- cleanup()");		
 	}
 
@@ -73,18 +69,33 @@ public class DropPickRandomLocationBean1 implements DropPickRandomLocationLocal1
 		HandlingUnit h4 = handlingUnitService.createOrUpdate(new HandlingUnit("4"));
 
 		Location lA = locationService.getById("A");
-		if (lA == null)
+		if (lA == null) {
 		    lA = locationService.createOrUpdate(new RandomLocation("A"));
+		}
+		else {
+			locationService.delete(lA);
+		    lA = locationService.createOrUpdate(new RandomLocation("A"));
+		}
 		LOG.debug(lA);
 		
-        Location lB = locationService.getById("B");
-        if (lB == null)
-		    lB = locationService.createOrUpdate(new RandomLocation("B"));
-		LOG.debug(lB);
+        Location lD = locationService.getById("D");
+        if (lD == null) {
+		    lD = locationService.createOrUpdate(new RandomLocation("D"));
+        }
+        else {
+			locationService.delete(lD);
+		    lD = locationService.createOrUpdate(new RandomLocation("D"));
+        }
+		LOG.debug(lD);
 		
         Location lC = locationService.getById("C");
-        if (lC == null)
+        if (lC == null) {
 		    lC = locationService.createOrUpdate(new RandomLocation("C"));
+        }
+        else {
+			locationService.delete(lC);
+		    lC = locationService.createOrUpdate(new RandomLocation("C"));
+        }
 		LOG.debug(lC);
 		
 		try {

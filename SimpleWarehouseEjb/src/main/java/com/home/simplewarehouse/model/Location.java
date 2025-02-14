@@ -92,8 +92,8 @@ public abstract class Location extends EntityBase implements Serializable {
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
         name = "Location_Zone",
-        joinColumns = @JoinColumn(name = "location_id"),
-        inverseJoinColumns = @JoinColumn(name = "zone_id")
+        joinColumns = @JoinColumn(name = "LOCATION_ID"),
+        inverseJoinColumns = @JoinColumn(name = "ZONE_ID")
     )
     private Set<Zone> zones = new HashSet<>();
 
@@ -104,12 +104,16 @@ public abstract class Location extends EntityBase implements Serializable {
 		this.setLocationStatus(ls);
 		
 		if (pos == null) {
-			pos = new LogicalPosition(this.getLocationId());
+			Position tmp = new LogicalPosition(this.getLocationId());
+			this.setPosition(tmp);
+			tmp.setLocation(this);
+			tmp.setLocationId(this.getLocationId());
 		}
-
-		this.setPosition(pos);
-		pos.setLocation(this);
-		pos.setLocationId(this.getLocationId());
+		else {
+			this.setPosition(pos);
+			pos.setLocation(this);
+			pos.setLocationId(this.getLocationId());
+		}
 		
 		this.setZones(zones);
 	}
@@ -117,7 +121,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	/**
 	 * Default Random Location with default LogicalPosition
 	 */
-	protected Location() {
+	public Location() {
 		super();
 		initAssociated(null);
 	}
@@ -127,7 +131,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param id the given id
 	 */
-	protected Location(String id) {
+	public Location(String id) {
 		super();
 		this.locationId = id;
 		initAssociated(null);
@@ -139,7 +143,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param id   the given id
 	 * @param user the given user
 	 */
-	protected Location(String id, String user) {
+	public Location(String id, String user) {
 		super(user);
 		this.locationId = id;
 		initAssociated(null);
@@ -152,7 +156,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param user      the given user
 	 * @param timestamp the given timestamp
 	 */
-	protected Location(String id, String user, Timestamp timestamp) {
+	public Location(String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
 		initAssociated(null);
@@ -163,7 +167,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param pos the given Position
 	 */
-	protected Location(Position pos) {
+	public Location(Position pos) {
 		super();
 		initAssociated(pos);
 	}
@@ -174,7 +178,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param pos the given Position
 	 * @param id  the given id
 	 */
-	protected Location(Position pos, String id) {
+	public Location(Position pos, String id) {
 		super();
 		this.locationId = id;
 		initAssociated(pos);
@@ -187,7 +191,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param id   the given id
 	 * @param user the given user
 	 */
-	protected Location(Position pos, String id, String user) {
+	public Location(Position pos, String id, String user) {
 		super(user);
 		this.locationId = id;
 		initAssociated(pos);
@@ -201,7 +205,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param user      the given user
 	 * @param timestamp the given timestamp
 	 */
-	protected Location(Position pos, String id, String user, Timestamp timestamp) {
+	public Location(Position pos, String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
 		initAssociated(pos);
@@ -232,7 +236,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * 
 	 * @return the version number
 	 */
-	protected int getVersion() {
+	public int getVersion() {
 		return version;
 	}
 
@@ -312,7 +316,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param position the Position to assign
 	 */
-	protected void setPosition(Position position) {
+	public void setPosition(Position position) {
 		this.position = position;
 		position.setLocation(this);
 		position.setLocationId(getLocationId());

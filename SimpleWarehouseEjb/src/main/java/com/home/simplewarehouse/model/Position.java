@@ -3,8 +3,7 @@ package com.home.simplewarehouse.model;
 import java.io.Serializable;
 import java.util.Objects;
 
-import javax.persistence.DiscriminatorColumn;
-import javax.persistence.DiscriminatorType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -28,17 +27,18 @@ import org.apache.logging.log4j.Logger;
 @XmlRootElement(name = "Position")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name="POSITION")
-@Inheritance(strategy=InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name="TYPE", discriminatorType=DiscriminatorType.STRING, length=20)
 public abstract class Position implements Serializable {
-    private static final long serialVersionUID = 1L;
-    private static final Logger LOG = LogManager.getLogger(Position.class);
+	private static final long serialVersionUID = 8847664940380098181L;
+
+	private static final Logger LOG = LogManager.getLogger(Position.class);
     
     /**
      * The id of the associated Location
      */
 	@Id
+	@Column(name = "LOCATION_ID")
 	private String locationId;
 	/**
 	 * Version number for optimistic locking
@@ -49,16 +49,16 @@ public abstract class Position implements Serializable {
     /**
      * The associated location
      */
+    @XmlTransient
     @OneToOne
     @MapsId
     @JoinColumn(name = "LOCATION_ID")
-    @XmlTransient
     private Location location;
 
 	/**
 	 * Default constructor
 	 */
-	protected Position() {
+	public Position() {
 		super();
 		LOG.trace("--> Position()");
 		LOG.trace("<-- Position()");
@@ -69,7 +69,7 @@ public abstract class Position implements Serializable {
 	 * 
 	 * @return the location id
 	 */
-	private String getLocationId() {
+	public String getLocationId() {
 		return this.locationId;
 	}
 	
@@ -78,7 +78,7 @@ public abstract class Position implements Serializable {
 	 * 
 	 * @param locationId the location id
 	 */
-	protected void setLocationId(String locationId) {
+	public void setLocationId(String locationId) {
 		this.locationId = locationId;
 	}
 	
@@ -87,8 +87,16 @@ public abstract class Position implements Serializable {
 	 * 
 	 * @return the version number
 	 */
-	private int getVersion() {
+	protected int getVersion() {
 		return version;
+	}
+	
+    /**
+	 * Sets the version
+	 * 
+	 */
+	protected void setVersion(int version) {
+		this.version = version;
 	}
 
 	/**
@@ -105,7 +113,7 @@ public abstract class Position implements Serializable {
 	 * 
 	 * @param location the given Location
 	 */
-	protected void setLocation(Location location) {
+	public void setLocation(Location location) {
 		this.location = location;
 	}
 	

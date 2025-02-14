@@ -106,7 +106,7 @@ public class HandlingUnit extends EntityBase implements Serializable {
      */
     @ManyToOne(targetEntity = Location.class
     		, cascade = { CascadeType.PERSIST, CascadeType.DETACH, CascadeType.MERGE, CascadeType.REFRESH }
-    		, fetch = FetchType.EAGER) // LAZY for better performance)
+    		, fetch = FetchType.LAZY) // LAZY for better performance)
 	@JoinColumn(name = "LOCATION_ID", nullable = true)
     private Location location = null;
     

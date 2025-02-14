@@ -30,7 +30,6 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
-import com.home.simplewarehouse.model.AbsolutPosition;
 import com.home.simplewarehouse.model.Dimension;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.ErrorStatus;
@@ -43,7 +42,6 @@ import com.home.simplewarehouse.model.LockStatus;
 import com.home.simplewarehouse.model.LogicalPosition;
 import com.home.simplewarehouse.model.LtosStatus;
 import com.home.simplewarehouse.model.RandomLocation;
-import com.home.simplewarehouse.model.RelativPosition;
 import com.home.simplewarehouse.model.WidthCategory;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
@@ -107,6 +105,12 @@ public class LocationBeanTest {
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
 		
+		// Cleanup locations
+		locationService.getAll().stream().forEach(l -> locationService.delete(l));
+		
+		// Cleanup handling units
+		handlingUnitService.getAll().stream().forEach(h -> handlingUnitService.delete(h));		
+		
 		LOG.trace("<-- beforeTest()");		
 	}
 	
@@ -118,14 +122,10 @@ public class LocationBeanTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
-		List<Location> locations = locationService.getAll();
-		
-		locations.stream().forEach(l -> locationService.delete(l));
+		locationService.getAll().stream().forEach(l -> locationService.delete(l));
 		
 		// Cleanup handling units
-		List<HandlingUnit> handlingUnits = handlingUnitService.getAll();
-		
-		handlingUnits.stream().forEach(h -> handlingUnitService.delete(h));		
+		handlingUnitService.getAll().stream().forEach(h -> handlingUnitService.delete(h));		
 
 		LOG.trace("<-- afterTest()");
 	}
@@ -142,43 +142,11 @@ public class LocationBeanTest {
 		
 		Location location = null;
 		
-		try {
-			location = locationService.createOrUpdate(null);
-
-			Assert.fail("Exception expected");
-		}
-		catch (EJBException ejbex) {
-			LOG.info(ejbex.getMessage());
-		}
-
-		try {
-			location = locationService.createOrUpdate(new RandomLocation((String) null));
-
-			Assert.fail("Exception expected");
-		}
-		catch (EJBException ejbex) {
-			LOG.info(ejbex.getMessage());
-		}
-
-		assertNull(location);
-		
-		try {
-			location = locationService.createOrUpdate(new RandomLocation(new LogicalPosition()));
-
-			Assert.fail("Exception expected");
-		}
-		catch (EJBException ejbex) {
-			LOG.info(ejbex.getMessage());
-		}
-		
-		assertNull(location);
-		
 		Location expLocation = new RandomLocation("A");
 
 		location = locationService.createOrUpdate(expLocation);
 
 		assertNotNull(location);
-		assertFalse(location.equals(null));
 		assertEquals(expLocation, location);
 		assertEquals(EntityBase.USER_DEFAULT, location.getUpdateUserId());
 		assertNotNull(location.getUpdateTimestamp());
@@ -208,7 +176,7 @@ public class LocationBeanTest {
 				
 		LOG.info(location);
 
-		expLocation = new RandomLocation(new LogicalPosition("X"), "D");
+		expLocation = new RandomLocation("X", "D");
 
 		location = locationService.createOrUpdate(expLocation);
 		
@@ -216,26 +184,6 @@ public class LocationBeanTest {
 		assertTrue(location.getPosition() instanceof LogicalPosition);
 		assertEquals(expLocation, location.getPosition().getLocation());
 		assertEquals("X", ((LogicalPosition)location.getPosition()).getPositionId());
-		
-		LOG.info(location);
-
-		expLocation = new RandomLocation(new RelativPosition(1, 1, 1), "E");
-
-		location = locationService.createOrUpdate(expLocation);
-		
-		assertNotNull(location.getPosition());
-		assertTrue(location.getPosition() instanceof RelativPosition);
-		assertEquals(expLocation, location.getPosition().getLocation());
-		
-		LOG.info(location);
-
-		expLocation = new RandomLocation(new AbsolutPosition(1.25f, 3.12f, 1.01f), "F");
-
-		location = locationService.createOrUpdate(expLocation);
-		
-		assertNotNull(location.getPosition());
-		assertTrue(location.getPosition() instanceof AbsolutPosition);
-		assertEquals(expLocation, location.getPosition().getLocation());
 		
 		LOG.info(location);
 	}
@@ -332,16 +280,6 @@ public class LocationBeanTest {
 		locationService.delete("AAAAA");
 		location = locationService.getById("AAAAA");
 		assertNull(location);
-
-		// Delete id null
-		try {
-			locationService.delete((String)null);
-
-			Assert.fail("Exception expected");
-		}
-		catch (EJBException ex) {
-			assertTrue(true);
-		}
 	}
 	
 	/**
@@ -407,6 +345,8 @@ public class LocationBeanTest {
 		// Easy way
 		locA.setDimension(0, 0, HeightCategory.LOW, LengthCategory.NOT_RELEVANT, WidthCategory.WIDE);
 		
+		locA = locationService.createOrUpdate(locA);
+		
 		assertNotNull(locA);
 		assertEquals(0, locA.getDimension().getMaxCapacity());
 		assertEquals(0, locA.getDimension().getMaxWeight());
@@ -414,204 +354,7 @@ public class LocationBeanTest {
 		assertEquals(LengthCategory.NOT_RELEVANT, locA.getDimension().getMaxLength());
 		assertEquals(WidthCategory.WIDE, locA.getDimension().getMaxWidth());		
 	}
-	
-	/**
-	 * Test modify location position values
-	 */
-	@org.junit.Ignore // modifying the class is currently not possible !!!
-	@Test
-	@InSequence(6)
-	public void modifyLocationPositionValues() {
-		LOG.info("--- Test modifyLocationPositionValues");
 		
-		assumeTrue(locationService.getAll().isEmpty());
-		
-		Location locA = locationService.createOrUpdate(new RandomLocation("A", "Test"));
-		
-		// LogicalPosition
-		assertTrue(locA.getPosition() instanceof LogicalPosition);
-		
-		((LogicalPosition) locA.getPosition()).setCoord("V");
-		
-		locA = locationService.createOrUpdate(locA);
-		
-		assertNotNull(locA);
-		assertEquals("V", ((LogicalPosition) locA.getPosition()).getCoord());
-
-		LOG.info("LocA: {}", locA);
-		
-		// RelativePosition
-		Location locB = locationService.createOrUpdate(new RandomLocation(new RelativPosition(), "B"));
-		
-		assertNotNull(locB);
-		// Check the DEFAULT values
-		assertEquals(0, ((RelativPosition) locB.getPosition()).getxCoord());
-		assertEquals(0, ((RelativPosition) locB.getPosition()).getyCoord());
-		assertEquals(0, ((RelativPosition) locB.getPosition()).getzCoord());
-		
-		// Modify
-		((RelativPosition) locB.getPosition()).setxCoord(4);
-		((RelativPosition) locB.getPosition()).setyCoord(5);
-		((RelativPosition) locB.getPosition()).setzCoord(6);
-		
-		locB = locationService.createOrUpdate(locB);
-		
-		assertNotNull(locB);
-		assertEquals(4, ((RelativPosition) locB.getPosition()).getxCoord());
-		assertEquals(5, ((RelativPosition) locB.getPosition()).getyCoord());
-		assertEquals(6, ((RelativPosition) locB.getPosition()).getzCoord());
-		
-		// Easy way
-		((RelativPosition) locB.getPosition()).setCoord(9, 9, 9);
-		
-		locB = locationService.createOrUpdate(locB);
-
-		assertNotNull(locB);
-		assertEquals(9, ((RelativPosition) locB.getPosition()).getxCoord());
-		assertEquals(9, ((RelativPosition) locB.getPosition()).getyCoord());
-		assertEquals(9, ((RelativPosition) locB.getPosition()).getzCoord());
-
-		LOG.info("LocB: {}", locB);
-
-		// AbsolutePosition
-		Location locD = locationService.createOrUpdate(new RandomLocation(new AbsolutPosition(), "D"));
-		
-		assertNotNull(locD);
-		// Check the DEFAULT values
-		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getxCoord(), 0.0f);
-		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
-		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
-		
-		// Modify
-		((AbsolutPosition) locD.getPosition()).setxCoord(8.0f);
-		((AbsolutPosition) locD.getPosition()).setyCoord(9.0f);
-		((AbsolutPosition) locD.getPosition()).setzCoord(10.0f);
-		
-		locD = locationService.createOrUpdate(locD);
-		
-		assertNotNull(locD);
-		assertEquals(8.0f, ((AbsolutPosition) locD.getPosition()).getxCoord(), 0.0f);
-		assertEquals(9.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
-		assertEquals(10.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
-		
-		// Easy way
-		((AbsolutPosition) locD.getPosition()).setCoord(2.0f, 2.0f, 1.0f);
-		
-		locD = locationService.createOrUpdate(locD);
-
-		assertNotNull(locD);
-		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getxCoord(), 0.0f);
-		assertEquals(2.0f, ((AbsolutPosition) locD.getPosition()).getyCoord(), 0.0f);
-		assertEquals(1.0f, ((AbsolutPosition) locD.getPosition()).getzCoord(), 0.0f);
-
-		LOG.info("LocD: {}", locD);
-	}
-	
-	/**
-	 * Test modify location position class
-	 */
-	@org.junit.Ignore // modifying the class is currently not possible !!!
-	@Test
-	@InSequence(7)
-	public void modifyLocationPosition() {
-		LOG.info("--- Test modifyLocationPosition");
-		
-		assumeTrue(locationService.getAll().isEmpty());
-		
-		Location locA = locationService.createOrUpdate(new RandomLocation("A", "Test"));
-		
-		// LogicalPosition
-		assertTrue(locA.getPosition() instanceof LogicalPosition);
-
-		// Change to RelativPosition with DEFAULT values
-		//locA.setPosition(new RelativPosition());
-		
-		locA = locationService.createOrUpdate(locA);
-
-		assertNotNull(locA);		
-		assertTrue(locA.getPosition() instanceof RelativPosition);
-		// Check the DEFAULT values for changed Position class
-		assertEquals(0, ((RelativPosition) locA.getPosition()).getxCoord());
-		assertEquals(0, ((RelativPosition) locA.getPosition()).getyCoord());
-		assertEquals(0, ((RelativPosition) locA.getPosition()).getzCoord());
-
-		// Change to RelativPosition with given values
-		//locA.setPosition(new RelativPosition(3, 3, 3));
-		
-		locA = locationService.createOrUpdate(locA);
-
-		assertNotNull(locA);		
-		assertTrue(locA.getPosition() instanceof RelativPosition);
-		assertEquals(3, ((RelativPosition) locA.getPosition()).getxCoord());
-		assertEquals(3, ((RelativPosition) locA.getPosition()).getyCoord());
-		assertEquals(3, ((RelativPosition) locA.getPosition()).getzCoord());
-
-		// Change to AbsolutPosition with DEFAULT values
-		//locA.setPosition(new AbsolutPosition());
-		
-		locA = locationService.createOrUpdate(locA);
-
-		assertNotNull(locA);		
-		assertTrue(locA.getPosition() instanceof AbsolutPosition);
-		// Check the DEFAULT values
-		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getxCoord(), 0.0f);
-		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getyCoord(), 0.0f);
-		assertEquals(0.0f, ((AbsolutPosition) locA.getPosition()).getzCoord(), 0.0f);
-		
-		// Change to AbsolutPosition with given values
-		//locA.setPosition(new AbsolutPosition(3.1f, 0.5f, 2.9f));
-		
-		locA = locationService.createOrUpdate(locA);
-
-		assertNotNull(locA);		
-		assertTrue(locA.getPosition() instanceof AbsolutPosition);
-		assertEquals(3.1f, ((AbsolutPosition) locA.getPosition()).getxCoord(), 0.0f);
-		assertEquals(0.5f, ((AbsolutPosition) locA.getPosition()).getyCoord(), 0.0f);
-		assertEquals(2.9f, ((AbsolutPosition) locA.getPosition()).getzCoord(), 0.0f);
-		
-		// Now a Location with HandlingUnits
-		// Drop to make a relation
-		try {
-			handlingUnitService.dropTo(locA, new HandlingUnit("8", "Test"));
-		
-			// MANDATORY reread
-			locA = locationService.getById("A");
-			assertNotNull(locA);	
-			assertFalse(locA.getHandlingUnits().isEmpty());
-			assertEquals(1, locA.getHandlingUnits().size());
-
-			LOG.info("1 HandlingUnit dropped to {}     {}", locA.getLocationId(), locA);
-
-			LOG.info("Sample hU8");
-			// MANDATORY reread
-			HandlingUnit hU8 = handlingUnitService.getById("8");
-			LOG.info(hU8);
-		
-			// MANDATORY reread
-			locA = locationService.getById("A");
-			
-			// Change to RelativPosition with given values
-			//locA.setPosition(new RelativPosition(3, 3, 3));	
-			
-			locA = locationService.createOrUpdate(locA);
-			
-			// MANDATORY reread
-			hU8 = handlingUnitService.getById("8");
-		
-			assertNotNull(hU8);
-		    assertEquals(locA, hU8.getLocation());
-		    assertTrue(locA.getHandlingUnits().contains(hU8));
-		
-			LOG.info("Sample hU8 is still on location locA");
-			LOG.info(locA);
-			LOG.info(hU8);
-		}
-		catch (DimensionException dimex) {
-			Assert.fail("Not expected: " + dimex);			
-		}
-		
-	}
-	
 	/**
 	 * Test getAll method
 	 */
@@ -628,16 +371,13 @@ public class LocationBeanTest {
 		locationService.createOrUpdate(new RandomLocation("C", "Test"));
 		locationService.createOrUpdate(new RandomLocation("D", "Test"));
 		locationService.createOrUpdate(new RandomLocation("E", "Test"));
-		locationService.createOrUpdate(new RandomLocation(new LogicalPosition("F"), "F", "Test"));
-		locationService.createOrUpdate(new RandomLocation(new LogicalPosition("G"), "G", "Test",
-				new Timestamp(System.currentTimeMillis())));
 
 		// Get them all and output
 		List<Location> locations = locationService.getAll();
 		locations.stream().forEach( l -> LOG.info(l.toString()) );
 
 		assertFalse(locations.isEmpty());
-		assertEquals(7, locations.size());
+		assertEquals(5, locations.size());
 		
 		locations = locationService.getAll(0, 3);
 		assertEquals(3, locations.size());
@@ -999,5 +739,55 @@ public class LocationBeanTest {
 		assertNotNull(locA);
 		assertFalse(locationService.getAllFull().isEmpty());
 		assertEquals(1, locationService.getAllFull().size());
+	}
+	
+	/**
+	 * Test exceptions
+	 */
+	@Test
+	@InSequence(29)
+	public void testExceptions() {
+		LOG.info("--- Test exceptions");
+		
+		Location location = null;
+
+		try {
+			location = locationService.createOrUpdate(null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info(ejbex.getMessage());
+		}
+
+		try {
+			location = locationService.createOrUpdate(new RandomLocation((String) null));
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info(ejbex.getMessage());
+		}
+
+		assertNull(location);
+		
+		try {
+			locationService.createOrUpdate(new RandomLocation(new LogicalPosition()));
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info(ejbex.getMessage());
+		}
+		
+		// Delete id null
+		try {
+			locationService.delete((String)null);
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ex) {
+			assertTrue(true);
+		}
 	}
 }

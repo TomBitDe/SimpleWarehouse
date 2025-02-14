@@ -43,6 +43,7 @@ public class Zone extends EntityBase implements Serializable {
      * The zone identifier
      */
     @Id
+    @Column(name = "ID", nullable = false, length = 80)
     String id;
     
 	/**
