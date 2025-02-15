@@ -4,9 +4,8 @@ import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -17,8 +16,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement(name = "RelativPosition")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-@Table(name = "RELATIV_POSITION")
-@PrimaryKeyJoinColumn(name = "LOCATION_ID")
+@DiscriminatorValue("RELATIV")
 public class RelativPosition extends Position {
 	private static final long serialVersionUID = 233237933470941803L;
 	
@@ -26,19 +24,19 @@ public class RelativPosition extends Position {
 	 * X coordinate in millimeter
 	 */
 	@Basic(optional = false)
-    @Column(name = "X_RELATIV", nullable = false)
+    @Column(name = "X_RELATIV", nullable = true)
 	int xCoord = 0;
 	/**
 	 * Y coordinate in millimeter
 	 */
 	@Basic(optional = false)
-    @Column(name = "Y_RELATIV", nullable = false)
+    @Column(name = "Y_RELATIV", nullable = true)
 	int yCoord = 0;
 	/**
 	 * Z coordinate in millimeter
 	 */
 	@Basic(optional = false)
-    @Column(name = "Z_RELATIV", nullable = false)
+    @Column(name = "Z_RELATIV", nullable = true)
 	int zCoord = 0;
 
     /**

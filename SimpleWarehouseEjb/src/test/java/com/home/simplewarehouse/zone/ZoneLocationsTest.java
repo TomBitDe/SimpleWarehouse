@@ -10,10 +10,11 @@ import static org.junit.Assume.assumeNotNull;
 
 import java.io.File;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.ejb.EJB;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -87,6 +88,10 @@ public class ZoneLocationsTest {
 	@EJB
 	LocationService locationService;
 	
+    @PersistenceContext
+    private EntityManager entityManager;
+
+	
 	/**
 	 * Mandatory default constructor
 	 */
@@ -101,6 +106,15 @@ public class ZoneLocationsTest {
 	@Before
 	public void beforeTest() {
 		LOG.trace("--> beforeTest()");
+		
+		// Cleanup locations
+		locationService.getAll().forEach(l -> {
+		    locationService.delete(l);
+		    entityManager.getEntityManagerFactory().getCache().evict(l.getClass(), l.getLocationId());
+		});
+		
+		// Cleanup zones
+		zoneService.deleteAll();
 		
 		assertTrue(zoneService.getAll().isEmpty());
 		assertTrue(locationService.getAll().isEmpty());
@@ -146,9 +160,11 @@ public class ZoneLocationsTest {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
-		List<Location> locations = locationService.getAll();	
-		locations.stream().forEach(l -> locationService.delete(l));
-
+		locationService.getAll().forEach(l -> {
+		    locationService.delete(l);
+		    entityManager.getEntityManagerFactory().getCache().evict(l.getClass(), l.getLocationId());
+		});
+		
 		// Cleanup zones
 		zoneService.deleteAll();
 		

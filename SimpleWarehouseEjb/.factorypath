@@ -1,0 +1,4 @@
+<factorypath>
+    <factorypathentry kind="PLUGIN" id="org.eclipse.jst.ws.annotations.core" enabled="true" runInBatchMode="false"/>
+    <factorypathentry kind="EXTJAR" id="C:\Users\Tom\Entwicklung\Java\Test\Tests\Eclipse-Test\SimpleWarehouseWorkspace\libraries\eclipselink-2.5.2.v20140319-9ad6abd\eclipselink\jlib\jpa\org.eclipse.persistence.jpars_2.5.2.v20140319-9ad6abd.jar" enabled="true" runInBatchMode="false"/>
+</factorypath>

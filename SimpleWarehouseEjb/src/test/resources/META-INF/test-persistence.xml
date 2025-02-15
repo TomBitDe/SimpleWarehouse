@@ -29,16 +29,19 @@
 			<property name="eclipselink.application-location" value="c:/tmp"/>
 			<property name="eclipselink.weaving" value="true"/> 
 			<property name="eclipselink.logging.logger" value="DefaultLogger"/>
-            <property name="eclipselink.logging.level.sql" value="FINER" />
-            <property name="eclipselink.logging.level" value="FINER" />
+            <property name="eclipselink.logging.level.sql" value="FINE" />
+            <property name="eclipselink.logging.level" value="FINE" />
             <property name="eclipselink.logging.level.cache" value="FINER" />
             <property name="eclipselink.logging.parameters" value="true" />
 
             <!-- Cache-configuration for special Entities -->
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.HandlingUnit" value="SOFT" />
-            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Location" value="SOFT" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Location" value="NONE" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.FifoLocation" value="NONE" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LifoLocation" value="NONE" />
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LocationStatus" value="SOFT" />
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Zone" value="SOFT" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Position" value="NONE" />
             
             <!-- Caching in Query-Level control -->
             <property name="eclipselink.query-results-cache" value="false" />

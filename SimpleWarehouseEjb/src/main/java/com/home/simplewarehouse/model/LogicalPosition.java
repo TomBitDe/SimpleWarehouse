@@ -4,9 +4,8 @@ import java.util.Objects;
 
 import javax.persistence.Basic;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -20,8 +19,7 @@ import org.apache.logging.log4j.Logger;
 @XmlRootElement(name = "LogicalPosition")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-@Table(name = "LOGICAL_POSITION")
-@PrimaryKeyJoinColumn(name = "LOCATION_ID")
+@DiscriminatorValue("LOGICAL")
 public class LogicalPosition extends Position {
 	private static final long serialVersionUID = -459190244077254162L;
 
@@ -33,7 +31,7 @@ public class LogicalPosition extends Position {
 	 * Position identifier
 	 */
 	@Basic(optional = false)
-    @Column(name = "POSITION_ID", nullable = false, length = 80)
+    @Column(name = "POSITION_ID", nullable = true, length = 80)
 	private String positionId;
 
 	/**

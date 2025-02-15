@@ -91,7 +91,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 */
     @ManyToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinTable(
-        name = "Location_Zone",
+        name = "LOCATION_ZONE",
         joinColumns = @JoinColumn(name = "LOCATION_ID"),
         inverseJoinColumns = @JoinColumn(name = "ZONE_ID")
     )

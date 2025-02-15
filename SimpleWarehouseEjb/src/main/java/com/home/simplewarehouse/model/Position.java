@@ -3,7 +3,10 @@ package com.home.simplewarehouse.model;
 import java.io.Serializable;
 import java.util.Objects;
 
+import javax.persistence.Cacheable;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
@@ -27,8 +30,10 @@ import org.apache.logging.log4j.Logger;
 @XmlRootElement(name = "Position")
 @XmlAccessorType(XmlAccessType.FIELD)
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
-@Table(name="POSITION")
+@Cacheable(false)
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "POSITION_TYPE", discriminatorType = DiscriminatorType.STRING)
+@Table(name = "POSITION")
 public abstract class Position implements Serializable {
 	private static final long serialVersionUID = 8847664940380098181L;
 

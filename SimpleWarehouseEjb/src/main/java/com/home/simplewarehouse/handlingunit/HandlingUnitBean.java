@@ -648,6 +648,8 @@ public class HandlingUnitBean implements HandlingUnitService {
 		else {
 			lo = em.merge(location);
 		}
+		
+		em.flush();
 
 		return lo;
 	}
@@ -661,6 +663,8 @@ public class HandlingUnitBean implements HandlingUnitService {
 		else {
 			hu = em.merge(handlingUnit);
 		}
+		
+		em.flush();
 		
 		return hu;
 	}

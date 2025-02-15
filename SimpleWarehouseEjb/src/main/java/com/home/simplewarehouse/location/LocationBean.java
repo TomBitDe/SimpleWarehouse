@@ -107,7 +107,8 @@ public class LocationBean implements LocationService {
 				lo = location;
 			}
 			
-			for (Zone zone: lo.getZones()) {
+			List<Zone> zonesCopy = new ArrayList<>(lo.getZones());
+			for (Zone zone : zonesCopy) {
 				Set<Location> locs = zone.getLocations();
 				locs.remove(lo);
 				zone.setLocations(locs);
@@ -117,7 +118,8 @@ public class LocationBean implements LocationService {
 				em.flush();
 			}
 			
-			for (HandlingUnit handlingUnit : lo.getHandlingUnits()) {
+			List<HandlingUnit> handlingUnitsCopy = new ArrayList<>(lo.getHandlingUnits());
+			for (HandlingUnit handlingUnit : handlingUnitsCopy) {
 				handlingUnit.setLocation(null);
 				handlingUnit.setLocaPos(null);		
 				em.flush();

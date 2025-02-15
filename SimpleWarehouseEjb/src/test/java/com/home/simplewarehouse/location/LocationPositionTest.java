@@ -234,7 +234,7 @@ public class LocationPositionTest {
 		
 		// Prepare some locations; 7 locations
 		locationService.createOrUpdate(new RandomLocation("A", "Test"));
-//		locationService.createOrUpdate(new RandomLocation("B", "Test"));
+		locationService.createOrUpdate(new RandomLocation(new RelativPosition(), "B"));
 		locationService.createOrUpdate(new RandomLocation("C", "Test"));
 		locationService.createOrUpdate(new RandomLocation("D", "Test"));
 		locationService.createOrUpdate(new RandomLocation("E", "Test"));
@@ -247,7 +247,7 @@ public class LocationPositionTest {
 		locations.stream().forEach( l -> LOG.info(l.toString()) );
 
 		assertFalse(locations.isEmpty());
-		assertEquals(6, locations.size());
+		assertEquals(7, locations.size());
 		
 		locations = locationService.getAll(0, 3);
 		assertEquals(3, locations.size());
@@ -401,7 +401,7 @@ public class LocationPositionTest {
 		assertTrue(locationService.getAll().isEmpty());
 
 		locationService.createOrUpdate(new RandomLocation("A"));
-//		locationService.createOrUpdate(new RandomLocation("B"));
+		locationService.createOrUpdate(new RandomLocation(new RelativPosition(), "B"));
 		locationService.createOrUpdate(new RandomLocation("C"));
 		locationService.createOrUpdate(new RandomLocation("D"));
 		
@@ -410,7 +410,7 @@ public class LocationPositionTest {
 		
 		List<Location> freeCapacityLocations = locationService.getAllWithFreeCapacity();
 		
-		assertEquals(3, freeCapacityLocations.size());
+		assertEquals(4, freeCapacityLocations.size());
 
 		Location expLocation = locationService.getById("C");
 		assertTrue(freeCapacityLocations.contains(expLocation));
@@ -428,7 +428,7 @@ public class LocationPositionTest {
 		}
 		
 		freeCapacityLocations = locationService.getAllWithFreeCapacity();
-		assertEquals(2, freeCapacityLocations.size());
+		assertEquals(3, freeCapacityLocations.size());
 	}
 
 	/**
