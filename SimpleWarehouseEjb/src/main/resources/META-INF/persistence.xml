@@ -26,9 +26,9 @@
 			<property name="eclipselink.ddl-generation.output-mode" value="both" />
 			<property name="eclipselink.weaving" value="true"/> 
 			<property name="eclipselink.logging.logger" value="DefaultLogger"/>
-            <property name="eclipselink.logging.level.sql" value="SEVERE" />
+            <property name="eclipselink.logging.level.sql" value="FINE" />
             <property name="eclipselink.logging.level" value="FINE" />
-            <property name="eclipselink.logging.level.cache" value="FINE" />
+            <property name="eclipselink.logging.level.cache" value="FINER" />
             <property name="eclipselink.logging.parameters" value="true" />
             <property name="javax.persistence.schema-generation.create-database-schemas" value="true"></property>
             <property name="javax.persistence.schema-generation.scripts.create-target" value="aaaaaa.sql"></property>
@@ -36,9 +36,12 @@
 
             <!-- Cache-configuration for special Entities -->
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.HandlingUnit" value="SOFT" />
-            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Location" value="SOFT" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Location" value="NONE" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.FifoLocation" value="NONE" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LifoLocation" value="NONE" />
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.LocationStatus" value="SOFT" />
             <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Zone" value="SOFT" />
+            <property name="eclipselink.cache.type.com.home.simplewarehouse.model.Position" value="NONE" />
             
             <!-- Caching in Query-Level control -->
             <property name="eclipselink.query-results-cache" value="false" />
