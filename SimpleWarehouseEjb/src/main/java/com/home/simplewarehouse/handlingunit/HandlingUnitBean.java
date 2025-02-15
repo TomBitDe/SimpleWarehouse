@@ -184,18 +184,48 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		Location lo = persistOrMerge(location);
 		
+		lo.getHandlingUnits().size(); // This is really needed !!!
+		if (handlingUnit.getLocation() != null) {
+			if (handlingUnit.getLocationId().equals(lo.getLocationId())) {
+		        handlingUnit.setLocation(lo);
+		        handlingUnit.setLocationId(lo.getLocationId());
+			}
+			else {
+				handlingUnit.setLocation(handlingUnit.getLocation());
+				handlingUnit.setLocationId(handlingUnit.getLocationId());
+			}
+		}
+		
 		HandlingUnit hu = persistOrMerge(handlingUnit);
+		
+		lo = em.find(Location.class, lo.getLocationId());
 		
 		if ((lo.getHandlingUnits()).isEmpty()) {
 			// Check handlingUnitService is already stored elsewhere
 			List<Location> locations = locationService.getAllContainingExceptLocation(hu, lo);
+			
+			boolean storedElseWhere = false;
 			
 			for (Location other : locations) {
 				// HandlingUnit is already stored elsewhere
 				LOG.warn(HU_IS_HERE_FORMATTER, hu.getId(), other);
 
 				other.getLocationStatus().setErrorStatus(ErrorStatus.ERROR);
+				
+				hu.setLocation(other);
+				hu.setLocationId(other.getLocationId());
+
+				storedElseWhere = true;
+				
+				// Only the first other location
+				break;
 			}
+			
+			if  (! storedElseWhere) {
+				hu.setLocation(null);
+				hu.setLocationId(null);
+			}
+			
 			em.flush();
 			
 			// ATTENTION: Location error status does not need to be changed because the locationService was EMPTY!
@@ -645,12 +675,10 @@ public class HandlingUnitBean implements HandlingUnitService {
 		if (lo == null) {
 			lo = locationService.createOrUpdate(location);
 		}
-		else {
-			lo = em.merge(location);
+		else if (!em.contains(location)) {
+				lo = em.merge(location);
 		}
 		
-		em.flush();
-
 		return lo;
 	}
 	
@@ -660,11 +688,9 @@ public class HandlingUnitBean implements HandlingUnitService {
 		if (hu == null) {
 			hu = createOrUpdate(handlingUnit);
 		}
-		else {
-			hu = em.merge(handlingUnit);
-		}
-		
-		em.flush();
+	    else if (!em.contains(handlingUnit)) {
+	        hu = em.merge(handlingUnit);
+	    }
 		
 		return hu;
 	}
