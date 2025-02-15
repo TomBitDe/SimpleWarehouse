@@ -184,7 +184,8 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		Location lo = persistOrMerge(location);
 		
-		lo.getHandlingUnits().size(); // This is really needed !!!
+		// Start: This is really needed !!!
+		lo.getHandlingUnits().size();
 		if (handlingUnit.getLocation() != null) {
 			if (handlingUnit.getLocationId().equals(lo.getLocationId())) {
 		        handlingUnit.setLocation(lo);
@@ -195,6 +196,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 				handlingUnit.setLocationId(handlingUnit.getLocationId());
 			}
 		}
+		// End
 		
 		HandlingUnit hu = persistOrMerge(handlingUnit);
 		
