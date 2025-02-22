@@ -41,6 +41,7 @@ public abstract class Position implements Serializable {
     
     /**
      * The id of the associated Location
+     * THIS is a MUST @Column(name = "LOCATION_ID")
      */
 	@Id
 	@Column(name = "LOCATION_ID")
