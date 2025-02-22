@@ -29,6 +29,7 @@ import org.junit.runner.RunWith;
 
 import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
+import com.home.simplewarehouse.model.AbsolutPosition;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LogicalPosition;
@@ -220,6 +221,39 @@ public class LocationPositionTest {
 		assertEquals(9, ((RelativPosition) locB.getPosition()).getZCoord());
 
 		LOG.info("LocB: {}", locB);
+
+		// AbsolutPosition
+		Location locD = locationService.createOrUpdate(new RandomLocation(new AbsolutPosition(), "D"));
+		
+		assertNotNull(locD);
+		// Check the DEFAULT values
+		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getXCoord(), 0.0001f);
+		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getYCoord(), 0.0001f);
+		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getZCoord(), 0.0001f);
+		
+		// Modify
+		((AbsolutPosition) locD.getPosition()).setXCoord(4.0f);
+		((AbsolutPosition) locD.getPosition()).setYCoord(5.0f);
+		((AbsolutPosition) locD.getPosition()).setZCoord(6.0f);
+		
+		locD = locationService.createOrUpdate(locD);
+		
+		assertNotNull(locD);
+		assertEquals(4.0f, ((AbsolutPosition) locD.getPosition()).getXCoord(), 0.0001f);
+		assertEquals(5.0f, ((AbsolutPosition) locD.getPosition()).getYCoord(), 0.0001f);
+		assertEquals(6.0f, ((AbsolutPosition) locD.getPosition()).getZCoord(), 0.0001f);
+		
+		// Easy way
+		((AbsolutPosition) locD.getPosition()).setCoord(9.0f, 9.0f, 9.0f);
+		
+		locD = locationService.createOrUpdate(locD);
+
+		assertNotNull(locD);
+		assertEquals(9.0f, ((AbsolutPosition) locD.getPosition()).getXCoord(), 0.0001f);
+		assertEquals(9.0f, ((AbsolutPosition) locD.getPosition()).getYCoord(), 0.0001f);
+		assertEquals(9.0f, ((AbsolutPosition) locD.getPosition()).getZCoord(), 0.0001f);
+
+		LOG.info("LocD: {}", locD);
 	}
 	
 	/**
@@ -236,7 +270,7 @@ public class LocationPositionTest {
 		locationService.createOrUpdate(new RandomLocation("A", "Test"));
 		locationService.createOrUpdate(new RandomLocation(new RelativPosition(), "B"));
 		locationService.createOrUpdate(new RandomLocation("C", "Test"));
-		locationService.createOrUpdate(new RandomLocation("D", "Test"));
+		locationService.createOrUpdate(new RandomLocation(new AbsolutPosition(), "D"));
 		locationService.createOrUpdate(new RandomLocation("E", "Test"));
 		locationService.createOrUpdate(new RandomLocation(new LogicalPosition("F"), "F", "Test"));
 		locationService.createOrUpdate(new RandomLocation(new LogicalPosition("G"), "G", "Test",
@@ -403,14 +437,15 @@ public class LocationPositionTest {
 		locationService.createOrUpdate(new RandomLocation("A"));
 		locationService.createOrUpdate(new RandomLocation(new RelativPosition(), "B"));
 		locationService.createOrUpdate(new RandomLocation("C"));
-		locationService.createOrUpdate(new RandomLocation("D"));
+		locationService.createOrUpdate(new RandomLocation(new AbsolutPosition(), "D"));
+		locationService.createOrUpdate(new RandomLocation("E"));
 		
 
 		LOG.info("Locations created: {}", locationService.getAll().size());
 		
 		List<Location> freeCapacityLocations = locationService.getAllWithFreeCapacity();
 		
-		assertEquals(4, freeCapacityLocations.size());
+		assertEquals(5, freeCapacityLocations.size());
 
 		Location expLocation = locationService.getById("C");
 		assertTrue(freeCapacityLocations.contains(expLocation));
@@ -428,7 +463,7 @@ public class LocationPositionTest {
 		}
 		
 		freeCapacityLocations = locationService.getAllWithFreeCapacity();
-		assertEquals(3, freeCapacityLocations.size());
+		assertEquals(4, freeCapacityLocations.size());
 	}
 
 	/**
