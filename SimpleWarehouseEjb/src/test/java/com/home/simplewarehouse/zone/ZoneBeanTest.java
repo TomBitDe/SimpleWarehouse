@@ -26,6 +26,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.EntityBase;
@@ -58,6 +60,7 @@ public class ZoneBeanTest {
 				.addClasses(
 						ZoneService.class, ZoneBean.class,
 						LocationService.class, LocationBean.class,
+						HandlingUnitService.class, HandlingUnitBean.class,
 						PerformanceAuditor.class,
 						MonitoringResource.class
 						);
