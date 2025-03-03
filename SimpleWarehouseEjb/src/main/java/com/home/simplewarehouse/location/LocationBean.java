@@ -32,8 +32,14 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 @Interceptors(PerformanceAuditor.class)
 public class LocationBean implements LocationService {
 	private static final Logger LOG = LogManager.getLogger(LocationBean.class);
-	
+
+	/**
+	 * Message constant
+	 */
 	public static final String LOCATION_IS_NULL = "location is null";
+	/**
+	 * Message constant
+	 */
 	public static final String LOCATION_ID_IS_NULL = "locationId is null";
 	
 	private static final String HEIGHT_DOES_NOT_FIT = "Location has maximum height {}, heigth {} does not fit";

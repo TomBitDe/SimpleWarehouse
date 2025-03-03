@@ -176,6 +176,9 @@ public class ZoneLocationsTest {
 		LOG.trace("<-- afterTest()");
 	}
 
+	/**
+	 * Test simple assignment
+	 */
 	@Test
 	@InSequence(0)
 	public void simpleAssign() {
@@ -314,6 +317,9 @@ public class ZoneLocationsTest {
 		LOG.info(cooler);
 	}
 	
+	/**
+	 * Test move a single Location to a Zone
+	 */
 	@Test
 	@InSequence(15)
 	public void moveLocation() {
@@ -364,6 +370,9 @@ public class ZoneLocationsTest {
 		assertFalse(locA.getZones().contains(cooler));
 	}
 
+	/**
+	 * Test move Locations to a Zone
+	 */
 	@Test
 	@InSequence(17)
 	public void moveLocations() {
@@ -420,6 +429,9 @@ public class ZoneLocationsTest {
 		assertFalse(locA.getZones().contains(cooler));
 	}
 
+	/**
+	 * Test clear a Zone
+	 */
 	@Test
 	@InSequence(20)
 	public void clearZone() {
@@ -461,6 +473,9 @@ public class ZoneLocationsTest {
 		assertTrue(locationService.getById("LOCD").getZones().isEmpty());
 	}
 
+	/**
+	 * Test clear all Zones
+	 */
 	@Test
 	@InSequence(22)
 	public void clearAllZones() {
@@ -494,6 +509,9 @@ public class ZoneLocationsTest {
 		assertNotNull(zoneService.getById("ManuStorage"));
 	}
 
+	/**
+	 * Test delete all Zones
+	 */
 	@Test
 	@InSequence(25)
 	public void deleteAllZones() {
@@ -522,6 +540,9 @@ public class ZoneLocationsTest {
 		assertTrue(zoneService.getAll().isEmpty());
 	}
 	
+	/**
+	 * Test get all Locations for a Zone
+	 */
 	@Test
 	@InSequence(28)
 	public void getAllLocationsForZone() {
@@ -560,7 +581,10 @@ public class ZoneLocationsTest {
 		assertFalse(allBulk.isEmpty());
 		assertTrue(allLowTemp.contains(locationService.getById("LOCF")));
     }
-	
+
+	/**
+	 * Test get all HandlingUnits for a Zone
+	 */
 	@Test
 	@InSequence(31)
 	public void getAllHandlingUnitsForZone() {

@@ -99,20 +99,22 @@ public interface ZoneService {
 	 * Move a Location from its current Zone to the destination Zone
 	 * 
 	 * @param location the Location to move
-	 * @param zone the destination Zone 
+	 * @param current the current Zone
+	 * @param destination the destination Zone 
 	 */
 	public void moveLocation(Location location, Zone current, Zone destination);
 	/**
 	 * Move a List of Locations from their current Zone to the destination Zone
 	 * 
 	 * @param locations a List of Locations
-	 * @param zone
+	 * @param current the current Zone
+	 * @param destination the destination Zone 
 	 */
 	public void moveLocations(Set<Location> locations, Zone current, Zone destination);
 	/**
 	 * Add a Location to a given Zone
 	 * 
-	 * @param location the Location to add 
+	 * @param location the Location to move
 	 * @param zone the zone
 	 */
 	public void addLocationTo(Location location, Zone zone);

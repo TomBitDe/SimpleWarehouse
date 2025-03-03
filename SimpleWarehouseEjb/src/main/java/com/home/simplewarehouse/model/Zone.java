@@ -35,6 +35,9 @@ public class Zone extends EntityBase implements Serializable {
 	private static final long serialVersionUID = 1L;
     private static final Logger LOG = LogManager.getLogger(Zone.class);
     
+    /**
+     * Default rating for a Zone
+     */
     public static final int RATING_DEFAULT = 0;
 
     private static final String ID_FORMATTER = "id={0}";

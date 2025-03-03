@@ -107,6 +107,9 @@ public class ZoneBeanTest {
 		LOG.trace("<-- afterTest()");
 	}
 
+	/**
+	 * Create a Zone by its id
+	 */
 	@Test
 	@InSequence(0)
 	public void create_getById() {

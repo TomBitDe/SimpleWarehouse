@@ -38,7 +38,13 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAu
 public class ZoneBean implements ZoneService {
 	private static final Logger LOG = LogManager.getLogger(ZoneBean.class);
 	
+	/**
+	 * Message constant
+	 */
 	public static final String ZONE_IS_NULL = "zone is null";
+	/**
+	 * Message constant
+	 */
 	public static final String ZONE_ID_IS_NULL = "zone id is null";
 
 	@PersistenceContext
