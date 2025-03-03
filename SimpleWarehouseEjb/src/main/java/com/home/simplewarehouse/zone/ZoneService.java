@@ -2,6 +2,7 @@ package com.home.simplewarehouse.zone;
 
 import java.util.Set;
 
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Zone;
 
@@ -44,7 +45,7 @@ public interface ZoneService {
 	/**
 	 * Get a set of all Zone items
 	 * 
-	 * @return the Zone list
+	 * @return the Zone set
 	 */
 	public Set<Zone> getAll();
 	/**
@@ -53,9 +54,41 @@ public interface ZoneService {
      * @param offset the position to start fetching
      * @param count  the number of fetches to do
      *
-	 * @return the Zone list based on offset and count
+	 * @return the Zone set based on offset and count
 	 */
 	public Set<Zone> getAll(int offset, int count);
+	/**
+	 * Get a list of all Locations in a given zoneId
+	 * 
+     * @param zoneId the Zones id
+     *
+	 * @return the Location list based on the zoneId
+	 */
+	public Set<Location> getAllLocations(String zoneId);
+	/**
+	 * Get a list of all HandlingUnits in a given zoneId
+	 * 
+     * @param zoneId the Zones id
+     *
+	 * @return the HandlingUnit list based on the zoneId
+	 */
+	public Set<HandlingUnit> getAllHandlingUnits(String zoneId);
+	/**
+	 * Get a list of all Locations in a given Zone
+	 * 
+     * @param zone the Zone
+     *
+	 * @return the Location list based on the zone
+	 */
+	public Set<Location> getAllLocations(Zone zone);
+	/**
+	 * Get a list of all HandlingUnits in a given zone
+	 * 
+     * @param zone the Zone
+     *
+	 * @return the HandlingUnit list based on the zone
+	 */
+	public Set<HandlingUnit> getAllHandlingUnits(Zone zone);
 	/**
 	 * Count the Zone items
 	 *

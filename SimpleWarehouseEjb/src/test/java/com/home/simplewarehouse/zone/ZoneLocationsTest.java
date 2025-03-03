@@ -25,6 +25,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -36,6 +37,7 @@ import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.FifoLocation;
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
@@ -87,6 +89,9 @@ public class ZoneLocationsTest {
 	
 	@EJB
 	LocationService locationService;
+	
+	@EJB
+	HandlingUnitService handlingUnitService;
 	
     @PersistenceContext
     private EntityManager entityManager;
@@ -515,5 +520,79 @@ public class ZoneLocationsTest {
 		zoneService.deleteAll();
 		
 		assertTrue(zoneService.getAll().isEmpty());
+	}
+	
+	@Test
+	@InSequence(28)
+	public void getAllLocationsForZone() {
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+
+		assumeNotNull(zoneService.getById("Cooler"));
+		assumeNotNull(zoneService.getById("Freezer"));
+		assumeNotNull(zoneService.getById("Bulk"));
+		
+		Set<Location> coolerLocations = new HashSet<>();
+		coolerLocations.add(locationService.getById("LOCA"));
+		coolerLocations.add(locationService.getById("LOCB"));
+		zoneService.initZoneBy(zoneService.getById("Cooler"), coolerLocations);
+
+		Set<Location> freezerLocations = new HashSet<>();
+		freezerLocations.add(locationService.getById("LOCC"));
+		freezerLocations.add(locationService.getById("LOCD"));
+		freezerLocations.add(locationService.getById("LOCE"));
+		zoneService.initZoneBy(zoneService.getById("Freezer"), freezerLocations);
+
+		zoneService.addLocationTo(locationService.getById("LOCF"), zoneService.getById("Bulk"));
+		
+		zoneService.createOrUpdate(new Zone("LowTemp"));
+		
+		zoneService.addLocationTo(locationService.getById("LOCF"), zoneService.getById("LowTemp"));
+
+		// LOGF is in two Zones
+		Set<Location> allLowTemp = zoneService.getAllLocations(zoneService.getById("LowTemp"));
+		assertNotNull(allLowTemp);
+		assertFalse(allLowTemp.isEmpty());
+		assertTrue(allLowTemp.contains(locationService.getById("LOCF")));
+
+		Set<Location> allBulk = zoneService.getAllLocations("Bulk");		
+		assertNotNull(allBulk);
+		assertFalse(allBulk.isEmpty());
+		assertTrue(allLowTemp.contains(locationService.getById("LOCF")));
+    }
+	
+	@Test
+	@InSequence(31)
+	public void getAllHandlingUnitsForZone() {
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+
+		assumeNotNull(zoneService.getById("Cooler"));
+		assumeNotNull(zoneService.getById("Freezer"));
+		assumeNotNull(zoneService.getById("Bulk"));
+		
+		Set<Location> freezerLocations = new HashSet<>();
+		freezerLocations.add(locationService.getById("LOCC"));
+		freezerLocations.add(locationService.getById("LOCD"));
+		freezerLocations.add(locationService.getById("LOCE"));
+		zoneService.initZoneBy(zoneService.getById("Freezer"), freezerLocations);
+		
+		try {
+			handlingUnitService.createOrUpdate(new HandlingUnit("HU1"));
+			handlingUnitService.createOrUpdate(new HandlingUnit("HU2"));
+			handlingUnitService.createOrUpdate(new HandlingUnit("HU3"));
+			handlingUnitService.dropTo(locationService.getById("LOCC"), handlingUnitService.getById("HU1"));
+			handlingUnitService.dropTo(locationService.getById("LOCC"), handlingUnitService.getById("HU2"));
+			handlingUnitService.dropTo(locationService.getById("LOCC"), handlingUnitService.getById("HU3"));
+
+			Set<HandlingUnit> allHus = zoneService.getAllHandlingUnits(zoneService.getById("Freezer"));
+
+			assertNotNull(allHus);
+			assertFalse(allHus.isEmpty());
+			assertTrue(allHus.contains(handlingUnitService.getById("HU2")));
+		}
+		catch (Exception e) {
+			Assert.fail("Not expected: " + e);
+		}
 	}
 }

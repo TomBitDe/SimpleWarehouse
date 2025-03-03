@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.ejb.Stateless;
@@ -20,8 +21,10 @@ import javax.persistence.TypedQuery;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
+import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -43,6 +46,9 @@ public class ZoneBean implements ZoneService {
 	
 	@EJB
 	private LocationService locationService;
+	
+	@EJB
+	private HandlingUnitService handlingUnitService;
 
 	/**
 	 * Default constructor is mandatory
@@ -300,5 +306,85 @@ public class ZoneBean implements ZoneService {
 		if (zone.getId() == null) {
 			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
 		}
+	}
+
+	@Override
+	public Set<Location> getAllLocations(String zoneId) {
+		if (zoneId == null) {
+			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
+		if (getById(zoneId) == null) {
+			throw new IllegalArgumentException(ZONE_IS_NULL);
+		}
+		
+		Set<Location> ret;
+		
+		ret = locationService.getAll().stream()
+				.filter(loc -> loc.getZones().stream()
+						.anyMatch(zone -> zone.getId().equals(zoneId)))
+				.collect(Collectors.toSet());
+		
+		if (ret == null)
+			return new HashSet<>();
+		
+		return ret;
+	}
+
+	@Override
+	public Set<HandlingUnit> getAllHandlingUnits(String zoneId) {
+		if (zoneId == null) {
+			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
+		if (getById(zoneId) == null) {
+			throw new IllegalArgumentException(ZONE_IS_NULL);
+		}
+		
+		Set<HandlingUnit> ret;
+		
+		ret = getAllLocations(zoneId).stream()
+				 // Stream of HandlingUnits from all Locations create
+	             .flatMap(loc -> loc.getHandlingUnits().stream())
+	             // Collect the HandlingUnits in a Set	
+	             .collect(Collectors.toSet());	
+		
+		if (ret == null)
+			return new HashSet<>();
+		
+		return ret;
+	}
+
+	@Override
+	public Set<Location> getAllLocations(Zone zone) {
+		checkZone(zone);
+		
+		Set<Location> ret;
+		
+		ret = locationService.getAll().stream()
+				.filter(loc -> loc.getZones().stream()
+						.anyMatch(zo -> zo.equals(zone)))
+				.collect(Collectors.toSet());
+		
+		if (ret == null)
+			return new HashSet<>();
+		
+		return ret;
+	}
+
+	@Override
+	public Set<HandlingUnit> getAllHandlingUnits(Zone zone) {
+		checkZone(zone);
+		
+		Set<HandlingUnit> ret;
+		
+		ret = getAllLocations(zone).stream()
+				 // Stream of HandlingUnits from all Locations create
+	             .flatMap(loc -> loc.getHandlingUnits().stream())
+	             // Collect the HandlingUnits in a Set	
+	             .collect(Collectors.toSet());	
+		
+		if (ret == null)
+			return new HashSet<>();
+		
+		return ret;
 	}
 }
