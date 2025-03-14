@@ -240,10 +240,10 @@ public class ZoneLocationsTest {
 		Location locA = locationService.getById("LOCA");
 		Location locB = locationService.getById("LOCB");
 		
-		Set<Zone> A = new HashSet<>();
-		A.add(zoneService.getById("Cooler"));
-		locA.setZones(A);
-		locB.setZones(A);
+		Set<Zone> aZone = new HashSet<>();
+		aZone.add(zoneService.getById("Cooler"));
+		locA.setZones(aZone);
+		locB.setZones(aZone);
 		
 		cooler = zoneService.createOrUpdate(cooler);
 		locA = locationService.createOrUpdate(locA);
@@ -286,10 +286,10 @@ public class ZoneLocationsTest {
 		Location locA = locationService.getById("LOCA");
 		Location locB = locationService.getById("LOCB");
 		
-		Set<Zone> A = new HashSet<>();
-		A.add(zoneService.getById("Cooler"));
-		locA.setZones(A);
-		locB.setZones(A);
+		Set<Zone> aZone = new HashSet<>();
+		aZone.add(zoneService.getById("Cooler"));
+		locA.setZones(aZone);
+		locB.setZones(aZone);
 		
 		cooler = zoneService.createOrUpdate(cooler);
 		locA = locationService.createOrUpdate(locA);
@@ -338,10 +338,10 @@ public class ZoneLocationsTest {
 		Location locA = locationService.getById("LOCA");
 		Location locB = locationService.getById("LOCB");
 		
-		Set<Zone> A = new HashSet<>();
-		A.add(zoneService.getById("Cooler"));
-		locA.setZones(A);
-		locB.setZones(A);
+		Set<Zone> aZone = new HashSet<>();
+		aZone.add(zoneService.getById("Cooler"));
+		locA.setZones(aZone);
+		locB.setZones(aZone);
 
 		cooler = zoneService.createOrUpdate(cooler);
 		locA = locationService.createOrUpdate(locA);
@@ -391,10 +391,10 @@ public class ZoneLocationsTest {
 		Location locA = locationService.getById("LOCA");
 		Location locB = locationService.getById("LOCB");
 		
-		Set<Zone> A = new HashSet<>();
-		A.add(zoneService.getById("Cooler"));
-		locA.setZones(A);
-		locB.setZones(A);
+		Set<Zone> aZone = new HashSet<>();
+		aZone.add(zoneService.getById("Cooler"));
+		locA.setZones(aZone);
+		locB.setZones(aZone);
 
 		cooler = zoneService.createOrUpdate(cooler);
 		locA = locationService.createOrUpdate(locA);
