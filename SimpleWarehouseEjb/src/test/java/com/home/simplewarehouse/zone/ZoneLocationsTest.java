@@ -13,6 +13,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.ejb.EJB;
+import javax.ejb.EJBException;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -368,6 +369,10 @@ public class ZoneLocationsTest {
 		assertFalse(cooler.getLocations().contains(locA));
 		assertTrue(cooler.getLocations().contains(locB));
 		assertFalse(locA.getZones().contains(cooler));
+		
+		// Special case now
+		zoneService.moveLocation(locationService.getById("LOCF"), cooler, freezer);
+		assertTrue(freezer.getLocations().contains(locationService.getById("LOCF")));
 	}
 
 	/**
@@ -580,7 +585,46 @@ public class ZoneLocationsTest {
 		assertNotNull(allBulk);
 		assertFalse(allBulk.isEmpty());
 		assertTrue(allLowTemp.contains(locationService.getById("LOCF")));
-    }
+		
+		// Special cases
+		try {
+			Zone zone = null;
+			zoneService.getAllLocations(zone);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+
+		try {
+			zoneService.getAllLocations(new Zone(null));
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+
+		try {
+			String zoneId = null;
+			zoneService.getAllLocations(zoneId);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+
+		try {
+			zoneService.getAllLocations("DUMMY");
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+	}
 
 	/**
 	 * Test get all HandlingUnits for a Zone
@@ -614,9 +658,54 @@ public class ZoneLocationsTest {
 			assertNotNull(allHus);
 			assertFalse(allHus.isEmpty());
 			assertTrue(allHus.contains(handlingUnitService.getById("HU2")));
+			
+			allHus = zoneService.getAllHandlingUnits("Freezer");
+
+			assertNotNull(allHus);
+			assertFalse(allHus.isEmpty());
+			assertTrue(allHus.contains(handlingUnitService.getById("HU2")));
 		}
 		catch (Exception e) {
 			Assert.fail("Not expected: " + e);
+		}
+		
+		// Special cases
+		try {
+			zoneService.getAllHandlingUnits(zoneService.getById("DUMMY"));
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+		
+		try {
+			Zone zone = null;
+			zoneService.getAllHandlingUnits(zone);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+		
+		try {
+			zoneService.getAllHandlingUnits("DUMMY");
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+
+		try {
+			String zoneId = null;
+			zoneService.getAllHandlingUnits(zoneId);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
 		}
 	}
 }

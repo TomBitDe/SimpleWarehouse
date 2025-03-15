@@ -1,6 +1,7 @@
 package com.home.simplewarehouse.zone;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -118,6 +119,15 @@ public class ZoneBeanTest {
 		assertTrue(zoneService.getAll().isEmpty());
 		
 		Zone zone;
+		
+		try {
+			zoneService.getById(null);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
 
 		try {
 			zoneService.createOrUpdate(null);
@@ -125,7 +135,25 @@ public class ZoneBeanTest {
 			Assert.fail("Exception expected");
 		}
 		catch (EJBException ejbex) {
-			LOG.info(ejbex.getCause().toString() + " : " + ejbex.getCause().getMessage());
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+		
+		try {
+			zoneService.createOrUpdate(new Zone(null));
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+		
+		try {
+			zoneService.createOrUpdate(new Zone("  "));
+
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
 		}
 		
 		Zone expZone = new Zone("Cooler");
@@ -183,6 +211,9 @@ public class ZoneBeanTest {
 		
 		assumeTrue(zoneService.getAll().isEmpty());
 		
+		// DUMMY does not exist; this is always possible
+		zoneService.delete("DUMMY");
+		
 		Zone cooler = zoneService.createOrUpdate(new Zone("Cooler"));
 		
 		assertNotNull(cooler);
@@ -203,5 +234,86 @@ public class ZoneBeanTest {
 		freezer = zoneService.getById("Freezer");
 
 		assertNull(freezer);
+	}
+
+	/**
+	 * Test getAll zone
+	 */
+	@Test
+	@InSequence(13)
+	public void getAllZone() {
+		LOG.info("--- Test getAllZone");
+		
+		assumeTrue(zoneService.getAll().isEmpty());
+		
+		try {
+			zoneService.getAll(-1, 1);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+		
+		try {
+			zoneService.getAll(0, 0);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+
+		Zone cooler = zoneService.createOrUpdate(new Zone("Cooler"));
+		
+		assertNotNull(cooler);
+		LOG.info(cooler);
+
+		Zone freezer = zoneService.createOrUpdate(new Zone("Freezer"));
+		
+		assertNotNull(freezer);
+		LOG.info(freezer);
+		
+		Zone bulk = zoneService.createOrUpdate(new Zone("Bulk"));
+		
+		assertNotNull(bulk);
+		LOG.info(bulk);
+		
+		Set<Zone> zones = zoneService.getAll();
+		assertFalse(zones.isEmpty());
+		assertEquals(3, zones.size());
+		
+		zones = zoneService.getAll(2, 4);
+		assertFalse(zones.isEmpty());
+		assertEquals(1, zones.size());
+	}
+
+	/**
+	 * Test count zone
+	 */
+	@Test
+	@InSequence(16)
+	public void countZone() {
+		LOG.info("--- Test countZone");
+		
+		assumeTrue(zoneService.getAll().isEmpty());
+		
+		Zone cooler = zoneService.createOrUpdate(new Zone("Cooler"));
+		
+		assertNotNull(cooler);
+		LOG.info(cooler);
+
+		Zone freezer = zoneService.createOrUpdate(new Zone("Freezer"));
+		
+		assertNotNull(freezer);
+		LOG.info(freezer);
+		
+		Zone bulk = zoneService.createOrUpdate(new Zone("Bulk"));
+		
+		assertNotNull(bulk);
+		LOG.info(bulk);
+		
+		assertFalse(zoneService.getAll().isEmpty());
+		assertEquals(3, zoneService.count());
 	}
 }
