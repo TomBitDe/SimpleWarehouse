@@ -234,6 +234,12 @@ public class ZoneBeanTest {
 		freezer = zoneService.getById("Freezer");
 
 		assertNull(freezer);
+		
+		Zone dummy = null;
+		zoneService.delete(dummy);
+		
+		Zone noZone = new Zone(null);
+		zoneService.delete(noZone);
 	}
 
 	/**

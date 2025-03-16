@@ -218,8 +218,63 @@ public class ZoneLocationsTest {
 		assertTrue(cooler.getLocations().contains(locB));
 		
 		assertTrue(locA.getZones().contains(cooler));
-		assertTrue(locB.getZones().contains(cooler));		
+		assertTrue(locB.getZones().contains(cooler));
+		
+// -- Special cases
+		try {
+		    zoneService.addLocationTo(null, freezer);
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
 	}
+	
+	/**
+	 * Test init zone
+	 */
+	@Test
+	@InSequence(3)
+	public void initZoneBy() {
+		LOG.info("--- Test initZoneBy");
+		
+		assumeFalse(zoneService.getAll().isEmpty());
+		assumeFalse(locationService.getAll().isEmpty());
+
+// -- Cooler two Locations
+		Set<Location> coolerLocations = new HashSet<>();
+		coolerLocations.add(locationService.getById("LOCA"));
+		coolerLocations.add(locationService.getById("LOCB"));
+
+// -- Special cases
+		try {
+			zoneService.initZoneBy(null, coolerLocations);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+
+		try {
+			zoneService.initZoneBy(new Zone(null), coolerLocations);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+
+		try {
+			zoneService.initZoneBy(zoneService.getById("Cooler"), null);
+			
+			Assert.fail("Exception expected");
+		}
+		catch (EJBException ejbex) {
+			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		}
+	}
+	
 	
 	/**
 	 * Test remove zone
