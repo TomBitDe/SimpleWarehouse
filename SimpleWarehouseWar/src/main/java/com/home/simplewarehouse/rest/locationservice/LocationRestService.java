@@ -159,7 +159,7 @@ public class LocationRestService extends StandardRestServices {
     /**
      * Delete a Location by its key.
      *
-     * @param key the key of the location to delete
+     * @param key the key of the Location to delete
      *
      * @return the data of the removed Location
      */
