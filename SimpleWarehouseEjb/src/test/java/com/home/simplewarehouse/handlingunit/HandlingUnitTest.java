@@ -2,6 +2,7 @@ package com.home.simplewarehouse.handlingunit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -182,7 +183,7 @@ public class HandlingUnitTest {
 		HandlingUnit expHandlingUnit = new HandlingUnit("1");
 		
 		assertEquals(false, expHandlingUnit.equals(null));
-		assertEquals(false, expHandlingUnit.equals(new RandomLocation("A")));
+		assertNotEquals(new RandomLocation("A"), expHandlingUnit);
 
 		HandlingUnit handlingUnit = handlingUnitService.createOrUpdate(expHandlingUnit);
 		assertEquals(expHandlingUnit, handlingUnit);

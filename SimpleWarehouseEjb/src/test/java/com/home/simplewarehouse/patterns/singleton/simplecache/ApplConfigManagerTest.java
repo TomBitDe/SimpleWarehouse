@@ -1,7 +1,6 @@
 package com.home.simplewarehouse.patterns.singleton.simplecache;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -157,7 +156,7 @@ public class ApplConfigManagerTest {
 		
 		// Test equals also
 		entry = applConfigService.getById("DUMMY_F");
-		assertFalse(entry.equals(new Dimension()));
+		assertNotEquals(new Dimension(), entry);
 	}
 	
 	/**
