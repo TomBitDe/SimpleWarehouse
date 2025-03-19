@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -49,7 +50,11 @@ public class SimpleZoneBean implements Serializable {
     /**
      * The zone items
      */
-    private Set<SimpleZone> items;
+    private List<SimpleZone> items;
+    /**
+     * The new zoneId
+     */
+    private String newZoneId;
     
 	/**
 	 * Default constructor not mandatory
@@ -63,7 +68,7 @@ public class SimpleZoneBean implements Serializable {
      * 
      * @param items the items
      */
-	public void setItems(Set<SimpleZone> items) {
+	public void setItems(List<SimpleZone> items) {
 		this.items = items;
 	}
 
@@ -72,8 +77,8 @@ public class SimpleZoneBean implements Serializable {
 	 * 
 	 * @return the items
 	 */
-	public Set<SimpleZone> getItems() {
-		items = new HashSet<>();
+	public List<SimpleZone> getItems() {
+		items = new ArrayList<>();
 		
 		Set<Zone> zones = zoneService.getAll();
 		
@@ -86,6 +91,24 @@ public class SimpleZoneBean implements Serializable {
 		return items;
 	}
 	
+	/**
+	 * Gets the new zoneId
+	 * 
+	 * @return the newZoneId
+	 */
+	public String getNewZoneId() {
+		return newZoneId;
+	}
+
+	/**
+	 * Sets the new zoneId
+	 * 
+	 * @param newZoneId the newZoneId to set
+	 */
+	public void setNewZoneId(String newZoneId) {
+		this.newZoneId = newZoneId;
+	}
+
 	/**
 	 * Adds a zone with DEFAULT values
 	 */
@@ -107,6 +130,31 @@ public class SimpleZoneBean implements Serializable {
 		}
 	}
 	
+	/**
+	 * Adds a zone with given id
+	 */
+	public void addWithId() {
+		if (getNewZoneId().trim().isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("error"), localeBean.getText("no_input"));
+			
+			return;
+		}
+		
+		List<Zone> ids = zoneService.getAll().stream()
+				.filter(z -> z.getId().equals(getNewZoneId().trim()))
+				.collect(Collectors.toList());
+		
+		if (! ids.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("error"), localeBean.getText("already_exists"));
+			
+			return;
+		}
+		
+		zoneService.createOrUpdate(new Zone(getNewZoneId().trim()));
+	}
+
 	/**
 	 * Provides valid ids sorted out from base compared with existing
 	 * 
