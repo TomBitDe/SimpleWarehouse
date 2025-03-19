@@ -447,6 +447,15 @@ public class HandlingUnitBean implements HandlingUnitService {
 		
 		ba.setContains(ba.getContains());
 		
+		if (hu.getLocation() != null) {
+			try {
+			    pickFrom(hu.getLocation());
+			}
+			catch (LocationIsEmptyException lemp) {
+				LOG.warn("Location {} is EMPTY!", hu.getLocation());
+			}
+		}
+		
 		LOG.trace(END_ASSIGN_BASE, ba);
 		
 		em.flush();

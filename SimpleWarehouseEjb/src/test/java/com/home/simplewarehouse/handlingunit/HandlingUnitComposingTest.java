@@ -27,12 +27,14 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import com.home.simplewarehouse.location.DimensionException;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 import com.home.simplewarehouse.zone.ZoneBean;
@@ -384,7 +386,7 @@ public class HandlingUnitComposingTest {
 		}
 		
 		try {
-			freed = handlingUnitService.free((String)null);
+			handlingUnitService.free((String) null);
 
 			Assert.fail("Exception expected");
 		}
@@ -394,10 +396,57 @@ public class HandlingUnitComposingTest {
 	}
 
 	/**
-	 * Some edge cases to test
+	 * Simple handling unit assign one on location to base 
 	 */
 	@Test
 	@InSequence(21)
+	public void assignOneOnLocationToBase() {
+		LOG.info("--- Test assignOneOnLocationToBase");
+
+		try {
+			assertTrue(handlingUnitService.getAll().isEmpty());
+
+			// With ids
+			HandlingUnit base = handlingUnitService.createOrUpdate(new HandlingUnit("3"));
+			LOG.info(base);
+
+			HandlingUnit hu4 = handlingUnitService.createOrUpdate(new HandlingUnit("4"));
+
+			Location locA = locationService.createOrUpdate(new RandomLocation("A"));
+			handlingUnitService.dropTo(locA, hu4);
+
+			hu4 = handlingUnitService.getById("4");
+			LOG.info(hu4);
+
+			assertTrue(locationService.getHandlingUnits(locA).contains(hu4));
+			
+			// Now place a single handling unit on base
+			base = handlingUnitService.assign("4", "3");
+			
+			assertEquals(1, base.getContains().size());
+			assertTrue(base.getContains().contains(hu4));
+			assertNull(base.getBaseHU());
+			LOG.info(base);
+
+			hu4 = handlingUnitService.getById("4");
+			assertTrue(hu4.getContains().isEmpty());
+			assertEquals(base, hu4.getBaseHU());
+			
+			// hu4 should be removed from locA
+			assertTrue(locationService.getHandlingUnits(locA).isEmpty());
+			
+			LOG.info(hu4);
+		}
+		catch (DimensionException dimex) {
+			Assert.fail("Not expected: " + dimex);
+		}
+	}
+	
+	/**
+	 * Some edge cases to test
+	 */
+	@Test
+	@InSequence(35)
 	public void edgeCases() {
 		try {
 			handlingUnitService.move((String) null, (String) null);
