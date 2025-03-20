@@ -153,6 +153,8 @@ public class SimpleZoneBean implements Serializable {
 		}
 		
 		zoneService.createOrUpdate(new Zone(getNewZoneId().trim()));
+		
+		setNewZoneId("");
 	}
 
 	/**
