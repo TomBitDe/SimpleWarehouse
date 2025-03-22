@@ -112,7 +112,7 @@ public class SimpleHandlingUnitBean implements Serializable {
 	}
 
 	/**
-	 * Gets the destionations
+	 * Gets the destinations
 	 * 
 	 * @return the destinations
 	 */

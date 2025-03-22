@@ -114,8 +114,15 @@ public interface ZoneService {
 	/**
 	 * Add a Location to a given Zone
 	 * 
-	 * @param location the Location to move
-	 * @param zone the zone
+	 * @param locationId the Location Id of the related Location to add
+	 * @param zoneId the related Zone 
+	 */
+	public void addLocationTo(String locationId, String zoneId);
+	/**
+	 * Add a Location to a given Zone
+	 * 
+	 * @param location the Location to add
+	 * @param zone the Zone
 	 */
 	public void addLocationTo(Location location, Zone zone);
 	/**
@@ -131,6 +138,12 @@ public interface ZoneService {
 	 * @param zone the Zone to clear
 	 */
 	public void clear(Zone zone);
+	/**
+	 * Clear a given Zone by id from its Locations
+	 * 
+	 * @param id the Zone by id to clear
+	 */
+	public void clear(String id);
 	/**
 	 * Clear all existing Zones
 	 */

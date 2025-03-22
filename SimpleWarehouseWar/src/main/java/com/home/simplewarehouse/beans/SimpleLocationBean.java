@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Set;
 
 import javax.ejb.EJB;
 import javax.enterprise.context.RequestScoped;
@@ -18,6 +19,7 @@ import com.home.simplewarehouse.jsfutils.FacesMessageProxy;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.RandomLocation;
+import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.views.SimpleLocation;
 
 /**
@@ -77,8 +79,22 @@ public class SimpleLocationBean implements Serializable {
 		List<Location> locations = locationService.getAll();
 		
 		for (Location location : locations) {
-			items.add(new SimpleLocation(location.getLocationId(), false));
+			if (!location.getZones().isEmpty()) {
+				Set<Zone> zones = location.getZones();
+
+				String zos = "";
+				for (Zone zo : zones) {
+					zos = zos.concat(zo.getId() + ",\n");
+				}
+				zos = zos.substring(0, zos.lastIndexOf(','));
+				
+				items.add(new SimpleLocation(location.getLocationId(), zos, false));
+			}
+			else {
+				items.add(new SimpleLocation(location.getLocationId(), "", false));
+			}
 		}
+
 		
 		LOG.debug("Found [{}] locations", items.size());
 		

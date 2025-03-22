@@ -37,7 +37,7 @@
 					<!-- DO NOT USE THIS; WILL NOT WORK
 					<f:ajax render="@form" />
 					-->					
-					<f:ajax execute="@form" render="loc loc_hu hu loc_menu hu_hu orig_menu dest_menu" />
+					<f:ajax execute="@form" render="loc loc_hu hu loc_menu hu_hu orig_menu dest_menu zone loc_zo_menu zo_loc_menu" />
 				  </h:commandButton>
 				  
 				  <h:messages id="customMessages" globalOnly="false" showDetail="true"
@@ -50,14 +50,14 @@
 				      -->
 				</h:panelGrid>
 				
-				<h:panelGrid id="panelQualification" columns="5" >
+				<h:panelGrid id="panelQualification" columns="5" style="width: 100%;">
                    <h:panelGrid style="width: 100%;">
                    
 			           <h:outputText value="#{text['locations']}" styleClass="commmonTableHeadLine" />
         			   
  				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
         			   <h:dataTable id="loc" value="#{simpleLocationBean.items}"
-		        	       var="item" styleClass="commonTable" style="width: 160%;"
+		        	       var="item" styleClass="commonTable" style="width: 110%;"
 				           headerClass="commonTableHeader"
 					       rowClasses="commonTableOddRow, commonTableEvenRow">
 					       
@@ -68,6 +68,14 @@
 					       <h:column>
 						       <f:facet name="header">#{text['location_id']}</f:facet>    				
                                <h:outputText value="#{item.locationId}" />
+                           </h:column>
+					       <h:column>
+						       <f:facet name="header">#{text['zones']}</f:facet>    				
+                               <h:outputText value="#{item.zones}" >
+                                   <f:facet name="dummy">
+                                       <pre>#{item.zones}</pre>
+                                   </f:facet>
+                               </h:outputText>
                            </h:column>
 				       </h:dataTable>
                        </h:panelGrid>
@@ -176,7 +184,8 @@
                          <h:commandButton value="#{text['add']}" action="#{simpleHandlingUnitBean.addDefault}"
                                           styleClass="button" id="add_hu"/>
 					     
-					     <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}" styleClass="button" id="pick_hu"/><h:commandButton value="#{text['drop']}" action="#{simpleHandlingUnitBean.dropSelected}"
+					     <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}" styleClass="button" id="pick_hu"/>
+					     <h:commandButton value="#{text['drop']}" action="#{simpleHandlingUnitBean.dropSelected}"
 					                      styleClass="button" id="drop_hu"/>
 						 <h:selectOneMenu id="loc_menu" value="#{simpleHandlingUnitBean.selectedDestination}" style="width: 60px; ">
 						     <f:selectItem itemLabel=" " />
@@ -280,15 +289,32 @@
                            ]]>
                        </h:outputScript>
 				       
-				       <h:panelGrid columns="2" style="height: 25vh; display: grid;">
+				       <h:panelGrid columns="1" style="height: 25vh; display: grid;">
+				           <h:panelGrid columns="2">
                            <!-- Button for action -->
                            <h:commandButton value="#{text['delete']}" action="#{simpleZoneBean.deleteSelected}"
                                             styleClass="button" id="delete_zo"/>
-                           <h:outputText value="" />
+                           <h:commandButton value="#{text['clear']}" action="#{simpleZoneBean.clearSelected}"
+                                            styleClass="button" id="clear_zo"/>
                            <h:inputText value="#{simpleZoneBean.newZoneId}" id="zone_input"
                                             style="width: 100px;" styleClass="input-field"/>
                            <h:commandButton value="#{text['add']}" action="#{simpleZoneBean.addWithId}"
                                             styleClass="button" id="add_zo"/>
+                           </h:panelGrid>
+				           <h:panelGrid columns="3">
+						       <h:selectOneMenu id="loc_zo_menu" value="#{simpleZoneBean.selectedLocation}" style="width: 60px;">
+                                   <f:selectItem itemLabel=" " />
+						           <f:selectItems value="#{simpleHandlingUnitBean.destinations}" />
+						       </h:selectOneMenu>
+						       <h:panelGrid columns="1">
+						           <h:commandButton id="assign_lo_zo" value="#{text['assign']}"
+						                            action="#{simpleZoneBean.assignSelected}" styleClass="button" />
+						       </h:panelGrid>
+						       <h:selectOneMenu id="zo_loc_menu" value="#{simpleZoneBean.selectedZone}" style="width: 60px;">
+                                   <f:selectItem itemLabel=" " />
+						           <f:selectItems value="#{simpleZoneBean.zones}" />
+						       </h:selectOneMenu>
+						   </h:panelGrid>
                        </h:panelGrid>
                    </h:panelGrid>
 

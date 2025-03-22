@@ -1,12 +1,8 @@
 package com.home.simplewarehouse.zone;
 
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.stream.Collectors;
 
 import javax.ejb.EJB;
@@ -46,6 +42,10 @@ public class ZoneBean implements ZoneService {
 	 * Message constant
 	 */
 	public static final String ZONE_ID_IS_NULL = "zone id is null";
+	/**
+	 * Message constant
+	 */
+	public static final String ZONE_ID_IS_EMPTY = "zone id is empty or blank";
 
 	@PersistenceContext
 	private EntityManager em;
@@ -87,33 +87,6 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void delete(Zone zone) {
-		LOG.trace("--> delete({})", zone);
-
-		if (zone != null && zone.getId() != null) {
-			Zone zo = getById(zone.getId());
-			
-			if (zo != null && !zo.getLocations().isEmpty()) {
-			    List<Location> locationsCopy = new ArrayList<>(zo.getLocations());
-			    locationsCopy.stream()
-			        .filter(Objects::nonNull)
-			        .forEach(l -> l.setZones(null));
-			    em.flush();
-			}
-			
-			em.remove(zo);
-			em.flush();
-
-			LOG.debug("deleted: {}", zo);
-		}
-		else {
-			LOG.debug("Zone == null or id == null");
-		}
-
-		LOG.trace("<-- delete()");
-	}
-
-	@Override
 	public void delete(String id) {
 		LOG.trace("--> delete({})", id);
 
@@ -130,6 +103,38 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
+	public void delete(Zone zone) {
+	    LOG.trace("--> delete({})", zone);
+
+	    if (zone != null && zone.getId() != null) {
+	        Zone zo = getById(zone.getId());
+
+	        if (zo != null && !zo.getLocations().isEmpty()) {
+	            Set<Location> safeList = new HashSet<>(zo.getLocations());
+
+	            for (Location item : safeList) {
+	                Location locn = locationService.getById(item.getLocationId());
+	                if (locn != null && locn.getZones() != null && locn.getZones().remove(zo)) {
+	                    em.refresh(locn);
+	                    locn.setZones(locn.getZones());
+	                    locationService.createOrUpdate(locn);
+	                }
+	            }
+	        }
+
+	        em.remove(em.contains(zo) ? zo : em.merge(zo)); 
+	        em.flush();
+
+	        LOG.debug("deleted: {}", zo);
+	    }
+	    else {
+	        LOG.debug("Zone == null or id == null");
+	    }
+
+	    LOG.trace("<-- delete()");
+	}
+	
+	@Override
 	public Zone getById(String id) {
 		LOG.trace("--> getById({})", id);
 		
@@ -145,6 +150,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Set<Zone> getAll() {
 		LOG.trace("--> getAll()");
 
@@ -159,6 +165,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public Set<Zone> getAll(int offset, int count) {
 		LOG.trace("--> getAll({}, {})", offset, count);
 
@@ -221,6 +228,13 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
+	public void addLocationTo(String locationId, String zoneId) {
+		checkParam(locationId, zoneId);
+		
+		addLocationTo(locationService.getById(locationId), getById(zoneId));
+	}
+
+	@Override
 	public void addLocationTo(Location location, Zone zone) {
 		checkParam(location, zone);
 
@@ -247,20 +261,46 @@ public class ZoneBean implements ZoneService {
 		
 		locations.stream().forEach(l -> em.merge(l));
     }
+	
+	@Override
+	public void clear(String zoneId) {
+        checkZone(zoneId);
+        
+		clear(getById(zoneId));
+	}
+	
 
 	@Override
 	public void clear(Zone zone) {
 		checkZone(zone);
 		
-	    List<Location> safeList = new CopyOnWriteArrayList<>(zone.getLocations());
-	    
-	    zone.setLocations(new HashSet<>());
-	    em.merge(zone);
-	    
-	    safeList.stream().forEach(loc -> {
-	    	loc.setZones(null);
-	    	em.merge(loc);
-	    });
+	    if (zone.getId() != null) {
+	        Zone zo = getById(zone.getId());
+
+	        if (zo != null && !zo.getLocations().isEmpty()) {
+	            Set<Location> safeList = new HashSet<>(zo.getLocations());
+
+	            for (Location item : safeList) {
+	                Location locn = locationService.getById(item.getLocationId());
+	                if (locn != null && locn.getZones() != null) {
+	                    em.refresh(locn);
+	                    locn.getZones().remove(zo);
+	                    locn.setZones(locn.getZones());
+	                    locationService.createOrUpdate(locn);
+	                }
+	            }
+	        }
+
+	        em.merge(zo); 
+	        em.flush();
+
+	        LOG.debug("cleared: {}", zo);
+	    }
+	    else {
+	        LOG.debug("Zone == null or id == null");
+	    }
+
+	    LOG.trace("<-- clear()");
 	}
 
 	@Override
@@ -294,6 +334,32 @@ public class ZoneBean implements ZoneService {
 		}
 	}
 	
+	private void checkParam(String locationId, String zoneId) {
+		if (locationId == null) {
+			throw new IllegalArgumentException(LocationBean.LOCATION_ID_IS_NULL);
+		}
+
+		if (locationId.trim().isEmpty()) {
+			throw new IllegalArgumentException(LocationBean.LOCATION_ID_IS_EMPTY);
+		}
+
+		if (locationService.getById(locationId) == null) {
+			throw new IllegalArgumentException(LocationBean.LOCATION_IS_NULL);
+		}
+		
+		if (zoneId == null) {
+			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
+
+		if (zoneId.trim().isEmpty()) {
+			throw new IllegalArgumentException(ZONE_ID_IS_EMPTY);
+		}
+
+		if (getById(zoneId) == null) {
+			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
+	}
+	
 	private void checkParam(Location location, Zone current, Zone destination) {
 		checkParam(location, current);
 		
@@ -311,6 +377,20 @@ public class ZoneBean implements ZoneService {
 
 		if (zone.getId() == null) {
 			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
+	}
+
+	private void checkZone(String zoneId) {
+		if (zoneId == null) {
+			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+		}
+
+		if (zoneId.trim().isEmpty() ) {
+			throw new IllegalArgumentException(ZONE_ID_IS_EMPTY);
+		}
+		
+		if (getById(zoneId) == null) {
+			throw new IllegalArgumentException(ZONE_IS_NULL);
 		}
 	}
 

@@ -55,6 +55,18 @@ public class SimpleZoneBean implements Serializable {
      * The new zoneId
      */
     private String newZoneId;
+    /**
+     * The selected location
+     */
+    private String selectedLocation = "";
+    /**
+     * The selected zone
+     */
+    private String selectedZone = "";
+    /**
+     * The zones
+     */
+    private List<String> zones;
     
 	/**
 	 * Default constructor not mandatory
@@ -110,13 +122,77 @@ public class SimpleZoneBean implements Serializable {
 	}
 
 	/**
+	 * Gets the selected Location
+	 * 
+	 * @return the selectedLocation
+	 */
+	public String getSelectedLocation() {
+		return selectedLocation;
+	}
+
+	/**
+	 * Sets the selected Location
+	 * 
+	 * @param selectedLocation the selectedLocation to set
+	 */
+	public void setSelectedLocation(String selectedLocation) {
+		this.selectedLocation = selectedLocation;
+	}
+	
+	/**
+	 * Gets the selected Zone
+	 * 
+	 * @return the selectedZone
+	 */
+	public String getSelectedZone() {
+		return selectedZone;
+	}
+
+	/**
+	 * Sets the selected Zone
+	 * 
+	 * @param selectedZone the selectedZone to set
+	 */
+	public void setSelectedZone(String selectedZone) {
+		this.selectedZone = selectedZone;
+	}
+	
+	/**
+	 * Gets the zones
+	 * 
+	 * @return the zones
+	 */
+	public List<String> getZones() {
+		List<String> ret = new ArrayList<>();
+ 		
+		Set<Zone> temp = zoneService.getAll();
+		
+		for (Zone zone : temp) {
+			ret.add(zone.getId());
+		}
+		
+		LOG.debug("Set [{}] zones", ret.size());
+		
+		return ret;
+	}
+
+	/**
+	 * Sets the zones
+	 * 
+	 * @param zones the zones
+	 */
+	public void setZones(List<String> zones) {
+		this.zones = zones;
+	}
+
+	/**
 	 * Adds a zone with DEFAULT values
 	 */
 	public void addDefault() {
-		Set<Zone> zones = zoneService.getAll();
+		Set<Zone> temp = zoneService.getAll();
 		Set<String> existing = new HashSet<>();
 		
-		for (Zone zone : zones) {
+		for (Zone zone : temp) {
 			existing.add(zone.getId());
 		}
 		
@@ -205,5 +281,56 @@ public class SimpleZoneBean implements Serializable {
 			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
 					localeBean.getText("warning"), localeBean.getText("no_selection"));
 		}
+    }
+
+	/**
+	 * Clears the selected item
+	 */
+    public void clearSelected() {
+		if (items.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_items"));
+			
+			return;
+		}
+		
+		int cnt = 0;
+
+		// Process the selected rows
+		for (SimpleZone item : items) {
+			if (item.isSelected()) {
+				// This row has to be processed
+				zoneService.clear(item.getId());
+				LOG.info("Cleared item {}", item.getId());
+					
+				++cnt;
+			}
+		}
+
+		if (cnt == 0) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_selection"));
+		}
+    }
+    
+	/**
+	 * Assign the selected location to the selected zone
+	 */
+    public void assignSelected() {
+		if (selectedLocation == null || selectedLocation.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_combobox_location_selected"));
+			
+			return;
+		}
+		
+		if (selectedZone == null || selectedZone.isEmpty()) {
+			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
+					localeBean.getText("warning"), localeBean.getText("no_combobox_zone_selected"));
+			
+			return;
+		}
+
+		zoneService.addLocationTo(selectedLocation, selectedZone);
     }
 }

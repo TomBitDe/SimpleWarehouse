@@ -40,6 +40,10 @@ public class LocationBean implements LocationService {
 	/**
 	 * Message constant
 	 */
+	public static final String LOCATION_ID_IS_EMPTY = "location is empty or blank";
+	/**
+	 * Message constant
+	 */
 	public static final String LOCATION_ID_IS_NULL = "locationId is null";
 	
 	private static final String HEIGHT_DOES_NOT_FIT = "Location has maximum height {}, heigth {} does not fit";
@@ -178,6 +182,7 @@ public class LocationBean implements LocationService {
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Location> getAll() {
 		LOG.trace("--> getAll()");
 
@@ -190,6 +195,7 @@ public class LocationBean implements LocationService {
 	}
 	
 	@Override
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<Location> getAll(int offset, int count) {
 		LOG.trace("--> getAll({}, {})", offset, count);
 

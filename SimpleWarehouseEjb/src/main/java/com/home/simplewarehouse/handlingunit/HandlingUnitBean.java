@@ -143,6 +143,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 
 	@Override
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<HandlingUnit> getAll() {
 		LOG.trace("--> getAll()");
 
@@ -155,6 +156,7 @@ public class HandlingUnitBean implements HandlingUnitService {
 	}
 	
 	@Override
+	@TransactionAttribute(TransactionAttributeType.NOT_SUPPORTED)
 	public List<HandlingUnit> getAll(int offset, int count) {
 		LOG.trace("--> getAll({}, {})", offset, count);
 

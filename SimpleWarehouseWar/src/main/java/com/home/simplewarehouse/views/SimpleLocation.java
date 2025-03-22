@@ -13,15 +13,19 @@ public class SimpleLocation extends SelectableView implements Serializable {
 	 */
 	private String locationId;
 	
+	private String zones;
+	
 	/**
 	 * Constructor is mandatory
 	 * 
 	 * @param locationId the location id
+	 * @param zones the zones
 	 * @param selected the selection flag
 	 */
-	public SimpleLocation(String locationId, boolean selected) {
+	public SimpleLocation(String locationId, String zones, boolean selected) {
 		super(selected);
 		this.locationId = locationId;
+		this.zones = zones;
 	}
 
 	/**
@@ -40,5 +44,23 @@ public class SimpleLocation extends SelectableView implements Serializable {
 	 */
 	public void setLocationId(String locationId) {
 		this.locationId = locationId;
+	}
+
+	/**
+	 * Gets the Zones
+	 * 
+	 * @return the zones
+	 */
+	public String getZones() {
+		return zones;
+	}
+
+	/**
+	 * Sets the Zones
+	 * 
+	 * @param zones the zones to set
+	 */
+	public void setZones(String zones) {
+		this.zones = zones;
 	}
 }
