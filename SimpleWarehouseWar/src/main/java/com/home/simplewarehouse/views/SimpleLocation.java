@@ -12,7 +12,9 @@ public class SimpleLocation extends SelectableView implements Serializable {
 	 * The locations id
 	 */
 	private String locationId;
-	
+	/**
+	 * The zones
+	 */
 	private String zones;
 	
 	/**

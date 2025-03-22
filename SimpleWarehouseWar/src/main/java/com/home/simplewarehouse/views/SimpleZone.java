@@ -12,12 +12,15 @@ public class SimpleZone extends SelectableView implements Serializable {
 	 * The zone id
 	 */
 	private String id;
+	/**
+	 * The rating for that zone
+	 */
 	private int rating;
 	
 	/**
 	 * Constructor is mandatory
 	 * 
-	 * @param locationId the location id
+	 * @param id the zone id
 	 * @param selected the selection flag
 	 */
 	public SimpleZone(String id, boolean selected) {
