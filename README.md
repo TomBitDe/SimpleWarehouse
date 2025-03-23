@@ -14,3 +14,4 @@ Release notes:
 - Release-0.9.7.0 contains bugfixes for operations on handling units.
 - Release-0.9.8.0 contains more JSF. Now a very basic browser UI is available.
 - Release-0.9.9.0 contains refactoring to prepare final release.
+- Release-0.9.9.2 contains Zone handing with UI support.
