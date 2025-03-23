@@ -23,6 +23,12 @@
 				<f:facet name="header">#{text['location_id']}</f:facet>
 				<h:outputText value="#{item.locationId}" />
 			</h:column>
+
+			<h:column>
+				<f:facet name="header">#{text['location_type']}</f:facet>
+				<h:outputText value="#{item.type}" />
+			</h:column>
+
 			<h:column>
 				<f:facet name="header">#{text['zones']}</f:facet>
 				<h:outputText value="#{item.zones}">
@@ -51,6 +57,11 @@
 		<h:commandButton value="#{text['delete']}"
 			action="#{simpleLocationBean.deleteSelected}" styleClass="button"
 			id="del_lo" />
+	    <h:outputText value="" />
+	    <h:selectOneMenu id="loc_type_menu"
+				value="#{simpleLocationBean.selectedType}" style="width: 80px;">
+				<f:selectItems value="#{simpleLocationBean.locationTypes}" />
+		</h:selectOneMenu>
 		<h:commandButton value="#{text['add']}"
 			action="#{simpleLocationBean.addDefault}" styleClass="button"
 			id="add_lo" />

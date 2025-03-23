@@ -17,6 +17,8 @@ import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.jsfutils.FacesMessageProxy;
 import com.home.simplewarehouse.location.LocationService;
+import com.home.simplewarehouse.model.FifoLocation;
+import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.Zone;
@@ -51,6 +53,14 @@ public class SimpleLocationBean implements Serializable {
      * The location items
      */
     private List<SimpleLocation> items;
+    /**
+     * The location types
+     */
+    private List<SimpleLocation> locationTypes;
+    /**
+     * The selected location type
+     */
+    private String selectedType;
     
 	/**
 	 * Default constructor not mandatory
@@ -88,10 +98,10 @@ public class SimpleLocationBean implements Serializable {
 				}
 				zos = zos.substring(0, zos.lastIndexOf(','));
 				
-				items.add(new SimpleLocation(location.getLocationId(), zos, false));
+				items.add(new SimpleLocation(location.getLocationId(), getType(location), zos, false));
 			}
 			else {
-				items.add(new SimpleLocation(location.getLocationId(), "", false));
+				items.add(new SimpleLocation(location.getLocationId(), getType(location), "", false));
 			}
 		}
 
@@ -101,6 +111,48 @@ public class SimpleLocationBean implements Serializable {
 		return items;
 	}
 	
+	
+	/**
+	 * Gets the selected type
+	 * 
+	 * @return the selectedType
+	 */
+	public String getSelectedType() {
+		return selectedType;
+	}
+
+	/**
+	 * Gets the selected type
+	 * 
+	 * @param selectedType the selectedType to set
+	 */
+	public void setSelectedType(String selectedType) {
+		this.selectedType = selectedType;
+	}
+
+	/**
+	 * Gets the location types
+	 * 
+	 * @return the locationTypes
+	 */
+	public List<String> getLocationTypes() {
+		List<String> ret = new ArrayList<>();
+		ret.add("Random");
+		ret.add("FiFo");
+		ret.add("LiFo");
+		
+		return ret;
+	}
+
+	/**
+	 * Sets the location types
+	 * 
+	 * @param locationTypes the locationTypes to set
+	 */
+	public void setLocationTypes(List<SimpleLocation> locationTypes) {
+		// Nothing to to here !
+	}
+
 	/**
 	 * Adds a location with DEFAULT values
 	 */
@@ -115,7 +167,15 @@ public class SimpleLocationBean implements Serializable {
 		List<String> ids = validIds(GENERATED_IDS, existing);
 		
 		if (! ids.isEmpty()) {
-			locationService.createOrUpdate(new RandomLocation(ids.get(0)));
+			if (getSelectedType().equals("FiFo")) {
+				locationService.createOrUpdate(new FifoLocation(ids.get(0)));
+			}
+			else if (getSelectedType().equals("LiFo")) {
+				locationService.createOrUpdate(new LifoLocation(ids.get(0)));
+			}
+			else {
+				locationService.createOrUpdate(new RandomLocation(ids.get(0)));
+			}
 		}
 		else {
 			LOG.info("No ID available to add a DEFAULT location");
@@ -170,5 +230,11 @@ public class SimpleLocationBean implements Serializable {
 			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
 					localeBean.getText("warning"), localeBean.getText("no_selection"));
 		}
+    }
+    
+    public String getType(Location loc) {
+    	if (loc instanceof LifoLocation) return "LiFo";
+    	if (loc instanceof FifoLocation) return "FiFo";
+    	return "Random";
     }
 }
