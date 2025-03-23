@@ -1,0 +1,78 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:panelGrid style="width: 20%;">
+
+	<h:outputText value="#{text['zones']}"
+		styleClass="commmonTableHeadLine" />
+	<h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
+		<h:dataTable id="zone" value="#{simpleZoneBean.items}" var="item"
+			styleClass="commonTable" style="width: 102%;"
+			headerClass="commonTableHeader"
+			rowClasses="commonTableOddRow, commonTableEvenRow">
+
+			<h:column>
+				<h:selectBooleanCheckbox value="#{item.selected}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">#{text['zone_id']}</f:facet>
+				<h:outputText value="#{item.id}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">#{text['zone_rating']}</f:facet>
+				<h:outputText value="#{item.rating}" style="word-break: break-all; " />
+			</h:column>
+		</h:dataTable>
+	</h:panelGrid>
+
+	<!-- JavaScript for the selection -->
+	<h:outputScript>
+		<![CDATA[
+            // Function for selecting a row
+            function selectRow(row) {
+                row.classList.toggle("selected");
+                var checkbox = row.querySelector("input[type='checkbox']");
+                checkbox.checked = !checkbox.checked;
+            }
+        ]]>
+	</h:outputScript>
+
+	<h:panelGrid columns="1" style="height: 25vh; display: grid;">
+		<h:panelGrid columns="2">
+			<!-- Button for action -->
+			<h:commandButton value="#{text['delete']}"
+				action="#{simpleZoneBean.deleteSelected}" styleClass="button"
+				id="delete_zo" />
+			<h:commandButton value="#{text['clear']}"
+				action="#{simpleZoneBean.clearSelected}" styleClass="button"
+				id="clear_zo" />
+			<h:inputText value="#{simpleZoneBean.newZoneId}" id="zone_input"
+				style="width: 100px;" styleClass="input-field" />
+			<h:commandButton value="#{text['add']}"
+				action="#{simpleZoneBean.addWithId}" styleClass="button" id="add_zo" />
+		</h:panelGrid>
+		<h:panelGrid columns="3">
+			<h:selectOneMenu id="loc_zo_menu"
+				value="#{simpleZoneBean.selectedLocation}" style="width: 60px;">
+				<f:selectItem itemLabel=" " />
+				<f:selectItems value="#{simpleHandlingUnitBean.destinations}" />
+			</h:selectOneMenu>
+			<h:panelGrid columns="1">
+				<h:commandButton id="assign_lo_zo" value="#{text['assign']}"
+					action="#{simpleZoneBean.assignSelected}" styleClass="button" />
+			</h:panelGrid>
+			<h:selectOneMenu id="zo_loc_menu"
+				value="#{simpleZoneBean.selectedZone}" style="width: 60px;">
+				<f:selectItem itemLabel=" " />
+				<f:selectItems value="#{simpleZoneBean.zones}" />
+			</h:selectOneMenu>
+		</h:panelGrid>
+	</h:panelGrid>
+
+</h:panelGrid>
+
+</html>

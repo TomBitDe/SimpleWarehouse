@@ -1,0 +1,55 @@
+
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets">
+
+<h:panelGrid style="width: 25%;">
+
+	<h:outputText value="#{text['location_with_handling_units']}"
+		styleClass="commmonTableHeadLine" />
+	<h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
+		<h:dataTable id="loc_hu"
+			value="#{simpleLocationWithHandlingUnitsBean.items}" var="item"
+			styleClass="commonTable" style="width: 102%;"
+			headerClass="commonTableHeader"
+			rowClasses="commonTableOddRow, commonTableEvenRow">
+
+			<h:column>
+				<h:selectBooleanCheckbox value="#{item.selected}" />
+			</h:column>
+
+			<h:column>
+				<f:facet name="header">#{text['location_id']}</f:facet>
+				<h:outputText value="#{item.locationId}" />
+			</h:column>
+			<h:column>
+				<f:facet name="header">#{text['handling_units']}</f:facet>
+				<h:outputText value="#{item.handlingUnits}"
+					style="word-break: break-all; " />
+			</h:column>
+		</h:dataTable>
+	</h:panelGrid>
+
+	<!-- JavaScript for the selection -->
+	<h:outputScript>
+		<![CDATA[
+            // Function for selecting a row
+            function selectRow(row) {
+                row.classList.toggle("selected");
+                var checkbox = row.querySelector("input[type='checkbox']");
+                checkbox.checked = !checkbox.checked;
+            }
+        ]]>
+	</h:outputScript>
+
+	<h:panelGrid columns="1" style="height: 25vh; display: grid;">
+		<!-- Button for action -->
+		<h:commandButton value="#{text['empty']}"
+			action="#{simpleLocationWithHandlingUnitsBean.emptySelected}"
+			styleClass="button" id="empty_lo" />
+	</h:panelGrid>
+	
+</h:panelGrid>
+
+</html>

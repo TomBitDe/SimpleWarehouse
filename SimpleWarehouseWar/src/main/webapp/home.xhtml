@@ -2,8 +2,7 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
 "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
-<html lang="en"
-    xmlns="http://www.w3.org/1999/xhtml"
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml"
 	xmlns:f="http://java.sun.com/jsf/core"
 	xmlns:h="http://java.sun.com/jsf/html"
 	xmlns:ui="http://java.sun.com/jsf/facelets">
@@ -14,311 +13,64 @@
 
 		<ui:define name="content">
 
-			<h:outputText value="#{text['simplewarehouse']}" styleClass="custom1Header" style="padding-left: 5px;" />
+			<h:outputText value="#{text['simplewarehouse']}"
+				styleClass="custom1Header" style="padding-left: 5px;" />
 
 			<h:form>
-			    <h:panelGrid id="customMenu" columns="10" styleClass="customMenuPanel">
-				    <h:commandLink action="#{navigationController.moveToPage('home')}"
-				    	value="#{text['menu_home']}" styleClass="commandLink">
-				    </h:commandLink>
-				    <h:commandLink action="#{navigationController.moveToPage('page1')}"
-					    value="#{text['menu_page1']}" styleClass="commandLink">
-				    </h:commandLink>
-				    <h:commandLink action="#{navigationController.moveToPage('page2')}"
-					    value="#{text['menu_page2']}" styleClass="commandLink">
-				    </h:commandLink>
-				    <h:commandLink action="#{navigationController.moveToPage('page3')}"
-					    value="#{text['menu_page3']}" styleClass="commandLink">
-				    </h:commandLink>
+				<h:panelGrid id="customMenu" columns="10"
+					styleClass="customMenuPanel">
+					<h:commandLink action="#{navigationController.moveToPage('home')}"
+						value="#{text['menu_home']}" styleClass="commandLink">
+					</h:commandLink>
+					<h:commandLink action="#{navigationController.moveToPage('page1')}"
+						value="#{text['menu_page1']}" styleClass="commandLink">
+					</h:commandLink>
+					<h:commandLink action="#{navigationController.moveToPage('page2')}"
+						value="#{text['menu_page2']}" styleClass="commandLink">
+					</h:commandLink>
+					<h:commandLink action="#{navigationController.moveToPage('page3')}"
+						value="#{text['menu_page3']}" styleClass="commandLink">
+					</h:commandLink>
 				</h:panelGrid>
-			
-			    <h:panelGrid columns="2" style="padding-left: 5px;">
-				  <h:commandButton value="#{text['refresh']}" styleClass="button">
-					<!-- DO NOT USE THIS; WILL NOT WORK
+
+				<h:panelGrid columns="2" style="padding-left: 5px;">
+					<h:commandButton value="#{text['refresh']}" styleClass="button">
+						<!-- DO NOT USE THIS; WILL NOT WORK
 					<f:ajax render="@form" />
-					-->					
-					<f:ajax execute="@form" render="loc loc_hu hu loc_menu hu_hu orig_menu dest_menu zone loc_zo_menu zo_loc_menu" />
-				  </h:commandButton>
-				  
-				  <h:messages id="customMessages" globalOnly="false" showDetail="true"
-				      infoStyle="color: black;" warnStyle="color: blue; font-weight: bold; font-size: 150%;" 
-				      errorStyle="color: red; font-weight: bold; font-size: 150%;"
-				      fatalStyle="color: purple; font-weight: bold; font-size: 150%;" />
-				      <!-- THIS DOES NOT WORK; DON'T KNOW WHY
+					-->
+						<f:ajax execute="@form"
+							render="loc loc_hu hu loc_menu hu_hu orig_menu dest_menu zone loc_zo_menu zo_loc_menu" />
+					</h:commandButton>
+
+					<h:messages id="customMessages" globalOnly="false"
+						showDetail="true" infoStyle="color: black;"
+						warnStyle="color: blue; font-weight: bold; font-size: 150%;"
+						errorStyle="color: red; font-weight: bold; font-size: 150%;"
+						fatalStyle="color: purple; font-weight: bold; font-size: 150%;" />
+					<!-- THIS DOES NOT WORK; DON'T KNOW WHY
 				      infoClass="info-message" warningClass="warning-message"
 				      errorClass="error-message" fatalClass="fatal-message" />
 				      -->
 				</h:panelGrid>
-				
+
 				<h:panelGrid id="panelQualification" columns="5" style="width: 100%;">
-                   <h:panelGrid style="width: 100%;">
-                   
-			           <h:outputText value="#{text['locations']}" styleClass="commmonTableHeadLine" />
-        			   
- 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
-        			   <h:dataTable id="loc" value="#{simpleLocationBean.items}"
-		        	       var="item" styleClass="commonTable" style="width: 110%;"
-				           headerClass="commonTableHeader"
-					       rowClasses="commonTableOddRow, commonTableEvenRow">
-					       
-                           <h:column>
-                               <h:selectBooleanCheckbox value="#{item.selected}" />
-                           </h:column>
-                           
-					       <h:column>
-						       <f:facet name="header">#{text['location_id']}</f:facet>    				
-                               <h:outputText value="#{item.locationId}" />
-                           </h:column>
-					       <h:column>
-						       <f:facet name="header">#{text['zones']}</f:facet>    				
-                               <h:outputText value="#{item.zones}" >
-                                   <f:facet name="dummy">
-                                       <pre>#{item.zones}</pre>
-                                   </f:facet>
-                               </h:outputText>
-                           </h:column>
-				       </h:dataTable>
-                       </h:panelGrid>
-				       
-				       <!-- JavaScript for the selection -->
-                       <h:outputScript>
-                           <![CDATA[
-                             // Function for selecting a row
-                             function selectRow(row) {
-                               row.classList.toggle("selected");
-                               var checkbox = row.querySelector("input[type='checkbox']");
-                               checkbox.checked = !checkbox.checked;
-                             }
-                           ]]>
-                       </h:outputScript>
-				       
-				       <h:panelGrid columns="2" style="height: 25vh; display: grid;">
-                           <!-- Buttons for action -->
-                           <h:commandButton value="#{text['delete']}" action="#{simpleLocationBean.deleteSelected}"
-                                            styleClass="button" id="del_lo"/>
-                           <h:commandButton value="#{text['add']}" action="#{simpleLocationBean.addDefault}"
-                                            styleClass="button" id="add_lo"/>
-                       </h:panelGrid>
-                   </h:panelGrid>
+					<h:panelGroup style="width: 40%;">
+						<ui:include src="locations.xhtml" />
+					</h:panelGroup>
+					<h:panelGroup style="width: 25%;">
+						<ui:include src="locationsWithHandlingUnits.xhtml" />
+					</h:panelGroup>
+					<h:panelGroup style="width: 5%;">
+						<ui:include src="handlingUnits.xhtml" />
+					</h:panelGroup>
+					<h:panelGroup style="width: 20%;">
+						<ui:include src="containerHandlingUnits.xhtml" />
+					</h:panelGroup>
+					<h:panelGroup style="width: 10%;">
+						<ui:include src="zones.xhtml" />
+					</h:panelGroup>
+				</h:panelGrid>
 
-                   <h:panelGrid style="width: 100%;" >
-			        
-			           <h:outputText value="#{text['location_with_handling_units']}" styleClass="commmonTableHeadLine" />
- 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
-        			   <h:dataTable id="loc_hu" value="#{simpleLocationWithHandlingUnitsBean.items}"
-		        	       var="item" styleClass="commonTable" style="width: 102%;"
-				           headerClass="commonTableHeader"
-					       rowClasses="commonTableOddRow, commonTableEvenRow">
-
-                           <h:column>
-                               <h:selectBooleanCheckbox value="#{item.selected}" />
-                           </h:column>
-                           
-					       <h:column>
-						       <f:facet name="header">#{text['location_id']}</f:facet>    				
-                               <h:outputText value="#{item.locationId}" />
-                           </h:column>
-					       <h:column>
-						       <f:facet name="header">#{text['handling_units']}</f:facet>    				
-                               <h:outputText value="#{item.handlingUnits}" style="word-break: break-all; " />
-                           </h:column>
-				       </h:dataTable>
-                       </h:panelGrid>
-				       
-				       <!-- JavaScript for the selection -->
-                       <h:outputScript>
-                           <![CDATA[
-                             // Function for selecting a row
-                             function selectRow(row) {
-                               row.classList.toggle("selected");
-                               var checkbox = row.querySelector("input[type='checkbox']");
-                               checkbox.checked = !checkbox.checked;
-                             }
-                           ]]>
-                       </h:outputScript>
-				       
-				       <h:panelGrid columns="1" style="height: 25vh; display: grid;">
-                           <!-- Button for action -->
-                           <h:commandButton value="#{text['empty']}" action="#{simpleLocationWithHandlingUnitsBean.emptySelected}"
-                                            styleClass="button" id="empty_lo"/>
-                       </h:panelGrid>
-                   </h:panelGrid>
-
-                   <h:panelGrid style="width: 100%;" >
-			        
-			           <h:outputText value="#{text['handling_units']}"  styleClass="commmonTableHeadLine" />
-			           
- 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
-        			   <h:dataTable id="hu" value="#{simpleHandlingUnitBean.items}"
-		        	       var="item" styleClass="commonTable" style="width: 135%;"
-				           headerClass="commonTableHeader"
-					       rowClasses="commonTableOddRow, commonTableEvenRow">
-
-                           <h:column>
-                               <h:selectBooleanCheckbox value="#{item.selected}" />
-                           </h:column>
-                           
-					       <h:column>
-						       <f:facet name="header">#{text['handling_unit_id']}</f:facet>    				
-                               <h:outputText value="#{item.id}" />
-                           </h:column>
-				       </h:dataTable>
-                       </h:panelGrid>
-				       
-				       <!-- JavaScript for the selection -->
-                       <h:outputScript>
-                           <![CDATA[
-                             // Function for selecting a row
-                             function selectRow(row) {
-                               row.classList.toggle("selected");
-                               var checkbox = row.querySelector("input[type='checkbox']");
-                               checkbox.checked = !checkbox.checked;
-                             }
-                           ]]>
-                       </h:outputScript>
-				       
-				       <h:panelGrid columns="3" rows="2" style="height: 25vh; display: grid;">
-                         <!-- Buttons for action -->
-                         <h:commandButton value="#{text['delete']}" action="#{simpleHandlingUnitBean.deleteSelected}"
-                                          styleClass="button" id="del_hu"/>
-                         <h:commandButton value="#{text['add']}" action="#{simpleHandlingUnitBean.addDefault}"
-                                          styleClass="button" id="add_hu"/>
-					     
-					     <h:commandButton value="#{text['pick']}" action="#{simpleHandlingUnitBean.pickSelected}" styleClass="button" id="pick_hu"/>
-					     <h:commandButton value="#{text['drop']}" action="#{simpleHandlingUnitBean.dropSelected}"
-					                      styleClass="button" id="drop_hu"/>
-						 <h:selectOneMenu id="loc_menu" value="#{simpleHandlingUnitBean.selectedDestination}" style="width: 60px; ">
-						     <f:selectItem itemLabel=" " />
-						     <f:selectItems value="#{simpleHandlingUnitBean.destinations}" />
-						 </h:selectOneMenu>
-					   </h:panelGrid>
-					</h:panelGrid>
-					
-					<h:panelGrid style="width: 100%;" >
-			        
-			           <h:outputText value="#{text['container_handling_units']}" styleClass="commmonTableHeadLine" />
- 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
-        			   <h:dataTable id="hu_hu" value="#{simpleContainerHandlingUnitsBean.items}"
-		        	       var="item" styleClass="commonTable" style="width: 113%;"
-				           headerClass="commonTableHeader"
-					       rowClasses="commonTableOddRow, commonTableEvenRow">
-
-                           <h:column>
-                               <h:selectBooleanCheckbox value="#{item.selected}" />
-                           </h:column>
-                           
-					       <h:column>
-						       <f:facet name="header">#{text['base_id']}</f:facet>    				
-                               <h:outputText value="#{item.baseId}" />
-                           </h:column>
-					       <h:column>
-						       <f:facet name="header">#{text['flat_handling_units']}</f:facet>    				
-                               <h:outputText value="#{item.handlingUnits}" style="word-break: break-all; " />
-                           </h:column>
-				       </h:dataTable>
-                       </h:panelGrid>
-				       
-				       <!-- JavaScript for the selection -->
-                       <h:outputScript>
-                           <![CDATA[
-                             // Function for selecting a row
-                             function selectRow(row) {
-                               row.classList.toggle("selected");
-                               var checkbox = row.querySelector("input[type='checkbox']");
-                               checkbox.checked = !checkbox.checked;
-                             }
-                           ]]>
-                       </h:outputScript>
-				       
-				       <h:panelGrid columns="1" rows="2" style="height: 25vh; display: grid;">
-                           <!-- Button for action -->
-                           <h:commandButton value="#{text['free']}" action="#{simpleContainerHandlingUnitsBean.freeSelected}"
-                                            styleClass="button" id="free_base"/>
-    					   
-    					   <h:panelGrid columns="3">
-						   <h:selectOneMenu id="orig_menu" value="#{simpleContainerHandlingUnitsBean.selectedOrigin}" style="width: 60px; ">
-						       <f:selectItem itemLabel=" " />
-						       <f:selectItems value="#{simpleContainerHandlingUnitsBean.origins}" />
-						   </h:selectOneMenu>
-						   <h:panelGrid columns="1">
-						       <h:commandButton value="#{text['assign']}" action="#{simpleContainerHandlingUnitsBean.assign}" styleClass="button" id="assign_hu" />
-						       <h:commandButton value="#{text['move']}" action="#{simpleContainerHandlingUnitsBean.move}" styleClass="button" id="move_hu" />
-						       <h:commandButton value="#{text['remove']}" action="#{simpleContainerHandlingUnitsBean.remove}" styleClass="button" id="remove_hu" />
-						   </h:panelGrid>
-						   <h:selectOneMenu id="dest_menu" value="#{simpleContainerHandlingUnitsBean.selectedDestination}" style="width: 60px; ">
-						       <f:selectItem itemLabel=" " />
-						       <f:selectItems value="#{simpleContainerHandlingUnitsBean.destinations}" />
-						   </h:selectOneMenu>
-						   </h:panelGrid>
-                       </h:panelGrid>
-                   </h:panelGrid>
-					
-                   <h:panelGrid style="width: 100%;" >
-			        
-			           <h:outputText value="#{text['zones']}" styleClass="commmonTableHeadLine" />
- 				       <h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
-        			   <h:dataTable id="zone" value="#{simpleZoneBean.items}"
-		        	       var="item" styleClass="commonTable" style="width: 102%;"
-				           headerClass="commonTableHeader"
-					       rowClasses="commonTableOddRow, commonTableEvenRow">
-
-                           <h:column>
-                               <h:selectBooleanCheckbox value="#{item.selected}" />
-                           </h:column>
-                           
-					       <h:column>
-						       <f:facet name="header">#{text['zone_id']}</f:facet>    				
-                               <h:outputText value="#{item.id}" />
-                           </h:column>
-					       <h:column>
-						       <f:facet name="header">#{text['zone_rating']}</f:facet>    				
-                               <h:outputText value="#{item.rating}" style="word-break: break-all; " />
-                           </h:column>
-				       </h:dataTable>
-                       </h:panelGrid>
-				       
-				       <!-- JavaScript for the selection -->
-                       <h:outputScript>
-                           <![CDATA[
-                             // Function for selecting a row
-                             function selectRow(row) {
-                               row.classList.toggle("selected");
-                               var checkbox = row.querySelector("input[type='checkbox']");
-                               checkbox.checked = !checkbox.checked;
-                             }
-                           ]]>
-                       </h:outputScript>
-				       
-				       <h:panelGrid columns="1" style="height: 25vh; display: grid;">
-				           <h:panelGrid columns="2">
-                           <!-- Button for action -->
-                           <h:commandButton value="#{text['delete']}" action="#{simpleZoneBean.deleteSelected}"
-                                            styleClass="button" id="delete_zo"/>
-                           <h:commandButton value="#{text['clear']}" action="#{simpleZoneBean.clearSelected}"
-                                            styleClass="button" id="clear_zo"/>
-                           <h:inputText value="#{simpleZoneBean.newZoneId}" id="zone_input"
-                                            style="width: 100px;" styleClass="input-field"/>
-                           <h:commandButton value="#{text['add']}" action="#{simpleZoneBean.addWithId}"
-                                            styleClass="button" id="add_zo"/>
-                           </h:panelGrid>
-				           <h:panelGrid columns="3">
-						       <h:selectOneMenu id="loc_zo_menu" value="#{simpleZoneBean.selectedLocation}" style="width: 60px;">
-                                   <f:selectItem itemLabel=" " />
-						           <f:selectItems value="#{simpleHandlingUnitBean.destinations}" />
-						       </h:selectOneMenu>
-						       <h:panelGrid columns="1">
-						           <h:commandButton id="assign_lo_zo" value="#{text['assign']}"
-						                            action="#{simpleZoneBean.assignSelected}" styleClass="button" />
-						       </h:panelGrid>
-						       <h:selectOneMenu id="zo_loc_menu" value="#{simpleZoneBean.selectedZone}" style="width: 60px;">
-                                   <f:selectItem itemLabel=" " />
-						           <f:selectItems value="#{simpleZoneBean.zones}" />
-						       </h:selectOneMenu>
-						   </h:panelGrid>
-                       </h:panelGrid>
-                   </h:panelGrid>
-
-                  </h:panelGrid>
 			</h:form>
 
 		</ui:define>
