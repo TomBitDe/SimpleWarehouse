@@ -232,6 +232,13 @@ public class SimpleLocationBean implements Serializable {
 		}
     }
     
+    /**
+     * Gets the locations type
+     * 
+     * @param loc the location
+     * 
+     * @return the locations type
+     */
     public String getType(Location loc) {
     	if (loc instanceof LifoLocation) return "LiFo";
     	if (loc instanceof FifoLocation) return "FiFo";

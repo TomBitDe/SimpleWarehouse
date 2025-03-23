@@ -25,6 +25,7 @@ public class SimpleLocation extends SelectableView implements Serializable {
 	 * Constructor is mandatory
 	 * 
 	 * @param locationId the location id
+	 * @param type the location type
 	 * @param zones the zones
 	 * @param selected the selection flag
 	 */
