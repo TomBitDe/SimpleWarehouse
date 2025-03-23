@@ -11,7 +11,7 @@
 
 	<h:panelGrid style="height: 40vh; display: grid; overflow-y: auto;">
 		<h:dataTable id="hu" value="#{simpleHandlingUnitBean.items}"
-			var="item" styleClass="commonTable" style="width: 135%;"
+			var="item" styleClass="commonTable" style="width: 100%;"
 			headerClass="commonTableHeader"
 			rowClasses="commonTableOddRow, commonTableEvenRow">
 
@@ -38,7 +38,7 @@
         ]]>
 	</h:outputScript>
 
-	<h:panelGrid columns="3" rows="2" style="height: 25vh; display: grid;">
+	<h:panelGrid columns="2" rows="3" style="height: 25vh; display: grid;">
 		<!-- Buttons for action -->
 		<h:commandButton value="#{text['delete']}"
 			action="#{simpleHandlingUnitBean.deleteSelected}" styleClass="button"
@@ -50,6 +50,7 @@
 		<h:commandButton value="#{text['pick']}"
 			action="#{simpleHandlingUnitBean.pickSelected}" styleClass="button"
 			id="pick_hu" />
+	    <h:outputText value="" />
 		<h:commandButton value="#{text['drop']}"
 			action="#{simpleHandlingUnitBean.dropSelected}" styleClass="button"
 			id="drop_hu" />
