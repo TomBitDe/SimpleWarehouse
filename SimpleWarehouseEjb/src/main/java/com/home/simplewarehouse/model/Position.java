@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import javax.persistence.Cacheable;
-import javax.persistence.Column;
 import javax.persistence.DiscriminatorColumn;
 import javax.persistence.DiscriminatorType;
 import javax.persistence.Entity;
@@ -41,10 +40,8 @@ public abstract class Position implements Serializable {
     
     /**
      * The id of the associated Location
-     * THIS is a MUST @Column(name = "LOCATION_ID")
      */
 	@Id
-	@Column(name = "LOCATION_ID")
 	private String locationId;
 	/**
 	 * Version number for optimistic locking
