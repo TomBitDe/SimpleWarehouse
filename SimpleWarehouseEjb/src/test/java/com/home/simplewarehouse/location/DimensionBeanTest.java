@@ -130,7 +130,7 @@ public class DimensionBeanTest {
 		assertEquals(expLocation, locationService.getById("A"));
 		
 		Dimension dimension = dimensionService.getById(expLocation.getLocationId());		
-		LOG.info("Dimension getById: " + dimension);
+		LOG.info("Dimension getById: {}", dimension);
 		
 		// Now check the corresponding Dimension
 		assertEquals(expLocation.getLocationId(), dimension.getLocation().getLocationId());
@@ -155,8 +155,8 @@ public class DimensionBeanTest {
 
 		assertEquals(expLocation, locationService.getById("A"));
 		
-		LOG.info("Location prepared: " + expLocation);
-		LOG.info("Dimension implicite prepared: "+ expLocation.getDimension());
+		LOG.info("Location prepared: {}", expLocation);
+		LOG.info("Dimension implicite prepared: {}", expLocation.getDimension());
 		
 		// Delete the location
 		locationService.delete(expLocation);
