@@ -157,6 +157,7 @@ public class LocationBeanTest {
 		
 		location = locationService.createOrUpdate(expLocation);
 		
+		assertFalse(location.equals(null));
 		assertEquals(expLocation, location);
 		
 		LOG.info(location);
@@ -567,7 +568,7 @@ public class LocationBeanTest {
 
 		// Now make location B full
 		Location location = locationService.getById("B");
-		location.getDimension().setMaxCapacity(1);;
+		location.getDimension().setMaxCapacity(1);
 		location = locationService.createOrUpdate(location);
 		
 		try {
