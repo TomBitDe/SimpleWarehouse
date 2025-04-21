@@ -40,7 +40,7 @@ public class Zone extends EntityBase implements Serializable {
      */
     public static final int RATING_DEFAULT = 0;
 
-    private static final String ID_FORMATTER = "id={0}";
+    private static final String ID_FORMATTER = "id={}";
     
     /**
      * The zone identifier
@@ -182,9 +182,9 @@ public class Zone extends EntityBase implements Serializable {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("Zone [id=").append(id)
-		        .append(", rating=").append(rating)
-		        .append(", version=").append(version)
+		builder.append("Zone [id=").append(getId())
+		        .append(", rating=").append(getRating())
+		        .append(", version=").append(getVersion())
 		        .append(", locations=").append(locations != null
                         ? locations.stream().map(Location::getLocationId)
                                 .collect(Collectors.toList())
