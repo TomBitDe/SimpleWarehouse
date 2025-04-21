@@ -2,6 +2,7 @@ package com.home.simplewarehouse.zone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -32,6 +33,7 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.EntityBase;
+import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
@@ -156,7 +158,23 @@ public class ZoneBeanTest {
 			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
 		}
 		
-		Zone expZone = new Zone("Cooler");
+		Zone expZone = new Zone();
+		
+		expZone.setId("Bulk");
+		expZone.setRating(5);
+		zone = zoneService.createOrUpdate(expZone);
+		
+		assertNotNull(zone);
+		assertEquals(expZone.getId(), zone.getId());
+		assertEquals(5, zone.getRating());
+		assertEquals(EntityBase.USER_DEFAULT, zone.getUpdateUserId());
+		assertNotNull(zone.getUpdateTimestamp());
+		assertEquals(expZone, expZone);
+		assertNotEquals(expZone, new RandomLocation(""));
+		assertEquals(expZone, zone);
+		LOG.info(zone);
+		
+		expZone = new Zone("Cooler");
 		zone = zoneService.createOrUpdate(new Zone("Cooler"));
 		
 		assertNotNull(zone);
