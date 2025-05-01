@@ -2,6 +2,7 @@ package com.home.simplewarehouse.location;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -223,8 +224,20 @@ public class LocationPositionTest {
 		LOG.info("LocB: {}", locB);
 
 		// AbsolutPosition
-		Location locD = locationService.createOrUpdate(new RandomLocation(new AbsolutPosition(), "D"));
+		Location locF = locationService.createOrUpdate(new RandomLocation(
+				new AbsolutPosition(3.0f, 2.5f, 6.1f), "F"));
 		
+		assertNotNull(locF);
+		// Check the values
+		assertEquals(3.0f, ((AbsolutPosition) locF.getPosition()).getXCoord(), 0.0001f);
+		assertEquals(2.5f, ((AbsolutPosition) locF.getPosition()).getYCoord(), 0.0001f);
+		assertEquals(6.1f, ((AbsolutPosition) locF.getPosition()).getZCoord(), 0.0001f);
+		
+		assertEquals(locF.getPosition(), locF.getPosition());
+		assertNotEquals(null, locF.getPosition());
+
+		Location locD = locationService.createOrUpdate(new RandomLocation(new AbsolutPosition(), "D"));
+
 		assertNotNull(locD);
 		// Check the DEFAULT values
 		assertEquals(0.0f, ((AbsolutPosition) locD.getPosition()).getXCoord(), 0.0001f);
