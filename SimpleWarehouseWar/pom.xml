@@ -93,9 +93,10 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
-                    <compilerArguments>
-                        <endorseddirs>${endorsed.dir}</endorseddirs>
-                    </compilerArguments>
+					<compilerArgs>
+						<arg>-endorseddirs</arg>
+						<arg>${endorsed.dir}</arg>
+					</compilerArgs>
                 </configuration>
             </plugin>
             <plugin>
