@@ -90,6 +90,9 @@ public class SampleWarehouseBeanTest {
 	
 	@EJB
 	private HandlingUnitService handlingUnitService;
+	
+	@EJB
+	private ZoneService zoneService;
 
 	/**
 	 * Mandatory default constructor
@@ -148,7 +151,13 @@ public class SampleWarehouseBeanTest {
 		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitService.getAll().size());
 		
 		handlingUnitService.getAll().forEach(h -> LOG.info(h));
-	}
+		
+		assertNotNull(zoneService.getAll());
+		assertFalse(zoneService.getAll().isEmpty());
+		assertTrue(4 <= zoneService.count());
+
+		zoneService.getAll().forEach(z -> LOG.info(z));
+}
 	
 	/**
 	 * Test the cleanup
@@ -171,6 +180,9 @@ public class SampleWarehouseBeanTest {
 
 		assertNotNull(handlingUnitService.getAll());
 		assertTrue(handlingUnitService.getAll().isEmpty());
+
+		assertNotNull(zoneService.getAll());
+		assertTrue(zoneService.getAll().isEmpty());
 	}
 
 	/**
@@ -202,6 +214,12 @@ public class SampleWarehouseBeanTest {
 		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitService.getAll().size());
 		
 		handlingUnitService.getAll().forEach(h -> LOG.info(h));
+
+		assertNotNull(zoneService.getAll());
+		assertFalse(zoneService.getAll().isEmpty());
+		assertTrue(4 <= zoneService.count());
+
+		zoneService.getAll().forEach(z -> LOG.info(z));
 	}
 	
 	/**
@@ -225,5 +243,8 @@ public class SampleWarehouseBeanTest {
 
 		assertNotNull(handlingUnitService.getAll());
 		assertTrue(handlingUnitService.getAll().isEmpty());
+
+		assertNotNull(zoneService.getAll());
+		assertTrue(zoneService.getAll().isEmpty());
 	}
 }

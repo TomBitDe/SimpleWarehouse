@@ -19,7 +19,9 @@ import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.RandomLocation;
+import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
+import com.home.simplewarehouse.zone.ZoneService;
 
 /**
  * Bean class for Sample Warehouse usage. 
@@ -35,6 +37,9 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 	
 	@EJB
 	HandlingUnitService handlingUnitService;
+	
+	@EJB
+	ZoneService zoneService;
 	
 	/**
 	 * Create the Sample Warehouse Bean
@@ -57,7 +62,6 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		
 		// Locations
 		List<Location> locationList = new ArrayList<>();
-		locationList.clear();
 		
 		// Random
 		for (char c = 'A', num = 1; num <= LOCATION_NUM; ++c, ++num) {
@@ -81,12 +85,19 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		
 		// HandlingUnits
 		List<HandlingUnit> handlingUnitList = new ArrayList<>();
-		handlingUnitList.clear();
 
 		for (int val = 1; val <= HANDLING_UNIT_NUM; ++val) {
 			handlingUnitList.add(new HandlingUnit(String.valueOf(val), SampleWarehouseBean.class.getSimpleName()));
 		}
 		handlingUnitList.forEach(h -> handlingUnitService.createOrUpdate(h));
+		
+		// Zones
+		List<Zone> zoneList = new ArrayList<>();
+		zoneList.add(new Zone("Bulk", 9));
+		zoneList.add(new Zone("Cooler", 5));
+		zoneList.add(new Zone("Freezer", 7));
+		zoneList.add(new Zone("Highbay", 2));
+		zoneList.forEach(z -> zoneService.createOrUpdate(z));
 		
 		LOG.trace("<-- initialize()");
 	}
@@ -100,6 +111,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		
 		locationService.getAll().forEach(l -> locationService.delete(l));
 		handlingUnitService.getAll().forEach(h -> handlingUnitService.delete(h));
+		zoneService.getAll().forEach(z -> zoneService.delete(z));
 		
 		LOG.trace("<-- cleanup()");
 	}
