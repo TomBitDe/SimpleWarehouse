@@ -96,7 +96,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		zoneList.add(new Zone("Bulk", 9));
 		zoneList.add(new Zone("Cooler", 5));
 		zoneList.add(new Zone("Freezer", 7));
-		zoneList.add(new Zone("Highbay", 2));
+		zoneList.add(new Zone("HighBay", 2));
 		zoneList.forEach(z -> zoneService.createOrUpdate(z));
 		
 		LOG.trace("<-- initialize()");
