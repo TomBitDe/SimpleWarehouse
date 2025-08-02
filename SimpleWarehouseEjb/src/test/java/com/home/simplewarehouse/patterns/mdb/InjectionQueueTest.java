@@ -79,7 +79,7 @@ public class InjectionQueueTest extends CommonJmsUtility {
 
 		producer.send(message);
 
-		LOG.info("Message [" + message.getBody(String.class) + "] send");
+		LOG.info("Message [{}] send", message.getBody(String.class));
 	}
 
 	@Test
@@ -108,7 +108,7 @@ public class InjectionQueueTest extends CommonJmsUtility {
 
 			producer.send(message);
 
-			LOG.info("Message [" +  message.getBody(String.class) + "] send");
+			LOG.info("Message [{}] send", message.getBody(String.class));
 		}
 
 	}

@@ -39,8 +39,10 @@ public class MsgQueueProducer1Bean implements MsgQueueProducer1 {
 	public void shouldBeAbleToSendMessage() {
 		LOG.trace("--> shouldBeAbleToSendMessage");
 
+		Connection connection = null;
+
 		try {
-			Connection connection = factory.createConnection();
+			connection = factory.createConnection();
 			LOG.info("Connection created...");
 
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -57,10 +59,20 @@ public class MsgQueueProducer1Bean implements MsgQueueProducer1 {
 
 			producer.send(message);
 
-			LOG.info("Message [" +  message.getBody(String.class) + "] send");
+			LOG.info("Message [{}] send", message.getBody(String.class));
 		}
 		catch (JMSException jmsEx) {
 			LOG.error(jmsEx.getMessage());
+		}
+		finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				}
+				catch (JMSException e) {
+					LOG.info(e.getMessage());
+				}
+			}
 		}
 
 		LOG.trace("<-- shouldBeAbleToSendMessage");
@@ -70,8 +82,10 @@ public class MsgQueueProducer1Bean implements MsgQueueProducer1 {
 	public void sendManyMessages(int noMsgs) {
 		LOG.trace("--> sendManyMessages");
 
+		Connection connection = null;
+		
 		try {
-			Connection connection = factory.createConnection();
+			connection = factory.createConnection();
 			LOG.info("Connection created...");
 
 			Session session = connection.createSession(false, Session.AUTO_ACKNOWLEDGE);
@@ -91,11 +105,21 @@ public class MsgQueueProducer1Bean implements MsgQueueProducer1 {
 
 				producer.send(message);
 
-				LOG.info("Message [" +  message.getBody(String.class) + "] send");
+				LOG.info("Message [{}] send", message.getBody(String.class));
 			}
 		}
 		catch (JMSException jmsEx) {
 			LOG.error(jmsEx.getMessage());
+		}
+		finally {
+			if (connection != null) {
+				try {
+					connection.close();
+				}
+				catch (JMSException e) {
+					LOG.info(e.getMessage());
+				}
+			}
 		}
 
 		LOG.trace("<-- sendManyMessages");
