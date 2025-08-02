@@ -41,18 +41,18 @@ public class MsgQueueConsumer1Bean implements MessageListener {
 	public void onMessage(Message message) {
     	try
         {
-            LOG.trace("onMessage: Message of Type [" + message.getClass().toString() + "] received");
+            LOG.trace("onMessage: Message of Type [{}] received", message.getClass());
             if (message instanceof TextMessage) {
                 TextMessage textMessage = (TextMessage) message;
-                LOG.info("TextMessage contains this text: [" + textMessage.getText() + ']');
+                LOG.info("TextMessage contains this text: [{}]", textMessage.getText());
             }
             else {
-        	    LOG.info("Other message type. Try toString() = [" + message.toString() + ']');
+        	    LOG.info("Other message type. Try toString() = [{}]", message);
 		    }
         }
         catch (JMSException jex)
         {
-        	LOG.fatal("Error on message processing: " + jex.getMessage(), jex );
+        	LOG.fatal("Error on message processing: {}", jex.getMessage(), jex );
             throw new EJBException ("Error on message processing: " + jex.getMessage(), jex );
         }
     }
