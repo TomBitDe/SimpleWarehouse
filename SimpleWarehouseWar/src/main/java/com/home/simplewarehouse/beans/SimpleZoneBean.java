@@ -92,9 +92,9 @@ public class SimpleZoneBean implements Serializable {
 	public List<SimpleZone> getItems() {
 		items = new ArrayList<>();
 		
-		Set<Zone> zones = zoneService.getAll();
+		Set<Zone> zonesSet = zoneService.getAll();
 		
-		for (Zone zone : zones) {
+		for (Zone zone : zonesSet) {
 			items.add(new SimpleZone(zone.getId(), false));
 		}
 		
@@ -172,6 +172,7 @@ public class SimpleZoneBean implements Serializable {
 		}
 		
 		LOG.debug("Set [{}] zones", ret.size());
+		zones = ret;
 		
 		return ret;
 	}
@@ -332,5 +333,12 @@ public class SimpleZoneBean implements Serializable {
 		}
 
 		zoneService.addLocationTo(selectedLocation, selectedZone);
+    }
+    
+	/**
+	 * Show all zones as log out debug
+	 */
+    public void showZones() {
+    	zones.stream().forEach(LOG::debug);
     }
 }

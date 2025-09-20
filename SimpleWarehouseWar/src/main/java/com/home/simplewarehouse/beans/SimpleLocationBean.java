@@ -244,4 +244,11 @@ public class SimpleLocationBean implements Serializable {
     	if (loc instanceof FifoLocation) return "FiFo";
     	return "Random";
     }
+    
+	/**
+	 * Show all location types as log out debug
+	 */
+    public void showLocationTypes() {
+    	locationTypes.stream().forEach(location -> LOG.debug(location.getType()));
+    }
 }
