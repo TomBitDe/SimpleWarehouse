@@ -92,7 +92,7 @@ public class CacheDataFromDbTableTest {
 		Map<String, ValueSourceEntry> configMap = cacheDataProvider.loadCacheData();
 		assertNotNull(configMap);
 		
-		configMap.values().forEach(e -> LOG.debug("Entry: {}", e.toString()));
+		configMap.values().forEach(e -> LOG.debug("Entry: {}", e));
 		
 		ValueSourceEntry entry = new ValueSourceEntry("DUMMY_XYZ", "Test");
 		ValueSourceEntry same = new ValueSourceEntry("DUMMY_XYZ", "Test");
