@@ -30,8 +30,8 @@ public class MsgQueueConsumer1Bean implements MessageListener {
      */
     public MsgQueueConsumer1Bean() {
 		super();
-		LOG.trace("--> MsgQueueConsumer1Bean");
-		LOG.trace("<-- MsgQueueConsumer1Bean");
+		LOG.trace("--> ZoneQueueListenerBean");
+		LOG.trace("<-- ZoneQueueListenerBean");
     }
 
 	/**
