@@ -23,6 +23,7 @@ import com.home.simplewarehouse.handlingunit.HandlingUnitBean;
 import com.home.simplewarehouse.handlingunit.HandlingUnitService;
 import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.topology.SampleWarehouseBean;
 import com.home.simplewarehouse.topology.SampleWarehouseService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -100,9 +101,10 @@ public class PickDropRandomLocationTest {
 	
 	/**
 	 * What to do before an individual test will be executed (each test)
+	 * @throws BusinessException 
 	 */
 	@Before
-	public void beforeTest() {
+	public void beforeTest() throws BusinessException {
 		LOG.trace("--> beforeTest()");
 		
 		sampleWarehouseService.initialize();
@@ -112,9 +114,10 @@ public class PickDropRandomLocationTest {
 	
 	/**
 	 * What to do after an individual test has been executed (each test)
+	 * @throws BusinessException 
 	 */
 	@After
-	public void afterTest() {
+	public void afterTest() throws BusinessException {
 		LOG.trace("--> afterTest()");
 		
 		sampleWarehouseService.cleanup();

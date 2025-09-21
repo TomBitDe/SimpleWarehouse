@@ -40,6 +40,7 @@ import com.home.simplewarehouse.location.LocationStatusService;
 import com.home.simplewarehouse.model.ErrorStatus;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.topology.SampleWarehouseBean;
 import com.home.simplewarehouse.topology.SampleWarehouseService;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
@@ -132,9 +133,10 @@ public class LifoAccessPickUseCasesTest {
 	 * What to do before an individual test will be executed (each test)<br>
 	 * <br>
 	 * Initialize with the SampleWarehouse data
+	 * @throws BusinessException 
 	 */
 	@Before
-	public void beforeTest() {
+	public void beforeTest() throws BusinessException {
 		LOG.trace("--> beforeTest()");
 		
 		sampleWarehouseService.initialize();
@@ -150,9 +152,10 @@ public class LifoAccessPickUseCasesTest {
 	 * What to do after an individual test has been executed (each test)<br>
 	 * <br>
 	 * Cleanup the SampleWarehouse data
+	 * @throws BusinessException 
 	 */
 	@After
-	public void afterTest() {
+	public void afterTest() throws BusinessException {
 		LOG.trace("--> afterTest()");
 		
 		sampleWarehouseService.cleanup();

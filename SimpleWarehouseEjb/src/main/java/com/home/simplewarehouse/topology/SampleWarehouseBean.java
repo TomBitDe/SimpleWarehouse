@@ -20,6 +20,7 @@ import com.home.simplewarehouse.model.LifoLocation;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.Zone;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.zone.ZoneService;
 
@@ -54,7 +55,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 	 * Create sample Locations (Random, FiFo, LiFo) and HandlingUnits 
 	 */
 	@Override
-	public void initialize() {
+	public void initialize() throws BusinessException {
 		LOG.trace("--> initialize()");
 		
 		// Do a cleanup before
@@ -97,7 +98,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		zoneList.add(new Zone("Cooler", 5));
 		zoneList.add(new Zone("Freezer", 7));
 		zoneList.add(new Zone("HighBay", 2));
-		zoneList.forEach(z -> zoneService.createOrUpdate(z));
+		for (Zone z : zoneList) { zoneService.createOrUpdate(z); };
 		
 		LOG.trace("<-- initialize()");
 	}
@@ -106,12 +107,12 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 	 * Delete all Locations and HandlingUnits
 	 */
 	@Override
-	public void cleanup() {
+	public void cleanup() throws BusinessException {
 		LOG.trace("--> cleanup()");
 		
 		locationService.getAll().forEach(l -> locationService.delete(l));
 		handlingUnitService.getAll().forEach(h -> handlingUnitService.delete(h));
-		zoneService.getAll().forEach(z -> zoneService.delete(z));
+		for (Zone z : zoneService.getAll()) { zoneService.delete(z); };
 		
 		LOG.trace("<-- cleanup()");
 	}

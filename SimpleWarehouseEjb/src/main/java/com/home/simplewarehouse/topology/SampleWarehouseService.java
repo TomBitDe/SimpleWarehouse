@@ -1,5 +1,7 @@
 package com.home.simplewarehouse.topology;
 
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
+
 /**
  * Local interface for Sample Warehouse usage.
  */
@@ -16,9 +18,9 @@ public interface SampleWarehouseService {
 	/**
 	 * Create sample warehouse topology data.
 	 */
-	public void initialize();
+	public void initialize() throws BusinessException;
 	/**
 	 * Cleanup the sample warehouse topology data.
 	 */
-	public void cleanup();
+	public void cleanup() throws BusinessException;
 }

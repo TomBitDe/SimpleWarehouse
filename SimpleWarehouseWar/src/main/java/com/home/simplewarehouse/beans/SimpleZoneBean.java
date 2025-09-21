@@ -19,6 +19,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.home.simplewarehouse.jsfutils.FacesMessageProxy;
 import com.home.simplewarehouse.model.Zone;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.views.SimpleZone;
 import com.home.simplewarehouse.zone.ZoneService;
 
@@ -88,8 +89,9 @@ public class SimpleZoneBean implements Serializable {
 	 * Gets the items to show
 	 * 
 	 * @return the items
+	 * @throws BusinessException 
 	 */
-	public List<SimpleZone> getItems() {
+	public List<SimpleZone> getItems() throws BusinessException {
 		items = new ArrayList<>();
 		
 		Set<Zone> zonesSet = zoneService.getAll();
@@ -161,8 +163,9 @@ public class SimpleZoneBean implements Serializable {
 	 * Gets the zones
 	 * 
 	 * @return the zones
+	 * @throws BusinessException 
 	 */
-	public List<String> getZones() {
+	public List<String> getZones() throws BusinessException {
 		List<String> ret = new ArrayList<>();
  		
 		Set<Zone> temp = zoneService.getAll();
@@ -188,8 +191,9 @@ public class SimpleZoneBean implements Serializable {
 
 	/**
 	 * Adds a zone with DEFAULT values
+	 * @throws BusinessException 
 	 */
-	public void addDefault() {
+	public void addDefault() throws BusinessException {
 		Set<Zone> temp = zoneService.getAll();
 		Set<String> existing = new HashSet<>();
 		
@@ -209,8 +213,9 @@ public class SimpleZoneBean implements Serializable {
 	
 	/**
 	 * Adds a zone with given id
+	 * @throws BusinessException 
 	 */
-	public void addWithId() {
+	public void addWithId() throws BusinessException {
 		if (getNewZoneId().trim().isEmpty()) {
 			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
 					localeBean.getText("error"), localeBean.getText("no_input"));
@@ -256,8 +261,9 @@ public class SimpleZoneBean implements Serializable {
 	
 	/**
 	 * Deletes the selected item
+	 * @throws BusinessException 
 	 */
-    public void deleteSelected() {
+    public void deleteSelected() throws BusinessException {
 		if (items.isEmpty()) {
 			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
 					localeBean.getText("warning"), localeBean.getText("no_items"));
@@ -286,8 +292,9 @@ public class SimpleZoneBean implements Serializable {
 
 	/**
 	 * Clears the selected item
+	 * @throws BusinessException 
 	 */
-    public void clearSelected() {
+    public void clearSelected() throws BusinessException {
 		if (items.isEmpty()) {
 			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
 					localeBean.getText("warning"), localeBean.getText("no_items"));
@@ -316,8 +323,9 @@ public class SimpleZoneBean implements Serializable {
     
 	/**
 	 * Assign the selected location to the selected zone
+	 * @throws BusinessException 
 	 */
-    public void assignSelected() {
+    public void assignSelected() throws BusinessException {
 		if (selectedLocation == null || selectedLocation.isEmpty()) {
 			FacesMessageProxy.showI18N(FacesContext.getCurrentInstance(),
 					localeBean.getText("warning"), localeBean.getText("no_combobox_location_selected"));

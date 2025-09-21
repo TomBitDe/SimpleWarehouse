@@ -44,6 +44,7 @@ import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.LocationStatus;
 import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.Zone;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -108,9 +109,10 @@ public class ZoneLocationsTest {
 	
 	/**
 	 * What to do before an individual test will be executed (each test)
+	 * @throws BusinessException 
 	 */
 	@Before
-	public void beforeTest() {
+	public void beforeTest() throws BusinessException {
 		LOG.trace("--> beforeTest()");
 		
 		// Cleanup locations
@@ -160,9 +162,10 @@ public class ZoneLocationsTest {
 	
 	/**
 	 * What to do after an individual test will be executed (each test)
+	 * @throws BusinessException 
 	 */
 	@After
-	public void afterTest() {
+	public void afterTest() throws BusinessException {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup locations
@@ -179,10 +182,11 @@ public class ZoneLocationsTest {
 
 	/**
 	 * Test simple assignment
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(0)
-	public void simpleAssign() {
+	public void simpleAssign() throws BusinessException {
 		LOG.info("--- Test simpleAssign");
 		
 		assumeFalse(zoneService.getAll().isEmpty());
@@ -232,10 +236,11 @@ public class ZoneLocationsTest {
 	
 	/**
 	 * Test init zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(3)
-	public void initZoneBy() {
+	public void initZoneBy() throws BusinessException {
 		LOG.info("--- Test initZoneBy");
 		
 		assumeFalse(zoneService.getAll().isEmpty());
@@ -278,10 +283,11 @@ public class ZoneLocationsTest {
 	
 	/**
 	 * Test remove zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(10)
-	public void removeZone() {
+	public void removeZone() throws BusinessException {
 		LOG.info("--- Test removeZone");
 		
 		assumeFalse(zoneService.getAll().isEmpty());
@@ -324,10 +330,11 @@ public class ZoneLocationsTest {
 	
 	/**
 	 * Test remove location
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(12)
-	public void removeLocation() {
+	public void removeLocation() throws BusinessException {
 		LOG.info("--- Test removeLocation");
 		
 		assumeFalse(zoneService.getAll().isEmpty());
@@ -375,10 +382,11 @@ public class ZoneLocationsTest {
 	
 	/**
 	 * Test move a single Location to a Zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(15)
-	public void moveLocation() {
+	public void moveLocation() throws BusinessException {
 		LOG.info("--- Test moveLocation");
 
 		assumeFalse(zoneService.getAll().isEmpty());
@@ -432,10 +440,11 @@ public class ZoneLocationsTest {
 
 	/**
 	 * Test move Locations to a Zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(17)
-	public void moveLocations() {
+	public void moveLocations() throws BusinessException {
 		LOG.info("--- Test moveLocations");
 
 		assumeFalse(zoneService.getAll().isEmpty());
@@ -491,10 +500,11 @@ public class ZoneLocationsTest {
 
 	/**
 	 * Test clear a Zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(20)
-	public void clearZone() {
+	public void clearZone() throws BusinessException {
 		assumeFalse(zoneService.getAll().isEmpty());
 		assumeFalse(locationService.getAll().isEmpty());
 		
@@ -535,10 +545,11 @@ public class ZoneLocationsTest {
 
 	/**
 	 * Test clear all Zones
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(22)
-	public void clearAllZones() {
+	public void clearAllZones() throws BusinessException {
 		assumeFalse(zoneService.getAll().isEmpty());
 		assumeFalse(locationService.getAll().isEmpty());
 
@@ -571,10 +582,11 @@ public class ZoneLocationsTest {
 
 	/**
 	 * Test delete all Zones
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(25)
-	public void deleteAllZones() {
+	public void deleteAllZones() throws BusinessException {
 		assumeFalse(zoneService.getAll().isEmpty());
 		assumeFalse(locationService.getAll().isEmpty());
 
@@ -602,10 +614,11 @@ public class ZoneLocationsTest {
 	
 	/**
 	 * Test get all Locations for a Zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(28)
-	public void getAllLocationsForZone() {
+	public void getAllLocationsForZone() throws BusinessException {
 		assumeFalse(zoneService.getAll().isEmpty());
 		assumeFalse(locationService.getAll().isEmpty());
 
@@ -683,10 +696,11 @@ public class ZoneLocationsTest {
 
 	/**
 	 * Test get all HandlingUnits for a Zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(31)
-	public void getAllHandlingUnitsForZone() {
+	public void getAllHandlingUnitsForZone() throws BusinessException {
 		assumeFalse(zoneService.getAll().isEmpty());
 		assumeFalse(locationService.getAll().isEmpty());
 

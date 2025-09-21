@@ -35,6 +35,7 @@ import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.EntityBase;
 import com.home.simplewarehouse.model.RandomLocation;
 import com.home.simplewarehouse.model.Zone;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -97,25 +98,27 @@ public class ZoneBeanTest {
 	
 	/**
 	 * What to do after an individual test will be executed (each test)
+	 * @throws BusinessException 
 	 */
 	@After
-	public void afterTest() {
+	public void afterTest() throws BusinessException {
 		LOG.trace("--> afterTest()");
 
 		// Cleanup zones
 		Set<Zone> zones = zoneService.getAll();
 		
-		zones.stream().forEach(z -> zoneService.delete(z));
+		for (Zone z : zones) { zoneService.delete(z); };
 		
 		LOG.trace("<-- afterTest()");
 	}
 
 	/**
 	 * Create a Zone by its id
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(0)
-	public void create_getById() {
+	public void create_getById() throws BusinessException {
 		LOG.info("--- Test create_getById");
 
 		assertTrue(zoneService.getAll().isEmpty());
@@ -127,8 +130,8 @@ public class ZoneBeanTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (EJBException | BusinessException ex) {
+			LOG.info("{} : {}", ex, ex.getMessage());
 		}
 
 		try {
@@ -195,10 +198,11 @@ public class ZoneBeanTest {
 	
 	/**
 	 * Test modify zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(5)
-	public void modifyZone() {
+	public void modifyZone() throws BusinessException {
 		LOG.info("--- Test modifyZone");
 		
 		assumeTrue(zoneService.getAll().isEmpty());
@@ -221,10 +225,11 @@ public class ZoneBeanTest {
 
 	/**
 	 * Test remove zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(10)
-	public void removeZone() {
+	public void removeZone() throws BusinessException {
 		LOG.info("--- Test removeZone");
 		
 		assumeTrue(zoneService.getAll().isEmpty());
@@ -262,10 +267,11 @@ public class ZoneBeanTest {
 
 	/**
 	 * Test getAll zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(13)
-	public void getAllZone() {
+	public void getAllZone() throws BusinessException {
 		LOG.info("--- Test getAllZone");
 		
 		assumeTrue(zoneService.getAll().isEmpty());
@@ -314,10 +320,11 @@ public class ZoneBeanTest {
 
 	/**
 	 * Test count zone
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(16)
-	public void countZone() {
+	public void countZone() throws BusinessException {
 		LOG.info("--- Test countZone");
 		
 		assumeTrue(zoneService.getAll().isEmpty());

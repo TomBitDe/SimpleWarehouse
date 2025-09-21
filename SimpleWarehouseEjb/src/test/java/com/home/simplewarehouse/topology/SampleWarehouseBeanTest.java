@@ -30,6 +30,7 @@ import com.home.simplewarehouse.location.LocationBean;
 import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.location.LocationStatusBean;
 import com.home.simplewarehouse.location.LocationStatusService;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 import com.home.simplewarehouse.zone.ZoneBean;
@@ -124,10 +125,11 @@ public class SampleWarehouseBeanTest {
 
 	/**
 	 * Test the initialization
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(0)
-	public void initializeTest() {
+	public void initializeTest() throws BusinessException {
 		LOG.info("--- Test initializeTest");
 		
 		sampleWarehouseService.initialize();
@@ -144,27 +146,28 @@ public class SampleWarehouseBeanTest {
 		assertFalse(dimensionService.getAll().isEmpty());
 		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, dimensionService.getAll().size());
 
-		locationService.getAll().forEach(l -> LOG.info(l));
+		locationService.getAll().forEach(LOG::info);
 		
 		assertNotNull(handlingUnitService.getAll());
 		assertFalse(handlingUnitService.getAll().isEmpty());
 		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitService.getAll().size());
 		
-		handlingUnitService.getAll().forEach(h -> LOG.info(h));
+		handlingUnitService.getAll().forEach(LOG::info);
 		
 		assertNotNull(zoneService.getAll());
 		assertFalse(zoneService.getAll().isEmpty());
 		assertTrue(4 <= zoneService.count());
 
-		zoneService.getAll().forEach(z -> LOG.info(z));
+		zoneService.getAll().forEach(LOG::info);
 }
 	
 	/**
 	 * Test the cleanup
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(1)
-	public void cleanupTest() {
+	public void cleanupTest() throws BusinessException {
 		LOG.info("--- Test cleanupTest");
 
 		sampleWarehouseService.cleanup();
@@ -187,10 +190,11 @@ public class SampleWarehouseBeanTest {
 
 	/**
 	 * Sequence testing for initialization
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(2)
-	public void secondInitializeTest() {
+	public void secondInitializeTest() throws BusinessException {
 		LOG.info("--- Test secondInitializeTest");
 		
 		sampleWarehouseService.initialize();
@@ -207,27 +211,28 @@ public class SampleWarehouseBeanTest {
 		assertFalse(dimensionService.getAll().isEmpty());
 		assertEquals(SampleWarehouseBean.LOCATION_NUM * 3, dimensionService.getAll().size());
 
-		locationService.getAll().forEach(l -> LOG.info(l));
+		locationService.getAll().forEach(LOG::info);
 		
 		assertNotNull(handlingUnitService.getAll());
 		assertFalse(handlingUnitService.getAll().isEmpty());
 		assertEquals(SampleWarehouseBean.HANDLING_UNIT_NUM, handlingUnitService.getAll().size());
 		
-		handlingUnitService.getAll().forEach(h -> LOG.info(h));
+		handlingUnitService.getAll().forEach(LOG::info);
 
 		assertNotNull(zoneService.getAll());
 		assertFalse(zoneService.getAll().isEmpty());
 		assertTrue(4 <= zoneService.count());
 
-		zoneService.getAll().forEach(z -> LOG.info(z));
+		zoneService.getAll().forEach(LOG::info);
 	}
 	
 	/**
 	 * Sequence testing for cleanup
+	 * @throws BusinessException 
 	 */
 	@Test
 	@InSequence(3)
-	public void secondCleanupTest() {
+	public void secondCleanupTest() throws BusinessException {
 		LOG.info("--- Test secondCleanupTest");
 
 		sampleWarehouseService.cleanup();

@@ -18,6 +18,7 @@ public class CommonJmsUtility {
 	private static final String WIN_ASADMIN = "/asadmin.bat";
 	private static final String OTHER_ASADMIN = "/asadmin";
 	private static final String JMS_QUEUE_CREATE_CMD = " create-jms-resource --enabled=true --property=Name=Queue1 --restype=javax.jms.Queue queue/Queue1";
+	private static final String JMS_ERROR_QUEUE_CREATE_CMD = " create-jms-resource --enabled=true --property=Name=APPLICATION-ERROR-QUEUE --restype=javax.jms.Queue queue/ApplicationErrorQueue";
 	private static final String JMS_TOPIC_CREATE_CMD = " create-jms-resource --enabled=true --property=Name=Topic1 --restype=javax.jms.Topic topic/Topic1";
 	private static final String PAYARA_PROP = "payara.home";
 	private static final String PAYARA_ENV = "PAYARA_HOME";
@@ -50,13 +51,28 @@ public class CommonJmsUtility {
 			    builder.command("sh", "-c", payaraPath + "/bin" + OTHER_ASADMIN + JMS_QUEUE_CREATE_CMD);
 			}
 
-			LOG.info("Create queue with command [" + builder.command().toString() + ']');
+			LOG.info("Create queue with command [{}]", builder.command());
 
 			Process process = builder.start();
 			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			int exitCode = process.waitFor();
-			LOG.info("Exit code [" + exitCode + "]");
+			LOG.info("Exit code [{}]", exitCode);
+
+			if (isWindows) {
+			    builder.command("cmd.exe", "/c", payaraPath + "/bin" + WIN_ASADMIN + JMS_ERROR_QUEUE_CREATE_CMD);
+			}
+			else {
+			    builder.command("sh", "-c", payaraPath + "/bin" + OTHER_ASADMIN + JMS_ERROR_QUEUE_CREATE_CMD);
+			}
+
+			LOG.info("Create queue with command [{}]", builder.command());
+
+			process = builder.start();
+			Executors.newSingleThreadExecutor().submit(streamGobbler);
+			exitCode = process.waitFor();
+			LOG.info("Exit code [{}]", exitCode);
+
 
 			if (isWindows) {
 				builder.command("cmd.exe", "/c", payaraPath + "/bin" + WIN_ASADMIN + JMS_TOPIC_CREATE_CMD);
@@ -65,12 +81,12 @@ public class CommonJmsUtility {
 			    builder.command("sh", "-c", payaraPath + "/bin" + OTHER_ASADMIN + JMS_TOPIC_CREATE_CMD);
 			}
 
-			LOG.info("Create topic with command [" + builder.command().toString() + ']');
+			LOG.info("Create topic with command [{}]", builder.command());
 
 			process = builder.start();
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			exitCode = process.waitFor();
-			LOG.info("Exit code [" + exitCode + "]");
+			LOG.info("Exit code [{}]", exitCode);
 		}
 		catch (IOException | InterruptedException ex) {
 			LOG.error(ex.getMessage());
@@ -93,6 +109,7 @@ public class CommonJmsUtility {
 	    }
 	}
 
-	public static void main(String[] args){
+	public static void main(String[] args) {
+		// Empty because all is done by static init
 	}
 }

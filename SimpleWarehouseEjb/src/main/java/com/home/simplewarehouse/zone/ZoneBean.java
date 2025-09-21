@@ -23,6 +23,7 @@ import com.home.simplewarehouse.location.LocationService;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Zone;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 
 /**
@@ -66,7 +67,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public Zone createOrUpdate(final Zone zone) {
+	public Zone createOrUpdate(final Zone zone) throws BusinessException {
 		LOG.trace("--> create");
 		
 		if (zone == null || zone.getId() == null || zone.getId().trim().isEmpty()) {
@@ -87,7 +88,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void delete(String id) {
+	public void delete(String id) throws BusinessException {
 		LOG.trace("--> delete({})", id);
 
 		Zone zo = getById(id);
@@ -103,7 +104,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void delete(Zone zone) {
+	public void delete(Zone zone)  throws BusinessException {
 	    LOG.trace("--> delete({})", zone);
 
 	    if (zone != null && zone.getId() != null) {
@@ -135,11 +136,11 @@ public class ZoneBean implements ZoneService {
 	}
 	
 	@Override
-	public Zone getById(String id) {
+	public Zone getById(String id) throws BusinessException {
 		LOG.trace("--> getById({})", id);
 		
 		if (id == null) {
-			throw new IllegalArgumentException();
+			throw new BusinessException("id must not be null");
 		}
 
 		Zone zone = em.find(Zone.class, id);
@@ -228,7 +229,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void addLocationTo(String locationId, String zoneId) {
+	public void addLocationTo(String locationId, String zoneId) throws BusinessException {
 		checkParam(locationId, zoneId);
 		
 		addLocationTo(locationService.getById(locationId), getById(zoneId));
@@ -263,7 +264,7 @@ public class ZoneBean implements ZoneService {
     }
 	
 	@Override
-	public void clear(String zoneId) {
+	public void clear(String zoneId) throws BusinessException {
         checkZone(zoneId);
         
 		clear(getById(zoneId));
@@ -271,7 +272,7 @@ public class ZoneBean implements ZoneService {
 	
 
 	@Override
-	public void clear(Zone zone) {
+	public void clear(Zone zone) throws BusinessException {
 		checkZone(zone);
 		
 	    if (zone.getId() != null) {
@@ -304,12 +305,14 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void clearAll() {
-		getAll().stream().forEach(this::clear);
+	public void clearAll() throws BusinessException {
+	    for (Zone entity : getAll()) {
+	        clear(entity); // allowed to throw BusinessException
+	    }
 	}
 
 	@Override
-	public void deleteAll() {
+	public void deleteAll() throws BusinessException {
 		Iterator<Zone> iterator = getAll().iterator();
 		while (iterator.hasNext()) {
 		    delete(iterator.next());
@@ -334,7 +337,7 @@ public class ZoneBean implements ZoneService {
 		}
 	}
 	
-	private void checkParam(String locationId, String zoneId) {
+	private void checkParam(String locationId, String zoneId) throws BusinessException {
 		if (locationId == null) {
 			throw new IllegalArgumentException(LocationBean.LOCATION_ID_IS_NULL);
 		}
@@ -380,7 +383,7 @@ public class ZoneBean implements ZoneService {
 		}
 	}
 
-	private void checkZone(String zoneId) {
+	private void checkZone(String zoneId) throws BusinessException {
 		if (zoneId == null) {
 			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
 		}
@@ -395,13 +398,8 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public Set<Location> getAllLocations(String zoneId) {
-		if (zoneId == null) {
-			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
-		}
-		if (getById(zoneId) == null) {
-			throw new IllegalArgumentException(ZONE_IS_NULL);
-		}
+	public Set<Location> getAllLocations(String zoneId) throws BusinessException {
+		checkZone(zoneId);
 		
 		Set<Location> ret;
 		
@@ -417,13 +415,8 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public Set<HandlingUnit> getAllHandlingUnits(String zoneId) {
-		if (zoneId == null) {
-			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
-		}
-		if (getById(zoneId) == null) {
-			throw new IllegalArgumentException(ZONE_IS_NULL);
-		}
+	public Set<HandlingUnit> getAllHandlingUnits(String zoneId) throws BusinessException {
+		checkZone(zoneId);
 		
 		Set<HandlingUnit> ret;
 		

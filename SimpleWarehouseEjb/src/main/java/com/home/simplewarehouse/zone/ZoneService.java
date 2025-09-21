@@ -5,6 +5,7 @@ import java.util.Set;
 import com.home.simplewarehouse.model.HandlingUnit;
 import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Zone;
+import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 
 /**
  * Service interface for Zone usage.
@@ -17,23 +18,23 @@ public interface ZoneService {
 	 * 
 	 * @return the created Zone
 	 */
-	public Zone createOrUpdate(final Zone zone);
+	public Zone createOrUpdate(final Zone zone) throws BusinessException;
 	/**
 	 * Delete a Zone and remove
 	 * 
 	 * @param zone the given Zone
 	 */
-	public void delete(final Zone zone);
+	public void delete(final Zone zone) throws BusinessException;
 	/**
 	 * Delete a Zone by its id and remove
 	 * 
 	 * @param id of the Zone
 	 */
-	public void delete(final String id);
+	public void delete(final String id) throws BusinessException;
 	/**
 	 * Delete all existing Zones
 	 */
-	public void deleteAll();
+	public void deleteAll() throws BusinessException;
 	/**
 	 * Get a Zone by its id
 	 * 
@@ -41,13 +42,13 @@ public interface ZoneService {
 	 * 
 	 * @return the corresponding Zone
 	 */
-	public Zone getById(final String id);
+	public Zone getById(final String id) throws BusinessException;
 	/**
 	 * Get a set of all Zone items
 	 * 
 	 * @return the Zone set
 	 */
-	public Set<Zone> getAll();
+	public Set<Zone> getAll() throws BusinessException;
 	/**
 	 * Get a set of all Zone items
 	 * 
@@ -56,7 +57,7 @@ public interface ZoneService {
      *
 	 * @return the Zone set based on offset and count
 	 */
-	public Set<Zone> getAll(int offset, int count);
+	public Set<Zone> getAll(int offset, int count) throws BusinessException;
 	/**
 	 * Get a list of all Locations in a given zoneId
 	 * 
@@ -64,7 +65,7 @@ public interface ZoneService {
      *
 	 * @return the Location list based on the zoneId
 	 */
-	public Set<Location> getAllLocations(String zoneId);
+	public Set<Location> getAllLocations(String zoneId) throws BusinessException;
 	/**
 	 * Get a list of all HandlingUnits in a given zoneId
 	 * 
@@ -72,7 +73,7 @@ public interface ZoneService {
      *
 	 * @return the HandlingUnit list based on the zoneId
 	 */
-	public Set<HandlingUnit> getAllHandlingUnits(String zoneId);
+	public Set<HandlingUnit> getAllHandlingUnits(String zoneId) throws BusinessException;
 	/**
 	 * Get a list of all Locations in a given Zone
 	 * 
@@ -80,7 +81,7 @@ public interface ZoneService {
      *
 	 * @return the Location list based on the zone
 	 */
-	public Set<Location> getAllLocations(Zone zone);
+	public Set<Location> getAllLocations(Zone zone) throws BusinessException;
 	/**
 	 * Get a list of all HandlingUnits in a given zone
 	 * 
@@ -88,7 +89,7 @@ public interface ZoneService {
      *
 	 * @return the HandlingUnit list based on the zone
 	 */
-	public Set<HandlingUnit> getAllHandlingUnits(Zone zone);
+	public Set<HandlingUnit> getAllHandlingUnits(Zone zone) throws BusinessException;
 	/**
 	 * Count the Zone items
 	 *
@@ -102,7 +103,7 @@ public interface ZoneService {
 	 * @param current the current Zone
 	 * @param destination the destination Zone 
 	 */
-	public void moveLocation(Location location, Zone current, Zone destination);
+	public void moveLocation(Location location, Zone current, Zone destination) throws BusinessException;
 	/**
 	 * Move a List of Locations from their current Zone to the destination Zone
 	 * 
@@ -110,42 +111,42 @@ public interface ZoneService {
 	 * @param current the current Zone
 	 * @param destination the destination Zone 
 	 */
-	public void moveLocations(Set<Location> locations, Zone current, Zone destination);
+	public void moveLocations(Set<Location> locations, Zone current, Zone destination) throws BusinessException;
 	/**
 	 * Add a Location to a given Zone
 	 * 
 	 * @param locationId the Location Id of the related Location to add
 	 * @param zoneId the related Zone 
 	 */
-	public void addLocationTo(String locationId, String zoneId);
+	public void addLocationTo(String locationId, String zoneId) throws BusinessException;
 	/**
 	 * Add a Location to a given Zone
 	 * 
 	 * @param location the Location to add
 	 * @param zone the Zone
 	 */
-	public void addLocationTo(Location location, Zone zone);
+	public void addLocationTo(Location location, Zone zone) throws BusinessException;
 	/**
 	 * Initialize a Zone with the given List of Locations
 	 * 
 	 * @param zone the Zone to initialize 
 	 * @param locations the List of Locations
 	 */
-	public void initZoneBy(Zone zone, Set<Location> locations);
+	public void initZoneBy(Zone zone, Set<Location> locations) throws BusinessException;
 	/**
 	 * Clear a given Zone from its Locations
 	 * 
 	 * @param zone the Zone to clear
 	 */
-	public void clear(Zone zone);
+	public void clear(Zone zone) throws BusinessException;
 	/**
 	 * Clear a given Zone by id from its Locations
 	 * 
 	 * @param id the Zone by id to clear
 	 */
-	public void clear(String id);
+	public void clear(String id) throws BusinessException;
 	/**
 	 * Clear all existing Zones
 	 */
-	public void clearAll();
+	public void clearAll() throws BusinessException;
 }
