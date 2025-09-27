@@ -661,8 +661,8 @@ public class ZoneLocationsTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (BusinessException | EJBException ejbex) {
+			LOG.info("{}", ejbex.getMessage());
 		}
 
 		try {
@@ -670,8 +670,8 @@ public class ZoneLocationsTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (BusinessException | EJBException ejbex) {
+			LOG.info("{}", ejbex.getMessage());
 		}
 
 		try {
@@ -680,8 +680,8 @@ public class ZoneLocationsTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (BusinessException | EJBException ejbex) {
+			LOG.info("{}", ejbex.getMessage());
 		}
 
 		try {
@@ -689,8 +689,8 @@ public class ZoneLocationsTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (BusinessException | EJBException ejbex) {
+			LOG.info("{}", ejbex.getMessage());
 		}
 	}
 
@@ -744,8 +744,8 @@ public class ZoneLocationsTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (BusinessException | EJBException ejbex) {
+			LOG.info("{}", ejbex.getMessage());
 		}
 		
 		try {
@@ -754,8 +754,8 @@ public class ZoneLocationsTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (BusinessException | EJBException ejbex) {
+			LOG.info("{}", ejbex.getMessage());
 		}
 		
 		try {
@@ -763,8 +763,8 @@ public class ZoneLocationsTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (BusinessException | EJBException ejbex) {
+			LOG.info("{}", ejbex.getMessage());
 		}
 
 		try {
@@ -773,8 +773,8 @@ public class ZoneLocationsTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException ejbex) {
-			LOG.info("{} : {}", ejbex.getCause(), ejbex.getCause().getMessage());
+		catch (BusinessException | EJBException ejbex) {
+			LOG.info("{}", ejbex.getMessage());
 		}
 	}
 }

@@ -197,7 +197,7 @@ public class ZoneBean implements ZoneService {
 	}
 	
 	@Override
-	public void moveLocation(Location location, Zone current, Zone destination) {
+	public void moveLocation(Location location, Zone current, Zone destination) throws BusinessException {
 		checkParam(location, current, destination);
 		
 		// Remove from current
@@ -224,8 +224,10 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public void moveLocations(Set<Location> locations, Zone current, Zone destination) {
-		locations.stream().forEach(l -> moveLocation(l, current, destination));
+	public void moveLocations(Set<Location> locations, Zone current, Zone destination) throws BusinessException {
+		for (Location item : locations) {
+			moveLocation(item, current, destination);
+		}
 	}
 
 	@Override
@@ -363,7 +365,7 @@ public class ZoneBean implements ZoneService {
 		}
 	}
 	
-	private void checkParam(Location location, Zone current, Zone destination) {
+	private void checkParam(Location location, Zone current, Zone destination) throws BusinessException {
 		checkParam(location, current);
 		
 		checkZone(destination);
@@ -373,27 +375,27 @@ public class ZoneBean implements ZoneService {
 		locations.stream().forEach(l -> checkParam(l, zone));
 	}
 	
-	private void checkZone(Zone zone) {
+	private void checkZone(Zone zone) throws BusinessException {
 		if (zone == null) {
-			throw new IllegalArgumentException(ZONE_IS_NULL);
+			throw new BusinessException(ZONE_IS_NULL);
 		}
 
 		if (zone.getId() == null) {
-			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+			throw new BusinessException(ZONE_ID_IS_NULL);
 		}
 	}
 
-	private void checkZone(String zoneId) throws BusinessException {
+	private void checkZone(String zoneId)  throws BusinessException {
 		if (zoneId == null) {
-			throw new IllegalArgumentException(ZONE_ID_IS_NULL);
+			throw new BusinessException(ZONE_ID_IS_NULL);
 		}
 
 		if (zoneId.trim().isEmpty() ) {
-			throw new IllegalArgumentException(ZONE_ID_IS_EMPTY);
+			throw new BusinessException(ZONE_ID_IS_EMPTY);
 		}
 		
 		if (getById(zoneId) == null) {
-			throw new IllegalArgumentException(ZONE_IS_NULL);
+			throw new BusinessException(ZONE_IS_NULL);
 		}
 	}
 
@@ -433,7 +435,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public Set<Location> getAllLocations(Zone zone) {
+	public Set<Location> getAllLocations(Zone zone) throws BusinessException {
 		checkZone(zone);
 		
 		Set<Location> ret;
@@ -450,7 +452,7 @@ public class ZoneBean implements ZoneService {
 	}
 
 	@Override
-	public Set<HandlingUnit> getAllHandlingUnits(Zone zone) {
+	public Set<HandlingUnit> getAllHandlingUnits(Zone zone) throws BusinessException {
 		checkZone(zone);
 		
 		Set<HandlingUnit> ret;

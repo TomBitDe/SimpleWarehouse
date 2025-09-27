@@ -55,7 +55,7 @@ public class CommonJmsUtility {
 			LOG.info("Create queue with command [{}]", builder.command());
 
 			Process process = builder.start();
-			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
+			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), LOG::info);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			int exitCode = process.waitFor();
 			LOG.info("Exit code [{}]", exitCode);
@@ -70,7 +70,7 @@ public class CommonJmsUtility {
 			LOG.info("Create queue with command [{}]", builder.command());
 
 			process = builder.start();
-			streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
+			streamGobbler = new StreamGobbler(process.getInputStream(), LOG::info);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			exitCode = process.waitFor();
 			LOG.info("Exit code [{}]", exitCode);
@@ -85,7 +85,7 @@ public class CommonJmsUtility {
 			LOG.info("Create queue with command [{}]", builder.command());
 
 			process = builder.start();
-			streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
+			streamGobbler = new StreamGobbler(process.getInputStream(), LOG::info);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			exitCode = process.waitFor();
 			LOG.info("Exit code [{}]", exitCode);
@@ -101,7 +101,7 @@ public class CommonJmsUtility {
 			LOG.info("Create topic with command [{}]", builder.command());
 
 			process = builder.start();
-			streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
+			streamGobbler = new StreamGobbler(process.getInputStream(), LOG::info);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			exitCode = process.waitFor();
 			LOG.info("Exit code [{}]", exitCode);

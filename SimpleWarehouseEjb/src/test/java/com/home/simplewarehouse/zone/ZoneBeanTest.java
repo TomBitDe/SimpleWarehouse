@@ -130,7 +130,7 @@ public class ZoneBeanTest {
 			
 			Assert.fail("Exception expected");
 		}
-		catch (EJBException | BusinessException ex) {
+		catch (BusinessException ex) {
 			LOG.info("{} : {}", ex, ex.getMessage());
 		}
 

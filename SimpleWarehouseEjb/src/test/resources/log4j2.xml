@@ -30,6 +30,12 @@
 		<Logger name="com.home.simplewarehouse.topology" level="info" additivity="true">
 			<AppenderRef ref="FilePart" />
 		</Logger>
+		<Logger name="com.home.simplewarehouse.zone" level="info" additivity="true">
+			<AppenderRef ref="FilePart" />
+		</Logger>
+		<Logger name="com.home.simplewarehouse.utils" level="info" additivity="true">
+			<AppenderRef ref="FilePart" />
+		</Logger>
 		<Logger name="com.home.simplewarehouse.usecase" level="trace" additivity="true">
 			<AppenderRef ref="FileUseCases" />
 		</Logger>
