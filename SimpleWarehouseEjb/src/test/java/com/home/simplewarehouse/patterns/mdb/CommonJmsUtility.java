@@ -18,7 +18,8 @@ public class CommonJmsUtility {
 	private static final String WIN_ASADMIN = "/asadmin.bat";
 	private static final String OTHER_ASADMIN = "/asadmin";
 	private static final String JMS_QUEUE_CREATE_CMD = " create-jms-resource --enabled=true --property=Name=Queue1 --restype=javax.jms.Queue queue/Queue1";
-	private static final String JMS_ERROR_QUEUE_CREATE_CMD = " create-jms-resource --enabled=true --property=Name=APPLICATION-ERROR-QUEUE --restype=javax.jms.Queue queue/ApplicationErrorQueue";
+	private static final String JMS_ZONE_QUEUE_CREATE_CMD = " create-jms-resource --enabled=true --property=Name=Zone --restype=javax.jms.Queue queue/Zone";
+	private static final String JMS_ERROR_QUEUE_CREATE_CMD = " create-jms-resource --enabled=true --property=Name=Error --restype=javax.jms.Queue queue/Error";
 	private static final String JMS_TOPIC_CREATE_CMD = " create-jms-resource --enabled=true --property=Name=Topic1 --restype=javax.jms.Topic topic/Topic1";
 	private static final String PAYARA_PROP = "payara.home";
 	private static final String PAYARA_ENV = "PAYARA_HOME";
@@ -60,6 +61,21 @@ public class CommonJmsUtility {
 			LOG.info("Exit code [{}]", exitCode);
 
 			if (isWindows) {
+			    builder.command("cmd.exe", "/c", payaraPath + "/bin" + WIN_ASADMIN + JMS_ZONE_QUEUE_CREATE_CMD);
+			}
+			else {
+			    builder.command("sh", "-c", payaraPath + "/bin" + OTHER_ASADMIN + JMS_ZONE_QUEUE_CREATE_CMD);
+			}
+
+			LOG.info("Create queue with command [{}]", builder.command());
+
+			process = builder.start();
+			streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
+			Executors.newSingleThreadExecutor().submit(streamGobbler);
+			exitCode = process.waitFor();
+			LOG.info("Exit code [{}]", exitCode);
+
+			if (isWindows) {
 			    builder.command("cmd.exe", "/c", payaraPath + "/bin" + WIN_ASADMIN + JMS_ERROR_QUEUE_CREATE_CMD);
 			}
 			else {
@@ -69,6 +85,7 @@ public class CommonJmsUtility {
 			LOG.info("Create queue with command [{}]", builder.command());
 
 			process = builder.start();
+			streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			exitCode = process.waitFor();
 			LOG.info("Exit code [{}]", exitCode);
@@ -84,6 +101,7 @@ public class CommonJmsUtility {
 			LOG.info("Create topic with command [{}]", builder.command());
 
 			process = builder.start();
+			streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
 			exitCode = process.waitFor();
 			LOG.info("Exit code [{}]", exitCode);
