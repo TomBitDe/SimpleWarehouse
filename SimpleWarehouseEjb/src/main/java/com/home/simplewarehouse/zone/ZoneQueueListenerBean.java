@@ -133,7 +133,7 @@ public class ZoneQueueListenerBean implements MessageListener {
             LOG.info("Message moved to ErrorQueue.");
         }
         catch (Exception e) {
-            LOG.fatal("Failed to send message to ErrorQueue: {}", e.getMessage(), e);
+            LOG.fatal("Failed to move message to ErrorQueue: {}", e.getMessage(), e);
         }
     }
 }

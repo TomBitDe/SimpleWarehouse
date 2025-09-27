@@ -7,6 +7,7 @@ import static org.junit.Assert.assertNull;
 import java.io.File;
 
 import javax.annotation.Resource;
+import javax.ejb.EJB;
 import javax.ejb.EJBException;
 import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
@@ -87,6 +88,9 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 	
 	@Resource(lookup = "queue/Error")
     private Queue errorQueue;
+	
+	@EJB
+	ZoneService zoneService; 
 
 	/**
 	 * Mandatory default constructor
@@ -98,10 +102,15 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 
 	/**
 	 * What to do before an individual test will be executed (each test)
+	 * @throws JMSException 
 	 */
 	@Before
-	public void beforeTest() throws BusinessException {
+	public void beforeTest() throws BusinessException, JMSException {
 		LOG.trace("--> beforeTest()");
+		
+		zoneService.createOrUpdate(new Zone("Dummy"));
+		
+		clearErrorQueueWithCount();
 		
 		LOG.trace("<-- beforeTest()");		
 	}
@@ -113,6 +122,8 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 	@After
 	public void afterTest() throws BusinessException {
 		LOG.trace("--> afterTest()");
+		
+		zoneService.delete("Dummy");
 
 		LOG.trace("<-- afterTest()");
 	}
@@ -178,7 +189,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		assertNotNull(producer);
 		LOG.info("Message Producer created...");
 
-		Message message = session.createTextMessage("12345");
+		Message message = session.createTextMessage("Dummy");
 		assertNotNull(message);
 		LOG.info("Text Message created...");
 
@@ -186,17 +197,26 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(1000);
+                Message consumed = consumer.receive(7000);
 
+                LOG.info("consumed: {}", consumed);
+                
                 // No message in ErrorQueue               
-                assertNull(consumed);
+                if (consumed instanceof TextMessage) {
+                	TextMessage errorMsg = (TextMessage) consumed;
+                	
+                    assertNull(errorMsg);
+                }
             }
 		}
     }
 
+	//@org.junit.Ignore
     @Test
 	@InSequence(20)
     public void testRedeliverySimulation() throws JMSException {
+		clearErrorQueue();
+		
 		Connection connection = connectionFactory.createConnection();
 		assertNotNull(connection);
 		LOG.info("Connection created...");
@@ -260,6 +280,42 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
                 }
             }
 		}
+		
+		assertEquals(0, clearErrorQueueWithCount());
     }
 
+	private void clearErrorQueue() {
+		try (JMSContext context = connectionFactory.createContext()) {
+			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
+                Message consumed = consumer.receive(1000);
+
+                LOG.info("consumed: {}", consumed);
+                
+                while (consumed != null) {
+                	consumed = consumer.receive(1000);
+                }
+            }
+		}		
+	}
+
+	private int clearErrorQueueWithCount() throws JMSException {
+		int count = 0;
+		
+		try (JMSContext context = connectionFactory.createContext()) {
+			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
+                Message consumed = consumer.receive(1000);
+
+                LOG.info("consumed: {}", consumed);
+                
+                while (consumed != null) {
+                	++ count;
+                	consumed = consumer.receive(1000);
+                }
+            }
+		}
+		
+		LOG.info("Cleared [{}] messages from >{}<", count, errorQueue.getQueueName());
+		
+		return count;
+	}
 }
