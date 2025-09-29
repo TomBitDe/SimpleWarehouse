@@ -216,6 +216,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 	@InSequence(20)
     public void testRedeliverySimulation() throws JMSException {
 		clearErrorQueue();
+		int count;
 		
 		Connection connection = connectionFactory.createConnection();
 		assertNotNull(connection);
@@ -243,6 +244,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		}
         catch (EJBException ignored) {
         }
+        count = clearErrorQueueWithCount();
 		
         message.setIntProperty("JMSXDeliveryCount", 2); // simulate second try
 
@@ -251,6 +253,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		}
         catch (EJBException ignored) {
         }
+        count = clearErrorQueueWithCount();
 
         message.setIntProperty("JMSXDeliveryCount", 3); // simulate third try
 
@@ -259,6 +262,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		}
         catch (EJBException ignored) {
         }
+        count = clearErrorQueueWithCount();
 
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
