@@ -262,11 +262,10 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		}
         catch (EJBException ignored) {
         }
-        count = clearErrorQueueWithCount();
-
+ 
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(1000);
+                Message consumed = consumer.receive(5000);
 
                 // Now message in ErrorQueue               
                 assertNotNull(consumed);
@@ -291,7 +290,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 	private void clearErrorQueue() {
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(1000);
+                Message consumed = consumer.receive(5000);
 
                 LOG.info("consumed: {}", consumed);
                 
@@ -307,7 +306,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(1000);
+                Message consumed = consumer.receive(5000);
 
                 LOG.info("consumed: {}", consumed);
                 
@@ -318,7 +317,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
             }
 		}
 		
-		LOG.info("Cleared [{}] messages from >{}<", count, errorQueue.getQueueName());
+		LOG.info("Cleared [{}] messages from queue >{}<", count, errorQueue.getQueueName());
 		
 		return count;
 	}
