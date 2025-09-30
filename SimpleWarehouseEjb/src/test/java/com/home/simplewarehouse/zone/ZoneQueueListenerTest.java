@@ -48,6 +48,8 @@ import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.Moni
 @RunWith(Arquillian.class)
 public class ZoneQueueListenerTest extends CommonJmsUtility {
 	private static final Logger LOG = LogManager.getLogger(ZoneQueueListenerTest.class);
+	
+	private static final int ERROR_QUEUE_CONSUMER_TIMEOUT = 5000; // msec.
 
 	/**
 	 * Configure the deployment.<br>
@@ -215,8 +217,9 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
     @Test
 	@InSequence(20)
     public void testRedeliverySimulation() throws JMSException {
-		clearErrorQueue();
 		int count;
+
+		clearErrorQueue();
 		
 		Connection connection = connectionFactory.createConnection();
 		assertNotNull(connection);
@@ -245,6 +248,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
         catch (EJBException ignored) {
         }
         count = clearErrorQueueWithCount();
+        LOG.debug("Cleared error messages [{}]", count);
 		
         message.setIntProperty("JMSXDeliveryCount", 2); // simulate second try
 
@@ -254,6 +258,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
         catch (EJBException ignored) {
         }
         count = clearErrorQueueWithCount();
+        LOG.debug("Cleared error messages [{}]", count);
 
         message.setIntProperty("JMSXDeliveryCount", 3); // simulate third try
 
@@ -265,7 +270,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
  
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(5000);
+                Message consumed = consumer.receive(ERROR_QUEUE_CONSUMER_TIMEOUT);
 
                 // Now message in ErrorQueue               
                 assertNotNull(consumed);
@@ -290,7 +295,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 	private void clearErrorQueue() {
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(5000);
+                Message consumed = consumer.receive(ERROR_QUEUE_CONSUMER_TIMEOUT);
 
                 LOG.info("consumed: {}", consumed);
                 
@@ -306,7 +311,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(5000);
+                Message consumed = consumer.receive(ERROR_QUEUE_CONSUMER_TIMEOUT);
 
                 LOG.info("consumed: {}", consumed);
                 
