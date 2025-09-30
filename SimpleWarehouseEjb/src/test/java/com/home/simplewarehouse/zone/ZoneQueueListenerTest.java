@@ -213,7 +213,6 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		}
     }
 
-	//@org.junit.Ignore
     @Test
 	@InSequence(20)
     public void testRedeliverySimulation() throws JMSException {
@@ -246,6 +245,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		    producer.send(message);
 		}
         catch (EJBException ignored) {
+        	// Ignored here because part of the test
         }
         count = clearErrorQueueWithCount();
         LOG.debug("Cleared error messages [{}]", count);
@@ -256,6 +256,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		    producer.send(message);
 		}
         catch (EJBException ignored) {
+        	// Ignored here because part of the test
         }
         count = clearErrorQueueWithCount();
         LOG.debug("Cleared error messages [{}]", count);
@@ -266,6 +267,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		    producer.send(message);
 		}
         catch (EJBException ignored) {
+        	// Ignored here because part of the test
         }
  
 		try (JMSContext context = connectionFactory.createContext()) {
