@@ -18,6 +18,7 @@ import javax.jms.MessageProducer;
 import javax.jms.Queue;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import javax.naming.NamingException;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -41,6 +42,7 @@ import com.home.simplewarehouse.model.Location;
 import com.home.simplewarehouse.model.Zone;
 import com.home.simplewarehouse.patterns.exceptions.BusinessException;
 import com.home.simplewarehouse.patterns.mdb.CommonJmsUtility;
+import com.home.simplewarehouse.utils.mdb.QueueUtils;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.PerformanceAuditor;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.boundary.MonitoringResource;
 
@@ -67,6 +69,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 						"glassfish-ejb-jar.xml")
 				.addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml")
 				.addClasses(
+						QueueUtils.class,
 						ZoneQueueListenerBean.class,
 						ZoneService.class, ZoneBean.class, Zone.class,
 						LocationService.class, LocationBean.class, Location.class,
@@ -103,15 +106,17 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 
 	/**
 	 * What to do before an individual test will be executed (each test)
+	 * @throws BusinessException 
 	 * @throws JMSException 
+	 * @throws NamingException 
 	 */
 	@Before
-	public void beforeTest() throws BusinessException, JMSException {
+	public void beforeTest() throws BusinessException, JMSException, NamingException {
 		LOG.trace("--> beforeTest()");
 		
 		zoneService.createOrUpdate(new Zone("Dummy"));
 		
-		clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT);
+		assertEquals(0, QueueUtils.getMessageCount("queue/Error"));
 		
 		LOG.trace("<-- beforeTest()");		
 	}
@@ -176,7 +181,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 
     @Test
 	@InSequence(10)
-    public void testNormalProcessingSucceeds() throws JMSException {
+    public void testNormalProcessingSucceeds() throws JMSException, NamingException {
 		Connection connection = connectionFactory.createConnection();
 		assertNotNull(connection);
 		LOG.info("Connection created...");
@@ -198,12 +203,12 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 
 		producer.send(message);
 		
-		assertEquals(0, clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT));
+		assertEquals(0, QueueUtils.clearQueueWithCount("queue/Error", ERROR_QUEUE_CONSUMER_TIMEOUT));
     }
 
     @Test
 	@InSequence(20)
-    public void testRedeliverySimulation() throws JMSException {
+    public void testRedeliverySimulation() throws JMSException, NamingException {
 		int count;
 
 		Connection connection = connectionFactory.createConnection();
@@ -233,7 +238,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
         catch (EJBException ignored) {
         	// Ignored here because part of the test
         }
-        count = clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT);
+        count = QueueUtils.clearQueueWithCount("queue/Error", ERROR_QUEUE_CONSUMER_TIMEOUT);
         LOG.debug("Cleared error messages [{}]", count);
 		
         message.setIntProperty("JMSXDeliveryCount", 2); // simulate second try
@@ -244,7 +249,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
         catch (EJBException ignored) {
         	// Ignored here because part of the test
         }
-        count = clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT);
+        count = QueueUtils.clearQueueWithCount("queue/Error", ERROR_QUEUE_CONSUMER_TIMEOUT);
         LOG.debug("Cleared error messages [{}]", count);
 
         message.setIntProperty("JMSXDeliveryCount", 3); // simulate third try
@@ -279,53 +284,6 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
             }
 		}
 		
-		assertEquals(0, clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT));
+		assertEquals(0, QueueUtils.clearQueueWithCount("queue/Error", ERROR_QUEUE_CONSUMER_TIMEOUT));
     }
-
-    /**
-     * Remove all content of a given queue
-     * 
-     * @param queue the given queue
-     * @param timeout the timeout to wait on queue for receiving
-     */
-	private void clearQueue(Queue queue, int timeout) {
-		try (JMSContext context = connectionFactory.createContext()) {
-			try (JMSConsumer consumer = context.createConsumer(queue)) {
-                Message consumed = consumer.receive(timeout);
-
-                while (consumed != null) {
-                	consumed = consumer.receive(timeout);
-                }
-            }
-		}		
-	}
-
-	/**
-     * Remove all content of a given queue and count the messages removed
-	 * 
-     * @param queue the given queue
-     * @param timeout the timeout to wait on queue for receiving
-     * 
-	 * @return the number of removed messages
-	 * 
-	 * @throws JMSException
-	 */
-	private int clearQueueWithCount(Queue queue, int timeout) throws JMSException {
-		int count = 0;
-		
-		try (JMSContext context = connectionFactory.createContext()) {
-			try (JMSConsumer consumer = context.createConsumer(queue)) {
-                Message consumed = consumer.receive(timeout);
-
-                while (consumed != null) {
-                	++ count;
-                	consumed = consumer.receive(timeout);
-                }
-            }
-		}
-		
-		LOG.info("Cleared [{}] messages from queue >{}<", count, queue.getQueueName());
-		
-		return count;
-	}
 }
