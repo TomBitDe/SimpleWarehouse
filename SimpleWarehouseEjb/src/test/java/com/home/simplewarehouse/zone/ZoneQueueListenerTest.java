@@ -2,7 +2,6 @@ package com.home.simplewarehouse.zone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 
 import java.io.File;
 
@@ -112,7 +111,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		
 		zoneService.createOrUpdate(new Zone("Dummy"));
 		
-		clearErrorQueueWithCount();
+		clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT);
 		
 		LOG.trace("<-- beforeTest()");		
 	}
@@ -154,9 +153,11 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 
 		producer.send(message);
 		
+		// Do NOT use  assertEquals(1, clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT)) here
+		// because we want to evaluate the content of errorMsg
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(1000);
+                Message consumed = consumer.receive(ERROR_QUEUE_CONSUMER_TIMEOUT);
                 
                 if (consumed instanceof TextMessage) {
                 	TextMessage errorMsg = (TextMessage) consumed;
@@ -197,20 +198,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 
 		producer.send(message);
 		
-		try (JMSContext context = connectionFactory.createContext()) {
-			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(7000);
-
-                LOG.info("consumed: {}", consumed);
-                
-                // No message in ErrorQueue               
-                if (consumed instanceof TextMessage) {
-                	TextMessage errorMsg = (TextMessage) consumed;
-                	
-                    assertNull(errorMsg);
-                }
-            }
-		}
+		assertEquals(0, clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT));
     }
 
     @Test
@@ -218,8 +206,6 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
     public void testRedeliverySimulation() throws JMSException {
 		int count;
 
-		clearErrorQueue();
-		
 		Connection connection = connectionFactory.createConnection();
 		assertNotNull(connection);
 		LOG.info("Connection created...");
@@ -235,7 +221,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
 		assertNotNull(producer);
 		LOG.info("Message Producer created...");
 
-		Message message = session.createTextMessage("trigger runtime error");
+		Message message = session.createTextMessage("Trigger runtime error");
 		assertNotNull(message);
 		LOG.info("Text Message created...");
 
@@ -247,7 +233,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
         catch (EJBException ignored) {
         	// Ignored here because part of the test
         }
-        count = clearErrorQueueWithCount();
+        count = clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT);
         LOG.debug("Cleared error messages [{}]", count);
 		
         message.setIntProperty("JMSXDeliveryCount", 2); // simulate second try
@@ -258,7 +244,7 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
         catch (EJBException ignored) {
         	// Ignored here because part of the test
         }
-        count = clearErrorQueueWithCount();
+        count = clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT);
         LOG.debug("Cleared error messages [{}]", count);
 
         message.setIntProperty("JMSXDeliveryCount", 3); // simulate third try
@@ -270,6 +256,8 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
         	// Ignored here because part of the test
         }
  
+		// Do NOT use  assertEquals(1, clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT)) here
+		// because we want to evaluate the content of errorMsg
 		try (JMSContext context = connectionFactory.createContext()) {
 			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
                 Message consumed = consumer.receive(ERROR_QUEUE_CONSUMER_TIMEOUT);
@@ -284,47 +272,59 @@ public class ZoneQueueListenerTest extends CommonJmsUtility {
                 
                     LOG.info("errorMsg: {}", errorMsg);
 
-                    assertEquals("trigger runtime error", errorMsg.getStringProperty("originalPayload"));
+                    assertEquals("Trigger runtime error", errorMsg.getStringProperty("originalPayload"));
                 
                     LOG.info("errorMsg.getText(): {}", errorMsg.getText());
                 }
             }
 		}
 		
-		assertEquals(0, clearErrorQueueWithCount());
+		assertEquals(0, clearQueueWithCount(errorQueue, ERROR_QUEUE_CONSUMER_TIMEOUT));
     }
 
-	private void clearErrorQueue() {
+    /**
+     * Remove all content of a given queue
+     * 
+     * @param queue the given queue
+     * @param timeout the timeout to wait on queue for receiving
+     */
+	private void clearQueue(Queue queue, int timeout) {
 		try (JMSContext context = connectionFactory.createContext()) {
-			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(ERROR_QUEUE_CONSUMER_TIMEOUT);
+			try (JMSConsumer consumer = context.createConsumer(queue)) {
+                Message consumed = consumer.receive(timeout);
 
-                LOG.info("consumed: {}", consumed);
-                
                 while (consumed != null) {
-                	consumed = consumer.receive(1000);
+                	consumed = consumer.receive(timeout);
                 }
             }
 		}		
 	}
 
-	private int clearErrorQueueWithCount() throws JMSException {
+	/**
+     * Remove all content of a given queue and count the messages removed
+	 * 
+     * @param queue the given queue
+     * @param timeout the timeout to wait on queue for receiving
+     * 
+	 * @return the number of removed messages
+	 * 
+	 * @throws JMSException
+	 */
+	private int clearQueueWithCount(Queue queue, int timeout) throws JMSException {
 		int count = 0;
 		
 		try (JMSContext context = connectionFactory.createContext()) {
-			try (JMSConsumer consumer = context.createConsumer(errorQueue)) {
-                Message consumed = consumer.receive(ERROR_QUEUE_CONSUMER_TIMEOUT);
+			try (JMSConsumer consumer = context.createConsumer(queue)) {
+                Message consumed = consumer.receive(timeout);
 
-                LOG.info("consumed: {}", consumed);
-                
                 while (consumed != null) {
                 	++ count;
-                	consumed = consumer.receive(1000);
+                	consumed = consumer.receive(timeout);
                 }
             }
 		}
 		
-		LOG.info("Cleared [{}] messages from queue >{}<", count, errorQueue.getQueueName());
+		LOG.info("Cleared [{}] messages from queue >{}<", count, queue.getQueueName());
 		
 		return count;
 	}

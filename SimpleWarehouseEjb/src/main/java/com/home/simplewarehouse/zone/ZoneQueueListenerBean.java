@@ -68,6 +68,14 @@ public class ZoneQueueListenerBean implements MessageListener {
             String payload = ((TextMessage) message).getText();
             LOG.info("Received message: [{}]", payload);
 
+            if (payload.contains("Trigger runtime error")) {
+                throw new RuntimeException("Simulated failure");
+            }
+            
+            if (payload.contains("Invalid payload")) {
+                throw new BusinessException("Simulated BusinessException");
+            }
+            
             // Business logic
             zoneService.clear(payload);
 
