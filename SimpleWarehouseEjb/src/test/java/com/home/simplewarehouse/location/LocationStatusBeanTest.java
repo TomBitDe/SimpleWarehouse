@@ -131,7 +131,7 @@ public class LocationStatusBeanTest {
 		assertEquals(expLocation, location);
 		
 		LocationStatus locationStatus = location.getLocationStatus();		
-		LOG.info("LocationStatus getById: " + locationStatus);
+		LOG.info("LocationStatus getById: {}", locationStatus);
 		
 		// Now check the corresponding LocationStatus
 		assertEquals("A", locationStatus.getLocationId());
@@ -160,8 +160,8 @@ public class LocationStatusBeanTest {
 		locationService.createOrUpdate(expLocation);
 		assertEquals(expLocation, locationService.getById("A"));
 		
-		LOG.info("Location prepared: " + expLocation);
-		LOG.info("LocationStatus implicite prepared: "+ expLocation.getLocationStatus());
+		LOG.info("Location prepared: {}", expLocation);
+		LOG.info("LocationStatus implicite prepared: {}", expLocation.getLocationStatus());
 		
 		// Delete the location
 		locationService.delete(expLocation);
@@ -198,7 +198,7 @@ public class LocationStatusBeanTest {
 		
 		// Change again
 		location = expLocation;
-		location.getLocationStatus().setErrorStatus(null);;
+		location.getLocationStatus().setErrorStatus(null);
 		location.getLocationStatus().setLtosStatus(null);
 		location.getLocationStatus().setLockStatus(null);
 		
@@ -211,7 +211,7 @@ public class LocationStatusBeanTest {
 
 		// Change again
 		location = expLocation;
-		location.getLocationStatus().setErrorStatus(ErrorStatus.NONE);;
+		location.getLocationStatus().setErrorStatus(ErrorStatus.NONE);
 		location.getLocationStatus().setLtosStatus(LtosStatus.NO);
 		location.getLocationStatus().setLockStatus(LockStatus.PICK_LOCKED);
 		
