@@ -140,7 +140,7 @@ public class ZoneBean implements ZoneService {
 		LOG.trace("--> getById({})", id);
 		
 		if (id == null) {
-			throw new BusinessException("id must not be null");
+			throw new BusinessException("id must not be null", new NullPointerException("parameter id is null"));
 		}
 
 		Zone zone = em.find(Zone.class, id);
@@ -377,17 +377,17 @@ public class ZoneBean implements ZoneService {
 	
 	private void checkZone(Zone zone) throws BusinessException {
 		if (zone == null) {
-			throw new BusinessException(ZONE_IS_NULL);
+			throw new BusinessException(ZONE_IS_NULL, new NullPointerException(ZONE_IS_NULL));
 		}
 
 		if (zone.getId() == null) {
-			throw new BusinessException(ZONE_ID_IS_NULL);
+			throw new BusinessException(ZONE_ID_IS_NULL, new NullPointerException(ZONE_ID_IS_NULL));
 		}
 	}
 
 	private void checkZone(String zoneId)  throws BusinessException {
 		if (zoneId == null) {
-			throw new BusinessException(ZONE_ID_IS_NULL);
+			throw new BusinessException(ZONE_ID_IS_NULL, new NullPointerException(ZONE_ID_IS_NULL));
 		}
 
 		if (zoneId.trim().isEmpty() ) {
@@ -395,7 +395,7 @@ public class ZoneBean implements ZoneService {
 		}
 		
 		if (getById(zoneId) == null) {
-			throw new BusinessException(ZONE_IS_NULL);
+			throw new BusinessException(ZONE_IS_NULL, new NullPointerException(ZONE_IS_NULL));
 		}
 	}
 
