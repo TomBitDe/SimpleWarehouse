@@ -121,7 +121,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	/**
 	 * Default Random Location with default LogicalPosition
 	 */
-	public Location() {
+	protected Location() {
 		super();
 		initAssociated(null);
 	}
@@ -131,7 +131,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param id the given id
 	 */
-	public Location(String id) {
+	protected Location(String id) {
 		super();
 		this.locationId = id;
 		initAssociated(null);
@@ -143,7 +143,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param id   the given id
 	 * @param user the given user
 	 */
-	public Location(String id, String user) {
+	protected Location(String id, String user) {
 		super(user);
 		this.locationId = id;
 		initAssociated(null);
@@ -156,7 +156,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param user      the given user
 	 * @param timestamp the given timestamp
 	 */
-	public Location(String id, String user, Timestamp timestamp) {
+	protected Location(String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
 		initAssociated(null);
@@ -167,7 +167,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * 
 	 * @param pos the given Position
 	 */
-	public Location(Position pos) {
+	protected Location(Position pos) {
 		super();
 		initAssociated(pos);
 	}
@@ -178,7 +178,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param pos the given Position
 	 * @param id  the given id
 	 */
-	public Location(Position pos, String id) {
+	protected Location(Position pos, String id) {
 		super();
 		this.locationId = id;
 		initAssociated(pos);
@@ -191,7 +191,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param id   the given id
 	 * @param user the given user
 	 */
-	public Location(Position pos, String id, String user) {
+	protected Location(Position pos, String id, String user) {
 		super(user);
 		this.locationId = id;
 		initAssociated(pos);
@@ -205,7 +205,7 @@ public abstract class Location extends EntityBase implements Serializable {
 	 * @param user      the given user
 	 * @param timestamp the given timestamp
 	 */
-	public Location(Position pos, String id, String user, Timestamp timestamp) {
+	protected Location(Position pos, String id, String user, Timestamp timestamp) {
 		super(user, timestamp);
 		this.locationId = id;
 		initAssociated(pos);
