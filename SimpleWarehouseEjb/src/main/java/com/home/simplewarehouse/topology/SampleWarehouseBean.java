@@ -98,7 +98,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		zoneList.add(new Zone("Cooler", 5));
 		zoneList.add(new Zone("Freezer", 7));
 		zoneList.add(new Zone("HighBay", 2));
-		for (Zone z : zoneList) { zoneService.createOrUpdate(z); };
+		for (Zone z : zoneList) { zoneService.createOrUpdate(z); }
 		
 		LOG.trace("<-- initialize()");
 	}
@@ -112,7 +112,7 @@ public class SampleWarehouseBean implements SampleWarehouseService {
 		
 		locationService.getAll().forEach(l -> locationService.delete(l));
 		handlingUnitService.getAll().forEach(h -> handlingUnitService.delete(h));
-		for (Zone z : zoneService.getAll()) { zoneService.delete(z); };
+		for (Zone z : zoneService.getAll()) { zoneService.delete(z); }
 		
 		LOG.trace("<-- cleanup()");
 	}
