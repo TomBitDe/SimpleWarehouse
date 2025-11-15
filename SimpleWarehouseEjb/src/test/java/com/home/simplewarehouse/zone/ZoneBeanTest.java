@@ -107,7 +107,7 @@ public class ZoneBeanTest {
 		// Cleanup zones
 		Set<Zone> zones = zoneService.getAll();
 		
-		for (Zone z : zones) { zoneService.delete(z); };
+		for (Zone z : zones) { zoneService.delete(z); }
 		
 		LOG.trace("<-- afterTest()");
 	}
@@ -172,9 +172,8 @@ public class ZoneBeanTest {
 		assertEquals(5, zone.getRating());
 		assertEquals(EntityBase.USER_DEFAULT, zone.getUpdateUserId());
 		assertNotNull(zone.getUpdateTimestamp());
-		assertEquals(expZone, expZone);
-		assertNotEquals(expZone, new RandomLocation(""));
 		assertEquals(expZone, zone);
+		assertNotEquals(new RandomLocation(""), expZone);
 		LOG.info(zone);
 		
 		expZone = new Zone("Cooler");

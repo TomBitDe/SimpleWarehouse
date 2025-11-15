@@ -37,9 +37,10 @@ public final class QueueUtils {
         ConnectionFactory connectionFactory =
                 (ConnectionFactory) ctx.lookup(JMS_CONNECTION_FACTORY);
         Queue queue = (Queue) ctx.lookup(queueJndiName);
+        QueueBrowser browser = null;
 
         try (JMSContext jmsContext = connectionFactory.createContext()) {
-            QueueBrowser browser = jmsContext.createBrowser(queue);
+            browser = jmsContext.createBrowser(queue);
             Enumeration<?> enumeration = browser.getEnumeration();
 
             int count = 0;
@@ -49,6 +50,11 @@ public final class QueueUtils {
             }
 
             return count;
+        }
+        finally {
+        	if (browser != null) {
+        		browser.close();
+        	}
         }
     }
 

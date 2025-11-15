@@ -328,13 +328,13 @@ public class HandlingUnitTest {
 		assertFalse(handlingUnits.isEmpty());
 		assertEquals(5, handlingUnits.size());
 		
-		handlingUnits.forEach(hU -> LOG.info(hU));
+		handlingUnits.forEach(LOG::info);
 
 		handlingUnits = handlingUnitService.getAll(3, 9);
 		assertEquals(2, handlingUnits.size());
 		
 		try {
-			handlingUnits = handlingUnitService.getAll(-3, 3);
+			handlingUnitService.getAll(-3, 3);
 			
 			Assert.fail("Exception expected");
 		}
@@ -343,7 +343,7 @@ public class HandlingUnitTest {
 		}
 
 		try {
-			handlingUnits = handlingUnitService.getAll(2, 0);
+			handlingUnitService.getAll(2, 0);
 			
 			Assert.fail("Exception expected");
 		}
@@ -387,14 +387,14 @@ public class HandlingUnitTest {
 			LOG.info(lOA);
 			
 			// Now by id
-			HandlingUnit hU2 = handlingUnitService.createOrUpdate(new HandlingUnit("2"));
-			Location lOB = locationService.createOrUpdate(new RandomLocation("B"));
+			handlingUnitService.createOrUpdate(new HandlingUnit("2"));
+			locationService.createOrUpdate(new RandomLocation("B"));
 			
 			handlingUnitService.dropTo("B", "2");
 
 			// MANDATORY reread
-			hU2 = handlingUnitService.getById("2");
-			lOB = locationService.getById("B");
+			HandlingUnit hU2 = handlingUnitService.getById("2");
+			Location lOB = locationService.getById("B");
 
 			LOG.info(hU2);
 
@@ -546,7 +546,7 @@ public class HandlingUnitTest {
 		}
 		catch (EJBException ex) {
 			// Location is null not allowed
-			LOG.info("Expected exception: " + ex.getMessage());
+			LOG.info("Expected exception: {}", ex.getMessage());
 		}
 
 		try {
@@ -556,7 +556,7 @@ public class HandlingUnitTest {
 		}
 		catch (EJBException ex) {
 			// Location is null not allowed
-			LOG.info("Expected exception: " + ex.getMessage());
+			LOG.info("Expected exception: {}", ex.getMessage());
 		}
 
 		// Now with ids
@@ -591,7 +591,7 @@ public class HandlingUnitTest {
 		}
 		catch (EJBException ex) {
 			// Location is null not allowed
-			LOG.info("Expected exception: " + ex.getMessage());
+			LOG.info("Expected exception: {}", ex.getMessage());
 		}
 		
 		try {
@@ -601,7 +601,7 @@ public class HandlingUnitTest {
 		}
 		catch (EJBException ex) {
 			// Location is null not allowed
-			LOG.info("Expected exception: " + ex.getMessage());
+			LOG.info("Expected exception: {}", ex.getMessage());
 		}
 		
 		LOG.info(hU2);
@@ -631,7 +631,7 @@ public class HandlingUnitTest {
 		}
 		catch (LocationIsEmptyException isEmpty) {
 			// Location is EMPTY because just newly created
-			LOG.info("Expected exception: " + isEmpty.getMessage());
+			LOG.info("Expected exception: {}", isEmpty.getMessage());
 		}
 	}
 
@@ -666,7 +666,7 @@ public class HandlingUnitTest {
 		}
 		catch(HandlingUnitNotOnLocationException isNotOnLocation) {
 			// Location contains hU1 but not hU2
-			LOG.info("Exception: " + isNotOnLocation.getMessage());
+			LOG.info("Exception: {}", isNotOnLocation.getMessage());
 		}
 		
 		// Check location is set to ERROR for manual adjustment (Inventur)
@@ -675,7 +675,7 @@ public class HandlingUnitTest {
 		assertEquals(ErrorStatus.ERROR,lOA.getLocationStatus().getErrorStatus());
 		
 		LOG.info("Locations in ERROR");
-		locationService.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
+		locationService.getAllInErrorStatus(ErrorStatus.ERROR).forEach(LOG::info);
 	}
 	
 	/**
@@ -705,7 +705,7 @@ public class HandlingUnitTest {
 			HandlingUnit hU2 = handlingUnitService.getById("2");
 			
 			// Now delete a handling unit that is related to a location
-			LOG.info("Delete: " + hU1);
+			LOG.info("Delete: {}", hU1);
 			handlingUnitService.delete(hU1);
 			
 		    // MANDATORY reread
@@ -747,8 +747,8 @@ public class HandlingUnitTest {
 			// MANDATORY reread
 			HandlingUnit hU2 = handlingUnitService.getById("2");
 			Location lOA = locationService.getById("A");
-			LOG.info("First drop: " + hU2);
-			LOG.info("First drop: " + lOA);
+			LOG.info("First drop: {}", hU2);
+			LOG.info("First drop: {}", lOA);
 
 			// Now drop again to same location
 			handlingUnitService.dropTo(lOA, hU2);
@@ -756,8 +756,8 @@ public class HandlingUnitTest {
 			// MANDATORY reread
 			hU2 = handlingUnitService.getById("2");
 			lOA = locationService.getById("A");
-			LOG.info("Second drop: " + hU2);
-			LOG.info("Second drop: " + lOA);
+			LOG.info("Second drop: {}", hU2);
+			LOG.info("Second drop: {}", lOA);
 
 			// Check the location
 			assertNotNull(lOA);
@@ -795,8 +795,8 @@ public class HandlingUnitTest {
 			// MANDATORY reread
 			HandlingUnit hU2 = handlingUnitService.getById("2");
 			Location lOA = locationService.getById("A");
-			LOG.info("First drop: " + hU2);
-			LOG.info("First drop: " + lOA);
+			LOG.info("First drop: {}", hU2);
+			LOG.info("First drop: {}", lOA);
 
 			// Now drop again to other location
 			handlingUnitService.dropTo(new RandomLocation("B"), hU2);
@@ -805,9 +805,9 @@ public class HandlingUnitTest {
 			hU2 = handlingUnitService.getById("2");
 			lOA = locationService.getById("A");
 			Location lOB = locationService.getById("B");
-			LOG.info("Second drop: " + hU2);
-			LOG.info("Second drop: " + lOA);
-			LOG.info("Second drop: " + lOB);
+			LOG.info("Second drop: {}", hU2);
+			LOG.info("Second drop: {}", lOA);
+			LOG.info("Second drop: {}", lOB);
 
 			// Check the locations
 			assertNotNull(lOA);
@@ -821,9 +821,9 @@ public class HandlingUnitTest {
 			assertEquals(ErrorStatus.NONE, lOB.getLocationStatus().getErrorStatus());
 
 			LOG.info("Locations in ERROR");
-			locationService.getAllInErrorStatus(ErrorStatus.ERROR).forEach(loc -> LOG.info(loc));
+			locationService.getAllInErrorStatus(ErrorStatus.ERROR).forEach(LOG::info);
 			LOG.info("Locations NOT in ERROR");
-			locationService.getAllInErrorStatus(ErrorStatus.NONE).forEach(loc -> LOG.info(loc));
+			locationService.getAllInErrorStatus(ErrorStatus.NONE).forEach(LOG::info);
 
 			// Check the handling unit
 			assertNotNull(hU2);
@@ -869,7 +869,7 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitService.dropTo(lOA, new HandlingUnit("4"));
 			// MANDATORY reread
-			lOA = locationService.getById("A");
+			locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -924,7 +924,7 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitService.dropTo(lOA, new HandlingUnit("4", 190));
 			// MANDATORY reread
-			lOA = locationService.getById("A");
+			locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -1134,7 +1134,7 @@ public class HandlingUnitTest {
 		try {
 			handlingUnitService.dropTo(lOA, hU5);
 			// MANDATORY reread
-			lOA = locationService.getById("A");
+			locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
@@ -1204,7 +1204,7 @@ public class HandlingUnitTest {
 			
 			handlingUnitService.dropTo(lOA, hU5);
 			// MANDATORY reread
-			lOA = locationService.getById("A");
+			locationService.getById("A");
 
 			Assert.fail("Exception expected");
 		}
