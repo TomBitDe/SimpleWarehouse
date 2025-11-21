@@ -5,6 +5,7 @@ import java.util.Map;
 
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.ExceptionStatistics;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invocation;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.InvocationCount;
 
 /**
  * Definitions for the Monitoring Resource MXBean
@@ -24,6 +25,20 @@ public interface MonitoringResourceMXBean {
 	 * @return the list
 	 */
     List<Invocation> getSlowestMethods(int maxResult);
+	/**
+	 * Gets a list of the method calls count
+	 * 
+	 * @return the list
+	 */
+	List<InvocationCount> getInvocationsCount();
+	/**
+	 * Gets a list of the method calls count
+	 * 
+	 * @param maxResult maximum number of elements in the list
+	 * 
+	 * @return the list
+	 */
+	List<InvocationCount> getInvocationsCount(int maxResult);
 	/**
 	 * Provide diagnostics data
 	 * 

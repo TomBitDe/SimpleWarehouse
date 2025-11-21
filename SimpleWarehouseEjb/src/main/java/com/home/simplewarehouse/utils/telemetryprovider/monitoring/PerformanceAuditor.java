@@ -46,7 +46,8 @@ public class PerformanceAuditor {
         }
         finally {
             long duration = System.currentTimeMillis() - start;
-            monitoring.add(methodName, duration);
+            monitoring.addInvocationPerformance(methodName, duration);
+            monitoring.addInvocationCount(methodName);
         }
     }
 }

@@ -40,6 +40,7 @@ import javax.ws.rs.core.MediaType;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Diagnostics;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.ExceptionStatistics;
 import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.Invocation;
+import com.home.simplewarehouse.utils.telemetryprovider.monitoring.entity.InvocationCount;
 
 /**
  * The Monitoring Resource 
@@ -56,7 +57,8 @@ public class MonitoringResource implements MonitoringResourceMXBean {
     private MBeanServer platformMBeanServer;
     private ObjectName objectName = null;
 
-    private ConcurrentHashMap<String, Invocation> methods = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, Invocation> methodsPerformance = new ConcurrentHashMap<>();
+    private ConcurrentHashMap<String, InvocationCount> methodsCount = new ConcurrentHashMap<>();
     private ConcurrentHashMap<String, String> diagnostics = new ConcurrentHashMap<>();
     private CopyOnWriteArrayList<String> exceptions = new CopyOnWriteArrayList<>();
     private ConcurrentHashMap<String, AtomicInteger> exceptionStatistics = new ConcurrentHashMap<>();
@@ -77,7 +79,28 @@ public class MonitoringResource implements MonitoringResourceMXBean {
     @Path("slowestMethods/{max}")
     @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
     public List<Invocation> getSlowestMethods(@PathParam("max") int maxResult) {
-    	List<Invocation> list = new ArrayList<>(methods.values());
+    	List<Invocation> list = new ArrayList<>(methodsPerformance.values());
+
+    	Collections.sort(list);
+    	Collections.reverse(list);
+    	if (maxResult <= 0) {
+    		maxResult = MAX_RESULT_DEFAULT;
+    	}
+    	
+    	if (list.size() > maxResult) {
+    		return list.subList(0, maxResult);
+    	}
+    	else {
+    		return list;
+    	}
+    }
+
+    @Override
+	@GET
+    @Path("invocationsCount/{max}")
+    @Produces({MediaType.APPLICATION_JSON, MediaType.APPLICATION_XML})
+    public List<InvocationCount> getInvocationsCount(@PathParam("max") int maxResult) {
+    	List<InvocationCount> list = new ArrayList<>(methodsCount.values());
 
     	Collections.sort(list);
     	Collections.reverse(list);
@@ -104,6 +127,11 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 	@Override
 	public List<Invocation> getSlowestMethods() {
 		return getSlowestMethods(MAX_RESULT_DEFAULT);
+	}
+
+	@Override
+	public List<InvocationCount> getInvocationsCount() {
+		return getInvocationsCount(MAX_RESULT_DEFAULT);
 	}
 
 	@Override
@@ -197,26 +225,55 @@ public class MonitoringResource implements MonitoringResourceMXBean {
 	public void add(Invocation invocation) {
 		String methodName = invocation.getMethodName();
 
-		if (methods.containsKey(methodName)) {
-			Invocation existing = methods.get(methodName);
+		if (methodsPerformance.containsKey(methodName)) {
+			Invocation existing = methodsPerformance.get(methodName);
 			if (existing.isSlowerThan(invocation)) {
 				return;
 			}
 		}
 
-		methods.put(methodName, invocation);
+		methodsPerformance.put(methodName, invocation);
+	}
+
+	/**
+	 * Add an invocation count
+	 * 
+	 * @param invocation the invocation
+	 */
+	public void add(InvocationCount invocation) {
+		String methodName = invocation.getMethodName();
+
+		if (methodsCount.containsKey(methodName)) {
+			InvocationCount existing = methodsCount.get(methodName);
+			
+			invocation = new InvocationCount(methodName, existing.getInvocationCount() + 1);
+		}
+
+		methodsCount.put(methodName, invocation);
 	}
 
 	/**
 	 * Adds an Invocation to this Monitor Resource
 	 * 
 	 * @param methodName the method name
-	 * @param performance the methods performance
+	 * @param performance the methodsPerformance performance
 	 */
-	public void add(String methodName, long performance) {
+	public void addInvocationPerformance(String methodName, long performance) {
 		Invocation invocation = new Invocation(methodName, performance);
 
 		this.add(invocation);
+	}
+
+	/**
+	 * Adds an InvocationCount to this Monitor Resource
+	 * 
+	 * @param methodName the method name
+	 * @param performance the methodsPerformance performance
+	 */
+	public void addInvocationCount(String methodName) {
+		InvocationCount invocationCount = new InvocationCount(methodName, 1);
+
+		this.add(invocationCount);
 	}
 
 	/**
@@ -272,7 +329,8 @@ public class MonitoringResource implements MonitoringResourceMXBean {
     @DELETE
 	@Path("clear")
     public void clear() {
-        methods.clear();
+        methodsPerformance.clear();
+        methodsCount.clear();
         exceptionCount.set(0);
         exceptions.clear();
         exceptionStatistics.clear();
